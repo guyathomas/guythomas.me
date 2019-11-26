@@ -1,11 +1,11 @@
 module.exports = {
   siteMetadata: {
-    title: `Gatsby Starter Blog`,
-    author: `Kyle Mathews`,
-    description: `A starter blog demonstrating what Gatsby can do.`,
-    siteUrl: `https://gatsby-starter-blog-demo.netlify.com/`,
+    title: `Guy Thomas`,
+    author: `Guy Thomas`,
+    description: `See what I'm up to now, and what I've been up to`,
+    siteUrl: `https://guythomas.me/`,
     social: {
-      twitter: `kylemathews`,
+      linkedin: `https://www.linkedin.com/in/guyathomas/`,
     },
   },
   plugins: [
@@ -57,11 +57,11 @@ module.exports = {
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: `Gatsby Starter Blog`,
-        short_name: `GatsbyJS`,
+        name: `Guy Thomas`,
+        short_name: `Guy`,
         start_url: `/`,
         background_color: `#ffffff`,
-        theme_color: `#663399`,
+        theme_color: `#F8BB10`,
         display: `minimal-ui`,
         icon: `content/assets/gatsby-icon.png`,
       },
@@ -74,5 +74,6 @@ module.exports = {
         pathToConfigModule: `src/utils/typography`,
       },
     },
+    `gatsby-plugin-emotion`
   ],
 }

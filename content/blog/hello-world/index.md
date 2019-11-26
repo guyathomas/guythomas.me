@@ -1,7 +1,7 @@
 ---
 title: Hello World
 date: "2015-05-01T22:12:03.284Z"
-description: "Hello World"
+description: "Hello World. I actually need this description to be a fair bit longer to test the overflow of this container. So I wonder how long I will need to write."
 ---
 
 This is my first post on my new fake blog! How exciting!
