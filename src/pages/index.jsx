@@ -1,80 +1,50 @@
-import React, { useState, useRef } from "react"
-import { graphql } from "gatsby"
-import styled from "@emotion/styled"
-import result from "lodash/result"
-import debounce from "lodash/debounce"
+import React, { useEffect, createContext, useState} from "react"
+import debounce from 'lodash/debounce';
 
-import { Post } from "../components/Post"
-import { Bio } from "../components/Bio"
-import { Layout } from "../components/Layout"
-import { SocialLine } from "../components/SocialLine"
-import { SEO } from "../components/Seo"
+import { MobileLayout, DesktopLayout } from "../components/Layout"
 
-const HEADER_HEIGHT = "100px"
 
-const Portrait = styled.div`
-  position: fixed;
-  background-image: url("https://res.cloudinary.com/dqvlfpaev/image/upload/v1574619573/cropped-black-and-white-portrait_cir0bd.png");
-  background-repeat: no-repeat;
-  width: 100%;
-  height: 80vh;
-  background-size: cover;
-  background-position: center;
-`
-
-const Card = styled.div`
-  background-color: white;
-  position: relative;
-  border-radius: 15px 15px 0 0;
-  padding: 20px 10px;
-  overflow-y: ${props => (props.allowScrolling ? "scroll" : "hidden")};
-  height: calc(100vh - ${HEADER_HEIGHT});
-`
-
-const CardWrapper = styled.div`
-  scroll-snap-align: start;
-  padding-top: ${HEADER_HEIGHT};
-`
-
-const InitialCardOffset = styled.div`
-  height: 40vh;
-  scroll-snap-align: start;
-`
-
-const BlogIndex = ({ data }) => {
-  const posts = data.allMarkdownRemark.edges
-  const [allowCardScrolling, setAllowCardScrolling] = useState(false)
-  const cardWrapperEl = useRef(null)
-
-  const handleScroll = debounce(() => {
-    const clientRect = result(cardWrapperEl, "current.getBoundingClientRect")
-    if (!clientRect) return
-    clientRect.top <= 1
-      ? setAllowCardScrolling(true)
-      : setAllowCardScrolling(false)
-  }, 100)
-
-  return (
-    <Layout onScroll={handleScroll}>
-      <SEO title="All posts" />
-      <Portrait />
-      <InitialCardOffset />
-      <CardWrapper ref={cardWrapperEl}>
-        <Card allowScrolling={allowCardScrolling}>
-          <Bio />
-          <SocialLine />
-          <main>
-            {posts.map(post => (
-              <Post key={post.node.fields.slug} {...post} />
-            ))}
-          </main>
-        </Card>
-      </CardWrapper>
-    </Layout>
-  )
+const theme = {
+  breakpoints: {
+    xs: 0,
+    sm: 576,
+    md: 768,
+    lg: 992,
+    xl: 1200,
+  },
 }
 
-export default BlogIndex
+export const ThemeContext = createContext(theme)
+
+export default props => {
+  const [screenSize, setScreenSize] = useState({})
+  const [isLoading, setIsLoading] = useState(true)
+  const [isMobile, setIsMobile] = useState(null)
+
+  useEffect(() => {
+    setIsLoading(false)
+  }, [])
+
+  const debouncedSetScreen = debounce(() => {
+    const { screen } = window;
+    setScreenSize(screen)
+    setIsMobile(screen.width < theme.breakpoints.md)
+  }, 100)
+
+  useEffect(() => {
+    debouncedSetScreen();
+    window.addEventListener("resize", debouncedSetScreen)
+    return () => window.removeEventListener("resize", debouncedSetScreen)
+  }, [])
+
+  if (isLoading || typeof isMobile !== 'boolean') return <div>Loading</div>
+  
+  return (
+    <ThemeContext.Provider value={{ theme, screenSize, isMobile }}>
+      { isMobile ? <MobileLayout {...props} /> : <DesktopLayout {...props} />}
+    </ThemeContext.Provider>
+  )
+}
 
 export const pageQuery = graphql`
   query {
