@@ -21,14 +21,32 @@ const BioContainer = styled.div`
   }
 `
 
+const Title = styled.h1`
+  margin: 0;
+  font-weight: 400;
+`
+
+const Role = styled.h3`
+  margin-bottom: 0;
+  margin-top: 0.5rem;
+`
+
+const Description = styled.div`
+  margin-bottom: 0;
+  font-weight: 300;
+  font-size: 80%;
+  max-width: 75%;
+  margin-top: 1rem;
+`
+
 export const Bio = () => (
   <BioContainer>
-    <h1>Guy Thomas</h1>
-    <h3>Software Engineer</h3>
-    <p>
+    <Title>Guy Thomas</Title>
+    <Role>Software Engineer</Role>
+    <Description>
       I love tinkering, teaching and exploring the outdoors. I'm currently
       ticking all those boxes at Lyft
-    </p>
+    </Description>
   </BioContainer>
 )
 

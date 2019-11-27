@@ -9,7 +9,7 @@ import { SocialLine } from "../SocialLine"
 import { SEO } from "../Seo"
 import "./style.css"
 
-const HEADER_HEIGHT = "100px"
+const HEADER_HEIGHT = "6rem"
 
 const Main = styled.main`
   scroll-snap-type: y mandatory;
@@ -30,8 +30,8 @@ const Portrait = styled.div`
 const Card = styled.div`
   background-color: white;
   position: relative;
-  border-radius: 15px 15px 0 0;
-  padding: 20px 10px;
+  border-radius: 1rem 1rem 0 0;
+  padding: 1rem 0.5rem;
   overflow-y: ${props => (props.allowScrolling ? "scroll" : "hidden")};
   height: calc(100vh - ${HEADER_HEIGHT});
 `

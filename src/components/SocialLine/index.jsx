@@ -8,8 +8,8 @@ import Medium from "./icons/medium.svg"
 // import TwitterIcon from './icons/twitter.svg';
 
 const IconWrapper = styled.span`
-  width: 70px;
-  height: 40px;
+  width: 4rem;
+  height: 3rem;
   display: flex;
   justify-content: center;
   align-items: center;

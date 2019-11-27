@@ -13,7 +13,7 @@ const Main = styled.main`
   max-width: ${props => props.maxWidth}px;
   display: flex;
   justify-content: center;
-  padding: 0 50px;
+  padding: 0 3rem;
   margin: auto;
 `
 
@@ -39,7 +39,7 @@ const Panel = styled.div`
 `
 
 const PostWrapper = styled.div`
-  padding: 30px;
+  padding: 2rem;
   overflow-y: scroll;
   height: 100%;
 `

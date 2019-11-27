@@ -1,86 +1,91 @@
 import { MOBILE_MEDIA_QUERY } from "typography-breakpoint-constants"
-import verticalRhythm from "compass-vertical-rhythm"
 
 const theme = {
-  title: "Fairy Gates",
-  baseFontSize: "20px",
-  baseLineHeight: 1.45,
+  title: "guythomas.me",
+  baseFontSize: "16px",
+  baseLineHeight: 1.75,
+  scaleRatio: 5 / 2,
   googleFonts: [
     {
-      name: "Work Sans",
-      styles: ["600"],
+      name: "Open Sans",
+      styles: ["700"],
     },
     {
-      name: "Quattrocento Sans",
-      styles: ["400", "400i", "700"],
+      name: "Work Sans",
+      styles: ["400", "400i", "700", "700i", "900", "900i"],
     },
   ],
-  headerFontFamily: ["Work Sans", "sans-serif"],
-  bodyFontFamily: ["Quattrocento Sans", "sans-serif"],
-  headerColor: "hsla(0,0%,0%,0.9)",
-  bodyColor: "hsla(0,0%,0%,0.8)",
-  headerWeight: "600",
+  headerFontFamily: ["Work Sans", "serif"],
+  bodyFontFamily: ["Work Sans", "serif"],
+  bodyColor: "hsla(0,0%,0%,0.9)",
+  headerWeight: 300,
   bodyWeight: 400,
   boldWeight: 700,
-  overrideStyles: ({ adjustFontSizeTo, scale, rhythm }, options) => {
-    const linkColor = "#1ca086"
-    const vr = verticalRhythm({
-      baseFontSize: "17px",
-      baseLineHeight: "24.65px",
-    })
-    return {
-      a: {
-        color: linkColor,
-        textDecoration: "none",
-        textShadow:
-          ".03em 0 #fff,-.03em 0 #fff,0 .03em #fff,0 -.03em #fff,.06em 0 #fff,-.06em 0 #fff,.09em 0 #fff,-.09em 0 #fff,.12em 0 #fff,-.12em 0 #fff,.15em 0 #fff,-.15em 0 #fff", // eslint-disable-line
-        backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 1px, ${linkColor} 1px, ${linkColor} 2px, rgba(0, 0, 0, 0) 2px)`, // eslint-disable-line
+  overrideStyles: ({ adjustFontSizeTo, scale, rhythm }, options) => ({
+    h1: {
+      fontFamily: ["Open Sans", "sans-serif"].join(","),
+    },
+    blockquote: {
+      ...scale(1 / 5),
+      color: "gray",
+      fontStyle: "italic",
+      paddingLeft: rhythm(13 / 16),
+      marginLeft: rhythm(-1),
+      borderLeft: `${rhythm(3 / 16)} solid gray`,
+    },
+    "blockquote > :last-child": {
+      marginBottom: 0,
+    },
+    "blockquote cite": {
+      ...adjustFontSizeTo(options.baseFontSize),
+      color: options.bodyColor,
+      fontWeight: options.bodyWeight,
+    },
+    "blockquote cite:before": {
+      content: '"— "',
+    },
+    ul: {
+      listStyle: "disc",
+    },
+    "ul,ol": {
+      marginLeft: 0,
+    },
+    [MOBILE_MEDIA_QUERY]: {
+      "ul,ol": {
+        marginLeft: rhythm(1),
       },
-      "a:hover,a:active": {
-        textShadow: "none",
-        backgroundImage: "none",
-      },
-      "h1,h2,h3,h4,h5,h6": {
-        marginTop: rhythm(1.5),
-        marginBottom: rhythm(0.5),
-      },
-      // Blockquote styles.
       blockquote: {
-        ...scale(1 / 5),
-        borderLeft: `${rhythm(6 / 16)} solid ${linkColor}`,
-        color: 'gray',
-        paddingLeft: rhythm(10 / 16),
-        fontStyle: "italic",
-        marginLeft: 0,
+        marginLeft: rhythm(-3 / 4),
         marginRight: 0,
+        paddingLeft: rhythm(9 / 16),
       },
-      "blockquote > :last-child": {
-        marginBottom: 0,
-      },
-      "blockquote cite": {
-        ...adjustFontSizeTo(options.baseFontSize),
-        color: options.bodyColor,
-        fontStyle: "normal",
-        fontWeight: options.bodyWeight,
-      },
-      "blockquote cite:before": {
-        content: '"— "',
-      },
-      [MOBILE_MEDIA_QUERY]: {
-        html: {
-          ...vr.establishBaseline(),
-        },
-        blockquote: {
-          borderLeft: `${rhythm(3 / 16)} solid ${linkColor}`,
-          color: 'gray',
-          paddingLeft: rhythm(9 / 16),
-          fontStyle: "italic",
-          marginLeft: rhythm(-3 / 4),
-          marginRight: 0,
-        },
-      },
-    }
-  },
+    },
+    "h1,h2,h3,h4,h5,h6": {
+      marginTop: rhythm(2),
+    },
+    h4: {
+      letterSpacing: "0.140625em",
+      textTransform: "uppercase",
+    },
+    h6: {
+      fontStyle: "italic",
+    },
+    a: {
+      boxShadow: "0 1px 0 0 currentColor",
+      color: "#007acc",
+      textDecoration: "none",
+      boxShadow: "none",
+    },
+    "a:hover,a:active": {
+      boxShadow: "none",
+    },
+    "mark,ins": {
+      background: "#007acc",
+      color: "white",
+      padding: `${rhythm(1 / 16)} ${rhythm(1 / 8)}`,
+      textDecoration: "none",
+    },
+  }),
 }
 
 export default theme

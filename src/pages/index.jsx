@@ -35,7 +35,7 @@ export default props => {
     debouncedSetScreen();
     window.addEventListener("resize", debouncedSetScreen)
     return () => window.removeEventListener("resize", debouncedSetScreen)
-  }, [])
+  }, [debouncedSetScreen])
 
   if (isLoading || typeof isMobile !== 'boolean') return <div>Loading</div>
   
