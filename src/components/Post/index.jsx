@@ -19,9 +19,11 @@ export const Post = ({ node }) => {
         <h3>
           <Link to={node.fields.slug}>{title}</Link>
         </h3>
+        <div>
         <PublishDate>{node.frontmatter.date}</PublishDate>
         <span> - </span>
         <Category>Work</Category>
+      </div>
       </header>
       <section>
         <p
