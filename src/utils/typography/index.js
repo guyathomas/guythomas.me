@@ -1,8 +1,7 @@
 import Typography from "typography"
-import fairyGatesTheme from 'typography-theme-fairy-gates'
+import theme from './config';
 
-
-const typography = new Typography(fairyGatesTheme)
+const typography = new Typography(theme)
 
 // Hot reload typography in development.
 if (process.env.NODE_ENV !== `production`) {

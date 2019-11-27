@@ -14,6 +14,7 @@ const Main = styled.main`
   display: flex;
   justify-content: center;
   padding: 0 50px;
+  margin: auto;
 `
 
 const Portrait = styled.div`
@@ -29,7 +30,6 @@ const Portrait = styled.div`
 const BioWrapper = styled.div`
   position: absolute;
   bottom: 0;
-  margin: auto;
   color: white;
 `
 
