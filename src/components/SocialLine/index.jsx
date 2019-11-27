@@ -1,9 +1,9 @@
 import React from "react"
 import styled from "@emotion/styled"
 
-import LinkedInIcon from "./icons/linkedin.svg"
-import GithubIcon from "./icons/github.svg"
-import MediumIcon from "./icons/medium.svg"
+import LinkedIn from "./icons/linkedin.svg"
+import Github from "./icons/github.svg"
+import Medium from "./icons/medium.svg"
 // import Instagram from './icons/instagram.svg';
 // import TwitterIcon from './icons/twitter.svg';
 
@@ -40,13 +40,17 @@ const IconGroup = styled.div`
   display: flex;
 `
 
-const icons = [LinkedInIcon, GithubIcon, MediumIcon]
+const icons = {
+  LinkedIn,
+  Github,
+  Medium,
+}
 
 export const SocialLine = ({ orientation = "horizontal" }) => {
   return (
     <Line orientation={orientation}>
-      {icons.map(Icon => (
-        <IconWrapper>
+      {Object.entries(icons).map(([ name, Icon ]) => (
+        <IconWrapper key={name}>
           <Icon />
         </IconWrapper>
       ))}
