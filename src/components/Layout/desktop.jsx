@@ -1,80 +1,72 @@
-import React, { useState, useRef } from "react"
+import React, { useState, useRef, useContext } from "react"
 import styled from "@emotion/styled"
-import result from "lodash/result"
-import debounce from "lodash/debounce"
 
 import { Post } from "../Post"
 import { Bio } from "../Bio"
 import { SocialLine } from "../SocialLine"
 import { SEO } from "../Seo"
+import { ThemeContext } from "../../pages"
 import "./style.css"
 
-const HEADER_HEIGHT = "100px"
-
 const Main = styled.main`
-  scroll-snap-type: y mandatory;
   height: 100vh;
-  overflow-y: scroll;
+  max-width: ${props => props.maxWidth}px;
+  display: flex;
+  justify-content: center;
+  padding: 0 50px;
 `
 
 const Portrait = styled.div`
-  position: fixed;
+  position: relative;
+  width: 100%;
+  height: 100%;
   background-image: url("https://res.cloudinary.com/dqvlfpaev/image/upload/v1574619573/cropped-black-and-white-portrait_cir0bd.png");
   background-repeat: no-repeat;
-  width: 100%;
-  height: 80vh;
   background-size: cover;
   background-position: center;
 `
 
-const Card = styled.div`
-  background-color: white;
+const BioWrapper = styled.div`
+  position: absolute;
+  bottom: 0;
+  margin: auto;
+  color: white;
+`
+
+const Panel = styled.div`
   position: relative;
-  border-radius: 15px 15px 0 0;
-  padding: 20px 10px;
-  overflow-y: ${props => (props.allowScrolling ? "scroll" : "hidden")};
-  height: calc(100vh - ${HEADER_HEIGHT});
+  flex: 1 1 0;
 `
 
-const CardWrapper = styled.div`
-  scroll-snap-align: start;
-  padding-top: ${HEADER_HEIGHT};
-`
-
-const InitialCardOffset = styled.div`
-  height: 40vh;
-  scroll-snap-align: start;
+const PostWrapper = styled.div`
+  padding: 30px;
+  overflow-y: scroll;
+  height: 100%;
 `
 
 export const DesktopLayout = ({ data }) => {
   const posts = data.allMarkdownRemark.edges
-  const [allowCardScrolling, setAllowCardScrolling] = useState(false)
-  const cardWrapperEl = useRef(null)
+  const {
+    theme: { breakpoints },
+  } = useContext(ThemeContext)
 
-  const handleScroll = debounce(() => {
-    const clientRect = result(cardWrapperEl, "current.getBoundingClientRect")
-    if (!clientRect) return
-    clientRect.top <= 1
-      ? setAllowCardScrolling(true)
-      : setAllowCardScrolling(false)
-  }, 100)
   return (
-    <Main onScroll={handleScroll}>
+    <Main maxWidth={breakpoints.xl}>
       <SEO title="All posts" />
-      <Portrait />
-      <InitialCardOffset />
-      <CardWrapper ref={cardWrapperEl}>
-        <Card allowScrolling={allowCardScrolling}>
-          DESKTOP
+      <Panel>
+        <Portrait />
+        <BioWrapper>
           <Bio />
-          <SocialLine />
-          <main>
-            {posts.map(post => (
-              <Post key={post.node.fields.slug} {...post} />
-            ))}
-          </main>
-        </Card>
-      </CardWrapper>
+        </BioWrapper>
+      </Panel>
+      <Panel>
+        <PostWrapper>
+          {posts.map(post => (
+            <Post key={post.node.fields.slug} {...post} />
+          ))}
+        </PostWrapper>
+        <SocialLine orientation="vertical" />
+      </Panel>
     </Main>
   )
 }

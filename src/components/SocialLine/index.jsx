@@ -17,27 +17,23 @@ const IconWrapper = styled.span`
   flex-shrink: 0;
 `
 
-const dividerStyles = `
-  content: '';
-  border-bottom: 1px solid black;
-  width: 100%;
-`
-
-const Line = styled.div`
+const VerticalLineLayout = styled.div`
   display: flex;
-  flex-direction: ${props =>
-    props.orientation === "horizontal" ? "row" : "column"};
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  &::after {
-    ${dividerStyles}
-  }
-  &::before {
-    ${dividerStyles}
-  }
+  top: 0;
+  right: 0;
+  position: absolute;
+  height: 100%;
+  transform: translateX(100%);
 `
-const IconGroup = styled.div`
+
+const HorizontalLineLayout = styled.div`
   display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 `
 
 const icons = {
@@ -46,14 +42,29 @@ const icons = {
   Medium,
 }
 
+const HorizontalLine = styled.div`
+  border-bottom: 1px solid black;
+  width: 100%;
+`
+
+const VerticalLine = styled.div`
+  border-right: 1px solid black;
+  height: 100%;
+  flex-shrink: ${props => props.long ? 1 : 2};
+`
+
 export const SocialLine = ({ orientation = "horizontal" }) => {
+  const LineLayout = orientation === 'horizontal' ? HorizontalLineLayout : VerticalLineLayout;
+  const Line = orientation === 'horizontal' ? HorizontalLine : VerticalLine;
   return (
-    <Line orientation={orientation}>
-      {Object.entries(icons).map(([ name, Icon ]) => (
-        <IconWrapper key={name}>
-          <Icon />
-        </IconWrapper>
-      ))}
-    </Line>
+    <LineLayout>
+      <Line orientation={orientation} />
+        {Object.entries(icons).map(([ name, Icon ]) => (
+          <IconWrapper key={name}>
+            <Icon />
+          </IconWrapper>
+        ))}
+      <Line orientation={orientation} long/>
+    </LineLayout>
   )
 }

@@ -13,6 +13,12 @@ const BioContainer = styled.div`
   flex-direction: column;
   align-items: center;
   text-align: center;
+  & > h1 {
+    color: inherit;
+  }
+  & > h3 {
+    color: inherit;
+  }
 `
 
 export const Bio = () => (
@@ -21,7 +27,7 @@ export const Bio = () => (
     <h3>Software Engineer</h3>
     <p>
       I love tinkering, teaching and exploring the outdoors. I'm currently
-      ticking all those boxes at <a href="https://www.lyft.com">Lyft</a>
+      ticking all those boxes at Lyft
     </p>
   </BioContainer>
 )
