@@ -3,6 +3,7 @@ import styled from "@emotion/styled"
 import result from "lodash/result"
 import debounce from "lodash/debounce"
 
+import { Header } from '../Header';
 import { Post } from "../Post"
 import { Bio } from "../Bio"
 import { SocialLine } from "../SocialLine"
@@ -69,6 +70,7 @@ export const MobileLayout = ({ data }) => {
   return (
     <Main onScroll={handleScroll}>
       <SEO title="All posts" />
+      <Header />
       <Portrait />
       <InitialCardOffset />
       <CardWrapper ref={cardWrapperEl}>

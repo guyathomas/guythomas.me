@@ -1,14 +1,31 @@
-import React from 'react';
-import styled from '@emotion/styled'
+import React from "react"
+import styled from "@emotion/styled"
+
+import Hamburger from './icons/hamburger.svg';
 
 const Nav = styled.nav`
-    height: 2rem;
-    position: sticky;
-    background-color: #142640;
-`;
+    position: absolute;
+    width: 100%;
+    z-index: 1;
+`
 
-export const Header = () => (
-    <Nav>
-        <title>Guy Thomas</title>
-    </Nav>
-)
+const HamburgerWrapper = styled.div`
+    height: 3.4rem;
+    display: flex;
+    justify-content: flex-end;
+    padding: 1.3rem 1rem 0;
+    & svg {
+        height: 100%;
+        width: unset;
+    }
+`
+
+export const Header = () => {
+    return (
+        <Nav>
+            <HamburgerWrapper>
+                <Hamburger />
+            </HamburgerWrapper>
+        </Nav>
+    )
+}
