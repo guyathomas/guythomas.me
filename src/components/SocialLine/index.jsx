@@ -5,14 +5,18 @@ import LinkedIn from "./icons/linkedin.svg"
 import Github from "./icons/github.svg"
 import Medium from "./icons/medium.svg"
 
-const IconWrapper = styled.span`
-  width: 4rem;
-  height: 3rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: white;
+const IconWrapper = styled.a`
   flex-shrink: 0;
+  line-height: 0;
+  margin: 0 1rem;
+  fill: #007acc;
+  cursor: pointer;
+  &:last-of-type {
+    margin-right: 2rem;
+  }
+  &:first-of-type {
+    margin-left: 2rem;
+  }
 `
 
 const VerticalLineLayout = styled.div`
@@ -32,12 +36,22 @@ const HorizontalLineLayout = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  padding: 0.5rem 0;
 `
 
-const icons = {
-  LinkedIn,
-  Github,
-  Medium,
+const socialLinks = {
+  LinkedIn: {
+    Icon: LinkedIn,
+    url: "https://www.linkedin.com/in/guyathomas",
+  },
+  Github: {
+    Icon: Github,
+    url: "https://github.com/guyathomas",
+  },
+  Medium: {
+    Icon: Medium,
+    url: "https://medium.com/@stolemyusername",
+  },
 }
 
 const HorizontalLine = styled.div`
@@ -48,21 +62,22 @@ const HorizontalLine = styled.div`
 const VerticalLine = styled.div`
   border-right: 1px solid black;
   height: 100%;
-  flex-shrink: ${props => props.long ? 1 : 2};
+  flex-shrink: ${props => (props.long ? 1 : 2)};
 `
 
 export const SocialLine = ({ orientation = "horizontal" }) => {
-  const LineLayout = orientation === 'horizontal' ? HorizontalLineLayout : VerticalLineLayout;
-  const Line = orientation === 'horizontal' ? HorizontalLine : VerticalLine;
+  const LineLayout =
+    orientation === "horizontal" ? HorizontalLineLayout : VerticalLineLayout
+  const Line = orientation === "horizontal" ? HorizontalLine : VerticalLine
   return (
     <LineLayout>
       <Line orientation={orientation} />
-        {Object.entries(icons).map(([ name, Icon ]) => (
-          <IconWrapper key={name}>
+      {Object.entries(socialLinks).map(([name, { Icon, url }]) => (
+        <IconWrapper key={name} href={url}>
             <Icon />
-          </IconWrapper>
-        ))}
-      <Line orientation={orientation} long/>
+        </IconWrapper>
+      ))}
+      <Line orientation={orientation} long />
     </LineLayout>
   )
 }
