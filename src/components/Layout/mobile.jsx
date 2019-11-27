@@ -42,7 +42,7 @@ const CardWrapper = styled.div`
 `
 
 const InitialCardOffset = styled.div`
-  height: 40vh;
+  height: 50vh;
   scroll-snap-align: start;
 `
 

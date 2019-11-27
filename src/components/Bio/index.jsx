@@ -34,8 +34,6 @@ const Role = styled.h3`
 const Description = styled.div`
   margin-bottom: 0;
   font-weight: 300;
-  font-size: 80%;
-  max-width: 75%;
   margin-top: 1rem;
 `
 
@@ -44,8 +42,7 @@ export const Bio = () => (
     <Title>Guy Thomas</Title>
     <Role>Software Engineer</Role>
     <Description>
-      I love tinkering, teaching and exploring the outdoors. I'm currently
-      ticking all those boxes at Lyft
+      I love tinkering, teaching and exploring the outdoors.
     </Description>
   </BioContainer>
 )

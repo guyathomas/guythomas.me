@@ -29,17 +29,20 @@ const Portrait = styled.div`
 
 const BioWrapper = styled.div`
   position: absolute;
-  bottom: 0;
   color: white;
 `
 
 const Panel = styled.div`
-  position: relative;
+  display: flex;
   flex: 1 1 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  position: relative;
 `
 
 const PostWrapper = styled.div`
-  padding: 2rem;
+  padding: 1rem 2rem;
   overflow-y: scroll;
   height: 100%;
 `

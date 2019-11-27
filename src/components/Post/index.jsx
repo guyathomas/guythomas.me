@@ -1,5 +1,5 @@
 import React from "react"
-import styled from '@emotion/styled'
+import styled from "@emotion/styled"
 import { Link, graphql } from "gatsby"
 
 const PublishDate = styled.span`
@@ -11,19 +11,37 @@ const Category = styled.span`
   color: purple;
 `
 
+const PostTitle = styled.h3`
+  margin-top: 0.5rem;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+`
+
+const PostMeta = styled.h4`
+  margin: 0;
+  margin-bottom: 0.2rem;
+  font-weight: 500;
+  font-size: 80%;
+`;
+
+const Article = styled.article`
+  margin-top: 2rem;
+`
+
 export const Post = ({ node }) => {
   const title = node.frontmatter.title || node.fields.slug
   return (
-    <article key={node.fields.slug}>
+    <Article key={node.fields.slug}>
       <header>
-        <h3>
+
+        <PostTitle>
           <Link to={node.fields.slug}>{title}</Link>
-        </h3>
-        <div>
-        <PublishDate>{node.frontmatter.date}</PublishDate>
-        <span> - </span>
-        <Category>Work</Category>
-      </div>
+        </PostTitle>
+        <PostMeta>
+          <PublishDate>{node.frontmatter.date}</PublishDate>
+          <span> - </span>
+          <Category>Work</Category>
+        </PostMeta>
       </header>
       <section>
         <p
@@ -32,6 +50,6 @@ export const Post = ({ node }) => {
           }}
         />
       </section>
-    </article>
+    </Article>
   )
 }
