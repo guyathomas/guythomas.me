@@ -45,6 +45,7 @@ const Panel = styled.div`
 
 const PostWrapper = styled.div`
   padding: 1rem 2rem 1rem 4rem;
+  margin-right: 2rem;
   overflow-y: scroll;
   height: 100%;
   max-width: 40rem;

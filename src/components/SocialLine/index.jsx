@@ -5,12 +5,8 @@ import LinkedIn from "./icons/linkedin.svg"
 import Github from "./icons/github.svg"
 import Medium from "./icons/medium.svg"
 
-const IconWrapper = styled.a`
-  flex-shrink: 0;
-  line-height: 0;
+const HorizontalIconMargins = `
   margin: 0 1rem;
-  fill: #007acc;
-  cursor: pointer;
   &:last-of-type {
     margin-right: 2rem;
   }
@@ -19,16 +15,34 @@ const IconWrapper = styled.a`
   }
 `
 
+const VerticalIconMargins = `
+  margin: 1rem 0;
+  &:last-of-type {
+    margin-bottom: 2rem;
+  }
+  &:first-of-type {
+    margin-top: 2rem;
+  }
+`
+
+const IconWrapper = styled.a`
+  flex-shrink: 0;
+  line-height: 0;
+  fill: #007acc;
+  cursor: pointer;
+  ${props =>
+    props.orientation === "horizontal"
+      ? HorizontalIconMargins
+      : VerticalIconMargins}
+`
 const VerticalLineLayout = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   top: 0;
   right: 0;
-  position: absolute;
   height: 100%;
-  transform: translateX(100%);
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `
 
 const HorizontalLineLayout = styled.div`
@@ -66,18 +80,29 @@ const VerticalLine = styled.div`
 `
 
 export const SocialLine = ({ orientation = "horizontal" }) => {
-  const LineLayout =
-    orientation === "horizontal" ? HorizontalLineLayout : VerticalLineLayout
-  const Line = orientation === "horizontal" ? HorizontalLine : VerticalLine
-  return (
-    <LineLayout>
-      <Line orientation={orientation} />
-      {Object.entries(socialLinks).map(([name, { Icon, url }]) => (
-        <IconWrapper key={name} href={url}>
+  if (orientation === "vertical") {
+    return (
+      <VerticalLineLayout>
+        <VerticalLine />
+        {Object.entries(socialLinks).map(([name, { Icon, url }]) => (
+          <IconWrapper key={name} href={url} orientation={orientation}>
             <Icon />
+          </IconWrapper>
+        ))}
+        <VerticalLine long />
+      </VerticalLineLayout>
+    )
+  }
+
+  return (
+    <HorizontalLineLayout>
+      <HorizontalLine />
+      {Object.entries(socialLinks).map(([name, { Icon, url }]) => (
+        <IconWrapper key={name} href={url} orientation={orientation}>
+          <Icon />
         </IconWrapper>
       ))}
-      <Line orientation={orientation} long />
-    </LineLayout>
+      <HorizontalLine />
+    </HorizontalLineLayout>
   )
 }
