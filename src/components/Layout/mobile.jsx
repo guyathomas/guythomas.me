@@ -57,6 +57,7 @@ const InitialCardOffset = styled.div`
 
 export const MobileLayout = ({ data, children, startExpanded = false }) => {
   const [allowCardScrolling, setAllowCardScrolling] = useState(false)
+  const [ hasLoaded, setHasLoaded ] = useState(false);
   const cardWrapperEl = useRef(null)
 
   const handleScroll = debounce(() => {
@@ -72,10 +73,14 @@ export const MobileLayout = ({ data, children, startExpanded = false }) => {
       cardWrapperEl.current.scrollIntoView()
     }
   }, [cardWrapperEl.current])
+
+  useEffect(() => {
+    setHasLoaded(true)
+  })
   return (
     <Main onScroll={handleScroll}>
       <Header />
-      <Portrait />
+      { hasLoaded && <Portrait />}
       <InitialCardOffset />
       <CardWrapper ref={cardWrapperEl}>
         <Card allowScrolling={allowCardScrolling}>
