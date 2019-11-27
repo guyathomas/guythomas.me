@@ -34,6 +34,17 @@ const Card = styled.div`
   padding: 1rem 0.5rem;
   overflow-y: ${props => (props.allowScrolling ? "scroll" : "hidden")};
   height: calc(100vh - ${HEADER_HEIGHT});
+  &::after {
+    content: '';
+    height: 3px;
+    width: 3rem;
+    background-color: lightgray;
+    position: absolute;
+    top: 0.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 1rem;
+  }
 `
 
 const CardWrapper = styled.div`
