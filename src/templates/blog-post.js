@@ -1,11 +1,17 @@
 import React from "react"
 import { graphql } from "gatsby"
+import styled from "@emotion/styled"
 
 import { Layout } from "../components/Layout"
 import { SEO } from "../components/Seo"
 import { Bio } from "../components/Bio"
 import { SocialLine } from "../components/SocialLine"
 import { PostMeta } from "../components/PostMeta"
+
+const BlogTitle = styled.h2`
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+`
 
 export default ({ data: { markdownRemark: post, data, title: siteTitle, location }, ...rest}) => {
   return (
@@ -14,11 +20,11 @@ export default ({ data: { markdownRemark: post, data, title: siteTitle, location
         title={post.frontmatter.title}
         description={post.frontmatter.description || post.excerpt}
       />
-      <Bio small/>
-      <SocialLine />
+        <Bio small/>
+        <SocialLine />
       <article>
         <header>
-          <h2>{post.frontmatter.title}</h2>
+          <BlogTitle>{post.frontmatter.title}</BlogTitle>
           <PostMeta date={post.frontmatter.date} />
         </header>
         <section dangerouslySetInnerHTML={{ __html: post.html }} />
