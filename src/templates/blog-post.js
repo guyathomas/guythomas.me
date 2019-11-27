@@ -3,6 +3,9 @@ import { graphql } from "gatsby"
 
 import { Layout } from "../components/Layout"
 import { SEO } from "../components/Seo"
+import { Bio } from "../components/Bio"
+import { SocialLine } from "../components/SocialLine"
+import { PostMeta } from "../components/PostMeta"
 
 export default ({ data: { markdownRemark: post, data, title: siteTitle, location }, ...rest}) => {
   return (
@@ -11,10 +14,12 @@ export default ({ data: { markdownRemark: post, data, title: siteTitle, location
         title={post.frontmatter.title}
         description={post.frontmatter.description || post.excerpt}
       />
+      <Bio small/>
+      <SocialLine />
       <article>
         <header>
-          <h1>{post.frontmatter.title}</h1>
-          <p>{post.frontmatter.date}</p>
+          <h2>{post.frontmatter.title}</h2>
+          <PostMeta date={post.frontmatter.date} />
         </header>
         <section dangerouslySetInnerHTML={{ __html: post.html }} />
       </article>

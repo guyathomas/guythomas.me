@@ -37,13 +37,17 @@ const Description = styled.div`
   margin-top: 1rem;
 `
 
-export const Bio = () => (
+export const Bio = ({ small = false }) => (
   <BioContainer>
     <Title>Guy Thomas</Title>
-    <Role>Software Engineer</Role>
-    <Description>
-      I love tinkering, teaching and exploring the outdoors.
-    </Description>
+    {!small && (
+      <>
+        <Role>Software Engineer</Role>
+        <Description>
+          I love tinkering, teaching and exploring the outdoors.
+        </Description>
+      </>
+    )}
   </BioContainer>
 )
 

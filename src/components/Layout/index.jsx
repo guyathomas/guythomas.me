@@ -37,7 +37,7 @@ export const Layout = ({ children, mobileProps }) => {
     return () => window.removeEventListener("resize", debouncedSetScreen)
   }, [debouncedSetScreen])
 
-  if (isLoading || typeof isMobile !== "boolean") return <div>Loading</div>
+  if (isLoading || typeof isMobile !== "boolean") return null
   const layoutMeta = { theme, screenSize, isMobile }
   const LayoutForPlatform = isMobile ? MobileLayout : DesktopLayout;
   return (

@@ -10,10 +10,10 @@ const Nav = styled.nav`
 `
 
 const HamburgerWrapper = styled.div`
-    height: 3.4rem;
+    height: 3.8rem;
     display: flex;
     justify-content: flex-end;
-    padding: 1.3rem 1rem 0;
+    padding: 1.8rem 1rem 0;
     & svg {
         height: 100%;
         width: unset;
