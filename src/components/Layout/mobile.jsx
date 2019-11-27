@@ -51,7 +51,7 @@ const InitialCardOffset = styled.div`
   scroll-snap-align: start;
 `
 
-export const MobileLayout = ({ children, mobileProps = {} }) => {
+export const MobileLayout = ({ children, focusedView }) => {
   const [allowCardScrolling, setAllowCardScrolling] = useState(false)
   const [ hasLoaded, setHasLoaded ] = useState(false);
   const cardWrapperEl = useRef(null)
@@ -65,7 +65,7 @@ export const MobileLayout = ({ children, mobileProps = {} }) => {
   }, 100)
 
   useEffect(() => {
-    if ( cardWrapperEl.current && mobileProps.startExpanded ){
+    if ( cardWrapperEl.current && focusedView ){
       cardWrapperEl.current.scrollIntoView()
     }
   }, [cardWrapperEl.current])

@@ -25,6 +25,7 @@ const Portrait = styled.div`
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
+  filter: ${props => props.blur ? 'blur(5px)' : 'none'};
 `
 
 const BioWrapper = styled.div`
@@ -34,20 +35,23 @@ const BioWrapper = styled.div`
 
 const Panel = styled.div`
   display: flex;
-  flex: 1 1 0;
+  flex-grow: ${props => (props.grow ? 3 : 1)};
+  flex-basis: 0;
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
   position: relative;
+  overflow: hidden;
 `
 
 const PostWrapper = styled.div`
-  padding: 1rem 2rem;
+  padding: 1rem 2rem 1rem 4rem;
   overflow-y: scroll;
   height: 100%;
+  max-width: 40rem;
 `
 
-export const DesktopLayout = ({ children }) => {
+export const DesktopLayout = ({ children, focusedView = true }) => {
   const {
     theme: { breakpoints },
   } = useContext(LayoutContext)
@@ -56,15 +60,15 @@ export const DesktopLayout = ({ children }) => {
     <Main maxWidth={breakpoints.max}>
       <SEO title="All posts" />
       <Panel>
-        <Portrait />
-        <BioWrapper>
-          <Bio />
-        </BioWrapper>
+          <Portrait blur={focusedView} />
+        {!focusedView && (
+          <BioWrapper>
+            <Bio />
+          </BioWrapper>
+        )}
       </Panel>
-      <Panel>
-        <PostWrapper>
-          {children}
-        </PostWrapper>
+      <Panel grow={focusedView}>
+        <PostWrapper>{children}</PostWrapper>
         <SocialLine orientation="vertical" />
       </Panel>
     </Main>

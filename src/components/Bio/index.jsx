@@ -50,5 +50,3 @@ export const Bio = ({ small = false }) => (
     )}
   </BioContainer>
 )
-
-// export default Bio

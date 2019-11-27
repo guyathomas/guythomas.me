@@ -16,7 +16,7 @@ const theme = {
 
 export const LayoutContext = createContext(theme)
 
-export const Layout = ({ children, mobileProps }) => {
+export const Layout = ({ children, focusedView = false }) => {
   const [screenSize, setScreenSize] = useState({})
   const [isLoading, setIsLoading] = useState(true)
   const [isMobile, setIsMobile] = useState(null)
@@ -42,7 +42,7 @@ export const Layout = ({ children, mobileProps }) => {
   const LayoutForPlatform = isMobile ? MobileLayout : DesktopLayout;
   return (
     <LayoutContext.Provider value={layoutMeta}>
-      <LayoutForPlatform mobileProps={mobileProps}>
+      <LayoutForPlatform focusedView={focusedView}>
         {typeof children === "function" ? children(layoutMeta) : children}
       </LayoutForPlatform>
     </LayoutContext.Provider>

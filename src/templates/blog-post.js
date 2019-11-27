@@ -15,7 +15,7 @@ const BlogTitle = styled.h2`
 
 export default ({ data: { markdownRemark: post, data, title: siteTitle, location }, ...rest}) => {
   return (
-    <Layout mobileProps={{ startExpanded: true }}>
+    <Layout focusedView>
       <SEO
         title={post.frontmatter.title}
         description={post.frontmatter.description || post.excerpt}
