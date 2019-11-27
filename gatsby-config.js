@@ -74,6 +74,14 @@ module.exports = {
         pathToConfigModule: `src/utils/typography`,
       },
     },
-    `gatsby-plugin-emotion`
+    `gatsby-plugin-emotion`,
+    {
+      resolve: "gatsby-plugin-react-svg",
+      options: {
+        rule: {
+          include: /icons\/\w+\.svg$/ // See below to configure properly
+        }
+      }
+    }
   ],
 }

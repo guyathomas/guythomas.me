@@ -7,6 +7,7 @@ import debounce from "lodash/debounce"
 import { Post } from "../components/Post"
 import { Bio } from "../components/Bio"
 import { Layout } from "../components/Layout"
+import { SocialLine } from "../components/SocialLine"
 import { SEO } from "../components/Seo"
 
 const HEADER_HEIGHT = "100px"
@@ -61,6 +62,7 @@ const BlogIndex = ({ data }) => {
       <CardWrapper ref={cardWrapperEl}>
         <Card allowScrolling={allowCardScrolling}>
           <Bio />
+          <SocialLine />
           <main>
             {posts.map(post => (
               <Post key={post.node.fields.slug} {...post} />

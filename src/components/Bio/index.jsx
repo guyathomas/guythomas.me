@@ -13,7 +13,6 @@ const BioContainer = styled.div`
   flex-direction: column;
   align-items: center;
   text-align: center;
-  border-bottom: 1px solid gray;
 `
 
 export const Bio = () => (
