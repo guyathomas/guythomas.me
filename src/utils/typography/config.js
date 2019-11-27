@@ -71,10 +71,8 @@ const theme = {
       fontStyle: "italic",
     },
     a: {
-      boxShadow: "0 1px 0 0 currentColor",
       color: "#007acc",
       textDecoration: "none",
-      boxShadow: "none",
     },
     "a:hover,a:active": {
       boxShadow: "none",

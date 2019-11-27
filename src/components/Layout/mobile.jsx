@@ -4,10 +4,6 @@ import result from "lodash/result"
 import debounce from "lodash/debounce"
 
 import { Header } from '../Header';
-import { PostSnippit } from "../PostSnippit"
-import { Bio } from "../Bio"
-import { SocialLine } from "../SocialLine"
-import { SEO } from "../Seo"
 import "./style.css"
 
 const Main = styled.main`
@@ -55,7 +51,7 @@ const InitialCardOffset = styled.div`
   scroll-snap-align: start;
 `
 
-export const MobileLayout = ({ data, children, startExpanded = false }) => {
+export const MobileLayout = ({ children, mobileProps = {} }) => {
   const [allowCardScrolling, setAllowCardScrolling] = useState(false)
   const [ hasLoaded, setHasLoaded ] = useState(false);
   const cardWrapperEl = useRef(null)
@@ -69,7 +65,7 @@ export const MobileLayout = ({ data, children, startExpanded = false }) => {
   }, 100)
 
   useEffect(() => {
-    if ( cardWrapperEl.current && startExpanded ){
+    if ( cardWrapperEl.current && mobileProps.startExpanded ){
       cardWrapperEl.current.scrollIntoView()
     }
   }, [cardWrapperEl.current])

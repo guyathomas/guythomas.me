@@ -1,14 +1,12 @@
 import React from "react"
 import { graphql } from "gatsby"
 
-import { MobileLayout } from "../components/Layout"
+import { Layout } from "../components/Layout"
 import { SEO } from "../components/Seo"
 
-export default ({
-  data: { markdownRemark: post, data, title: siteTitle, location },
-}) => {
+export default ({ data: { markdownRemark: post, data, title: siteTitle, location }, ...rest}) => {
   return (
-    <MobileLayout startExpanded>
+    <Layout mobileProps={{ startExpanded: true }}>
       <SEO
         title={post.frontmatter.title}
         description={post.frontmatter.description || post.excerpt}
@@ -20,7 +18,7 @@ export default ({
         </header>
         <section dangerouslySetInnerHTML={{ __html: post.html }} />
       </article>
-    </MobileLayout>
+    </Layout>
   )
 }
 

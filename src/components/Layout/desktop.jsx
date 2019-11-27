@@ -1,12 +1,12 @@
-import React, { useState, useRef, useContext } from "react"
+import React, { useContext } from "react"
 import styled from "@emotion/styled"
 
 import { PostSnippit } from "../PostSnippit"
 import { Bio } from "../Bio"
 import { SocialLine } from "../SocialLine"
 import { SEO } from "../Seo"
-import { ThemeContext } from "../../pages"
 import "./style.css"
+import { LayoutContext } from "."
 
 const Main = styled.main`
   height: 100vh;
@@ -47,11 +47,10 @@ const PostWrapper = styled.div`
   height: 100%;
 `
 
-export const DesktopLayout = ({ data }) => {
-  const posts = data.allMarkdownRemark.edges
+export const DesktopLayout = ({ children }) => {
   const {
     theme: { breakpoints },
-  } = useContext(ThemeContext)
+  } = useContext(LayoutContext)
 
   return (
     <Main maxWidth={breakpoints.max}>
@@ -64,9 +63,7 @@ export const DesktopLayout = ({ data }) => {
       </Panel>
       <Panel>
         <PostWrapper>
-          {posts.map(post => (
-            <PostSnippit key={post.node.fields.slug} {...post} />
-          ))}
+          {children}
         </PostWrapper>
         <SocialLine orientation="vertical" />
       </Panel>
