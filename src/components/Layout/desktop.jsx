@@ -1,7 +1,6 @@
 import React, { useContext } from "react"
 import styled from "@emotion/styled"
 
-import { PostSnippit } from "../PostSnippit"
 import { Bio } from "../Bio"
 import { SocialLine } from "../SocialLine"
 import { SEO } from "../Seo"

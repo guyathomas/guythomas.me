@@ -10,7 +10,7 @@ const MetaWrapper = styled.h4`
 
 export const PostMeta = ({ date, category = 'Work' }) => (
   <MetaWrapper>
-    <date>{date}</date>
+    <span>{date}</span>
     {true && <span> - {category}</span>}
   </MetaWrapper>
 )

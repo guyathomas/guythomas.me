@@ -4,8 +4,6 @@ import styled from "@emotion/styled"
 import LinkedIn from "./icons/linkedin.svg"
 import Github from "./icons/github.svg"
 import Medium from "./icons/medium.svg"
-// import Instagram from './icons/instagram.svg';
-// import TwitterIcon from './icons/twitter.svg';
 
 const IconWrapper = styled.span`
   width: 4rem;

@@ -68,11 +68,11 @@ export const MobileLayout = ({ children, focusedView }) => {
     if ( cardWrapperEl.current && focusedView ){
       cardWrapperEl.current.scrollIntoView()
     }
-  }, [cardWrapperEl.current])
+  }, [cardWrapperEl.current, focusedView])
 
   useEffect(() => {
     setHasLoaded(true)
-  })
+  }, [])
   return (
     <Main onScroll={handleScroll}>
       <Header />
