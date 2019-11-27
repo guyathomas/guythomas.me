@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react"
+import React, { useState, useRef, useEffect } from "react"
 import styled from "@emotion/styled"
 import result from "lodash/result"
 import debounce from "lodash/debounce"
@@ -55,7 +55,7 @@ const InitialCardOffset = styled.div`
   scroll-snap-align: start;
 `
 
-export const MobileLayout = ({ data, children }) => {
+export const MobileLayout = ({ data, children, startExpanded = false }) => {
   const [allowCardScrolling, setAllowCardScrolling] = useState(false)
   const cardWrapperEl = useRef(null)
 
@@ -66,6 +66,12 @@ export const MobileLayout = ({ data, children }) => {
       ? setAllowCardScrolling(true)
       : setAllowCardScrolling(false)
   }, 100)
+
+  useEffect(() => {
+    if ( cardWrapperEl.current && startExpanded ){
+      cardWrapperEl.current.scrollIntoView()
+    }
+  }, [cardWrapperEl.current])
   return (
     <Main onScroll={handleScroll}>
       <Header />

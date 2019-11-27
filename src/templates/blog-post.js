@@ -8,7 +8,7 @@ export default ({
   data: { markdownRemark: post, data, title: siteTitle, location },
 }) => {
   return (
-    <MobileLayout>
+    <MobileLayout startExpanded>
       <SEO
         title={post.frontmatter.title}
         description={post.frontmatter.description || post.excerpt}
