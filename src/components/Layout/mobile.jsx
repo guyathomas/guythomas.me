@@ -9,8 +9,6 @@ import { SocialLine } from "../SocialLine"
 import { SEO } from "../Seo"
 import "./style.css"
 
-const HEADER_HEIGHT = "6rem"
-
 const Main = styled.main`
   scroll-snap-type: y mandatory;
   height: 100vh;
@@ -33,7 +31,7 @@ const Card = styled.div`
   border-radius: 1rem 1rem 0 0;
   padding: 1rem 0.5rem;
   overflow-y: ${props => (props.allowScrolling ? "scroll" : "hidden")};
-  height: calc(100vh - ${HEADER_HEIGHT});
+  height: 100vh;
   &::after {
     content: '';
     height: 3px;
@@ -49,11 +47,10 @@ const Card = styled.div`
 
 const CardWrapper = styled.div`
   scroll-snap-align: start;
-  padding-top: ${HEADER_HEIGHT};
 `
 
 const InitialCardOffset = styled.div`
-  height: 50vh;
+  height: 70vh;
   scroll-snap-align: start;
 `
 
