@@ -29,6 +29,7 @@ export default props => {
               {posts.map(post => (
                 <PostSnippit key={post.node.fields.slug} {...post} />
               ))}
+              <SocialLine orientation="vertical"/>
             </main>
           </>
         )

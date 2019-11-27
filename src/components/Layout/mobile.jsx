@@ -3,7 +3,7 @@ import styled from "@emotion/styled"
 import result from "lodash/result"
 import debounce from "lodash/debounce"
 
-import { Header } from '../Header';
+import { Header } from "../Header"
 import "./style.css"
 
 const Main = styled.main`
@@ -30,7 +30,7 @@ const Card = styled.div`
   overflow-y: ${props => (props.allowScrolling ? "scroll" : "hidden")};
   height: 100vh;
   &::after {
-    content: '';
+    content: "";
     height: 3px;
     width: 3rem;
     background-color: lightgray;
@@ -53,7 +53,7 @@ const InitialCardOffset = styled.div`
 
 export const MobileLayout = ({ children, focusedView }) => {
   const [allowCardScrolling, setAllowCardScrolling] = useState(false)
-  const [ hasLoaded, setHasLoaded ] = useState(false);
+  const [hasLoaded, setHasLoaded] = useState(false)
   const cardWrapperEl = useRef(null)
 
   const handleScroll = debounce(() => {
@@ -65,10 +65,10 @@ export const MobileLayout = ({ children, focusedView }) => {
   }, 100)
 
   useEffect(() => {
-    if ( cardWrapperEl.current && focusedView ){
+    if (cardWrapperEl.current && focusedView) {
       cardWrapperEl.current.scrollIntoView()
     }
-  }, [cardWrapperEl.current, focusedView])
+  }, [cardWrapperEl, focusedView])
 
   useEffect(() => {
     setHasLoaded(true)
@@ -76,12 +76,10 @@ export const MobileLayout = ({ children, focusedView }) => {
   return (
     <Main onScroll={handleScroll}>
       <Header />
-      { hasLoaded && <Portrait />}
+      {hasLoaded && <Portrait />}
       <InitialCardOffset />
       <CardWrapper ref={cardWrapperEl}>
-        <Card allowScrolling={allowCardScrolling}>
-          { children }
-        </Card>
+        <Card allowScrolling={allowCardScrolling}>{children}</Card>
       </CardWrapper>
     </Main>
   )

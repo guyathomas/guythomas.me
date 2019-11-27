@@ -1,11 +1,14 @@
-import React, { useContext } from "react"
+import React, { useContext, useRef } from "react"
 import styled from "@emotion/styled"
+import throttle from "lodash/throttle"
 
 import { Bio } from "../Bio"
 import { SocialLine } from "../SocialLine"
 import { SEO } from "../Seo"
 import "./style.css"
 import { LayoutContext } from "."
+import { useEffect } from "react"
+import { useState } from "react"
 
 const Main = styled.main`
   height: 100vh;
@@ -24,7 +27,7 @@ const Portrait = styled.div`
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
-  filter: ${props => props.blur ? 'blur(5px)' : 'none'};
+  filter: ${props => (props.blur ? "blur(5px)" : "none")};
 `
 
 const BioWrapper = styled.div`
@@ -55,12 +58,20 @@ export const DesktopLayout = ({ children, focusedView = true }) => {
   const {
     theme: { breakpoints },
   } = useContext(LayoutContext)
+  const articleRef = useRef(null)
+  const [scrolledPastHeader, setScrolledPastHeader] = useState(false)
+
+  const onScroll = throttle(() => {
+    if (!articleRef.current) return
+    const { top } = articleRef.current.getBoundingClientRect()
+    top < 0 ? setScrolledPastHeader(true) : setScrolledPastHeader(false)
+  }, 100)
 
   return (
     <Main maxWidth={breakpoints.max}>
       <SEO title="All posts" />
       <Panel>
-          <Portrait blur={focusedView} />
+        <Portrait blur={focusedView} />
         {!focusedView && (
           <BioWrapper>
             <Bio />
@@ -68,8 +79,12 @@ export const DesktopLayout = ({ children, focusedView = true }) => {
         )}
       </Panel>
       <Panel grow={focusedView}>
-        <PostWrapper>{children}</PostWrapper>
-        <SocialLine orientation="vertical" />
+        <PostWrapper onScroll={onScroll}>
+          {React.Children.map(children, child =>
+            React.cloneElement(child, { ref: articleRef })
+          )}
+        </PostWrapper>
+        <SocialLine orientation="vertical" visible={scrolledPastHeader} />
       </Panel>
     </Main>
   )

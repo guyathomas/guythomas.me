@@ -43,6 +43,8 @@ const VerticalLineLayout = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  transition: opacity 0.3s;
+  opacity: ${props => (props.visible ? 1 : 0)};
 `
 
 const HorizontalLineLayout = styled.div`
@@ -69,20 +71,20 @@ const socialLinks = {
 }
 
 const HorizontalLine = styled.div`
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid lightgray;
   width: 100%;
 `
 
 const VerticalLine = styled.div`
-  border-right: 1px solid black;
+  border-right: 1px solid lightgray;
   height: 100%;
   flex-shrink: ${props => (props.long ? 1 : 2)};
 `
 
-export const SocialLine = ({ orientation = "horizontal" }) => {
+export const SocialLine = ({ orientation = "horizontal", visible = true }) => {
   if (orientation === "vertical") {
     return (
-      <VerticalLineLayout>
+      <VerticalLineLayout visible={visible}>
         <VerticalLine />
         {Object.entries(socialLinks).map(([name, { Icon, url }]) => (
           <IconWrapper key={name} href={url} orientation={orientation}>
