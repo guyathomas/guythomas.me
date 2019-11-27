@@ -4,7 +4,7 @@ import result from "lodash/result"
 import debounce from "lodash/debounce"
 
 import { Header } from '../Header';
-import { Post } from "../Post"
+import { PostSnippit } from "../PostSnippit"
 import { Bio } from "../Bio"
 import { SocialLine } from "../SocialLine"
 import { SEO } from "../Seo"
@@ -79,7 +79,7 @@ export const MobileLayout = ({ data }) => {
           <SocialLine />
           <main>
             {posts.map(post => (
-              <Post key={post.node.fields.slug} {...post} />
+              <PostSnippit key={post.node.fields.slug} {...post} />
             ))}
           </main>
         </Card>

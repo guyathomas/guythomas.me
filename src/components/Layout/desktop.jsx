@@ -1,7 +1,7 @@
 import React, { useState, useRef, useContext } from "react"
 import styled from "@emotion/styled"
 
-import { Post } from "../Post"
+import { PostSnippit } from "../PostSnippit"
 import { Bio } from "../Bio"
 import { SocialLine } from "../SocialLine"
 import { SEO } from "../Seo"
@@ -65,7 +65,7 @@ export const DesktopLayout = ({ data }) => {
       <Panel>
         <PostWrapper>
           {posts.map(post => (
-            <Post key={post.node.fields.slug} {...post} />
+            <PostSnippit key={post.node.fields.slug} {...post} />
           ))}
         </PostWrapper>
         <SocialLine orientation="vertical" />

@@ -28,7 +28,7 @@ const Article = styled.article`
   margin-top: 2rem;
 `
 
-export const Post = ({ node }) => {
+export const PostSnippit = ({ node }) => {
   const title = node.frontmatter.title || node.fields.slug
   return (
     <Article key={node.fields.slug}>
