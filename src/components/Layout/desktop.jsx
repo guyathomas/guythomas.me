@@ -54,7 +54,7 @@ export const DesktopLayout = ({ data }) => {
   } = useContext(ThemeContext)
 
   return (
-    <Main maxWidth={breakpoints.xl}>
+    <Main maxWidth={breakpoints.max}>
       <SEO title="All posts" />
       <Panel>
         <Portrait />

@@ -11,6 +11,7 @@ const theme = {
     md: 768,
     lg: 992,
     xl: 1200,
+    max: 1440,
   },
 }
 
