@@ -55,8 +55,7 @@ const InitialCardOffset = styled.div`
   scroll-snap-align: start;
 `
 
-export const MobileLayout = ({ data }) => {
-  const posts = data.allMarkdownRemark.edges
+export const MobileLayout = ({ data, children }) => {
   const [allowCardScrolling, setAllowCardScrolling] = useState(false)
   const cardWrapperEl = useRef(null)
 
@@ -69,19 +68,12 @@ export const MobileLayout = ({ data }) => {
   }, 100)
   return (
     <Main onScroll={handleScroll}>
-      <SEO title="All posts" />
       <Header />
       <Portrait />
       <InitialCardOffset />
       <CardWrapper ref={cardWrapperEl}>
         <Card allowScrolling={allowCardScrolling}>
-          <Bio />
-          <SocialLine />
-          <main>
-            {posts.map(post => (
-              <PostSnippit key={post.node.fields.slug} {...post} />
-            ))}
-          </main>
+          { children }
         </Card>
       </CardWrapper>
     </Main>

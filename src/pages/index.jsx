@@ -1,8 +1,11 @@
-import React, { useEffect, createContext, useState} from "react"
-import debounce from 'lodash/debounce';
+import React, { useEffect, createContext, useState } from "react"
+import debounce from "lodash/debounce"
 
+import { PostSnippit } from "../components/PostSnippit"
+import { Bio } from "../components/Bio"
+import { SocialLine } from "../components/SocialLine"
+import { SEO } from "../components/Seo"
 import { MobileLayout, DesktopLayout } from "../components/Layout"
-
 
 const theme = {
   breakpoints: {
@@ -27,22 +30,36 @@ export default props => {
   }, [])
 
   const debouncedSetScreen = debounce(() => {
-    const { screen } = window;
+    const { screen } = window
     setScreenSize(screen)
     setIsMobile(screen.width < theme.breakpoints.md)
   }, 100)
 
   useEffect(() => {
-    debouncedSetScreen();
+    debouncedSetScreen()
     window.addEventListener("resize", debouncedSetScreen)
     return () => window.removeEventListener("resize", debouncedSetScreen)
   }, [debouncedSetScreen])
 
-  if (isLoading || typeof isMobile !== 'boolean') return <div>Loading</div>
+  if (isLoading || typeof isMobile !== "boolean") return <div>Loading</div>
+  const posts = props.data.allMarkdownRemark.edges
   
   return (
     <ThemeContext.Provider value={{ theme, screenSize, isMobile }}>
-      { isMobile ? <MobileLayout {...props} /> : <DesktopLayout {...props} />}
+      {isMobile ? (
+        <MobileLayout {...props}>
+          <SEO title="All posts" />
+          <Bio />
+          <SocialLine />
+          <main>
+            {posts.map(post => (
+              <PostSnippit key={post.node.fields.slug} {...post} />
+            ))}
+          </main>
+        </MobileLayout>
+      ) : (
+        <DesktopLayout {...props} />
+      )}
     </ThemeContext.Provider>
   )
 }

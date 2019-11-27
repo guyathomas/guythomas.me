@@ -1,29 +1,28 @@
 import React from "react"
-import { Link, graphql } from "gatsby"
+import { graphql } from "gatsby"
 
-import { Layout } from "../components/layout"
-import { SEO } from "../components/seo"
+import { MobileLayout } from "../components/Layout"
+import { SEO } from "../components/Seo"
 
-export const BlogPostTemplate = ({
-  markdownRemark: post,
-  data,
-  title: siteTitle,
-  location,
-}) => (
-  <Layout location={location} title={siteTitle}>
-    <SEO
-      title={post.frontmatter.title}
-      description={post.frontmatter.description || post.excerpt}
-    />
-    <article>
-      <header>
-        <h1>{post.frontmatter.title}</h1>
-        <p>{post.frontmatter.date}</p>
-      </header>
-      <section dangerouslySetInnerHTML={{ __html: post.html }} />
-    </article>
-  </Layout>
-)
+export default ({
+  data: { markdownRemark: post, data, title: siteTitle, location },
+}) => {
+  return (
+    <MobileLayout>
+      <SEO
+        title={post.frontmatter.title}
+        description={post.frontmatter.description || post.excerpt}
+      />
+      <article>
+        <header>
+          <h1>{post.frontmatter.title}</h1>
+          <p>{post.frontmatter.date}</p>
+        </header>
+        <section dangerouslySetInnerHTML={{ __html: post.html }} />
+      </article>
+    </MobileLayout>
+  )
+}
 
 export const pageQuery = graphql`
   query BlogPostBySlug($slug: String!) {
