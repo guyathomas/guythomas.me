@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from "react"
+import React, { useContext, useRef, useState } from "react"
 import styled from "@emotion/styled"
 import throttle from "lodash/throttle"
 
@@ -7,8 +7,6 @@ import { SocialLine } from "../SocialLine"
 import { SEO } from "../Seo"
 import "./style.css"
 import { LayoutContext } from "."
-import { useEffect } from "react"
-import { useState } from "react"
 
 const Main = styled.main`
   height: 100vh;
