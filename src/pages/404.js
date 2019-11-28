@@ -3,7 +3,7 @@ import { graphql } from "gatsby"
 
 import { SEO } from "../components/Seo"
 
-export const NotFoundPage =  () =>(
+export default () =>(
   <div>
     <SEO title="404: Not Found" />
     <h1>Not Found</h1>
