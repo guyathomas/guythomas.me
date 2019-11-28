@@ -8,9 +8,9 @@ const MetaWrapper = styled.h4`
   font-size: 80%;
 `
 
-export const PostMeta = ({ date, category = 'Work' }) => (
+export const PostMeta = ({ date, category }) => (
   <MetaWrapper>
     <span>{date}</span>
-    {true && <span> - {category}</span>}
+    {category && <span> - {category}</span>}
   </MetaWrapper>
 )
