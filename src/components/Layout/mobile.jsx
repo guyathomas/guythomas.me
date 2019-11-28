@@ -6,9 +6,15 @@ import debounce from "lodash/debounce"
 import { Header } from "../Header"
 import "./style.css"
 
+const VHWithFallback = ( units = 0 ) => `
+  height: ${units}vh; /* Fallback for browsers that do not support Custom Properties */
+  height: calc(var(--vh, 1vh) * ${units});
+`
+
+
 const Main = styled.main`
   scroll-snap-type: y mandatory;
-  height: 100vh;
+  height: ${VHWithFallback(100)};
   overflow-y: scroll;
 `
 
@@ -17,7 +23,7 @@ const Portrait = styled.div`
   background-image: url("https://res.cloudinary.com/dqvlfpaev/image/upload/v1574619573/cropped-black-and-white-portrait_cir0bd.png");
   background-repeat: no-repeat;
   width: 100%;
-  height: 80vh;
+  height: ${VHWithFallback(80)};
   background-size: cover;
   background-position: center;
 `
@@ -28,7 +34,7 @@ const Card = styled.div`
   border-radius: 1rem 1rem 0 0;
   padding: 1rem 0.5rem;
   overflow-y: ${props => (props.allowScrolling ? "scroll" : "hidden")};
-  height: 100vh;
+  height: ${VHWithFallback(100)};
   &::after {
     content: "";
     height: 3px;
@@ -47,7 +53,7 @@ const CardWrapper = styled.div`
 `
 
 const InitialCardOffset = styled.div`
-  height: 70vh;
+  height: ${VHWithFallback(70)};
   scroll-snap-align: start;
 `
 
@@ -69,6 +75,19 @@ export const MobileLayout = ({ children, focusedView }) => {
       cardWrapperEl.current.scrollIntoView()
     }
   }, [cardWrapperEl, focusedView])
+
+  useEffect(() => {
+    const setViewHeightVariable = debounce(() => {
+      const vh = window.innerHeight * 0.01
+      // Set VH CSS variable so that 100vh will take mobile nav bars into consideration
+      document.documentElement.style.setProperty("--vh", `${vh}px`)
+    }, 100)
+
+    setViewHeightVariable()
+    window.addEventListener("resize", setViewHeightVariable)
+
+    return () => window.removeEventListener("resize", setViewHeightVariable)
+  }, [])
 
   useEffect(() => {
     setHasLoaded(true)
