@@ -44,7 +44,7 @@ export const Layout = ({ children, focusedView = false }) => {
   return (
     <LayoutContext.Provider value={layoutMeta}>
       <LayoutForPlatform focusedView={focusedView}>
-        <GlobalStyles />
+        {/* <GlobalStyles /> */}
         {typeof children === "function" ? children(layoutMeta) : children}
       </LayoutForPlatform>
     </LayoutContext.Provider>

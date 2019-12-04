@@ -21,7 +21,7 @@
     "gatsby-plugin-react-svg": "^2.1.2",
     "gatsby-plugin-sharp": "^2.3.4",
     "gatsby-plugin-typography": "^2.3.18",
-    "gatsby-remark-autolink-headers": "^2.1.19",
+    "gatsby-remark-autolink-headers": "github:guyathomas/gatsby-remark-autolink-headers#master",
     "gatsby-remark-copy-linked-files": "^2.1.31",
     "gatsby-remark-images": "^3.1.34",
     "gatsby-remark-prismjs": "^3.3.25",
