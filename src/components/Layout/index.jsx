@@ -2,6 +2,7 @@ import React, { createContext, useState, useEffect } from "react"
 import debounce from "lodash/debounce"
 import { MobileLayout } from "./mobile"
 import { DesktopLayout } from "./desktop"
+import GlobalStyles from './global-styles';
 
 const theme = {
   breakpoints: {
@@ -43,6 +44,7 @@ export const Layout = ({ children, focusedView = false }) => {
   return (
     <LayoutContext.Provider value={layoutMeta}>
       <LayoutForPlatform focusedView={focusedView}>
+        <GlobalStyles />
         {typeof children === "function" ? children(layoutMeta) : children}
       </LayoutForPlatform>
     </LayoutContext.Provider>
