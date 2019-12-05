@@ -2,69 +2,46 @@ import React from "react"
 import styled from "@emotion/styled"
 import { Link } from "gatsby"
 
-import Hamburger from "./icons/hamburger.svg"
-import Cross from "./icons/cross.svg"
-import { useState } from "react"
-
 const Nav = styled.nav`
   position: absolute;
   width: 100%;
-  z-index: 1;
 `
 
-const MenuPositioner = styled.div`
-  height: 3.8rem;
+const LinkList = styled.ul`
   display: flex;
-  justify-content: flex-end;
-  padding: 1.8rem 1rem 0;
-  & svg {
-    height: 100%;
-    width: unset;
-  }
-`
-
-const MenuList = styled.ul`
-  position: absolute;
-  left: 0;
-  top: 0;
-  right: 0;
+  padding: 1rem;
+  justify-content: space-around;
   margin: 0;
-  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.5);
-  background-color: white;
-  border-radius: 1rem 1rem 0 0;
-  display: ${props => (props.isExpanded ? "initial" : 'none')}
+  color: white;
+  flex-wrap: wrap;
 `
 
 const MenuListItem = styled.li`
-  width: 100%;
   margin: 0;
   list-style: none;
-  height: 5rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 2.5rem;
+  flex-shrink: 0;
+  & a {
+    color: white;
+  }
+  & .active {
+    border-bottom: 2px solid white;
+  }
 `
 
 export const Header = () => {
-  const [isExpanded, setIsExpanded] = useState(false)
-  const MenuToggler = isExpanded ? Cross : Hamburger
-  const MenuItems = [{ label: "Home", path: "/" }]
-  const toggleIsExpanded = () => setIsExpanded(!isExpanded)
+  const menuItems = [{ label: "Home", path: "/" }]
+  // menuItems.push({ label: "Blog", path: "/blog" }, { label: "Resume", path: "/resume" }, { label: "Now", path: "/now" })
   return (
     <Nav>
-      <MenuPositioner>
-        <MenuToggler onClick={toggleIsExpanded} style={{ zIndex: 1 }} />
-        <MenuList isExpanded={isExpanded}>
-          {MenuItems.map(({ label, path }) => (
+      <LinkList>
+          {menuItems.map(({ label, path }) => (
             <MenuListItem>
-              <Link key={label} to={path}>
+              <Link key={label} to={path} activeClassName="active">
                 {label}
               </Link>
             </MenuListItem>
           ))}
-        </MenuList>
-      </MenuPositioner>
+      </LinkList>
     </Nav>
   )
 }

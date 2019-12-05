@@ -19,6 +19,7 @@ const Main = styled.main`
 `
 
 const Portrait = styled.div`
+  z-index: -1;
   position: fixed;
   background-image: url("https://res.cloudinary.com/dqvlfpaev/image/upload/v1574619573/cropped-black-and-white-portrait_cir0bd.png");
   background-repeat: no-repeat;
