@@ -2,14 +2,9 @@ import React from "react"
 import styled from "@emotion/styled"
 import { Link } from "gatsby"
 
-const Nav = styled.nav`
-  position: absolute;
-  width: 100%;
-`
-
 const LinkList = styled.ul`
   display: flex;
-  padding: 1rem;
+  padding: 2rem 1rem;
   justify-content: space-around;
   margin: 0;
   color: white;
@@ -20,19 +15,17 @@ const MenuListItem = styled.li`
   margin: 0;
   list-style: none;
   flex-shrink: 0;
+  font-size: 1.5rem;
   & a {
     color: white;
   }
-  & .active {
-    border-bottom: 2px solid white;
-  }
 `
-
-export const Header = () => {
-  const menuItems = [{ label: "Home", path: "/" }]
-  // menuItems.push({ label: "Blog", path: "/blog" }, { label: "Resume", path: "/resume" }, { label: "Now", path: "/now" })
+// horizontal, verticalMiddle, horizontalTop
+export const Header = ({ orientationAndPosition = 'horizontal' }) => {
+  const menuItems = [{ label: "Home", path: "/" }, { label: "Blog", path: "/blog" }]
+  // menuItems.push({ label: "Resume", path: "/resume" }, { label: "Now", path: "/now" })
   return (
-    <Nav>
+    <nav>
       <LinkList>
           {menuItems.map(({ label, path }) => (
             <MenuListItem>
@@ -42,6 +35,6 @@ export const Header = () => {
             </MenuListItem>
           ))}
       </LinkList>
-    </Nav>
+    </nav>
   )
 }

@@ -4,6 +4,7 @@ import throttle from "lodash/throttle"
 
 import { Bio } from "../Bio"
 import { SocialLine } from "../SocialLine"
+import { Header } from "../Header"
 import { SEO } from "../Seo"
 import "./style.css"
 import { LayoutContext } from "."
@@ -53,10 +54,22 @@ const PostWrapper = styled.div`
   max-width: 40rem;
 `
 
-export const DesktopLayout = ({
-  children,
-  focusMode = false,
-}) => {
+const HeaderWrapper = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  ${props => props.focusMode ? `
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  & ul {
+    flex-direction: column;
+  }
+  ` : 0 }
+`
+
+export const DesktopLayout = ({ children, focusMode = false }) => {
   const {
     theme: { breakpoints },
   } = useContext(LayoutContext)
@@ -74,6 +87,9 @@ export const DesktopLayout = ({
       <SEO title="All posts" />
       <Panel>
         <Portrait blur={focusMode} />
+        <HeaderWrapper focusMode={focusMode}>
+          <Header orientation={focusMode ? "vertical" : "horizontal"} />
+        </HeaderWrapper>
         {!focusMode && (
           <BioWrapper>
             <Bio />
