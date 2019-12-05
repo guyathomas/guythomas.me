@@ -61,21 +61,33 @@ const InitialCardOffset = styled.div`
 export const MobileLayout = ({ children, focusedView }) => {
   const [allowCardScrolling, setAllowCardScrolling] = useState(false)
   const [hasLoaded, setHasLoaded] = useState(false)
-  const cardWrapperEl = useRef(null)
+  const mainEl = useRef(null);
+  const cardEl = useRef(null);
 
   const handleScroll = debounce(() => {
-    const clientRect = result(cardWrapperEl, "current.getBoundingClientRect")
+    const clientRect = result(cardEl, "current.getBoundingClientRect")
     if (!clientRect) return
     clientRect.top <= 1
       ? setAllowCardScrolling(true)
       : setAllowCardScrolling(false)
   }, 100)
 
+  const minimizeCard = () => {
+    if (!mainEl || !mainEl.current) return;
+    if (!cardEl || !cardEl.current) return;
+    const topSmoothly = { top: 0, left: 0, behavior: 'smooth'};
+    cardEl.current.scrollTo(topSmoothly) 
+    mainEl.current.scrollTo(topSmoothly)
+  }
+  
+  // TODO: Remove this - testing only
+  // window.minimizeCard = minimizeCard;
+
   useEffect(() => {
-    if (cardWrapperEl.current && focusedView) {
-      cardWrapperEl.current.scrollIntoView()
+    if (cardEl.current && focusedView) {
+      cardEl.current.scrollIntoView()
     }
-  }, [cardWrapperEl, focusedView])
+  }, [focusedView, cardEl])
 
   useEffect(() => {
     const setViewHeightVariable = debounce(() => {
@@ -94,12 +106,12 @@ export const MobileLayout = ({ children, focusedView }) => {
     setHasLoaded(true)
   }, [])
   return (
-    <Main onScroll={handleScroll}>
+    <Main onScroll={handleScroll} ref={mainEl}>
       <Header />
       {hasLoaded && <Portrait />}
       <InitialCardOffset />
-      <CardWrapper ref={cardWrapperEl}>
-        <Card allowScrolling={allowCardScrolling}>{children}</Card>
+      <CardWrapper>
+        <Card allowScrolling={allowCardScrolling} ref={cardEl}>{children}</Card>
       </CardWrapper>
     </Main>
   )
