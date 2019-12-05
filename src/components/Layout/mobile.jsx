@@ -1,16 +1,17 @@
 import React, { useState, useRef, useEffect } from "react"
 import styled from "@emotion/styled"
 import result from "lodash/result"
+import get from "lodash/get"
+import noop from "lodash/noop"
 import debounce from "lodash/debounce"
 
 import { Header } from "../Header"
 import "./style.css"
 
-const VHWithFallback = ( units = 0 ) => `
+const VHWithFallback = (units = 0) => `
   height: ${units}vh; /* Fallback for browsers that do not support Custom Properties */
   height: calc(var(--vh, 1vh) * ${units});
 `
-
 
 const Main = styled.main`
   scroll-snap-type: y mandatory;
@@ -58,28 +59,44 @@ const InitialCardOffset = styled.div`
   scroll-snap-align: start;
 `
 
+const vibrateDevice = () => {
+  // Only supported on Android Chrome & Firefox
+  if (get(window, "navigator.vibrate")) {
+    return window.navigator.vibrate(200)
+  }
+  return false
+}
+
 export const MobileLayout = ({ children, focusedView }) => {
   const [allowCardScrolling, setAllowCardScrolling] = useState(false)
   const [hasLoaded, setHasLoaded] = useState(false)
-  const mainEl = useRef(null);
-  const cardEl = useRef(null);
+  const mainEl = useRef(null)
+  const cardEl = useRef(null)
 
-  const handleScroll = debounce(() => {
-    const clientRect = result(cardEl, "current.getBoundingClientRect")
-    if (!clientRect) return
-    clientRect.top <= 1
-      ? setAllowCardScrolling(true)
-      : setAllowCardScrolling(false)
-  }, 100)
+  const handleScroll = debounce(
+    () => {
+      const clientRect = result(cardEl, "current.getBoundingClientRect")
+      if (!clientRect) return
+      const newAllowScrollingValue = clientRect.top <= 1 ? true : false
+      const scrollingStateWillChange =
+        newAllowScrollingValue !== allowCardScrolling
+      if (scrollingStateWillChange) {
+        vibrateDevice()
+        setAllowCardScrolling(newAllowScrollingValue)
+      }
+    },
+    100,
+    { leading: true }
+  )
 
   const minimizeCard = () => {
-    if (!mainEl || !mainEl.current) return;
-    if (!cardEl || !cardEl.current) return;
-    const topSmoothly = { top: 0, left: 0, behavior: 'smooth'};
-    cardEl.current.scrollTo(topSmoothly) 
+    if (!mainEl || !mainEl.current) return
+    if (!cardEl || !cardEl.current) return
+    const topSmoothly = { top: 0, left: 0, behavior: "smooth" }
+    cardEl.current.scrollTo(topSmoothly)
     mainEl.current.scrollTo(topSmoothly)
   }
-  
+
   // TODO: Remove this - testing only
   // window.minimizeCard = minimizeCard;
 
@@ -111,7 +128,9 @@ export const MobileLayout = ({ children, focusedView }) => {
       {hasLoaded && <Portrait />}
       <InitialCardOffset />
       <CardWrapper>
-        <Card allowScrolling={allowCardScrolling} ref={cardEl}>{children}</Card>
+        <Card allowScrolling={allowCardScrolling} ref={cardEl}>
+          {children}
+        </Card>
       </CardWrapper>
     </Main>
   )
