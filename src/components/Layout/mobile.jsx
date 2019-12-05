@@ -67,7 +67,7 @@ const vibrateDevice = () => {
   return false
 }
 
-export const MobileLayout = ({ children, focusedView }) => {
+export const MobileLayout = ({ children, options: { focusMode = false } = {} }) => {
   const [allowCardScrolling, setAllowCardScrolling] = useState(false)
   const [hasLoaded, setHasLoaded] = useState(false)
   const mainEl = useRef(null)
@@ -101,10 +101,10 @@ export const MobileLayout = ({ children, focusedView }) => {
   // window.minimizeCard = minimizeCard;
 
   useEffect(() => {
-    if (cardEl.current && focusedView) {
+    if (cardEl.current && focusMode) {
       cardEl.current.scrollIntoView()
     }
-  }, [focusedView, cardEl])
+  }, [focusMode, cardEl])
 
   useEffect(() => {
     const setViewHeightVariable = debounce(() => {

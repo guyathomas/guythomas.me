@@ -31,11 +31,12 @@ const Portrait = styled.div`
 const BioWrapper = styled.div`
   position: absolute;
   color: white;
+  padding-bottom: 1rem;
 `
 
 const Panel = styled.div`
   display: flex;
-  flex-grow: ${props => (props.grow ? 3 : 1)};
+  flex-grow: ${props => (props.large ? 3 : 1)};
   flex-basis: 0;
   flex-direction: column;
   align-items: center;
@@ -52,7 +53,10 @@ const PostWrapper = styled.div`
   max-width: 40rem;
 `
 
-export const DesktopLayout = ({ children, focusedView = true }) => {
+export const DesktopLayout = ({
+  children,
+  options: { focusMode = true } = {},
+}) => {
   const {
     theme: { breakpoints },
   } = useContext(LayoutContext)
@@ -69,20 +73,15 @@ export const DesktopLayout = ({ children, focusedView = true }) => {
     <Main maxWidth={breakpoints.max}>
       <SEO title="All posts" />
       <Panel>
-        <Portrait blur={focusedView} />
-        {!focusedView && (
+        <Portrait blur={focusMode} />
+        {!focusMode && (
           <BioWrapper>
             <Bio />
           </BioWrapper>
         )}
       </Panel>
-      <Panel grow={focusedView}>
-        <PostWrapper onScroll={onScroll}>
-          {React.Children.map(children, child =>
-            React.cloneElement(child, { ref: articleRef })
-          )}
-        </PostWrapper>
-        <SocialLine orientation="vertical" visible={scrolledPastHeader} />
+      <Panel large={focusMode}>
+        <PostWrapper onScroll={onScroll}>{children}</PostWrapper>
       </Panel>
     </Main>
   )

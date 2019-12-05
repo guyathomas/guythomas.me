@@ -13,29 +13,22 @@ const BlogTitle = styled.h2`
   margin-bottom: 1rem;
 `
 
-export default React.forwardRef(
-  (
-    { data: { markdownRemark: post, data, title: siteTitle, location } },
-    ref
-  ) => {
-    return (
-      <Layout focusedView>
-        <SEO
-          title={post.frontmatter.title}
-          description={post.frontmatter.description || post.excerpt}
-        />
-        <Bio small />
-        <SocialLine />
-        <article ref={ref}>
-          <header>
-            <BlogTitle>{post.frontmatter.title}</BlogTitle>
-            <PostMeta date={post.frontmatter.date} />
-          </header>
-          <section dangerouslySetInnerHTML={{ __html: post.html }} />
-        </article>
-      </Layout>
-    )
-  }
+export default ({ data: { markdownRemark: post } }) => (
+  <Layout options={{ focusMode: true }}>
+    <SEO
+      title={post.frontmatter.title}
+      description={post.frontmatter.description || post.excerpt}
+    />
+    <Bio small />
+    <SocialLine />
+    <article>
+      <header>
+        <BlogTitle>{post.frontmatter.title}</BlogTitle>
+        <PostMeta date={post.frontmatter.date} />
+      </header>
+      <section dangerouslySetInnerHTML={{ __html: post.html }} />
+    </article>
+  </Layout>
 )
 
 export const pageQuery = graphql`

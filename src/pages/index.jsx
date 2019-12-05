@@ -4,36 +4,37 @@ import { PostSnippit } from "../components/PostSnippit"
 import { Bio } from "../components/Bio"
 import { SocialLine } from "../components/SocialLine"
 import { SEO } from "../components/Seo"
-import { Layout } from "../components/Layout"
+import { Layout, LayoutContext } from "../components/Layout"
 
 export default props => {
   const posts = props.data.allMarkdownRemark.edges
   return (
     <Layout>
-      {({ isMobile }) =>
-        isMobile ? (
-          <>
-            <SEO title="All posts" />
-            <Bio />
-            <SocialLine />
-            <main>
-              {posts.map(post => (
-                <PostSnippit key={post.node.fields.slug} {...post} />
-              ))}
-            </main>
-          </>
-        ) : (
-          <>
-            <SEO title="All posts" />
-            <main>
-              {posts.map(post => (
-                <PostSnippit key={post.node.fields.slug} {...post} />
-              ))}
-              <SocialLine orientation="vertical"/>
-            </main>
-          </>
-        )
-      }
+      <SEO title="All posts" />
+      <LayoutContext.Consumer>
+        {({ isMobile }) =>
+          isMobile ? (
+            <>
+              <Bio />
+              <SocialLine />
+              <main>
+                {posts.map(post => (
+                  <PostSnippit key={post.node.fields.slug} {...post} />
+                ))}
+              </main>
+            </>
+          ) : (
+            <>
+              <main>
+                {posts.map(post => (
+                  <PostSnippit key={post.node.fields.slug} {...post} />
+                ))}
+                <SocialLine orientation="vertical" />
+              </main>
+            </>
+          )
+        }
+      </LayoutContext.Consumer>
     </Layout>
   )
 }
