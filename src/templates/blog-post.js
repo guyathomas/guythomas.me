@@ -4,8 +4,6 @@ import styled from "@emotion/styled"
 
 import { Layout } from "../components/Layout"
 import { SEO } from "../components/Seo"
-import { Bio } from "../components/Bio"
-import { SocialLine } from "../components/SocialLine"
 import { PostMeta } from "../components/PostMeta"
 
 const BlogTitle = styled.h2`
@@ -13,15 +11,13 @@ const BlogTitle = styled.h2`
   margin-bottom: 1rem;
 `
 
-export default React.forwardRef(({ data: { markdownRemark: post } }, articleRef) => (
+export default ({ data: { markdownRemark: post } }) => (
   <Layout focusMode>
     <SEO
       title={post.frontmatter.title}
       description={post.frontmatter.description || post.excerpt}
     />
-    <Bio small />
-    <SocialLine />
-    <article ref={articleRef}>
+    <article>
       <header>
         <BlogTitle>{post.frontmatter.title}</BlogTitle>
         <PostMeta date={post.frontmatter.date} />
@@ -29,7 +25,7 @@ export default React.forwardRef(({ data: { markdownRemark: post } }, articleRef)
       <section dangerouslySetInnerHTML={{ __html: post.html }} />
     </article>
   </Layout>
-))
+)
 
 export const pageQuery = graphql`
   query BlogPostBySlug($slug: String!) {

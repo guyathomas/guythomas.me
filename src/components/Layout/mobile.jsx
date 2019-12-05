@@ -6,6 +6,8 @@ import noop from "lodash/noop"
 import debounce from "lodash/debounce"
 
 import { Header } from "../Header"
+import { Bio } from "../Bio"
+import { SocialLine } from "../SocialLine"
 import "./style.css"
 
 const VHWithFallback = (units = 0) => `
@@ -136,6 +138,8 @@ export const MobileLayout = ({ children, focusMode }) => {
       <InitialCardOffset />
       <CardWrapper>
         <Card allowScrolling={allowCardScrolling} ref={cardEl}>
+          <Bio small={focusMode} />
+          <SocialLine />
           {children}
         </Card>
       </CardWrapper>

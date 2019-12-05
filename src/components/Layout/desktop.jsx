@@ -59,27 +59,30 @@ const HeaderWrapper = styled.div`
   width: 100%;
   height: 100%;
   top: 0;
-  ${props => props.focusMode ? `
+  ${props =>
+    props.focusMode
+      ? `
   display: flex;
   justify-content: center;
   align-items: center;
   & ul {
     flex-direction: column;
   }
-  ` : 0 }
+  `
+      : 0}
 `
 
 export const DesktopLayout = ({ children, focusMode = false }) => {
   const {
     theme: { breakpoints },
   } = useContext(LayoutContext)
-  const articleRef = useRef(null)
-  const [scrolledPastHeader, setScrolledPastHeader] = useState(false)
+  const socialLineRef = useRef(null)
+  const [scrolledPastSocial, setScrolledPastSocial] = useState(false)
 
   const onScroll = throttle(() => {
-    if (!articleRef.current) return
-    const { top } = articleRef.current.getBoundingClientRect()
-    top < 0 ? setScrolledPastHeader(true) : setScrolledPastHeader(false)
+    if (!socialLineRef.current) return
+    const { top, height } = socialLineRef.current.getBoundingClientRect()
+    top + height < 0 ? setScrolledPastSocial(true) : setScrolledPastSocial(false)
   }, 100)
 
   return (
@@ -98,10 +101,16 @@ export const DesktopLayout = ({ children, focusMode = false }) => {
       </Panel>
       <Panel large={focusMode}>
         <PostWrapper onScroll={onScroll}>
-          {React.Children.map(children, child =>
-            React.cloneElement(child, { ref: articleRef })
+          {focusMode && (
+            <>
+              <Bio small />
+              <div ref={socialLineRef}>
+                <SocialLine />
+              </div>
+            </>
           )}
-          <SocialLine orientation="vertical" visible={scrolledPastHeader} />
+          {children}
+          <SocialLine orientation="vertical" visible={scrolledPastSocial} />
         </PostWrapper>
       </Panel>
     </Main>

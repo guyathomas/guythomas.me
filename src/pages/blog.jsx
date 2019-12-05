@@ -1,13 +1,8 @@
 import React from "react"
 
-import { PostSnippit } from "../components/PostSnippit"
-import { Bio } from "../components/Bio"
-import { SocialLine } from "../components/SocialLine"
-import { SEO } from "../components/Seo"
-import { Layout, LayoutContext } from "../components/Layout"
-import Test from "."
+import IndexComponent from "."
 
-export default props => <Test {...props} focusMode />
+export default props => <IndexComponent {...props} focusMode />
 
 export const pageQuery = graphql`
   query {
