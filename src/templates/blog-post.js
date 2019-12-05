@@ -13,7 +13,7 @@ const BlogTitle = styled.h2`
   margin-bottom: 1rem;
 `
 
-export default ({ data: { markdownRemark: post } }) => (
+export default React.forwardRef(({ data: { markdownRemark: post } }, articleRef) => (
   <Layout options={{ focusMode: true }}>
     <SEO
       title={post.frontmatter.title}
@@ -21,7 +21,7 @@ export default ({ data: { markdownRemark: post } }) => (
     />
     <Bio small />
     <SocialLine />
-    <article>
+    <article ref={articleRef}>
       <header>
         <BlogTitle>{post.frontmatter.title}</BlogTitle>
         <PostMeta date={post.frontmatter.date} />
@@ -29,7 +29,7 @@ export default ({ data: { markdownRemark: post } }) => (
       <section dangerouslySetInnerHTML={{ __html: post.html }} />
     </article>
   </Layout>
-)
+))
 
 export const pageQuery = graphql`
   query BlogPostBySlug($slug: String!) {

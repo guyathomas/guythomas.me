@@ -81,7 +81,12 @@ export const DesktopLayout = ({
         )}
       </Panel>
       <Panel large={focusMode}>
-        <PostWrapper onScroll={onScroll}>{children}</PostWrapper>
+        <PostWrapper onScroll={onScroll}>
+          {React.Children.map(children, child =>
+            React.cloneElement(child, { ref: articleRef })
+          )}
+          <SocialLine orientation="vertical" visible={scrolledPastHeader} />
+        </PostWrapper>
       </Panel>
     </Main>
   )
