@@ -20,7 +20,7 @@ export const PostSnippit = ({ node }) => {
     <Article key={node.fields.slug}>
       <header>
         <PostTitle>
-          <Link to={node.fields.slug}>{title}</Link>
+          <Link to={`/blog${node.fields.slug}`}>{title}</Link>
         </PostTitle>
         <PostMeta date={node.frontmatter.date} />
       </header>
