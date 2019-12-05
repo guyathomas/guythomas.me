@@ -67,7 +67,7 @@ const vibrateDevice = () => {
   return false
 }
 
-export const MobileLayout = ({ children, options: { focusMode = false } = {} }) => {
+export const MobileLayout = ({ children, focusMode }) => {
   const [allowCardScrolling, setAllowCardScrolling] = useState(false)
   const [hasLoaded, setHasLoaded] = useState(false)
   const mainEl = useRef(null)

@@ -55,7 +55,7 @@ const PostWrapper = styled.div`
 
 export const DesktopLayout = ({
   children,
-  options: { focusMode = false } = {},
+  focusMode = false,
 }) => {
   const {
     theme: { breakpoints },

@@ -14,7 +14,7 @@ const BlogTitle = styled.h2`
 `
 
 export default React.forwardRef(({ data: { markdownRemark: post } }, articleRef) => (
-  <Layout options={{ focusMode: true }}>
+  <Layout focusMode>
     <SEO
       title={post.frontmatter.title}
       description={post.frontmatter.description || post.excerpt}
