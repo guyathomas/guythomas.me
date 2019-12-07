@@ -82,7 +82,9 @@ export const DesktopLayout = ({ children, focusMode = false }) => {
   const onScroll = throttle(() => {
     if (!socialLineRef.current) return
     const { top, height } = socialLineRef.current.getBoundingClientRect()
-    top + height < 0 ? setScrolledPastSocial(true) : setScrolledPastSocial(false)
+    top + height < 0
+      ? setScrolledPastSocial(true)
+      : setScrolledPastSocial(false)
   }, 100)
 
   return (
@@ -90,25 +92,13 @@ export const DesktopLayout = ({ children, focusMode = false }) => {
       <SEO title="All posts" />
       <Panel>
         <Portrait blur={focusMode} />
-        <HeaderWrapper focusMode={focusMode}>
-          <Header orientation={focusMode ? "vertical" : "horizontal"} />
-        </HeaderWrapper>
-        {!focusMode && (
-          <BioWrapper>
-            <Bio />
-          </BioWrapper>
-        )}
       </Panel>
       <Panel large={focusMode}>
         <PostWrapper onScroll={onScroll}>
-          {focusMode && (
-            <>
-              <Bio small />
-              <div ref={socialLineRef}>
-                <SocialLine />
-              </div>
-            </>
-          )}
+          <div ref={socialLineRef}>
+            <Bio small />
+            <SocialLine />
+          </div>
           {children}
           <SocialLine orientation="vertical" visible={scrolledPastSocial} />
         </PostWrapper>

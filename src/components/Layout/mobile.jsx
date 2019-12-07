@@ -61,11 +61,6 @@ const InitialCardOffset = styled.div`
   scroll-snap-align: start;
 `
 
-const HeaderWrapper = styled.div`
-  position: absolute;
-  width: 100%;
-`
-
 const vibrateDevice = () => {
   // Only supported on Android Chrome & Firefox
   if (get(window, "navigator.vibrate")) {
@@ -131,9 +126,6 @@ export const MobileLayout = ({ children, focusMode }) => {
   }, [])
   return (
     <Main onScroll={handleScroll} ref={mainEl}>
-      <HeaderWrapper>
-        <Header />
-      </HeaderWrapper>
       {hasLoaded && <Portrait />}
       <InitialCardOffset />
       <CardWrapper>
