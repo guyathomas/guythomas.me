@@ -18,11 +18,10 @@ const VHWithFallback = (units = 0) => `
   height: calc(var(--vh, 1vh) * ${units});
 `
 
-const Main = styled(animated.main)`
+const Main = styled.main`
   scroll-snap-type: y mandatory;
   height: ${VHWithFallback(100)};
   overflow-y: scroll;
-  position: relative;
 `
 
 const Portrait = styled.div`
@@ -81,13 +80,15 @@ const HamburgerWrapper = styled.div`
 `
 
 const MenuWrapper = styled(animated.div)`
-  position: relative;
-  background-color: blue;
+  /* TODO: Test animation that goes past 100vw */
+  width: 120vw;
+  background-color: white;
   top: 0;
-  width: 100vw;
+  right: 0;
   height: 100vh;
   position: fixed;
   z-index: 5;
+  transition: left 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28);
 `
 
 const vibrateDevice = () => {
@@ -156,27 +157,17 @@ export const MobileLayout = ({ children, focusMode }) => {
 
   const [menuExpanded, setMenuExpanded] = useState(false)
   const toggleMenu = () => setMenuExpanded(!menuExpanded)
-
-  const menuStyles = useSpring(
-    menuExpanded
-      ? { left: "0vw", height: "100vh" }
-      : { left: "100vw", height: "0vh" }
-  )
-  const mainStyles = useSpring(
-    menuExpanded ? { left: "-100vw" } : { left: "0vw" }
-  )
   const MenuIcon = menuExpanded ? Cross : HamburgerSquare
+
   return (
-    <Main
-      onScroll={handleScroll}
-      ref={mainEl}
-      style={{ left: mainStyles.left }}
-    >
+    <Main onScroll={handleScroll} ref={mainEl}>
       {hasLoaded && <Portrait />}
       <HamburgerWrapper>
         <MenuIcon onClick={toggleMenu} />
       </HamburgerWrapper>
-      <MenuWrapper style={{ left: menuStyles.left }} />
+      <MenuWrapper style={{ left: menuExpanded ? 0 : "100vw" }}>
+        <Header />
+      </MenuWrapper>
       <InitialCardOffset />
       <CardWrapper>
         <Card allowScrolling={allowCardScrolling} ref={cardEl}>

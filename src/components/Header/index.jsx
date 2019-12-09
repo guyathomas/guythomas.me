@@ -4,11 +4,10 @@ import { Link } from "gatsby"
 
 const LinkList = styled.ul`
   display: flex;
-  padding: 2rem 1rem;
-  justify-content: space-around;
+  flex-direction: column;
+  padding: 5rem 1rem;
   margin: 0;
-  color: white;
-  flex-wrap: wrap;
+  
 `
 
 const MenuListItem = styled.li`
@@ -17,19 +16,19 @@ const MenuListItem = styled.li`
   flex-shrink: 0;
   font-size: 1.5rem;
   & a {
-    color: white;
+    font-size: 3rem;
   }
 `
 // horizontal, verticalMiddle, horizontalTop
-export const Header = ({ orientationAndPosition = 'horizontal' }) => {
+export const Header = () => {
   const menuItems = [{ label: "Home", path: "/" }, { label: "Blog", path: "/blog" }]
   // menuItems.push({ label: "Resume", path: "/resume" }, { label: "Now", path: "/now" })
   return (
     <nav>
       <LinkList>
           {menuItems.map(({ label, path }) => (
-            <MenuListItem>
-              <Link key={label} to={path} activeClassName="active">
+            <MenuListItem key={label}>
+              <Link to={path} activeClassName="active">
                 {label}
               </Link>
             </MenuListItem>
