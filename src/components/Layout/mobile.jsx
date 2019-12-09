@@ -4,8 +4,11 @@ import result from "lodash/result"
 import get from "lodash/get"
 import noop from "lodash/noop"
 import debounce from "lodash/debounce"
+import { useSpring, animated } from "react-spring"
 
 import { Header } from "../Header"
+import HamburgerSquare from "../Header/icons/hamburger.svg"
+import Cross from "../Header/icons/cross.svg"
 import { Bio } from "../Bio"
 import { SocialLine } from "../SocialLine"
 import "./style.css"
@@ -15,10 +18,11 @@ const VHWithFallback = (units = 0) => `
   height: calc(var(--vh, 1vh) * ${units});
 `
 
-const Main = styled.main`
+const Main = styled(animated.main)`
   scroll-snap-type: y mandatory;
   height: ${VHWithFallback(100)};
   overflow-y: scroll;
+  position: relative;
 `
 
 const Portrait = styled.div`
@@ -59,6 +63,31 @@ const CardWrapper = styled.div`
 const InitialCardOffset = styled.div`
   height: ${VHWithFallback(65)};
   scroll-snap-align: start;
+`
+
+const HamburgerWrapper = styled.div`
+  height: 2rem;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 10;
+  padding-top: 1.7rem;
+  padding-right: 1rem;
+  box-sizing: content-box;
+  & svg {
+    height: 100%;
+    width: auto;
+  }
+`
+
+const MenuWrapper = styled(animated.div)`
+  position: relative;
+  background-color: blue;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  z-index: 5;
 `
 
 const vibrateDevice = () => {
@@ -124,9 +153,30 @@ export const MobileLayout = ({ children, focusMode }) => {
   useEffect(() => {
     setHasLoaded(true)
   }, [])
+
+  const [menuExpanded, setMenuExpanded] = useState(false)
+  const toggleMenu = () => setMenuExpanded(!menuExpanded)
+
+  const menuStyles = useSpring(
+    menuExpanded
+      ? { left: "0vw", height: "100vh" }
+      : { left: "100vw", height: "0vh" }
+  )
+  const mainStyles = useSpring(
+    menuExpanded ? { left: "-100vw" } : { left: "0vw" }
+  )
+  const MenuIcon = menuExpanded ? Cross : HamburgerSquare
   return (
-    <Main onScroll={handleScroll} ref={mainEl}>
+    <Main
+      onScroll={handleScroll}
+      ref={mainEl}
+      style={{ left: mainStyles.left }}
+    >
       {hasLoaded && <Portrait />}
+      <HamburgerWrapper>
+        <MenuIcon onClick={toggleMenu} />
+      </HamburgerWrapper>
+      <MenuWrapper style={{ left: menuStyles.left }} />
       <InitialCardOffset />
       <CardWrapper>
         <Card allowScrolling={allowCardScrolling} ref={cardEl}>
