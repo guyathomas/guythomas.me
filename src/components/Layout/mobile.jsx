@@ -162,7 +162,7 @@ export const MobileLayout = ({ children, focusMode }) => {
   useEffect(() => {
     setHasLoaded(true)
   }, [])
-  console.log('scrollDirection', scrollDirection)
+
   return (
     <Main onScroll={handleScroll} ref={mainEl}>
       {hasLoaded && <Portrait />}
