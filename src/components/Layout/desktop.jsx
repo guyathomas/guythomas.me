@@ -43,7 +43,7 @@ const Panel = styled.div`
   align-items: center;
   justify-content: flex-end;
   position: relative;
-  overflow: hidden;
+  overflow: ${props => props.overflow || 'visible'};
 `
 
 const PostWrapper = styled.div`
@@ -54,22 +54,35 @@ const PostWrapper = styled.div`
   max-width: 40rem;
 `
 
-const HeaderWrapper = styled.div`
-  position: absolute;
-  width: 100%;
-  height: 100%;
+const MenuWrapper = styled.div`
+  /* TODO: Test animation that goes past 100vw */
+  width: 120vw;
+  background-color: white;
   top: 0;
-  ${props =>
-    props.focusMode
-      ? `
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  & ul {
-    flex-direction: column;
+  right: 0;
+  height: 100vh;
+  position: fixed;
+  z-index: 5;
+  transition: left 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  left: ${props => (props.menuExpanded ? 0 : "100vw")};
+`
+
+const HamburgerWrapper = styled.div`
+  height: 2rem;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 10;
+  cursor: pointer;
+  transform: translateX(0.5rem);
+  top: 1rem;
+  background-color: white;
+  box-sizing: content-box;
+  padding: 1rem 0;
+  & svg {
+    height: 100%;
+    width: auto;
   }
-  `
-      : 0}
 `
 
 export const DesktopLayout = ({ children, focusMode = false }) => {
@@ -90,12 +103,25 @@ export const DesktopLayout = ({ children, focusMode = false }) => {
   return (
     <Main maxWidth={breakpoints.max}>
       <SEO title="All posts" />
-      <Panel>
+      <Panel overflow='hidden'>
         <Portrait blur={focusMode} />
       </Panel>
       <Panel large={focusMode}>
-        {/* <Header /> */}
         <PostWrapper onScroll={onScroll}>
+          <Header>
+            {({ Hamburger, Nav }, menuExpanded) => {
+              return (
+                <>
+                  <HamburgerWrapper>
+                    <Hamburger />
+                  </HamburgerWrapper>
+                  <MenuWrapper menuExpanded={menuExpanded}>
+                    <Nav />
+                  </MenuWrapper>
+                </>
+              )
+            }}
+          </Header>
           <div ref={socialLineRef}>
             <Bio small />
             <SocialLine />
