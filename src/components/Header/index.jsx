@@ -18,16 +18,16 @@ const MenuListItem = styled.li`
   list-style: none;
   flex-shrink: 0;
   font-size: 1.5rem;
-  cursor: pointer;
   & a.active {
+    cursor: pointer;
     color: hsla(0,0%,0%,0.7) !important;
   }
   & a {
     font-size: 3rem;
+    cursor: pointer;
   }
   & a:hover {
     color: #005b98;
-    cursor: auto;
   }
 `
 
