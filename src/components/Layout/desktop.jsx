@@ -2,9 +2,10 @@ import React, { useContext, useRef, useState } from "react"
 import styled from "@emotion/styled"
 import throttle from "lodash/throttle"
 
+import { AppStateContext } from '../Layout'
 import { Bio } from "../Bio"
 import { SocialLine } from "../SocialLine"
-import { Header } from "../Header"
+import { Navigation } from "../Navigation"
 import { SEO } from "../Seo"
 import "./style.css"
 import { LayoutContext } from "."
@@ -43,7 +44,7 @@ const Panel = styled.div`
   align-items: center;
   justify-content: flex-end;
   position: relative;
-  overflow: ${props => props.overflow || 'visible'};
+  overflow: ${props => props.overflow || "visible"};
 `
 
 const PostWrapper = styled.div`
@@ -63,11 +64,11 @@ const MenuWrapper = styled.div`
   position: absolute;
   width: 40vw;
   z-index: 5;
-  transform: scaleX(${props => (props.menuExpanded ? 1 : 0)});
+  transform: scaleX(${props => (props.isNavigationExpanded ? 1 : 0)});
   transform-origin: right;
   width: auto;
   overflow-x: hidden;
-  box-shadow: -4px 0px 6px 0px rgba(0,0,0,0.32);
+  box-shadow: -4px 0px 6px 0px rgba(0, 0, 0, 0.32);
   padding-right: 6rem;
 `
 
@@ -103,29 +104,26 @@ export const DesktopLayout = ({ children, focusMode = false }) => {
       ? setScrolledPastSocial(true)
       : setScrolledPastSocial(false)
   }, 100)
-
+  const { state: appState, dispatchers: appDispatchers } = React.useContext(
+    AppStateContext
+  )
   return (
     <Main maxWidth={breakpoints.max}>
       <SEO title="All posts" />
-      <Panel overflow='hidden'>
+      <Panel overflow="hidden">
         <Portrait blur={focusMode} />
       </Panel>
       <Panel large={focusMode}>
         <PostWrapper onScroll={onScroll}>
-          <Header>
-            {({ Hamburger, Nav }, menuExpanded) => {
-              return (
-                <>
-                  <HamburgerWrapper>
-                    <Hamburger />
-                  </HamburgerWrapper>
-                  <MenuWrapper menuExpanded={menuExpanded}>
-                    <Nav />
-                  </MenuWrapper>
-                </>
-              )
-            }}
-          </Header>
+          <HamburgerWrapper>
+            <Navigation.NavigationToggler
+              toggleNavigation={appDispatchers.toggleNavigation}
+              isNavigationExpanded={appState.isNavigationExpanded}
+            />
+          </HamburgerWrapper>
+          <MenuWrapper isNavigationExpanded={appState.isNavigationExpanded}>
+            <Navigation.MenuItems />
+          </MenuWrapper>
           <div ref={socialLineRef}>
             <Bio small />
             <SocialLine />
