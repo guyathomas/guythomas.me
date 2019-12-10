@@ -2,7 +2,7 @@ import React, { useContext, useRef, useState } from "react"
 import styled from "@emotion/styled"
 import throttle from "lodash/throttle"
 
-import { AppStateContext } from '../Layout'
+import { AppStateContext } from "../Layout"
 import { Bio } from "../Bio"
 import { SocialLine } from "../SocialLine"
 import { Navigation } from "../Navigation"

@@ -1,7 +1,6 @@
 import React from "react"
 import styled from "@emotion/styled"
 import { Link } from "gatsby"
-import noop from "lodash/noop"
 
 import HamburgerSquare from "./icons/hamburger.svg"
 import Cross from "./icons/cross.svg"

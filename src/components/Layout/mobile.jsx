@@ -1,13 +1,10 @@
 import React, { useState, useRef, useEffect } from "react"
 import styled from "@emotion/styled"
-import result from "lodash/result"
 import get from "lodash/get"
 import debounce from "lodash/debounce"
 
-import { AppStateContext } from '../Layout'
+import { AppStateContext } from "../Layout"
 import { Navigation } from "../Navigation"
-import HamburgerSquare from "../Navigation/icons/hamburger.svg"
-import Cross from "../Navigation/icons/cross.svg"
 import { Bio } from "../Bio"
 import { SocialLine } from "../SocialLine"
 import "./style.css"
@@ -163,12 +160,17 @@ export const MobileLayout = ({ children, focusMode }) => {
   useEffect(() => {
     setHasLoaded(true)
   }, [])
-  const { state: appState, dispatchers: appDispatchers } = React.useContext(AppStateContext)
+  const { state: appState, dispatchers: appDispatchers } = React.useContext(
+    AppStateContext
+  )
   return (
     <Main onScroll={handleScroll} ref={mainEl}>
       {hasLoaded && <Portrait />}
       <HamburgerWrapper hide={scrollDirection === "down"}>
-        <Navigation.NavigationToggler toggleNavigation={appDispatchers.toggleNavigation} isNavigationExpanded={appState.isNavigationExpanded} />
+        <Navigation.NavigationToggler
+          toggleNavigation={appDispatchers.toggleNavigation}
+          isNavigationExpanded={appState.isNavigationExpanded}
+        />
       </HamburgerWrapper>
       <MenuWrapper isNavigationExpanded={appState.isNavigationExpanded}>
         <Navigation.MenuItems />

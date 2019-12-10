@@ -3,7 +3,7 @@ import React from "react"
 import { ACTIONS } from "./actions"
 
 const initialState = {
-    isNavigationExpanded:  false,
+  isNavigationExpanded: false,
 }
 
 function reducer(state, action) {
