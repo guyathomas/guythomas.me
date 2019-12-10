@@ -18,13 +18,19 @@ const MenuListItem = styled.li`
   list-style: none;
   flex-shrink: 0;
   font-size: 1.5rem;
+  cursor: pointer;
+  & a.active {
+    color: hsla(0,0%,0%,0.7) !important;
+  }
   & a {
     font-size: 3rem;
   }
+  & a:hover {
+    color: #005b98;
+  }
 `
 
-// horizontal, verticalMiddle, horizontalTop
-const Hamburger = ({ toggleMenu, menuExpanded }) => {
+const Hamburger = ({ toggleMenu = noop, menuExpanded }) => {
   const MenuIcon = menuExpanded ? Cross : HamburgerSquare
   return (
       <MenuIcon onClick={toggleMenu} />
