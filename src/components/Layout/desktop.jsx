@@ -56,15 +56,19 @@ const PostWrapper = styled.div`
 
 const MenuWrapper = styled.div`
   /* TODO: Test animation that goes past 100vw */
-  width: 120vw;
   background-color: white;
   top: 0;
   right: 0;
   height: 100vh;
-  position: fixed;
+  position: absolute;
+  width: 40vw;
   z-index: 5;
-  transition: left 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28);
-  left: ${props => (props.menuExpanded ? 0 : "100vw")};
+  transform: scaleX(${props => (props.menuExpanded ? 1 : 0)});
+  transform-origin: right;
+  width: auto;
+  overflow-x: hidden;
+  box-shadow: -4px 0px 6px 0px rgba(0,0,0,0.32);
+  padding-right: 6rem;
 `
 
 const HamburgerWrapper = styled.div`
