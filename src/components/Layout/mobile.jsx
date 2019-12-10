@@ -89,6 +89,8 @@ const HamburgerWrapper = styled.div`
     height: 100%;
     width: auto;
   }
+  opacity: ${props => props.hide ? 0 : 1};
+  transition: opacity .25s ease-in-out;
 `
 
 const vibrateDevice = () => {
@@ -99,16 +101,22 @@ const vibrateDevice = () => {
   return false
 }
 
+let lastScrollPosition = 0
 export const MobileLayout = ({ children, focusMode }) => {
   const [allowCardScrolling, setAllowCardScrolling] = useState(false)
+  const [scrollDirection, setScrollDirection] = useState(null)
   const [hasLoaded, setHasLoaded] = useState(false)
   const mainEl = useRef(null)
   const cardEl = useRef(null)
 
   const handleScroll = debounce(
     () => {
-      const clientRect = result(cardEl, "current.getBoundingClientRect")
-      if (!clientRect) return
+      if (!cardEl.current) return
+      const clientRect = cardEl.current.getBoundingClientRect()
+      const scrollPos = cardEl.current.scrollTop
+      let newScrollDirection = scrollPos > lastScrollPosition ? 'down' : 'up'
+      lastScrollPosition = scrollPos
+      setScrollDirection(newScrollDirection)
       const newAllowScrollingValue = clientRect.top <= 1 ? true : false
       const scrollingStateWillChange =
         newAllowScrollingValue !== allowCardScrolling
@@ -117,7 +125,7 @@ export const MobileLayout = ({ children, focusMode }) => {
         setAllowCardScrolling(newAllowScrollingValue)
       }
     },
-    100,
+    50,
     { leading: true }
   )
 
@@ -154,7 +162,7 @@ export const MobileLayout = ({ children, focusMode }) => {
   useEffect(() => {
     setHasLoaded(true)
   }, [])
-
+  console.log('scrollDirection', scrollDirection)
   return (
     <Main onScroll={handleScroll} ref={mainEl}>
       {hasLoaded && <Portrait />}
@@ -162,7 +170,7 @@ export const MobileLayout = ({ children, focusMode }) => {
         {({ Hamburger, Nav }, menuExpanded) => {
           return (
             <>
-              <HamburgerWrapper>
+              <HamburgerWrapper hide={scrollDirection === 'down'}>
                 <Hamburger />
               </HamburgerWrapper>
               <MenuWrapper menuExpanded={menuExpanded}>
