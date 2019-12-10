@@ -79,6 +79,7 @@ const VerticalLine = styled.div`
   border-right: 1px solid lightgray;
   height: 100%;
   flex-shrink: ${props => (props.long ? 1 : 2)};
+  min-height: 6rem;
 `
 
 export const SocialLine = ({ orientation = "horizontal", visible = true }) => {

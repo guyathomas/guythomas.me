@@ -2,9 +2,7 @@ import React, { useState, useRef, useEffect } from "react"
 import styled from "@emotion/styled"
 import result from "lodash/result"
 import get from "lodash/get"
-import noop from "lodash/noop"
 import debounce from "lodash/debounce"
-import { useSpring, animated } from "react-spring"
 
 import { Header } from "../Header"
 import HamburgerSquare from "../Header/icons/hamburger.svg"
@@ -64,22 +62,7 @@ const InitialCardOffset = styled.div`
   scroll-snap-align: start;
 `
 
-const HamburgerWrapper = styled.div`
-  height: 2rem;
-  position: fixed;
-  right: 0;
-  top: 0;
-  z-index: 10;
-  padding-top: 1.7rem;
-  padding-right: 1rem;
-  box-sizing: content-box;
-  & svg {
-    height: 100%;
-    width: auto;
-  }
-`
-
-const MenuWrapper = styled(animated.div)`
+const MenuWrapper = styled.div`
   /* TODO: Test animation that goes past 100vw */
   width: 120vw;
   background-color: white;
@@ -89,6 +72,23 @@ const MenuWrapper = styled(animated.div)`
   position: fixed;
   z-index: 5;
   transition: left 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  left: ${props => (props.menuExpanded ? 0 : "100vw")};
+`
+
+const HamburgerWrapper = styled.div`
+  height: 2rem;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 10;
+  padding-top: 1.7rem;
+  padding-right: 1rem;
+  box-sizing: content-box;
+  cursor: pointer;
+  & svg {
+    height: 100%;
+    width: auto;
+  }
 `
 
 const vibrateDevice = () => {
@@ -155,19 +155,23 @@ export const MobileLayout = ({ children, focusMode }) => {
     setHasLoaded(true)
   }, [])
 
-  const [menuExpanded, setMenuExpanded] = useState(false)
-  const toggleMenu = () => setMenuExpanded(!menuExpanded)
-  const MenuIcon = menuExpanded ? Cross : HamburgerSquare
-
   return (
     <Main onScroll={handleScroll} ref={mainEl}>
       {hasLoaded && <Portrait />}
-      <HamburgerWrapper>
-        <MenuIcon onClick={toggleMenu} />
-      </HamburgerWrapper>
-      <MenuWrapper style={{ left: menuExpanded ? 0 : "100vw" }}>
-        <Header />
-      </MenuWrapper>
+      <Header>
+        {({ Hamburger, Nav }, menuExpanded) => {
+          return (
+            <>
+              <HamburgerWrapper>
+                <Hamburger />
+              </HamburgerWrapper>
+              <MenuWrapper menuExpanded={menuExpanded}>
+                <Nav />
+              </MenuWrapper>
+            </>
+          )
+        }}
+      </Header>
       <InitialCardOffset />
       <CardWrapper>
         <Card allowScrolling={allowCardScrolling} ref={cardEl}>

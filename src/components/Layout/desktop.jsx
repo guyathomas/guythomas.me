@@ -94,6 +94,7 @@ export const DesktopLayout = ({ children, focusMode = false }) => {
         <Portrait blur={focusMode} />
       </Panel>
       <Panel large={focusMode}>
+        {/* <Header /> */}
         <PostWrapper onScroll={onScroll}>
           <div ref={socialLineRef}>
             <Bio small />
