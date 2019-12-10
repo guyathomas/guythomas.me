@@ -27,6 +27,7 @@ const MenuListItem = styled.li`
   }
   & a:hover {
     color: #005b98;
+    cursor: auto;
   }
 `
 
