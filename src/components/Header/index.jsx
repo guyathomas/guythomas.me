@@ -19,7 +19,7 @@ const MenuListItem = styled.li`
   flex-shrink: 0;
   font-size: 1.5rem;
   & a.active {
-    cursor: pointer;
+    cursor: default;
     color: hsla(0,0%,0%,0.7) !important;
   }
   & a {
