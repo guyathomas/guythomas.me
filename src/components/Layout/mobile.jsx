@@ -166,47 +166,15 @@ export const MobileLayout = ({ children, focusMode }) => {
   return (
     <Main onScroll={handleScroll} ref={mainEl}>
       {hasLoaded && <Portrait />}
-<<<<<<< Updated upstream
-      <HamburgerWrapper hide={scrollDirection === "down"}>
+      <HamburgerPositioner hide={scrollDirection === "down"}>
         <Navigation.NavigationToggler
           toggleNavigation={appDispatchers.toggleNavigation}
           isNavigationExpanded={appState.isNavigationExpanded}
         />
-      </HamburgerWrapper>
+      </HamburgerPositioner>
       <MenuWrapper isNavigationExpanded={appState.isNavigationExpanded}>
         <Navigation.MenuItems />
       </MenuWrapper>
-||||||| merged common ancestors
-      <Header>
-        {({ Hamburger, Nav }, menuExpanded) => {
-          return (
-            <>
-              <HamburgerWrapper hide={scrollDirection === 'down'}>
-                <Hamburger />
-              </HamburgerWrapper>
-              <MenuWrapper menuExpanded={menuExpanded}>
-                <Nav />
-              </MenuWrapper>
-            </>
-          )
-        }}
-      </Header>
-=======
-      <Header>
-        {({ Hamburger, Nav }, menuExpanded) => {
-          return (
-            <>
-              <HamburgerPositioner hide={scrollDirection === 'down'}>
-                <Hamburger />
-              </HamburgerPositioner>
-              <MenuWrapper menuExpanded={false}>
-                <Nav />
-              </MenuWrapper>
-            </>
-          )
-        }}
-      </Header>
->>>>>>> Stashed changes
       <InitialCardOffset />
       <CardWrapper>
         <Card allowScrolling={allowCardScrolling} ref={cardEl}>

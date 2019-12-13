@@ -1,6 +1,7 @@
 import React from "react"
 import styled from "@emotion/styled"
 import { Link } from "gatsby"
+import noop from "lodash/noop"
 
 import HamburgerSquare from "./icons/hamburger.svg"
 import Cross from "./icons/cross.svg"
@@ -33,11 +34,13 @@ const MenuListItem = styled.li`
 const MenuIcon = styled.button`
   width: 30px;
   height: 2px;
-  transition: all 250ms cubic-bezier(0.86, 0, 0.07, 1) 3s;
-  background-color: ${props => (props.menuExpanded ? 'transparent' : '#007acc')};
+  transition: all 250ms cubic-bezier(0.86,0,0.07,1);
+  background-color: ${props =>
+    props.isNavigationExpanded ? "transparent" : "#007acc"};
   padding: 0;
   border: none;
-  
+  outline: none;
+
   &:before {
     content: "";
     width: 30px;
@@ -47,8 +50,8 @@ const MenuIcon = styled.button`
     left: 0;
     position: absolute;
     transform-origin: left;
-    transition: all 250ms cubic-bezier(0.86, 0, 0.07, 1) 3s;
-    transform: rotate(${props => (props.menuExpanded ? "45deg" : "0deg")});
+    transition: all 250ms cubic-bezier(0.86,0,0.07,1);
+    transform: rotate(${props => (props.isNavigationExpanded ? "45deg" : "0deg")});
   }
 
   &:after {
@@ -60,8 +63,8 @@ const MenuIcon = styled.button`
     bottom: 0;
     left: 0;
     background-color: #007acc;
-    transition: all 250ms cubic-bezier(0.86, 0, 0.07, 1) 3s;
-    transform: rotate(${props => (props.menuExpanded ? "-45deg" : "0deg")});
+    transition: all 250ms cubic-bezier(0.86,0,0.07,1);
+    transform: rotate(${props => (props.isNavigationExpanded ? "-45deg" : "0deg")});
   }
 `
 
@@ -72,11 +75,13 @@ const HamburgerWrapper = styled.div`
   height: 100%;
   position: relative;
 `
+// toggleNavigation={appDispatchers.toggleNavigation}
+// isNavigationExpanded={appState.isNavigationExpanded}
 
-const NavigationToggler = ({ toggleMenu = noop, menuExpanded }) => {
+const NavigationToggler = ({ toggleNavigation = noop, isNavigationExpanded = false }) => {
   return (
     <HamburgerWrapper>
-      <MenuIcon menuExpanded={menuExpanded} onClick={toggleMenu} />
+      <MenuIcon isNavigationExpanded={isNavigationExpanded} onClick={toggleNavigation} />
     </HamburgerWrapper>
   )
 }
