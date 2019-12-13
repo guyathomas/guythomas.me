@@ -1,12 +1,10 @@
 import React, { useState, useRef, useEffect } from "react"
 import styled from "@emotion/styled"
-import result from "lodash/result"
 import get from "lodash/get"
 import debounce from "lodash/debounce"
 
-import { Header } from "../Header"
-import HamburgerSquare from "../Header/icons/hamburger.svg"
-import Cross from "../Header/icons/cross.svg"
+import { AppStateContext } from "../Layout"
+import { Navigation } from "../Navigation"
 import { Bio } from "../Bio"
 import { SocialLine } from "../SocialLine"
 import "./style.css"
@@ -72,7 +70,7 @@ const MenuWrapper = styled.div`
   position: fixed;
   z-index: 5;
   transition: left 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28);
-  left: ${props => (props.menuExpanded ? 0 : "100vw")};
+  left: ${props => (props.isNavigationExpanded ? 0 : "100vw")};
 `
 
 const HamburgerWrapper = styled.div`
@@ -89,8 +87,8 @@ const HamburgerWrapper = styled.div`
     height: 100%;
     width: auto;
   }
-  opacity: ${props => props.hide ? 0 : 1};
-  transition: opacity .25s ease-in-out;
+  opacity: ${props => (props.hide ? 0 : 1)};
+  transition: opacity 0.25s ease-in-out;
 `
 
 const vibrateDevice = () => {
@@ -114,7 +112,7 @@ export const MobileLayout = ({ children, focusMode }) => {
       if (!cardEl.current) return
       const clientRect = cardEl.current.getBoundingClientRect()
       const scrollPos = cardEl.current.scrollTop
-      let newScrollDirection = scrollPos > lastScrollPosition ? 'down' : 'up'
+      let newScrollDirection = scrollPos > lastScrollPosition ? "down" : "up"
       lastScrollPosition = scrollPos
       setScrollDirection(newScrollDirection)
       const newAllowScrollingValue = clientRect.top <= 1 ? true : false
@@ -162,24 +160,21 @@ export const MobileLayout = ({ children, focusMode }) => {
   useEffect(() => {
     setHasLoaded(true)
   }, [])
-
+  const { state: appState, dispatchers: appDispatchers } = React.useContext(
+    AppStateContext
+  )
   return (
     <Main onScroll={handleScroll} ref={mainEl}>
       {hasLoaded && <Portrait />}
-      <Header>
-        {({ Hamburger, Nav }, menuExpanded) => {
-          return (
-            <>
-              <HamburgerWrapper hide={scrollDirection === 'down'}>
-                <Hamburger />
-              </HamburgerWrapper>
-              <MenuWrapper menuExpanded={menuExpanded}>
-                <Nav />
-              </MenuWrapper>
-            </>
-          )
-        }}
-      </Header>
+      <HamburgerWrapper hide={scrollDirection === "down"}>
+        <Navigation.NavigationToggler
+          toggleNavigation={appDispatchers.toggleNavigation}
+          isNavigationExpanded={appState.isNavigationExpanded}
+        />
+      </HamburgerWrapper>
+      <MenuWrapper isNavigationExpanded={appState.isNavigationExpanded}>
+        <Navigation.MenuItems />
+      </MenuWrapper>
       <InitialCardOffset />
       <CardWrapper>
         <Card allowScrolling={allowCardScrolling} ref={cardEl}>

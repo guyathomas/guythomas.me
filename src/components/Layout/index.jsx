@@ -3,6 +3,7 @@ import debounce from "lodash/debounce"
 import { MobileLayout } from "./mobile"
 import { DesktopLayout } from "./desktop"
 import GlobalStyles from "./global-styles"
+import { useAppState } from './store';
 
 const theme = {
   breakpoints: {
@@ -16,6 +17,7 @@ const theme = {
 }
 
 export const LayoutContext = createContext(theme)
+export const AppStateContext = createContext(null)
 
 export const Layout = ({ children, focusMode }) => {
   const [screenSize, setScreenSize] = useState({})
@@ -37,15 +39,19 @@ export const Layout = ({ children, focusMode }) => {
     return () => window.removeEventListener("resize", debouncedSetScreen)
   }, [])
 
+  const appState = useAppState();
+
   if (isLoading || typeof isMobile !== "boolean") return null
   const layoutMeta = { theme, screenSize, isMobile }
   const LayoutForPlatform = isMobile ? MobileLayout : DesktopLayout
   return (
     <LayoutContext.Provider value={layoutMeta}>
-      <LayoutForPlatform focusMode={focusMode}>
-        <GlobalStyles />
-        {children}
-      </LayoutForPlatform>
+      <AppStateContext.Provider value={appState}>
+        <LayoutForPlatform focusMode={focusMode}>
+          <GlobalStyles />
+          {children}
+        </LayoutForPlatform>
+      </AppStateContext.Provider>
     </LayoutContext.Provider>
   )
 }

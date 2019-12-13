@@ -1,10 +1,9 @@
 import React from "react"
 import styled from "@emotion/styled"
 import { Link } from "gatsby"
-import noop from "lodash/noop"
 
-import HamburgerSquare from "../Header/icons/hamburger.svg"
-import Cross from "../Header/icons/cross.svg"
+import HamburgerSquare from "./icons/hamburger.svg"
+import Cross from "./icons/cross.svg"
 
 const LinkList = styled.ul`
   display: flex;
@@ -18,27 +17,25 @@ const MenuListItem = styled.li`
   list-style: none;
   flex-shrink: 0;
   font-size: 1.5rem;
-  cursor: pointer;
   & a.active {
-    color: hsla(0,0%,0%,0.7) !important;
+    cursor: default;
+    color: hsla(0, 0%, 0%, 0.7) !important;
   }
   & a {
     font-size: 3rem;
+    cursor: pointer;
   }
   & a:hover {
     color: #005b98;
-    cursor: auto;
   }
 `
 
-const Hamburger = ({ toggleMenu = noop, menuExpanded }) => {
-  const MenuIcon = menuExpanded ? Cross : HamburgerSquare
-  return (
-      <MenuIcon onClick={toggleMenu} />
-  )
+const NavigationToggler = ({toggleNavigation, isNavigationExpanded}) => {
+  const MenuIcon = isNavigationExpanded ? Cross : HamburgerSquare
+  return <MenuIcon onClick={toggleNavigation} />
 }
 
-const Nav = () => {
+const MenuItems = () => {
   const menuItems = [
     { label: "Home", path: "/" },
     { label: "Blog", path: "/blog" },
@@ -59,9 +56,7 @@ const Nav = () => {
   )
 }
 
-export const Header = ({ children = noop }) => {
-  const [menuExpanded, setMenuExpanded] = React.useState(false)
-  const toggleMenu = () => setMenuExpanded(!menuExpanded)
-  const BoundHamburger = () => <Hamburger toggleMenu={toggleMenu} menuExpanded={menuExpanded} />
-  return <div>{children({ Hamburger: BoundHamburger, Nav }, menuExpanded)}</div>
+export const Navigation = {
+  NavigationToggler: NavigationToggler,
+  MenuItems,
 }
