@@ -30,9 +30,55 @@ const MenuListItem = styled.li`
   }
 `
 
-const NavigationToggler = ({toggleNavigation, isNavigationExpanded}) => {
-  const MenuIcon = isNavigationExpanded ? Cross : HamburgerSquare
-  return <MenuIcon onClick={toggleNavigation} />
+const MenuIcon = styled.button`
+  width: 30px;
+  height: 2px;
+  transition: all 250ms cubic-bezier(0.86, 0, 0.07, 1) 3s;
+  background-color: ${props => (props.menuExpanded ? 'transparent' : '#007acc')};
+  padding: 0;
+  border: none;
+  
+  &:before {
+    content: "";
+    width: 30px;
+    height: 2px;
+    background-color: #007acc;
+    top: 0;
+    left: 0;
+    position: absolute;
+    transform-origin: left;
+    transition: all 250ms cubic-bezier(0.86, 0, 0.07, 1) 3s;
+    transform: rotate(${props => (props.menuExpanded ? "45deg" : "0deg")});
+  }
+
+  &:after {
+    content: "";
+    width: 30px;
+    height: 2px;
+    position: absolute;
+    transform-origin: left;
+    bottom: 0;
+    left: 0;
+    background-color: #007acc;
+    transition: all 250ms cubic-bezier(0.86, 0, 0.07, 1) 3s;
+    transform: rotate(${props => (props.menuExpanded ? "-45deg" : "0deg")});
+  }
+`
+
+const HamburgerWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  position: relative;
+`
+
+const NavigationToggler = ({ toggleMenu = noop, menuExpanded }) => {
+  return (
+    <HamburgerWrapper>
+      <MenuIcon menuExpanded={menuExpanded} onClick={toggleMenu} />
+    </HamburgerWrapper>
+  )
 }
 
 const MenuItems = () => {
@@ -57,6 +103,6 @@ const MenuItems = () => {
 }
 
 export const Navigation = {
-  NavigationToggler: NavigationToggler,
+  NavigationToggler,
   MenuItems,
 }
