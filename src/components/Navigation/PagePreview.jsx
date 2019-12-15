@@ -1,5 +1,5 @@
 import React from "react"
-import Iframe from "react-iframe"
+// import Iframe from "react-iframe"
 import styled from "@emotion/styled"
 
 const IframeWrapper = styled.div`
@@ -19,8 +19,8 @@ const IframeWrapper = styled.div`
 
 export const PagePreview = ({ path }) => (
   <IframeWrapper>
-    <Iframe
+    {/* <Iframe
       url={path}
-    />
+    /> */}
   </IframeWrapper>
 )
