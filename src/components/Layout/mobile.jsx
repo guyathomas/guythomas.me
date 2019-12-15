@@ -16,7 +16,6 @@ const VHWithFallback = (units = 0) => `
 
 const Main = styled.main`
   height: ${VHWithFallback(100)};
-  perspective: 30rem;
   overflow-y: hidden;
 `
 
@@ -90,25 +89,26 @@ const ContentWrapper = styled.div`
   scroll-snap-type: y mandatory;
   overflow-y: scroll;
   height: 100%;
-  transition: transform 0.4s;
-  transform: translate3d(0, 0, 0);
-  ${props => makeSmaller(props)}
+  pointer-events: ${props => (props.isNavigationExpanded ? "none" : "all")};
 `
 
 const makeSmaller = props =>
   props.isNavigationExpanded
     ? `
-  transform: translate3d(0, 6rem, -10rem);
-  border-radius: 3%;
+  transform: scale(0.7);
   box-shadow: 0 2px 10px rgba(0,0,0,0.5);
   cursor: pointer;
 `
-    : ``
+    : `
+    transform: scale(1);
+    `
 
 const MainMask = styled.div`
   height: 100%;
   overflow: hidden;
-  pointer-events: ${props => (props.isNavigationExpanded ? "none" : "all")};
+  transition: all 0.4s ease-in-out;
+
+  ${props => makeSmaller(props)}
 `
 
 let lastScrollPosition = 0
@@ -179,8 +179,11 @@ export const MobileLayout = ({ children, focusMode }) => {
           isNavigationExpanded={isNavigationExpanded}
         />
       </HamburgerPositioner>
-      <Main onClick={handleSelectCurrentView}>
-        <MainMask isNavigationExpanded={isNavigationExpanded}>
+      <Main>
+        <MainMask
+          isNavigationExpanded={isNavigationExpanded}
+          onClick={handleSelectCurrentView}
+        >
           <ContentWrapper
             isNavigationExpanded={isNavigationExpanded}
             onScroll={handleScroll}
