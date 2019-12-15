@@ -15,9 +15,9 @@ const VHWithFallback = (units = 0) => `
 `
 
 const Main = styled.main`
-  scroll-snap-type: y mandatory;
   height: ${VHWithFallback(100)};
-  overflow-y: scroll;
+  perspective: 30rem;
+  overflow-y: hidden;
 `
 
 const Portrait = styled.div`
@@ -62,15 +62,10 @@ const InitialCardOffset = styled.div`
 
 const MenuWrapper = styled.div`
   /* TODO: Test animation that goes past 100vw */
-  width: 120vw;
-  background-color: white;
-  top: 0;
-  right: 0;
+  background-color: lightgray;
+  width: 100vw;
   height: 100vh;
-  position: fixed;
-  z-index: 5;
-  transition: left 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28);
-  left: ${props => (props.isNavigationExpanded ? 0 : "100vw")};
+  perspective: 500px;
 `
 
 const HamburgerPositioner = styled.div`
@@ -91,17 +86,34 @@ const HamburgerPositioner = styled.div`
   transition: opacity 0.25s ease-in-out;
 `
 
-const vibrateDevice = () => {
-  // Only supported on Android Chrome & Firefox
-  if (get(window, "navigator.vibrate")) {
-    return window.navigator.vibrate(200)
-  }
-  return false
-}
+const ContentWrapper = styled.div`
+  scroll-snap-type: y mandatory;
+  overflow-y: scroll;
+  height: 100%;
+  transition: transform 0.4s;
+  transform: translate3d(0, 0, 0);
+  ${props => makeSmaller(props)}
+`
+
+const makeSmaller = props =>
+  props.isNavigationExpanded
+    ? `
+  transform: translate3d(0, 6rem, -10rem);
+  border-radius: 3%;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  cursor: pointer;
+`
+    : ``
+
+const MainMask = styled.div`
+  height: 100%;
+  overflow: hidden;
+  pointer-events: ${props => (props.isNavigationExpanded ? "none" : "all")};
+`
 
 let lastScrollPosition = 0
 export const MobileLayout = ({ children, focusMode }) => {
-  const [allowCardScrolling, setAllowCardScrolling] = useState(false)
+  const [isCardAtTop, setIsCardAtTop] = useState(false)
   const [scrollDirection, setScrollDirection] = useState(null)
   const [hasLoaded, setHasLoaded] = useState(false)
   const mainEl = useRef(null)
@@ -115,28 +127,21 @@ export const MobileLayout = ({ children, focusMode }) => {
       let newScrollDirection = scrollPos > lastScrollPosition ? "down" : "up"
       lastScrollPosition = scrollPos
       setScrollDirection(newScrollDirection)
-      const newAllowScrollingValue = clientRect.top <= 1 ? true : false
-      const scrollingStateWillChange =
-        newAllowScrollingValue !== allowCardScrolling
-      if (scrollingStateWillChange) {
-        vibrateDevice()
-        setAllowCardScrolling(newAllowScrollingValue)
-      }
+      setIsCardAtTop(clientRect.top <= 1 ? true : false)
     },
     50,
     { leading: true }
   )
 
   const minimizeCard = () => {
+    // TODO: Remove this - testing only
+    // window.minimizeCard = minimizeCard;
     if (!mainEl || !mainEl.current) return
     if (!cardEl || !cardEl.current) return
     const topSmoothly = { top: 0, left: 0, behavior: "smooth" }
     cardEl.current.scrollTo(topSmoothly)
     mainEl.current.scrollTo(topSmoothly)
   }
-
-  // TODO: Remove this - testing only
-  // window.minimizeCard = minimizeCard;
 
   useEffect(() => {
     if (cardEl.current && focusMode) {
@@ -163,26 +168,36 @@ export const MobileLayout = ({ children, focusMode }) => {
   const { state: appState, dispatchers: appDispatchers } = React.useContext(
     AppStateContext
   )
+  const { isNavigationExpanded } = appState
+  const handleSelectCurrentView = () =>
+    isNavigationExpanded && appDispatchers.toggleNavigation()
   return (
-    <Main onScroll={handleScroll} ref={mainEl}>
-      {hasLoaded && <Portrait />}
+    <>
       <HamburgerPositioner hide={scrollDirection === "down"}>
         <Navigation.NavigationToggler
           toggleNavigation={appDispatchers.toggleNavigation}
-          isNavigationExpanded={appState.isNavigationExpanded}
+          isNavigationExpanded={isNavigationExpanded}
         />
       </HamburgerPositioner>
-      <MenuWrapper isNavigationExpanded={appState.isNavigationExpanded}>
-        <Navigation.MenuItems />
-      </MenuWrapper>
-      <InitialCardOffset />
-      <CardWrapper>
-        <Card allowScrolling={allowCardScrolling} ref={cardEl}>
-          <Bio small={focusMode} />
-          <SocialLine />
-          {children}
-        </Card>
-      </CardWrapper>
-    </Main>
+      <Main onClick={handleSelectCurrentView}>
+        <MainMask isNavigationExpanded={isNavigationExpanded}>
+          <ContentWrapper
+            isNavigationExpanded={isNavigationExpanded}
+            onScroll={handleScroll}
+            ref={mainEl}
+          >
+            {hasLoaded && <Portrait />}
+            <InitialCardOffset />
+            <CardWrapper>
+              <Card allowScrolling={isCardAtTop} ref={cardEl}>
+                <Bio small={focusMode} />
+                <SocialLine />
+                {children}
+              </Card>
+            </CardWrapper>
+          </ContentWrapper>
+        </MainMask>
+      </Main>
+    </>
   )
 }

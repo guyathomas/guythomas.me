@@ -2,7 +2,7 @@ import React from "react"
 import styled from "@emotion/styled"
 import { Link } from "gatsby"
 import noop from "lodash/noop"
-
+import { PagePreview } from "./PagePreview"
 import HamburgerSquare from "./icons/hamburger.svg"
 import Cross from "./icons/cross.svg"
 
@@ -31,37 +31,39 @@ const MenuListItem = styled.li`
   }
 `
 
-const MenuIcon = styled.div`
+const MenuIconLine = `
   width: 30px;
   height: 2px;
-  transition: all 250ms cubic-bezier(0.86,0,0.07,1);
+  transition: all 250ms cubic-bezier(0.86, 0, 0.07, 1);
+`
+const MenuIconPsuedo = `
+  ${MenuIconLine}
+  content: "";
+  position: absolute;
+  left: 0;
+  background-color: #007acc;
+  transform-origin: left;
+`
+
+const MenuIcon = styled.div`
+  ${MenuIconLine}
   background-color: ${props =>
     props.isNavigationExpanded ? "transparent" : "#007acc"};
 
   &:before {
-    content: "";
-    width: 30px;
-    height: 2px;
-    background-color: #007acc;
+    ${MenuIconPsuedo}
     top: 0;
-    left: 0;
-    position: absolute;
-    transform-origin: left;
-    transition: all 250ms cubic-bezier(0.86,0,0.07,1);
-    transform: rotate(${props => (props.isNavigationExpanded ? "45deg" : "0deg")});
+    transform: rotate(
+      ${props => (props.isNavigationExpanded ? "45deg" : "0deg")}
+    );
   }
-
+  
   &:after {
-    content: "";
-    width: 30px;
-    height: 2px;
-    position: absolute;
-    transform-origin: left;
+    ${MenuIconPsuedo}
     bottom: 0;
-    left: 0;
-    background-color: #007acc;
-    transition: all 250ms cubic-bezier(0.86,0,0.07,1);
-    transform: rotate(${props => (props.isNavigationExpanded ? "-45deg" : "0deg")});
+    transform: rotate(
+      ${props => (props.isNavigationExpanded ? "-45deg" : "0deg")}
+    );
   }
 `
 
@@ -77,13 +79,14 @@ const HamburgerWrapper = styled.button`
   border: none;
   outline: none;
 `
-// toggleNavigation={appDispatchers.toggleNavigation}
-// isNavigationExpanded={appState.isNavigationExpanded}
 
-const NavigationToggler = ({ toggleNavigation = noop, isNavigationExpanded = false }) => {
+const NavigationToggler = ({
+  toggleNavigation = noop,
+  isNavigationExpanded = false,
+}) => {
   return (
     <HamburgerWrapper onClick={toggleNavigation}>
-      <MenuIcon isNavigationExpanded={isNavigationExpanded}  />
+      <MenuIcon isNavigationExpanded={isNavigationExpanded} />
     </HamburgerWrapper>
   )
 }
@@ -96,7 +99,10 @@ const MenuItems = () => {
   // menuItems.push({ label: "Resume", path: "/resume" }, { label: "Now", path: "/now" })
   return (
     <nav>
-      <LinkList>
+      {menuItems.map(({ path }) => (
+        <PagePreview path={path} key={path} />
+      ))}
+      {/* <LinkList>
         {menuItems.map(({ label, path }) => (
           <MenuListItem key={label}>
             <Link to={path} activeClassName="active">
@@ -104,7 +110,7 @@ const MenuItems = () => {
             </Link>
           </MenuListItem>
         ))}
-      </LinkList>
+      </LinkList> */}
     </nav>
   )
 }
