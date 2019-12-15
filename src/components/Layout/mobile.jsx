@@ -107,7 +107,7 @@ const makeSmaller = props =>
 const MainMask = styled.div`
   height: 100%;
   overflow: hidden;
-  transition: all 0.4s ease-in-out;
+  transition: all 0.4s;
 
   ${props => makeSmaller(props)}
 `
