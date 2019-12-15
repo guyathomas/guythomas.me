@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react"
 import styled from "@emotion/styled"
+import { css } from "@emotion/core"
 import get from "lodash/get"
 import debounce from "lodash/debounce"
 
@@ -9,7 +10,7 @@ import { Bio } from "../Bio"
 import { SocialLine } from "../SocialLine"
 import "./style.css"
 
-const VHWithFallback = (units = 0) => `
+const VHWithFallback = (units = 0) => css`
   height: ${units}vh; /* Fallback for browsers that do not support Custom Properties */
   height: calc(var(--vh, 1vh) * ${units});
 `
@@ -94,12 +95,12 @@ const ContentWrapper = styled.div`
 
 const makeSmaller = props =>
   props.isNavigationExpanded
-    ? `
+    ? css`
   transform: scale(0.7);
   box-shadow: 0 2px 10px rgba(0,0,0,0.5);
   cursor: pointer;
 `
-    : `
+    : css`
     transform: scale(1);
     `
 
