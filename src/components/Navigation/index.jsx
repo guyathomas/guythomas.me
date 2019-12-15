@@ -31,15 +31,12 @@ const MenuListItem = styled.li`
   }
 `
 
-const MenuIcon = styled.button`
+const MenuIcon = styled.div`
   width: 30px;
   height: 2px;
   transition: all 250ms cubic-bezier(0.86,0,0.07,1);
   background-color: ${props =>
     props.isNavigationExpanded ? "transparent" : "#007acc"};
-  padding: 0;
-  border: none;
-  outline: none;
 
   &:before {
     content: "";
@@ -68,20 +65,25 @@ const MenuIcon = styled.button`
   }
 `
 
-const HamburgerWrapper = styled.div`
+const HamburgerWrapper = styled.button`
   display: flex;
+  cursor: pointer;
   justify-content: center;
   align-items: center;
   height: 100%;
   position: relative;
+  padding: 0;
+  background: none;
+  border: none;
+  outline: none;
 `
 // toggleNavigation={appDispatchers.toggleNavigation}
 // isNavigationExpanded={appState.isNavigationExpanded}
 
 const NavigationToggler = ({ toggleNavigation = noop, isNavigationExpanded = false }) => {
   return (
-    <HamburgerWrapper>
-      <MenuIcon isNavigationExpanded={isNavigationExpanded} onClick={toggleNavigation} />
+    <HamburgerWrapper onClick={toggleNavigation}>
+      <MenuIcon isNavigationExpanded={isNavigationExpanded}  />
     </HamburgerWrapper>
   )
 }

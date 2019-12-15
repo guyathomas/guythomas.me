@@ -72,8 +72,7 @@ const MenuWrapper = styled.div`
   padding-right: 6rem;
 `
 
-const HamburgerWrapper = styled.div`
-  height: 2rem;
+const HamburgerPositioner = styled.div`
   position: absolute;
   right: 0;
   top: 0;
@@ -84,6 +83,7 @@ const HamburgerWrapper = styled.div`
   background-color: white;
   box-sizing: content-box;
   padding: 1rem 0;
+  height: 1.5rem;
   & svg {
     height: 100%;
     width: auto;
@@ -115,12 +115,12 @@ export const DesktopLayout = ({ children, focusMode = false }) => {
       </Panel>
       <Panel large={focusMode}>
         <PostWrapper onScroll={onScroll}>
-          <HamburgerWrapper>
+          <HamburgerPositioner>
             <Navigation.NavigationToggler
               toggleNavigation={appDispatchers.toggleNavigation}
               isNavigationExpanded={appState.isNavigationExpanded}
             />
-          </HamburgerWrapper>
+          </HamburgerPositioner>
           <MenuWrapper isNavigationExpanded={appState.isNavigationExpanded}>
             <Navigation.MenuItems />
           </MenuWrapper>
