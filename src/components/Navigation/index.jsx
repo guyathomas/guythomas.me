@@ -98,7 +98,7 @@ const MenuItems = () => {
   ]
   // menuItems.push({ label: "Resume", path: "/resume" }, { label: "Now", path: "/now" })
   return (
-    <nav>
+    <>
       {menuItems.map(({ path }) => (
         <PagePreview path={path} key={path} />
       ))}
@@ -111,7 +111,7 @@ const MenuItems = () => {
           </MenuListItem>
         ))}
       </LinkList> */}
-    </nav>
+    </>
   )
 }
 

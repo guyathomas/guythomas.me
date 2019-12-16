@@ -1,11 +1,10 @@
 import React from "react"
-// import Iframe from "react-iframe"
+import Iframe from "react-iframe"
 import styled from "@emotion/styled"
 
 const IframeWrapper = styled.div`
   pointer-events: none;
   overflow: hidden;
-  padding-top: 56.25%;
   position: relative;
   & iframe {
     border: 0;

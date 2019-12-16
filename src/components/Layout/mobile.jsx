@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect } from "react"
+import { withPrefix, navigate } from "gatsby"
 import styled from "@emotion/styled"
 import { css } from "@emotion/core"
 import get from "lodash/get"
 import debounce from "lodash/debounce"
 
+import { PagePreview } from "../Navigation/PagePreview"
 import { AppStateContext } from "../Layout"
 import { Navigation } from "../Navigation"
 import { Bio } from "../Bio"
@@ -18,6 +20,7 @@ const VHWithFallback = (units = 0) => css`
 const Main = styled.main`
   height: ${VHWithFallback(100)};
   overflow-y: hidden;
+  display: flex;
 `
 
 const Portrait = styled.div`
@@ -65,7 +68,6 @@ const MenuWrapper = styled.div`
   background-color: lightgray;
   width: 100vw;
   height: 100vh;
-  perspective: 500px;
 `
 
 const HamburgerPositioner = styled.div`
@@ -96,20 +98,22 @@ const ContentWrapper = styled.div`
 const makeSmaller = props =>
   props.isNavigationExpanded
     ? css`
-  transform: scale(0.7);
-  box-shadow: 0 2px 10px rgba(0,0,0,0.5);
-  cursor: pointer;
-`
+        transform: scale(0.7) translateY(-2rem);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        cursor: pointer;
+      `
     : css`
-    transform: scale(1);
-    `
-
+        transform: scale(1) translateY(0rem);
+      `
+const transitionDuration = 0.4
 const MainMask = styled.div`
   height: 100%;
+  width: 100%;
   overflow: hidden;
-  transition: all 0.4s;
-
-  ${props => makeSmaller(props)}
+  transition: all ${transitionDuration}s;
+  transform-origin: bottom;
+  flex-shrink: 0;
+  ${makeSmaller}
 `
 
 let lastScrollPosition = 0
@@ -172,6 +176,17 @@ export const MobileLayout = ({ children, focusMode }) => {
   const { isNavigationExpanded } = appState
   const handleSelectCurrentView = () =>
     isNavigationExpanded && appDispatchers.toggleNavigation()
+
+  const menuItems = [
+    { label: "Home", path: "/" },
+    { label: "Blog", path: "/blog" },
+  ]
+  const createOnClickNewPage = path => {
+    return () => {
+      appDispatchers.toggleNavigation()
+      setTimeout(() => navigate(path), transitionDuration * 1000 )
+    }
+  }
   return (
     <>
       <HamburgerPositioner hide={scrollDirection === "down"}>
@@ -201,6 +216,14 @@ export const MobileLayout = ({ children, focusMode }) => {
             </CardWrapper>
           </ContentWrapper>
         </MainMask>
+        {menuItems.map(({ path }) => (
+          <MainMask
+            isNavigationExpanded={appState.isNavigationExpanded}
+            onClick={createOnClickNewPage(path)}
+          >
+            <PagePreview path={path} key={path} />
+          </MainMask>
+        ))}
       </Main>
     </>
   )
