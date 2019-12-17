@@ -43,7 +43,14 @@ const Panel = styled.div`
   align-items: center;
   justify-content: flex-end;
   position: relative;
-  overflow: ${props => props.overflow || "visible"};
+`
+
+const OptionalPanel = styled(Panel)`
+  display: none;
+  overflow: hidden;
+  @media (min-width: ${props => props.hideAtPx}px) {
+    display: block;
+  }
 `
 
 const PostWrapper = styled.div`
@@ -111,14 +118,14 @@ export const DesktopLayout = ({ children, focusMode = false }) => {
           />
         </HamburgerPositioner>
         <SEO title="All posts" />
-        { isNavigationExpanded && <DesktopNavigationItems /> }
+        {isNavigationExpanded && <DesktopNavigationItems />}
         <Navigation.ContentContainer
           isNavigationExpanded={isNavigationExpanded}
           onClick={handleSelectCurrentView}
         >
-          <Panel overflow="hidden">
+          <OptionalPanel hideAtPx={breakpoints.md}>
             <Portrait blur={focusMode} />
-          </Panel>
+          </OptionalPanel>
           <Panel large={focusMode}>
             <PostWrapper onScroll={onScroll}>
               <div ref={socialLineRef}>
