@@ -34,9 +34,10 @@ const Portrait = styled.div`
 const Card = styled.div`
   background-color: white;
   position: relative;
-  border-radius: 1rem 1rem 0 0;
   padding: 1rem 0.5rem;
   overflow-y: ${props => (props.allowScrolling ? "scroll" : "hidden")};
+  transition: all 0.25s ease-in-out;
+  border-radius: ${props => (props.allowScrolling ? "0" : "1rem 1rem 0 0")};
   height: ${VHWithFallback(100)};
   &::after {
     content: "";
