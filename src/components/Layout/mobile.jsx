@@ -96,6 +96,7 @@ const makeSmaller = props =>
         transform: scale(1) translateY(0rem);
       `
 const transitionDuration = 0.4
+
 const MainMask = styled.div`
   height: 100%;
   width: 100%;

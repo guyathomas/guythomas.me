@@ -1,5 +1,6 @@
 import React, { useContext, useRef, useState } from "react"
 import styled from "@emotion/styled"
+import { css } from "@emotion/core"
 import throttle from "lodash/throttle"
 
 import { AppStateContext } from "../Layout"
@@ -13,10 +14,14 @@ import { LayoutContext } from "."
 const Main = styled.main`
   height: 100vh;
   max-width: ${props => props.maxWidth}px;
-  display: flex;
-  justify-content: center;
   padding: 0 3rem;
   margin: auto;
+`
+
+const MainInner = styled.div`
+  position: relative;
+  display: flex;
+  height: 100%;
 `
 
 const Portrait = styled.div`
@@ -90,6 +95,31 @@ const HamburgerPositioner = styled.div`
   }
 `
 
+const makeSmaller = props =>
+  props.isNavigationExpanded
+    ? css`
+        transform: scale(0.7) translateY(-4rem);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        cursor: pointer;
+      `
+    : css`
+        transform: scale(1) translateY(0rem);
+      `
+const transitionDuration = 0.4
+
+const MainMask = styled.div`
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  transition: all ${transitionDuration}s;
+  transform-origin: bottom;
+  flex-shrink: 0;
+  bottom: 0;
+  position: absolute;
+  display: flex;
+  ${makeSmaller}
+`
+
 export const DesktopLayout = ({ children, focusMode = false }) => {
   const {
     theme: { breakpoints },
@@ -107,31 +137,38 @@ export const DesktopLayout = ({ children, focusMode = false }) => {
   const { state: appState, dispatchers: appDispatchers } = React.useContext(
     AppStateContext
   )
+  const { isNavigationExpanded } = appState
+  const handleSelectCurrentView = () =>
+    isNavigationExpanded && appDispatchers.toggleNavigation()
   return (
     <Main maxWidth={breakpoints.max}>
-      <SEO title="All posts" />
-      <Panel overflow="hidden">
-        <Portrait blur={focusMode} />
-      </Panel>
-      <Panel large={focusMode}>
-        <PostWrapper onScroll={onScroll}>
-          <HamburgerPositioner>
-            <Navigation.NavigationToggler
-              toggleNavigation={appDispatchers.toggleNavigation}
-              isNavigationExpanded={appState.isNavigationExpanded}
-            />
-          </HamburgerPositioner>
-          <MenuWrapper isNavigationExpanded={appState.isNavigationExpanded}>
-            <Navigation.MenuItems />
-          </MenuWrapper>
-          <div ref={socialLineRef}>
-            <Bio small />
-            <SocialLine />
-          </div>
-          {children}
-          <SocialLine orientation="vertical" visible={scrolledPastSocial} />
-        </PostWrapper>
-      </Panel>
+      <MainInner>
+        <HamburgerPositioner>
+          <Navigation.NavigationToggler
+            toggleNavigation={appDispatchers.toggleNavigation}
+            isNavigationExpanded={appState.isNavigationExpanded}
+          />
+        </HamburgerPositioner>
+        <SEO title="All posts" />
+        <MainMask
+          isNavigationExpanded={isNavigationExpanded}
+          onClick={handleSelectCurrentView}
+        >
+          <Panel overflow="hidden">
+            <Portrait blur={focusMode} />
+          </Panel>
+          <Panel large={focusMode}>
+            <PostWrapper onScroll={onScroll}>
+              <div ref={socialLineRef}>
+                <Bio small />
+                <SocialLine />
+              </div>
+              {children}
+              <SocialLine orientation="vertical" visible={scrolledPastSocial} />
+            </PostWrapper>
+          </Panel>
+        </MainMask>
+      </MainInner>
     </Main>
   )
 }

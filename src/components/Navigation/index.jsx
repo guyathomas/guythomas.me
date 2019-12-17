@@ -80,6 +80,19 @@ const HamburgerWrapper = styled.button`
   outline: none;
 `
 
+// const ContentContainer = styled.div`
+//   height: 100%;
+//   width: 100%;
+//   overflow: hidden;
+//   transition: all ${transitionDuration}s;
+//   transform-origin: bottom;
+//   flex-shrink: 0;
+//   bottom: 0;
+//   position: absolute;
+//   display: flex;
+//   ${makeSmaller}
+// `
+
 const NavigationToggler = ({
   toggleNavigation = noop,
   isNavigationExpanded = false,
