@@ -67,7 +67,7 @@ const HamburgerPositioner = styled.div`
   top: 0;
   z-index: 10;
   cursor: pointer;
-  transform: translateX(0.5rem);
+  transform: translateX(0.2rem);
   top: 1rem;
   background-color: white;
   box-sizing: content-box;
