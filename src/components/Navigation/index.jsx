@@ -1,5 +1,6 @@
 import React from "react"
 import styled from "@emotion/styled"
+import { css } from "@emotion/core"
 import { Link } from "gatsby"
 import noop from "lodash/noop"
 import { PagePreview } from "./PagePreview"
@@ -80,18 +81,56 @@ const HamburgerWrapper = styled.button`
   outline: none;
 `
 
-// const ContentContainer = styled.div`
-//   height: 100%;
-//   width: 100%;
-//   overflow: hidden;
-//   transition: all ${transitionDuration}s;
-//   transform-origin: bottom;
-//   flex-shrink: 0;
-//   bottom: 0;
-//   position: absolute;
-//   display: flex;
-//   ${makeSmaller}
-// `
+const makeSmaller = props =>
+  props.isNavigationExpanded
+    ? css`
+        transform: scale(0.7) translateY(-2rem);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        cursor: pointer;
+      `
+    : css`
+        transform: scale(1) translateY(0rem);
+      `
+const transitionDuration = 0.4
+
+const ContentContainer = styled.div`
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  transition: all ${transitionDuration}s;
+  transform-origin: bottom;
+  flex-shrink: 0;
+  bottom: 0;
+  position: absolute;
+  display: flex;
+  ${makeSmaller}
+`
+
+const NavList = styled.ul`
+  list-style: none;
+  display: flex;
+  font-size: 1.5rem;
+  margin: 0;
+`
+
+const NavItem = styled.li`
+  margin: 0;
+`
+
+const menuItems = [
+  { label: "Home", path: "/" },
+  { label: "Blog", path: "/blog" },
+]
+
+const NavigationItems = ({ className = '' }) => (
+  <NavList className={className}>
+    {menuItems.map(({ label, path }) => (
+      <NavItem>
+        <Link to={path}>{label}</Link>
+      </NavItem>
+    ))}
+  </NavList>
+)
 
 const NavigationToggler = ({
   toggleNavigation = noop,
@@ -104,31 +143,8 @@ const NavigationToggler = ({
   )
 }
 
-const MenuItems = () => {
-  const menuItems = [
-    { label: "Home", path: "/" },
-    { label: "Blog", path: "/blog" },
-  ]
-  // menuItems.push({ label: "Resume", path: "/resume" }, { label: "Now", path: "/now" })
-  return (
-    <>
-      {menuItems.map(({ path }) => (
-        <PagePreview path={path} key={path} />
-      ))}
-      {/* <LinkList>
-        {menuItems.map(({ label, path }) => (
-          <MenuListItem key={label}>
-            <Link to={path} activeClassName="active">
-              {label}
-            </Link>
-          </MenuListItem>
-        ))}
-      </LinkList> */}
-    </>
-  )
-}
-
 export const Navigation = {
   NavigationToggler,
-  MenuItems,
+  ContentContainer,
+  NavigationItems,
 }

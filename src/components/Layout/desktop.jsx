@@ -35,12 +35,6 @@ const Portrait = styled.div`
   filter: ${props => (props.blur ? "blur(5px)" : "none")};
 `
 
-const BioWrapper = styled.div`
-  position: absolute;
-  color: white;
-  padding-bottom: 1rem;
-`
-
 const Panel = styled.div`
   display: flex;
   flex-grow: ${props => (props.large ? 3 : 1)};
@@ -58,23 +52,6 @@ const PostWrapper = styled.div`
   overflow-y: scroll;
   height: 100%;
   max-width: 40rem;
-`
-
-const MenuWrapper = styled.div`
-  /* TODO: Test animation that goes past 100vw */
-  background-color: white;
-  top: 0;
-  right: 0;
-  height: 100vh;
-  position: absolute;
-  width: 40vw;
-  z-index: 5;
-  transform: scaleX(${props => (props.isNavigationExpanded ? 1 : 0)});
-  transform-origin: right;
-  width: auto;
-  overflow-x: hidden;
-  box-shadow: -4px 0px 6px 0px rgba(0, 0, 0, 0.32);
-  padding-right: 6rem;
 `
 
 const HamburgerPositioner = styled.div`
@@ -95,29 +72,13 @@ const HamburgerPositioner = styled.div`
   }
 `
 
-const makeSmaller = props =>
-  props.isNavigationExpanded
-    ? css`
-        transform: scale(0.7) translateY(-4rem);
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-        cursor: pointer;
-      `
-    : css`
-        transform: scale(1) translateY(0rem);
-      `
-const transitionDuration = 0.4
-
-const MainMask = styled.div`
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
-  transition: all ${transitionDuration}s;
-  transform-origin: bottom;
-  flex-shrink: 0;
-  bottom: 0;
+const DesktopNavigationItems = styled(Navigation.NavigationItems)`
   position: absolute;
-  display: flex;
-  ${makeSmaller}
+  right: 0;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding-top: 7rem;
+  text-align: right;
 `
 
 export const DesktopLayout = ({ children, focusMode = false }) => {
@@ -150,7 +111,8 @@ export const DesktopLayout = ({ children, focusMode = false }) => {
           />
         </HamburgerPositioner>
         <SEO title="All posts" />
-        <MainMask
+        { isNavigationExpanded && <DesktopNavigationItems /> }
+        <Navigation.ContentContainer
           isNavigationExpanded={isNavigationExpanded}
           onClick={handleSelectCurrentView}
         >
@@ -167,7 +129,7 @@ export const DesktopLayout = ({ children, focusMode = false }) => {
               <SocialLine orientation="vertical" visible={scrolledPastSocial} />
             </PostWrapper>
           </Panel>
-        </MainMask>
+        </Navigation.ContentContainer>
       </MainInner>
     </Main>
   )

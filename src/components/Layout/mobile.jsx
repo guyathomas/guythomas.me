@@ -85,39 +85,11 @@ const ContentWrapper = styled.div`
   pointer-events: ${props => (props.isNavigationExpanded ? "none" : "all")};
 `
 
-const makeSmaller = props =>
-  props.isNavigationExpanded
-    ? css`
-        transform: scale(0.7) translateY(-4rem);
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-        cursor: pointer;
-      `
-    : css`
-        transform: scale(1) translateY(0rem);
-      `
-const transitionDuration = 0.4
-
-const MainMask = styled.div`
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
-  transition: all ${transitionDuration}s;
-  transform-origin: bottom;
-  flex-shrink: 0;
-  bottom: 0;
-  position: absolute;
-  ${makeSmaller}
-`
-
-const NavList = styled.ul`
-  list-style: none;
-  display: flex;
-  padding-top: 4rem;
-  margin: 0 3rem;
-  display: flex;
-  justify-content: space-around;
-  flex-wrap: wrap;
-  font-size: 1.5rem;
+const MobileNavigationItems = styled(Navigation.NavigationItems)`
+  margin: 0;
+  padding: 2rem 15% 0;
+  justify-content: center;
+  flex-direction: column;
 `
 
 let lastScrollPosition = 0
@@ -181,10 +153,6 @@ export const MobileLayout = ({ children, focusMode }) => {
   const handleSelectCurrentView = () =>
     isNavigationExpanded && appDispatchers.toggleNavigation()
 
-  const menuItems = [
-    { label: "Home", path: "/" },
-    { label: "Blog", path: "/blog" },
-  ]
 
   return (
     <>
@@ -195,14 +163,8 @@ export const MobileLayout = ({ children, focusMode }) => {
         />
       </HamburgerPositioner>
       <Main>
-        <NavList isVisible={appState.isNavigationExpanded}>
-          {menuItems.map(({ label, path }) => (
-            <li>
-              <Link to={path}>{label}</Link>
-            </li>
-          ))}
-        </NavList>
-        <MainMask
+        <MobileNavigationItems />
+        <Navigation.ContentContainer
           isNavigationExpanded={isNavigationExpanded}
           onClick={handleSelectCurrentView}
         >
@@ -221,7 +183,7 @@ export const MobileLayout = ({ children, focusMode }) => {
               </Card>
             </CardWrapper>
           </ContentWrapper>
-        </MainMask>
+        </Navigation.ContentContainer>
       </Main>
     </>
   )
