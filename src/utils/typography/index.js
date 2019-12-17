@@ -1,5 +1,5 @@
 import Typography from "typography"
-import theme from './config';
+import theme from "./config"
 
 const typography = new Typography(theme)
 

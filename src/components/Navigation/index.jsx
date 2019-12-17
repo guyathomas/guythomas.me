@@ -122,7 +122,7 @@ const menuItems = [
   { label: "Blog", path: "/blog" },
 ]
 
-const NavigationItems = ({ className = '' }) => (
+const NavigationItems = ({ className = "" }) => (
   <NavList className={className}>
     {menuItems.map(({ label, path }) => (
       <NavItem>

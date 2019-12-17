@@ -2,7 +2,7 @@ import React from "react"
 import styled from "@emotion/styled"
 import { Link } from "gatsby"
 
-import { PostMeta } from '../PostMeta';
+import { PostMeta } from "../PostMeta"
 
 const PostTitle = styled.h3`
   margin-top: 0.5rem;

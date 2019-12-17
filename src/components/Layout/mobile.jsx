@@ -154,7 +154,6 @@ export const MobileLayout = ({ children, focusMode }) => {
   const handleSelectCurrentView = () =>
     isNavigationExpanded && appDispatchers.toggleNavigation()
 
-
   return (
     <>
       <HamburgerPositioner hide={scrollDirection === "down"}>
