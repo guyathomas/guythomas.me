@@ -1,11 +1,9 @@
 import React, { useState, useRef, useEffect } from "react"
-import { withPrefix, navigate } from "gatsby"
+import { Link } from "gatsby"
 import styled from "@emotion/styled"
 import { css } from "@emotion/core"
-import get from "lodash/get"
 import debounce from "lodash/debounce"
 
-import { PagePreview } from "../Navigation/PagePreview"
 import { AppStateContext } from "../Layout"
 import { Navigation } from "../Navigation"
 import { Bio } from "../Bio"
@@ -20,7 +18,6 @@ const VHWithFallback = (units = 0) => css`
 const Main = styled.main`
   height: ${VHWithFallback(100)};
   overflow-y: hidden;
-  display: flex;
 `
 
 const Portrait = styled.div`
@@ -63,13 +60,6 @@ const InitialCardOffset = styled.div`
   scroll-snap-align: start;
 `
 
-const MenuWrapper = styled.div`
-  /* TODO: Test animation that goes past 100vw */
-  background-color: lightgray;
-  width: 100vw;
-  height: 100vh;
-`
-
 const HamburgerPositioner = styled.div`
   height: 1.4rem;
   position: fixed;
@@ -98,7 +88,7 @@ const ContentWrapper = styled.div`
 const makeSmaller = props =>
   props.isNavigationExpanded
     ? css`
-        transform: scale(0.7) translateY(-2rem);
+        transform: scale(0.7) translateY(-4rem);
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
         cursor: pointer;
       `
@@ -113,7 +103,20 @@ const MainMask = styled.div`
   transition: all ${transitionDuration}s;
   transform-origin: bottom;
   flex-shrink: 0;
+  bottom: 0;
+  position: absolute;
   ${makeSmaller}
+`
+
+const NavList = styled.ul`
+  list-style: none;
+  display: flex;
+  padding-top: 4rem;
+  margin: 0 3rem;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  font-size: 1.5rem;
 `
 
 let lastScrollPosition = 0
@@ -181,12 +184,7 @@ export const MobileLayout = ({ children, focusMode }) => {
     { label: "Home", path: "/" },
     { label: "Blog", path: "/blog" },
   ]
-  const createOnClickNewPage = path => {
-    return () => {
-      appDispatchers.toggleNavigation()
-      setTimeout(() => navigate(path), transitionDuration * 1000 )
-    }
-  }
+
   return (
     <>
       <HamburgerPositioner hide={scrollDirection === "down"}>
@@ -196,6 +194,13 @@ export const MobileLayout = ({ children, focusMode }) => {
         />
       </HamburgerPositioner>
       <Main>
+        <NavList isVisible={appState.isNavigationExpanded}>
+          {menuItems.map(({ label, path }) => (
+            <li>
+              <Link to={path}>{label}</Link>
+            </li>
+          ))}
+        </NavList>
         <MainMask
           isNavigationExpanded={isNavigationExpanded}
           onClick={handleSelectCurrentView}
@@ -216,14 +221,6 @@ export const MobileLayout = ({ children, focusMode }) => {
             </CardWrapper>
           </ContentWrapper>
         </MainMask>
-        {menuItems.map(({ path }) => (
-          <MainMask
-            isNavigationExpanded={appState.isNavigationExpanded}
-            onClick={createOnClickNewPage(path)}
-          >
-            <PagePreview path={path} key={path} />
-          </MainMask>
-        ))}
       </Main>
     </>
   )

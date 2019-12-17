@@ -18,8 +18,8 @@ const IframeWrapper = styled.div`
 
 export const PagePreview = ({ path }) => (
   <IframeWrapper>
-    {/* <Iframe
+    <Iframe
       url={path}
-    /> */}
+    />
   </IframeWrapper>
 )
