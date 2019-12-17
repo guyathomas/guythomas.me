@@ -3,6 +3,7 @@ import { Link } from "gatsby"
 import styled from "@emotion/styled"
 import { css } from "@emotion/core"
 import debounce from "lodash/debounce"
+import { useScroll } from "react-use-gesture"
 
 import { AppStateContext } from "../Layout"
 import { Navigation } from "../Navigation"
@@ -92,7 +93,6 @@ const MobileNavigationItems = styled(Navigation.NavigationItems)`
   justify-content: center;
   flex-direction: column;
 `
-
 let lastScrollPosition = 0
 export const MobileLayout = ({ children, focusMode }) => {
   const [isCardAtTop, setIsCardAtTop] = useState(false)
@@ -101,14 +101,16 @@ export const MobileLayout = ({ children, focusMode }) => {
   const mainEl = useRef(null)
   const cardEl = useRef(null)
 
+  const bindScrollDirection = useScroll(({ direction: [dirX, dirY] }) =>
+    setScrollDirection(dirY)
+  )
+
   const handleScroll = debounce(
     () => {
       if (!cardEl.current) return
       const clientRect = cardEl.current.getBoundingClientRect()
       const scrollPos = cardEl.current.scrollTop
-      let newScrollDirection = scrollPos > lastScrollPosition ? "down" : "up"
       lastScrollPosition = scrollPos
-      setScrollDirection(newScrollDirection)
       setIsCardAtTop(clientRect.top <= 1 ? true : false)
     },
     50,
@@ -153,10 +155,9 @@ export const MobileLayout = ({ children, focusMode }) => {
   const { isNavigationExpanded } = appState
   const handleSelectCurrentView = () =>
     isNavigationExpanded && appDispatchers.toggleNavigation()
-
   return (
     <>
-      <HamburgerPositioner hide={scrollDirection === "down"}>
+      <HamburgerPositioner hide={scrollDirection === 1}>
         <Navigation.NavigationToggler
           toggleNavigation={appDispatchers.toggleNavigation}
           isNavigationExpanded={isNavigationExpanded}
@@ -176,7 +177,11 @@ export const MobileLayout = ({ children, focusMode }) => {
             {hasLoaded && <Portrait />}
             <InitialCardOffset />
             <CardWrapper>
-              <Card allowScrolling={isCardAtTop} ref={cardEl}>
+              <Card
+                allowScrolling={isCardAtTop}
+                ref={cardEl}
+                {...bindScrollDirection()}
+              >
                 <Bio small={focusMode} />
                 <SocialLine />
                 {children}
