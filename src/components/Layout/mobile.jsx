@@ -4,7 +4,7 @@ import styled from "@emotion/styled"
 import { css } from "@emotion/core"
 import debounce from "lodash/debounce"
 import { useScroll } from "react-use-gesture"
-import get from 'lodash/get'
+import get from "lodash/get"
 
 import { AppStateContext } from "../Layout"
 import { Navigation } from "../Navigation"
@@ -93,13 +93,21 @@ const MobileNavigationItems = styled(Navigation.NavigationItems)`
   justify-content: center;
   flex-direction: column;
 `
+
+const FullHeightDetector = styled.div`
+  position: absolute;
+  height: ${VHWithFallback(100)};
+  width: 100vw;
+  top: 0;
+  left: 0;
+`
 let lastScrollPosition = 0
 export const MobileLayout = ({ children, focusMode }) => {
   const [isCardAtTop, setIsCardAtTop] = useState(false)
   const [scrollDirection, setScrollDirection] = useState(null)
   const [initialContentHeight, setInitialContentHeight] = useState()
   const [hasLoaded, setHasLoaded] = useState(false)
-  const mainEl = useRef(null)
+  const scrollContainerEl = useRef(null)
   const cardEl = useRef(null)
   const initialContentEl = useRef(null)
 
@@ -107,22 +115,19 @@ export const MobileLayout = ({ children, focusMode }) => {
     setScrollDirection(dirY)
   )
 
-  const useObserver = () => {
-    if (!(cardEl.current && mainEl.current)) return
+  if (cardEl.current && scrollContainerEl.current) {
     let options = {
-      root: mainEl.current,
-      threshold: 1.0,
+      root: scrollContainerEl.current,
+      threshold: [0.5, 1],
     }
     const onIntersect = (entries, observer) => {
-      entries.forEach(entry => {
-        console.log(entry)
+      entries.forEach((entry, i) => {
+        console.log("obz", 1, entry)
       })
     }
     let observer = new IntersectionObserver(onIntersect, options)
     observer.observe(cardEl.current)
   }
-
-  useObserver()
 
   useEffect(() => {
     if (cardEl.current && focusMode) {
@@ -131,9 +136,9 @@ export const MobileLayout = ({ children, focusMode }) => {
   }, [focusMode, cardEl])
 
   useEffect(() => {
-    if (!initialContentEl.current) return;
+    if (!initialContentEl.current) return
     const setContentHeight = () => {
-      setInitialContentHeight(initialContentEl.current.clientHeight);
+      setInitialContentHeight(initialContentEl.current.clientHeight)
     }
     setTimeout(setContentHeight, 100) // HACK - Wait til styles are loaded
   }, [initialContentEl])
@@ -176,11 +181,12 @@ export const MobileLayout = ({ children, focusMode }) => {
         >
           <ContentWrapper
             isNavigationExpanded={isNavigationExpanded}
-            ref={mainEl}
+            ref={scrollContainerEl}
           >
             {hasLoaded && <Portrait />}
             <InitialCardOffset height={initialContentHeight} />
-            <Card ref={cardEl} {...bindScrollDirection()}>
+            <Card {...bindScrollDirection()}>
+              <FullHeightDetector ref={cardEl} />
               <InitialContent ref={initialContentEl}>
                 <Bio small={focusMode} />
                 <SocialLine />
