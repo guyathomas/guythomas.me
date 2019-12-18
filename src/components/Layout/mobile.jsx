@@ -4,6 +4,7 @@ import styled from "@emotion/styled"
 import { css } from "@emotion/core"
 import debounce from "lodash/debounce"
 import { useScroll } from "react-use-gesture"
+import get from 'lodash/get'
 
 import { AppStateContext } from "../Layout"
 import { Navigation } from "../Navigation"
@@ -36,10 +37,8 @@ const Card = styled.div`
   background-color: white;
   position: relative;
   padding: 1rem 0.5rem;
-  overflow-y: ${props => (props.allowScrolling ? "scroll" : "hidden")};
   transition: all 0.25s ease-in-out;
-  border-radius: ${props => (props.allowScrolling ? "0" : "1rem 1rem 0 0")};
-  height: ${VHWithFallback(100)};
+  border-radius: 1rem 1rem 0 0;
   &::after {
     content: "";
     height: 3px;
@@ -53,13 +52,11 @@ const Card = styled.div`
   }
 `
 
-const CardWrapper = styled.div`
-  scroll-snap-align: start;
-`
+const CardWrapper = styled.div``
 
 const InitialCardOffset = styled.div`
-  height: ${VHWithFallback(65)};
-  scroll-snap-align: start;
+  height: ${props =>
+    props.height ? `calc(100vh - ${props.height}px - 28px)` : "100vh"};
 `
 
 const HamburgerPositioner = styled.div`
@@ -81,11 +78,12 @@ const HamburgerPositioner = styled.div`
 `
 
 const ContentWrapper = styled.div`
-  scroll-snap-type: y mandatory;
   overflow-y: scroll;
   height: 100%;
   pointer-events: ${props => (props.isNavigationExpanded ? "none" : "all")};
 `
+
+const InitialContent = styled.div``
 
 const MobileNavigationItems = styled(Navigation.NavigationItems)`
   margin: 0;
@@ -97,35 +95,32 @@ let lastScrollPosition = 0
 export const MobileLayout = ({ children, focusMode }) => {
   const [isCardAtTop, setIsCardAtTop] = useState(false)
   const [scrollDirection, setScrollDirection] = useState(null)
+  const [initialContentHeight, setInitialContentHeight] = useState()
   const [hasLoaded, setHasLoaded] = useState(false)
   const mainEl = useRef(null)
   const cardEl = useRef(null)
+  const initialContentEl = useRef(null)
 
   const bindScrollDirection = useScroll(({ direction: [dirX, dirY] }) =>
     setScrollDirection(dirY)
   )
 
-  const handleScroll = debounce(
-    () => {
-      if (!cardEl.current) return
-      const clientRect = cardEl.current.getBoundingClientRect()
-      const scrollPos = cardEl.current.scrollTop
-      lastScrollPosition = scrollPos
-      setIsCardAtTop(clientRect.top <= 1 ? true : false)
-    },
-    50,
-    { leading: true }
-  )
-
-  const minimizeCard = () => {
-    // TODO: Remove this - testing only
-    // window.minimizeCard = minimizeCard;
-    if (!mainEl || !mainEl.current) return
-    if (!cardEl || !cardEl.current) return
-    const topSmoothly = { top: 0, left: 0, behavior: "smooth" }
-    cardEl.current.scrollTo(topSmoothly)
-    mainEl.current.scrollTo(topSmoothly)
+  const useObserver = () => {
+    if (!(cardEl.current && mainEl.current)) return
+    let options = {
+      root: mainEl.current,
+      threshold: 1.0,
+    }
+    const onIntersect = (entries, observer) => {
+      entries.forEach(entry => {
+        console.log(entry)
+      })
+    }
+    let observer = new IntersectionObserver(onIntersect, options)
+    observer.observe(cardEl.current)
   }
+
+  useObserver()
 
   useEffect(() => {
     if (cardEl.current && focusMode) {
@@ -133,6 +128,15 @@ export const MobileLayout = ({ children, focusMode }) => {
     }
   }, [focusMode, cardEl])
 
+  useEffect(() => {
+    if (!initialContentEl.current) return;
+    const setContentHeight = () => {
+      setInitialContentHeight(initialContentEl.current.clientHeight);
+    }
+    setTimeout(setContentHeight, 50) // HACK - Wait til styles are loaded
+  }, [initialContentEl])
+
+  console.log("initialContentHeight", initialContentHeight)
   useEffect(() => {
     const setViewHeightVariable = debounce(() => {
       const vh = window.innerHeight * 0.01
@@ -171,22 +175,17 @@ export const MobileLayout = ({ children, focusMode }) => {
         >
           <ContentWrapper
             isNavigationExpanded={isNavigationExpanded}
-            onScroll={handleScroll}
             ref={mainEl}
           >
             {hasLoaded && <Portrait />}
-            <InitialCardOffset />
-            <CardWrapper>
-              <Card
-                allowScrolling={isCardAtTop}
-                ref={cardEl}
-                {...bindScrollDirection()}
-              >
+            <InitialCardOffset height={initialContentHeight} />
+            <Card ref={cardEl} {...bindScrollDirection()}>
+              <InitialContent ref={initialContentEl}>
                 <Bio small={focusMode} />
                 <SocialLine />
-                {children}
-              </Card>
-            </CardWrapper>
+              </InitialContent>
+              {children}
+            </Card>
           </ContentWrapper>
         </Navigation.ContentContainer>
       </Main>
