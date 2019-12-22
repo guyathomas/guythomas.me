@@ -133,7 +133,7 @@ export const MobileLayout = ({ children, focusMode }) => {
     const setContentHeight = () => {
       setInitialContentHeight(initialContentEl.current.clientHeight)
     }
-    setTimeout(setContentHeight, 500) // HACK - Wait til styles are loaded
+    setTimeout(setContentHeight, 100) // HACK - Wait til styles are loaded
   }, [initialContentEl])
 
   useEffect(() => {
