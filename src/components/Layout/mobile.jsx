@@ -53,8 +53,6 @@ const Card = styled.div`
   }
 `
 
-const CardWrapper = styled.div``
-
 const InitialCardOffset = styled.div`
   scroll-snap-align: start;
   transition: all 0.25s ease-in-out;
