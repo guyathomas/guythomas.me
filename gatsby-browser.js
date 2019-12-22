@@ -1,4 +1,8 @@
 // custom typefaces
 
-import "typeface-open-sans"
-import "typeface-work-sans"
+require("typeface-open-sans")
+require("typeface-work-sans")
+
+exports.onClientEntry = () => {
+  require("./polyfill");
+}
