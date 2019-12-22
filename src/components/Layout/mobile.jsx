@@ -1,10 +1,8 @@
 import React, { useState, useRef, useEffect } from "react"
-import { Link } from "gatsby"
 import styled from "@emotion/styled"
 import { css } from "@emotion/core"
 import debounce from "lodash/debounce"
 import { useScroll } from "react-use-gesture"
-import get from "lodash/get"
 
 import { AppStateContext } from "../Layout"
 import { Navigation } from "../Navigation"
@@ -34,11 +32,14 @@ const Portrait = styled.div`
 `
 
 const Card = styled.div`
+  scroll-snap-align: start;
   background-color: white;
   position: relative;
   padding: 1rem 0.5rem;
   transition: all 0.25s ease-in-out;
-  border-radius: 1rem 1rem 0 0;
+  height: 100%;
+  border-radius: ${props => (props.isCardAtTop ? "0rem" : "1rem 1rem 0 0")};
+  overflow-y: ${props => (props.isCardAtTop ? "scroll" : "hidden")};
   &::after {
     content: "";
     height: 3px;
@@ -55,6 +56,7 @@ const Card = styled.div`
 const CardWrapper = styled.div``
 
 const InitialCardOffset = styled.div`
+  scroll-snap-align: start;
   transition: all 0.25s ease-in-out;
   height: 100vh;
   max-height: ${props =>
@@ -83,6 +85,7 @@ const ContentWrapper = styled.div`
   overflow-y: scroll;
   height: 100%;
   pointer-events: ${props => (props.isNavigationExpanded ? "none" : "all")};
+  scroll-snap-type: y mandatory;
 `
 
 const InitialContent = styled.div``
@@ -94,14 +97,6 @@ const MobileNavigationItems = styled(Navigation.NavigationItems)`
   flex-direction: column;
 `
 
-const FullHeightDetector = styled.div`
-  position: absolute;
-  height: ${VHWithFallback(100)};
-  width: 100vw;
-  top: 0;
-  left: 0;
-`
-let lastScrollPosition = 0
 export const MobileLayout = ({ children, focusMode }) => {
   const [isCardAtTop, setIsCardAtTop] = useState(false)
   const [scrollDirection, setScrollDirection] = useState(null)
@@ -116,16 +111,14 @@ export const MobileLayout = ({ children, focusMode }) => {
   )
 
   if (cardEl.current && scrollContainerEl.current) {
-    let options = {
+    const options = {
       root: scrollContainerEl.current,
-      threshold: [0.5, 1],
+      threshold: 1,
     }
-    const onIntersect = (entries, observer) => {
-      entries.forEach((entry, i) => {
-        console.log("obz", 1, entry)
-      })
+    const onIntersect = ([firstEntry]) => {
+      setIsCardAtTop(firstEntry.intersectionRatio === 1)
     }
-    let observer = new IntersectionObserver(onIntersect, options)
+    const observer = new IntersectionObserver(onIntersect, options)
     observer.observe(cardEl.current)
   }
 
@@ -140,7 +133,7 @@ export const MobileLayout = ({ children, focusMode }) => {
     const setContentHeight = () => {
       setInitialContentHeight(initialContentEl.current.clientHeight)
     }
-    setTimeout(setContentHeight, 100) // HACK - Wait til styles are loaded
+    setTimeout(setContentHeight, 500) // HACK - Wait til styles are loaded
   }, [initialContentEl])
 
   useEffect(() => {
@@ -165,6 +158,7 @@ export const MobileLayout = ({ children, focusMode }) => {
   const { isNavigationExpanded } = appState
   const handleSelectCurrentView = () =>
     isNavigationExpanded && appDispatchers.toggleNavigation()
+
   return (
     <>
       <HamburgerPositioner hide={scrollDirection === 1}>
@@ -185,10 +179,13 @@ export const MobileLayout = ({ children, focusMode }) => {
           >
             {hasLoaded && <Portrait />}
             <InitialCardOffset height={initialContentHeight} />
-            <Card {...bindScrollDirection()}>
-              <FullHeightDetector ref={cardEl} />
+            <Card
+              ref={cardEl}
+              isCardAtTop={isCardAtTop}
+              {...bindScrollDirection()}
+            >
               <InitialContent ref={initialContentEl}>
-                <Bio small={focusMode} />
+                <Bio/>
                 <SocialLine />
               </InitialContent>
               {children}
