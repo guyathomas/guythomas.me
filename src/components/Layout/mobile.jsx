@@ -34,14 +34,12 @@ const Portrait = styled.div`
 `
 
 const Card = styled.div`
-  scroll-snap-align: start;
   background-color: white;
   position: relative;
   padding: 1rem 0.5rem;
   transition: all 0.25s ease-in-out;
   border-radius: ${props => (props.isCardAtTop ? "0" : "1rem 1rem 0 0")};
   &::after {
-    display: ${props => (props.focusMode ? "none" : "block")};
     content: "";
     height: 3px;
     width: 3rem;
@@ -55,7 +53,6 @@ const Card = styled.div`
 `
 
 const InitialCardOffset = styled.div`
-  scroll-snap-align: start;
   transition: all 0.25s ease-in-out;
   height: 100vh;
   max-height: ${props =>
@@ -63,7 +60,7 @@ const InitialCardOffset = styled.div`
   max-height: ${props =>
     props.height
       ? `calc(calc(var(--vh, 1vh) * 100) - ${props.height}px - 28px)`
-      : "75vh"};
+      : "70vh"};
 `
 
 const HamburgerPositioner = styled.div`
@@ -88,7 +85,6 @@ const ContentWrapper = styled.div`
   overflow-y: scroll;
   height: 100%;
   pointer-events: ${props => (props.isNavigationExpanded ? "none" : "all")};
-  scroll-snap-type: y proximity;
 `
 
 const InitialContent = styled.div``
@@ -115,6 +111,12 @@ export const MobileLayout = ({ children, focusMode }) => {
     setScrollDirection(dirY)
     setIsCardAtTop(cardIsAtTop)
   })
+
+  useEffect(() => {
+    if (cardEl.current && focusMode) {
+      cardEl.current.scrollIntoView()
+    }
+  }, [focusMode, cardEl])
 
   useEffect(() => {
     const setViewHeightVariable = debounce(() => {
@@ -164,7 +166,7 @@ export const MobileLayout = ({ children, focusMode }) => {
             {...bindScrollDirection()}
           >
             {hasLoaded && <Portrait />}
-            {!focusMode && <InitialCardOffset height={initialContentHeight} />}
+            <InitialCardOffset height={initialContentHeight} />
             <Card ref={cardEl} isCardAtTop={isCardAtTop} focusMode={focusMode}>
               <InitialContent ref={initialContentEl}>
                 <ReactResizeDetector

@@ -4,30 +4,6 @@ import { css } from "@emotion/core"
 import { Link, navigate } from "gatsby"
 import noop from "lodash/noop"
 
-const LinkList = styled.ul`
-  display: flex;
-  flex-direction: column;
-  padding: 5rem 1rem;
-  margin: 0;
-`
-
-const MenuListItem = styled.li`
-  margin: 0;
-  list-style: none;
-  flex-shrink: 0;
-  font-size: 1.5rem;
-  & a.active {
-    cursor: default;
-    color: hsla(0, 0%, 0%, 0.7) !important;
-  }
-  & a {
-    font-size: 3rem;
-    cursor: pointer;
-  }
-  & a:hover {
-    color: #005b98;
-  }
-`
 
 const MenuIconLine = `
   width: 30px;
