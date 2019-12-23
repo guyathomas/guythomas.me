@@ -44,6 +44,7 @@
     "react-spring": "^9.0.0-beta.34",
     "react-typography": "^0.16.19",
     "react-use-gesture": "^6.0.14",
+    "smoothscroll-polyfill": "^0.4.4",
     "typeface-open-sans": "0.0.75",
     "typeface-work-sans": "0.0.72",
     "typography": "^0.16.19",

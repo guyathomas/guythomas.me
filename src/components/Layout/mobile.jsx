@@ -12,6 +12,8 @@ import { Bio } from "../Bio"
 import { SocialLine } from "../SocialLine"
 import "./style.css"
 
+const CARD_TOP_PADDING = 28;
+
 const VHWithFallback = (units = 0) => css`
   height: ${units}vh; /* Fallback for browsers that do not support Custom Properties */
   height: calc(var(--vh, 1vh) * ${units});
@@ -56,10 +58,10 @@ const InitialCardOffset = styled.div`
   transition: all 0.25s ease-in-out;
   height: 100vh;
   max-height: ${props =>
-    props.height ? `calc(100vh - ${props.height}px - 28px)` : "75vh"};
+    props.height ? `calc(100vh - ${props.height}px - ${CARD_TOP_PADDING}px)` : "75vh"};
   max-height: ${props =>
     props.height
-      ? `calc(calc(var(--vh, 1vh) * 100) - ${props.height}px - 28px)`
+      ? `calc(calc(var(--vh, 1vh) * 100) - ${props.height}px - ${CARD_TOP_PADDING}px)`
       : "70vh"};
 `
 
@@ -104,8 +106,9 @@ export const MobileLayout = ({ children, focusMode }) => {
   const scrollContainerEl = useRef(null)
   const cardEl = useRef(null)
   const initialContentEl = useRef(null)
-
-  const bindScrollDirection = useScroll(({ last, direction: [dirX, dirY] }) => {
+  let windowHeight = window.innerHeight;
+  
+  const bindScrollDirection = useScroll(({ direction: [dirX, dirY] }) => {
     const { top } = result(cardEl, "current.getBoundingClientRect")
     const cardIsAtTop = top <= 0
     setScrollDirection(dirY)
@@ -113,10 +116,10 @@ export const MobileLayout = ({ children, focusMode }) => {
   })
 
   useEffect(() => {
-    if (cardEl.current && focusMode) {
-      cardEl.current.scrollIntoView()
+    if (scrollContainerEl.current && focusMode) {
+      scrollContainerEl.current.scrollTo(0, windowHeight - initialContentHeight - CARD_TOP_PADDING);
     }
-  }, [focusMode, cardEl])
+  }, [focusMode, scrollContainerEl, initialContentHeight])
 
   useEffect(() => {
     const setViewHeightVariable = debounce(() => {
