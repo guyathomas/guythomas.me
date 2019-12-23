@@ -141,7 +141,7 @@ export const MobileLayout = ({ children, focusMode }) => {
     AppStateContext
   )
   const { isNavigationExpanded } = appState
-  const hideHamburger = scrollDirection === 1
+  const hideHamburger = scrollDirection === 1 && isCardAtTop
   const handleSelectCurrentView = () =>
     isNavigationExpanded && !hideHamburger && appDispatchers.toggleNavigation()
   const handleSetCurrentHeight = (width, height) =>
