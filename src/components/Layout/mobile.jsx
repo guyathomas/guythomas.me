@@ -2,8 +2,10 @@ import React, { useState, useRef, useEffect } from "react"
 import styled from "@emotion/styled"
 import { css } from "@emotion/core"
 import debounce from "lodash/debounce"
+import result from "lodash/result"
 import { useScroll } from "react-use-gesture"
 import ReactResizeDetector from "react-resize-detector"
+import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock"
 
 import { AppStateContext } from "../Layout"
 import { Navigation } from "../Navigation"
@@ -104,22 +106,16 @@ export const MobileLayout = ({ children, focusMode }) => {
   const cardEl = useRef(null)
   const initialContentEl = useRef(null)
 
-  const bindScrollDirection = useScroll(({ direction: [dirX, dirY] }) =>
+  const bindScrollDirection = useScroll(({ last, direction: [dirX, dirY] }) => {
     setScrollDirection(dirY)
-  )
-
-  if (cardEl.current && scrollContainerEl.current) {
-    const options = {
-      root: scrollContainerEl.current,
-      threshold: 1,
+    if (last) {
+      const { top } = result(cardEl, "current.getBoundingClientRect")
+      const cardIsAtTop = top <= 0
+      setIsCardAtTop(cardIsAtTop)
     }
-    const onIntersect = ([firstEntry]) => {
-      setIsCardAtTop(firstEntry.intersectionRatio === 1)
-    }
-    const observer = new IntersectionObserver(onIntersect, options)
-    observer.observe(cardEl.current)
-  }
+  })
 
+  
   useEffect(() => {
     if (cardEl.current && focusMode) {
       cardEl.current.scrollIntoView()
@@ -171,14 +167,11 @@ export const MobileLayout = ({ children, focusMode }) => {
           <ContentWrapper
             isNavigationExpanded={isNavigationExpanded}
             ref={scrollContainerEl}
+            {...bindScrollDirection()}
           >
             {hasLoaded && <Portrait />}
             <InitialCardOffset height={initialContentHeight} />
-            <Card
-              ref={cardEl}
-              isCardAtTop={isCardAtTop}
-              {...bindScrollDirection()}
-            >
+            <Card ref={cardEl} isCardAtTop={isCardAtTop}>
               <InitialContent ref={initialContentEl}>
                 <ReactResizeDetector
                   handleHeight
