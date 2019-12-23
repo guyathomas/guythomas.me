@@ -36,9 +36,8 @@ const Card = styled.div`
   background-color: white;
   position: relative;
   padding: 1rem 0.5rem;
-  transition: all 0.25s ease-in-out;
   height: 100%;
-  border-radius: ${props => (props.isCardAtTop ? "0rem" : "1rem 1rem 0 0")};
+  border-radius: ${props => (props.isCardAtTop ? "0" : "1rem 1rem 0 0")};
   overflow-y: ${props => (props.isCardAtTop ? "scroll" : "hidden")};
   &::after {
     content: "";
@@ -96,7 +95,7 @@ const MobileNavigationItems = styled(Navigation.NavigationItems)`
 `
 
 export const MobileLayout = ({ children, focusMode }) => {
-  const [isCardAtTop, setIsCardAtTop] = useState(false)
+  const [isCardAtTop, setIsCardAtTop] = useState(focusMode)
   const [scrollDirection, setScrollDirection] = useState(null)
   const [initialContentHeight, setInitialContentHeight] = useState()
   const [hasLoaded, setHasLoaded] = useState(false)
@@ -131,7 +130,7 @@ export const MobileLayout = ({ children, focusMode }) => {
     const setContentHeight = () => {
       setInitialContentHeight(initialContentEl.current.clientHeight)
     }
-    setTimeout(setContentHeight, 100) // HACK - Wait til styles are loaded
+    setTimeout(setContentHeight, 200) // HACK - Wait til styles are loaded
   }, [initialContentEl])
 
   useEffect(() => {
