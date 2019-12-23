@@ -29,7 +29,7 @@ const Portrait = styled.div`
   background-image: url("https://res.cloudinary.com/dqvlfpaev/image/upload/v1574619573/cropped-black-and-white-portrait_cir0bd.png");
   background-repeat: no-repeat;
   width: 100%;
-  height: ${VHWithFallback(80)};
+  height: ${VHWithFallback(85)};
   background-size: cover;
   background-position: center;
 `
@@ -40,6 +40,7 @@ const Card = styled.div`
   position: relative;
   padding: 1rem 0.5rem;
   height: 100%;
+  transition: all 0.25s ease-in-out;
   border-radius: ${props => (props.isCardAtTop ? "0" : "1rem 1rem 0 0")};
   overflow-y: ${props => (props.isCardAtTop ? "scroll" : "hidden")};
   &::after {
@@ -115,7 +116,7 @@ export const MobileLayout = ({ children, focusMode }) => {
     }
   })
 
-  
+
   useEffect(() => {
     if (cardEl.current && focusMode) {
       cardEl.current.scrollIntoView()
