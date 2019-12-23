@@ -39,10 +39,8 @@ const Card = styled.div`
   background-color: white;
   position: relative;
   padding: 1rem 0.5rem;
-  height: 100%;
   transition: all 0.25s ease-in-out;
   border-radius: ${props => (props.isCardAtTop ? "0" : "1rem 1rem 0 0")};
-  overflow-y: ${props => (props.isCardAtTop ? "scroll" : "hidden")};
   &::after {
     content: "";
     height: 3px;
@@ -109,11 +107,11 @@ export const MobileLayout = ({ children, focusMode }) => {
 
   const bindScrollDirection = useScroll(({ last, direction: [dirX, dirY] }) => {
     setScrollDirection(dirY)
-    if (last) {
+    // if (last) {
       const { top } = result(cardEl, "current.getBoundingClientRect")
       const cardIsAtTop = top <= 0
       setIsCardAtTop(cardIsAtTop)
-    }
+    // }
   })
 
 
@@ -173,13 +171,14 @@ export const MobileLayout = ({ children, focusMode }) => {
             {hasLoaded && <Portrait />}
             <InitialCardOffset height={initialContentHeight} />
             <Card ref={cardEl} isCardAtTop={isCardAtTop}>
+              <ReactResizeDetector
+                handleHeight
+                onResize={handleSetCurrentHeight}
+                targetDomEl={initialContentEl.current}
+              />
               <InitialContent ref={initialContentEl}>
-                <ReactResizeDetector
-                  handleHeight
-                  onResize={handleSetCurrentHeight}
-                />
-                <Bio />
-                <SocialLine />
+                  <Bio />
+                  <SocialLine />
               </InitialContent>
               {children}
             </Card>
