@@ -1,11 +1,8 @@
 import React from "react"
 import styled from "@emotion/styled"
 import { css } from "@emotion/core"
-import { Link } from "gatsby"
+import { Link, navigate } from "gatsby"
 import noop from "lodash/noop"
-import { PagePreview } from "./PagePreview"
-import HamburgerSquare from "./icons/hamburger.svg"
-import Cross from "./icons/cross.svg"
 
 const LinkList = styled.ul`
   display: flex;
@@ -122,15 +119,23 @@ const menuItems = [
   { label: "Blog", path: "/blog" },
 ]
 
-const NavigationItems = ({ className = "" }) => (
-  <NavList className={className}>
-    {menuItems.map(({ label, path }) => (
-      <NavItem>
-        <Link to={path}>{label}</Link>
-      </NavItem>
-    ))}
-  </NavList>
-)
+const NavigationItems = ({ className = "", toggleNavigation = noop }) => {
+  const createNavigationHandler = path => () => {
+    toggleNavigation()
+    navigate(path)
+  }
+  return (
+    <NavList className={className}>
+      {menuItems.map(({ label, path }) => (
+        <NavItem>
+          <Link onClick={createNavigationHandler(path)} to={path}>
+            {label}
+          </Link>
+        </NavItem>
+      ))}
+    </NavList>
+  )
+}
 
 const NavigationToggler = ({
   toggleNavigation = noop,

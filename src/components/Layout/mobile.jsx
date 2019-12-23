@@ -165,7 +165,7 @@ export const MobileLayout = ({ children, focusMode }) => {
         />
       </HamburgerPositioner>
       <Main>
-        <MobileNavigationItems />
+        <MobileNavigationItems toggleNavigation={appDispatchers.toggleNavigation}/>
         <Navigation.ContentContainer
           isNavigationExpanded={isNavigationExpanded}
           onClick={handleSelectCurrentView}

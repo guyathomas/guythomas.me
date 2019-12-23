@@ -118,7 +118,7 @@ export const DesktopLayout = ({ children, focusMode = false }) => {
           />
         </HamburgerPositioner>
         <SEO title="All posts" />
-        {isNavigationExpanded && <DesktopNavigationItems />}
+        {isNavigationExpanded && <DesktopNavigationItems toggleNavigation={appDispatchers.toggleNavigation}/>}
         <Navigation.ContentContainer
           isNavigationExpanded={isNavigationExpanded}
           onClick={handleSelectCurrentView}
