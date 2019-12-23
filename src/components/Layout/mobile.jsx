@@ -3,6 +3,7 @@ import styled from "@emotion/styled"
 import { css } from "@emotion/core"
 import debounce from "lodash/debounce"
 import { useScroll } from "react-use-gesture"
+import ReactResizeDetector from "react-resize-detector"
 
 import { AppStateContext } from "../Layout"
 import { Navigation } from "../Navigation"
@@ -97,7 +98,7 @@ const MobileNavigationItems = styled(Navigation.NavigationItems)`
 export const MobileLayout = ({ children, focusMode }) => {
   const [isCardAtTop, setIsCardAtTop] = useState(focusMode)
   const [scrollDirection, setScrollDirection] = useState(null)
-  const [initialContentHeight, setInitialContentHeight] = useState()
+  const [initialContentHeight, setInitialContentHeight] = useState(0)
   const [hasLoaded, setHasLoaded] = useState(false)
   const scrollContainerEl = useRef(null)
   const cardEl = useRef(null)
@@ -126,14 +127,6 @@ export const MobileLayout = ({ children, focusMode }) => {
   }, [focusMode, cardEl])
 
   useEffect(() => {
-    if (!initialContentEl.current) return
-    const setContentHeight = () => {
-      setInitialContentHeight(initialContentEl.current.clientHeight)
-    }
-    setTimeout(setContentHeight, 200) // HACK - Wait til styles are loaded
-  }, [initialContentEl])
-
-  useEffect(() => {
     const setViewHeightVariable = debounce(() => {
       const vh = window.innerHeight * 0.01
       // Set VH CSS variable so that 100vh will take mobile nav bars into consideration
@@ -153,19 +146,24 @@ export const MobileLayout = ({ children, focusMode }) => {
     AppStateContext
   )
   const { isNavigationExpanded } = appState
+  const hideHamburger = scrollDirection === 1
   const handleSelectCurrentView = () =>
-    isNavigationExpanded && appDispatchers.toggleNavigation()
+    isNavigationExpanded && !hideHamburger && appDispatchers.toggleNavigation()
+  const handleSetCurrentHeight = (width, height) =>
+    setInitialContentHeight(height)
 
   return (
     <>
-      <HamburgerPositioner hide={scrollDirection === 1}>
+      <HamburgerPositioner hide={hideHamburger}>
         <Navigation.NavigationToggler
           toggleNavigation={appDispatchers.toggleNavigation}
           isNavigationExpanded={isNavigationExpanded}
         />
       </HamburgerPositioner>
       <Main>
-        <MobileNavigationItems toggleNavigation={appDispatchers.toggleNavigation}/>
+        <MobileNavigationItems
+          toggleNavigation={appDispatchers.toggleNavigation}
+        />
         <Navigation.ContentContainer
           isNavigationExpanded={isNavigationExpanded}
           onClick={handleSelectCurrentView}
@@ -182,7 +180,11 @@ export const MobileLayout = ({ children, focusMode }) => {
               {...bindScrollDirection()}
             >
               <InitialContent ref={initialContentEl}>
-                <Bio/>
+                <ReactResizeDetector
+                  handleHeight
+                  onResize={handleSetCurrentHeight}
+                />
+                <Bio />
                 <SocialLine />
               </InitialContent>
               {children}
