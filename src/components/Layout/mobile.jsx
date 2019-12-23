@@ -171,12 +171,11 @@ export const MobileLayout = ({ children, focusMode }) => {
             {hasLoaded && <Portrait />}
             <InitialCardOffset height={initialContentHeight} />
             <Card ref={cardEl} isCardAtTop={isCardAtTop}>
-              <ReactResizeDetector
-                handleHeight
-                onResize={handleSetCurrentHeight}
-                targetDomEl={initialContentEl.current}
-              />
               <InitialContent ref={initialContentEl}>
+                  <ReactResizeDetector
+                    handleHeight
+                    onResize={handleSetCurrentHeight}
+                  />
                   <Bio />
                   <SocialLine />
               </InitialContent>
