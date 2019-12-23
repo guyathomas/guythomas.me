@@ -175,6 +175,7 @@ export const MobileLayout = ({ children, focusMode }) => {
                   <ReactResizeDetector
                     handleHeight
                     onResize={handleSetCurrentHeight}
+                    targetDomEl={initialContentEl.current}
                   />
                   <Bio />
                   <SocialLine />
