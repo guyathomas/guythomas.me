@@ -5,7 +5,6 @@ import debounce from "lodash/debounce"
 import result from "lodash/result"
 import { useScroll } from "react-use-gesture"
 import ReactResizeDetector from "react-resize-detector"
-import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock"
 
 import { AppStateContext } from "../Layout"
 import { Navigation } from "../Navigation"
@@ -19,7 +18,7 @@ const VHWithFallback = (units = 0) => css`
 `
 
 const Main = styled.main`
-  height: ${VHWithFallback(100)};
+  ${VHWithFallback(100)};
   overflow-y: hidden;
 `
 
@@ -29,7 +28,7 @@ const Portrait = styled.div`
   background-image: url("https://res.cloudinary.com/dqvlfpaev/image/upload/v1574619573/cropped-black-and-white-portrait_cir0bd.png");
   background-repeat: no-repeat;
   width: 100%;
-  height: ${VHWithFallback(85)};
+  ${VHWithFallback(85)};
   background-size: cover;
   background-position: center;
 `
@@ -42,6 +41,7 @@ const Card = styled.div`
   transition: all 0.25s ease-in-out;
   border-radius: ${props => (props.isCardAtTop ? "0" : "1rem 1rem 0 0")};
   &::after {
+    display: ${props => (props.focusMode ? "none" : "block")};
     content: "";
     height: 3px;
     width: 3rem;
@@ -60,6 +60,10 @@ const InitialCardOffset = styled.div`
   height: 100vh;
   max-height: ${props =>
     props.height ? `calc(100vh - ${props.height}px - 28px)` : "75vh"};
+  max-height: ${props =>
+    props.height
+      ? `calc(calc(var(--vh, 1vh) * 100) - ${props.height}px - 28px)`
+      : "75vh"};
 `
 
 const HamburgerPositioner = styled.div`
@@ -106,20 +110,11 @@ export const MobileLayout = ({ children, focusMode }) => {
   const initialContentEl = useRef(null)
 
   const bindScrollDirection = useScroll(({ last, direction: [dirX, dirY] }) => {
+    const { top } = result(cardEl, "current.getBoundingClientRect")
+    const cardIsAtTop = top <= 0
     setScrollDirection(dirY)
-    // if (last) {
-      const { top } = result(cardEl, "current.getBoundingClientRect")
-      const cardIsAtTop = top <= 0
-      setIsCardAtTop(cardIsAtTop)
-    // }
+    setIsCardAtTop(cardIsAtTop)
   })
-
-
-  useEffect(() => {
-    if (cardEl.current && focusMode) {
-      cardEl.current.scrollIntoView()
-    }
-  }, [focusMode, cardEl])
 
   useEffect(() => {
     const setViewHeightVariable = debounce(() => {
@@ -169,16 +164,15 @@ export const MobileLayout = ({ children, focusMode }) => {
             {...bindScrollDirection()}
           >
             {hasLoaded && <Portrait />}
-            <InitialCardOffset height={initialContentHeight} />
-            <Card ref={cardEl} isCardAtTop={isCardAtTop}>
+            {!focusMode && <InitialCardOffset height={initialContentHeight} />}
+            <Card ref={cardEl} isCardAtTop={isCardAtTop} focusMode={focusMode}>
               <InitialContent ref={initialContentEl}>
-                  <ReactResizeDetector
-                    handleHeight
-                    onResize={handleSetCurrentHeight}
-                    targetDomEl={initialContentEl.current}
-                  />
-                  <Bio />
-                  <SocialLine />
+                <ReactResizeDetector
+                  handleHeight
+                  onResize={handleSetCurrentHeight}
+                />
+                <Bio />
+                <SocialLine />
               </InitialContent>
               {children}
             </Card>
