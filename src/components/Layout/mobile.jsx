@@ -88,7 +88,7 @@ const ContentWrapper = styled.div`
   overflow-y: scroll;
   height: 100%;
   pointer-events: ${props => (props.isNavigationExpanded ? "none" : "all")};
-  scroll-snap-type: y mandatory;
+  scroll-snap-type: y proximity;
 `
 
 const InitialContent = styled.div``
