@@ -12,7 +12,7 @@ import { Bio } from "../Bio"
 import { SocialLine } from "../SocialLine"
 import "./style.css"
 
-const CARD_TOP_PADDING = 28;
+const CARD_TOP_PADDING = 28
 
 const VHWithFallback = (units = 0) => css`
   height: ${units}vh; /* Fallback for browsers that do not support Custom Properties */
@@ -42,6 +42,7 @@ const Card = styled.div`
   transition: all 0.25s ease-in-out;
   border-radius: ${props => (props.isCardAtTop ? "0" : "1rem 1rem 0 0")};
   &::after {
+    display: ${props => (props.focusMode ? "none" : "block")}
     content: "";
     height: 3px;
     width: 3rem;
@@ -58,7 +59,9 @@ const InitialCardOffset = styled.div`
   transition: all 0.25s ease-in-out;
   height: 100vh;
   max-height: ${props =>
-    props.height ? `calc(100vh - ${props.height}px - ${CARD_TOP_PADDING}px)` : "75vh"};
+    props.height
+      ? `calc(100vh - ${props.height}px - ${CARD_TOP_PADDING}px)`
+      : "75vh"};
   max-height: ${props =>
     props.height
       ? `calc(calc(var(--vh, 1vh) * 100) - ${props.height}px - ${CARD_TOP_PADDING}px)`
@@ -106,20 +109,13 @@ export const MobileLayout = ({ children, focusMode }) => {
   const scrollContainerEl = useRef(null)
   const cardEl = useRef(null)
   const initialContentEl = useRef(null)
-  let windowHeight = window.innerHeight;
-  
+
   const bindScrollDirection = useScroll(({ direction: [dirX, dirY] }) => {
     const { top } = result(cardEl, "current.getBoundingClientRect")
     const cardIsAtTop = top <= 0
     setScrollDirection(dirY)
     setIsCardAtTop(cardIsAtTop)
   })
-
-  useEffect(() => {
-    if (scrollContainerEl.current && focusMode) {
-      scrollContainerEl.current.scrollTo(0, windowHeight - initialContentHeight - CARD_TOP_PADDING);
-    }
-  }, [focusMode, scrollContainerEl, initialContentHeight])
 
   useEffect(() => {
     const setViewHeightVariable = debounce(() => {
@@ -140,43 +136,42 @@ export const MobileLayout = ({ children, focusMode }) => {
   const { state: appState, dispatchers: appDispatchers } = React.useContext(
     AppStateContext
   )
-  const { isNavigationExpanded } = appState
+
   const hideHamburger = scrollDirection === 1 && isCardAtTop
   const handleSelectCurrentView = () =>
-    isNavigationExpanded && !hideHamburger && appDispatchers.toggleNavigation()
-  const handleSetCurrentHeight = (width, height) =>
-    setInitialContentHeight(height)
+    appState.isNavigationExpanded && appDispatchers.toggleNavigation()
+  const toggleNavigation = () =>
+    !hideHamburger && appDispatchers.toggleNavigation()
+  const handleSetCurrentHeight = (_, height) => setInitialContentHeight(height)
 
   return (
     <>
       <HamburgerPositioner hide={hideHamburger}>
         <Navigation.NavigationToggler
-          toggleNavigation={appDispatchers.toggleNavigation}
-          isNavigationExpanded={isNavigationExpanded}
+          toggleNavigation={toggleNavigation}
+          isNavigationExpanded={appState.isNavigationExpanded}
         />
       </HamburgerPositioner>
       <Main>
-        <MobileNavigationItems
-          toggleNavigation={appDispatchers.toggleNavigation}
-        />
+        <MobileNavigationItems toggleNavigation={toggleNavigation} />
         <Navigation.ContentContainer
-          isNavigationExpanded={isNavigationExpanded}
+          isNavigationExpanded={appState.isNavigationExpanded}
           onClick={handleSelectCurrentView}
         >
           <ContentWrapper
-            isNavigationExpanded={isNavigationExpanded}
+            isNavigationExpanded={appState.isNavigationExpanded}
             ref={scrollContainerEl}
             {...bindScrollDirection()}
           >
             {hasLoaded && <Portrait />}
-            <InitialCardOffset height={initialContentHeight} />
-            <Card ref={cardEl} isCardAtTop={isCardAtTop} focusMode={focusMode}>
+            {!focusMode && <InitialCardOffset height={initialContentHeight} />}
+            <Card ref={cardEl} isCardAtTop={isCardAtTop} focusMode={focusMode} focusMode={focusMode}>
               <InitialContent ref={initialContentEl}>
                 <ReactResizeDetector
                   handleHeight
                   onResize={handleSetCurrentHeight}
                 />
-                <Bio />
+                <Bio small={focusMode} />
                 <SocialLine />
               </InitialContent>
               {children}
