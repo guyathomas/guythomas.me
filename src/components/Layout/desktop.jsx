@@ -1,6 +1,5 @@
 import React, { useContext, useRef, useState } from "react"
 import styled from "@emotion/styled"
-import { css } from "@emotion/core"
 import throttle from "lodash/throttle"
 
 import { AppStateContext } from "../Layout"
@@ -79,7 +78,7 @@ const HamburgerPositioner = styled.div`
   }
 `
 
-const DesktopNavigationItems = styled(Navigation.NavigationItems)`
+const DesktopNavigationItems = styled(Navigation.Links)`
   position: absolute;
   right: 0;
   flex-direction: column;
@@ -102,27 +101,16 @@ export const DesktopLayout = ({ children, focusMode = false }) => {
       ? setScrolledPastSocial(true)
       : setScrolledPastSocial(false)
   }, 100)
-  const { state: appState, dispatchers: appDispatchers } = React.useContext(
-    AppStateContext
-  )
-  const { isNavigationExpanded } = appState
-  const handleSelectCurrentView = () =>
-    isNavigationExpanded && appDispatchers.toggleNavigation()
+
   return (
     <Main maxWidth={breakpoints.max}>
       <MainInner>
         <HamburgerPositioner>
-          <Navigation.NavigationToggler
-            toggleNavigation={appDispatchers.toggleNavigation}
-            isNavigationExpanded={appState.isNavigationExpanded}
-          />
+          <Navigation.Hamburger />
         </HamburgerPositioner>
         <SEO title="All posts" />
-        {isNavigationExpanded && <DesktopNavigationItems toggleNavigation={appDispatchers.toggleNavigation}/>}
-        <Navigation.ContentContainer
-          isNavigationExpanded={isNavigationExpanded}
-          onClick={handleSelectCurrentView}
-        >
+        <DesktopNavigationItems />
+        <Navigation.ContentContainer>
           <OptionalPanel hideAtPx={breakpoints.md}>
             <Portrait blur={focusMode} />
           </OptionalPanel>

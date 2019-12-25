@@ -94,7 +94,7 @@ const ContentWrapper = styled.div`
 
 const InitialContent = styled.div``
 
-const MobileNavigationItems = styled(Navigation.NavigationItems)`
+const MobileNavigationItems = styled(Navigation.Links)`
   margin: 0;
   padding: 2rem 15% 0;
   justify-content: center;
@@ -140,32 +140,21 @@ export const MobileLayout = ({ children, focusMode }) => {
   const hideHamburger = scrollDirection === 1 && isCardAtTop
   const handleSelectCurrentView = () =>
     appState.isNavigationExpanded && appDispatchers.toggleNavigation()
-  const toggleNavigation = () =>
-    !hideHamburger && appDispatchers.toggleNavigation()
+
   const handleSetCurrentHeight = (_, height) => setInitialContentHeight(height)
 
   return (
     <>
       <HamburgerPositioner hide={hideHamburger}>
-        <Navigation.NavigationToggler
-          toggleNavigation={toggleNavigation}
-          isNavigationExpanded={appState.isNavigationExpanded}
-        />
+        <Navigation.Hamburger disableNavigation={hideHamburger} />
       </HamburgerPositioner>
       <Main>
-        <MobileNavigationItems toggleNavigation={toggleNavigation} />
-        <Navigation.ContentContainer
-          isNavigationExpanded={appState.isNavigationExpanded}
-          onClick={handleSelectCurrentView}
-        >
-          <ContentWrapper
-            isNavigationExpanded={appState.isNavigationExpanded}
-            ref={scrollContainerEl}
-            {...bindScrollDirection()}
-          >
+        <MobileNavigationItems />
+        <Navigation.ContentContainer>
+          <ContentWrapper ref={scrollContainerEl} {...bindScrollDirection()}>
             {hasLoaded && <Portrait />}
             {!focusMode && <InitialCardOffset height={initialContentHeight} />}
-            <Card ref={cardEl} isCardAtTop={isCardAtTop} focusMode={focusMode} focusMode={focusMode}>
+            <Card ref={cardEl} isCardAtTop={isCardAtTop} focusMode={focusMode}>
               <InitialContent ref={initialContentEl}>
                 <ReactResizeDetector
                   handleHeight
