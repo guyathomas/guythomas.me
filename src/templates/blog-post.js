@@ -12,7 +12,7 @@ const BlogTitle = styled.h2`
 `
 
 export default ({ data: { markdownRemark: post } }) => (
-  <Layout focusMode>
+  <>
     <SEO
       title={post.frontmatter.title}
       description={post.frontmatter.description || post.excerpt}
@@ -24,7 +24,7 @@ export default ({ data: { markdownRemark: post } }) => (
       </header>
       <section dangerouslySetInnerHTML={{ __html: post.html }} />
     </article>
-  </Layout>
+  </>
 )
 
 export const pageQuery = graphql`

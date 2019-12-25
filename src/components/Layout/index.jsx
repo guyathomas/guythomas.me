@@ -19,11 +19,12 @@ const theme = {
 export const LayoutContext = createContext(theme)
 export const AppStateContext = createContext(null)
 
-export const Layout = ({ children, focusMode }) => {
+export default ({ children, ...props }) => {
   const [screenSize, setScreenSize] = useState({})
   const [isLoading, setIsLoading] = useState(true)
   const [isMobile, setIsMobile] = useState(null)
-
+  const pathsWithCard = new Set(["/"])
+  const focusMode = !pathsWithCard.has(props.path)
   useEffect(() => {
     setIsLoading(false)
   }, [])

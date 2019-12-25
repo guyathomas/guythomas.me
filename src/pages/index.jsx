@@ -7,14 +7,14 @@ import { Layout } from "../components/Layout"
 export default ({ focusMode = false, ...props }) => {
   const posts = props.data.allMarkdownRemark.edges
   return (
-    <Layout focusMode={focusMode}>
+      <>
       <SEO title="All posts" />
       <main>
         {posts.map(post => (
           <PostSnippit key={post.node.fields.slug} {...post} />
         ))}
       </main>
-    </Layout>
+    </>
   )
 }
 
