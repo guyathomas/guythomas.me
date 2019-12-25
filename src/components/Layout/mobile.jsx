@@ -41,6 +41,7 @@ const Card = styled.div`
   padding: 1rem 0.5rem;
   transition: all 0.25s ease-in-out;
   border-radius: ${props => (props.isCardAtTop ? "0" : "1rem 1rem 0 0")};
+  min-height: 100vh;
   &::after {
     display: ${props => (props.focusMode ? "none" : "block")}
     content: "";
@@ -133,14 +134,8 @@ export const MobileLayout = ({ children, focusMode }) => {
   useEffect(() => {
     setHasLoaded(true)
   }, [])
-  const { state: appState, dispatchers: appDispatchers } = React.useContext(
-    AppStateContext
-  )
 
   const hideHamburger = scrollDirection === 1 && isCardAtTop
-  const handleSelectCurrentView = () =>
-    appState.isNavigationExpanded && appDispatchers.toggleNavigation()
-
   const handleSetCurrentHeight = (_, height) => setInitialContentHeight(height)
 
   return (
