@@ -23,6 +23,7 @@ const Portrait = styled.div`
   height: 85vh;
   background-size: cover;
   background-position: center;
+  filter: ${props => `blur(${(props.blur / 100) * 5 || 0}px)`};
 `
 
 const Card = styled.div`
@@ -89,22 +90,26 @@ const MobileNavigationItems = styled(Navigation.Links)`
 export const MobileLayout = ({ children, focusMode }) => {
   const [isBelowHeader, setIsBelowHeader] = useState(false)
   const [scrollDirection, setScrollDirection] = useState(null)
+  const [percentageVHScrolled, setPercentageVHScrolled] = useState(0)
   const [initialContentHeight, setInitialContentHeight] = useState()
   const [hasLoaded, setHasLoaded] = useState(false)
   const scrollContainerEl = useRef(null)
   const initialContentEl = useRef(null)
 
   const bindWindowScroll = useScroll(
-    ({ direction: [dirX, dirY] }) => {
+    ({ direction: [dirX, dirY], xy: [x, y] }) => {
       const isBelowHeader =
         result(initialContentEl, "current.getBoundingClientRect").top <= 0
       setScrollDirection(dirY)
       setIsBelowHeader(isBelowHeader)
+      const roundedToTens = Math.round((10 * y) / window.innerHeight)
+      const newPercentageScrolled = Math.min(roundedToTens, 10) * 10;
+      if ( newPercentageScrolled !== percentageVHScrolled ) setPercentageVHScrolled(newPercentageScrolled)
     },
     { domTarget: window }
   )
 
-  useEffect(bindWindowScroll, [bindWindowScroll])
+  useEffect(bindWindowScroll, [bindWindowScroll, window])
 
   useEffect(() => {
     setHasLoaded(true)
@@ -121,7 +126,7 @@ export const MobileLayout = ({ children, focusMode }) => {
       <MobileNavigationItems />
       <Navigation.ContentContainer>
         <ContentWrapper ref={scrollContainerEl}>
-          {hasLoaded && <Portrait />}
+          {hasLoaded && <Portrait blur={percentageVHScrolled} />}
           {!focusMode && <InitialCardOffset height={initialContentHeight} />}
           <Card focusMode={focusMode}>
             <InitialContent ref={initialContentEl}>
