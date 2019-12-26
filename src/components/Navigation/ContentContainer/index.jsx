@@ -17,8 +17,7 @@ const transformPageSize = props =>
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
         cursor: pointer;
         position: absolute;
-        height: 100vh; /* Fallback for browsers that do not support Custom Properties */
-        height: calc(var(--vh, 1vh) * 100);
+        height: 100vh;
         overflow: hidden;
       `
     : css``

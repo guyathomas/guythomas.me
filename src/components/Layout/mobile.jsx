@@ -111,26 +111,11 @@ export const MobileLayout = ({ children, focusMode }) => {
   useEffect(bindWindowScroll, [bindWindowScroll])
 
   useEffect(() => {
-    const setViewHeightVariable = debounce(() => {
-      const vh = window.innerHeight * 0.01
-      // Set VH CSS variable so that 100vh will take mobile nav bars into consideration
-      document.documentElement.style.setProperty("--vh", `${vh}px`)
-    }, 100)
-
-    setViewHeightVariable()
-    window.addEventListener("resize", setViewHeightVariable)
-
-    return () => window.removeEventListener("resize", setViewHeightVariable)
-  }, [])
-
-  useEffect(() => {
     setHasLoaded(true)
   }, [])
 
   const hideHamburger = scrollDirection === 1 && isBelowHeader
-  const handleSetCurrentHeight = (_, height) =>
-    (!initialContentHeight || height > initialContentHeight) &&
-    setInitialContentHeight(height)
+  const handleSetCurrentHeight = (_, height) => setInitialContentHeight(height)
 
   return (
     <>
