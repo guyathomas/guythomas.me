@@ -13,7 +13,7 @@ import { TransitionConstants } from "../../Layout/Transition"
 const transformPageSize = props =>
   props.isNavigationExpanded
     ? css`
-        transform: scale(0.6) translateY(-5rem);
+        transform: scale(0.7) translateY(-1rem);
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
         cursor: pointer;
         height: 100vh;
