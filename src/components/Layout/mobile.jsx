@@ -15,12 +15,7 @@ import "./style.css"
 const CARD_TOP_PADDING = 28
 
 const Portrait = styled.div`
-  /* Make portrait extend outside viewport so blur effect doesn't look janky */
-  left: -1%;
-  top: -1%;
-  width: 102%;
-  filter: ${props => `blur(${(props.blur / 100) * 5 || 0}px)`};
-  
+  width: 100%;
   z-index: -1;
   position: fixed;
   background-image: url("https://res.cloudinary.com/dqvlfpaev/image/upload/v1574619573/cropped-black-and-white-portrait_cir0bd.png");
@@ -93,21 +88,16 @@ const MobileNavigationItems = styled(Navigation.Links)`
 export const MobileLayout = ({ children, focusMode }) => {
   const [isBelowHeader, setIsBelowHeader] = useState(false)
   const [scrollDirection, setScrollDirection] = useState(null)
-  const [percentageVHScrolled, setPercentageVHScrolled] = useState(0)
   const [initialContentHeight, setInitialContentHeight] = useState()
   const [hasLoaded, setHasLoaded] = useState(false)
   const scrollContainerEl = useRef(null)
   const initialContentEl = useRef(null)
 
-  const bindScroll = useScroll(({ direction: [dirX, dirY], xy: [x, y] }) => {
+  const bindScroll = useScroll(({ direction: [dirX, dirY] }) => {
     const isBelowHeader =
       result(initialContentEl, "current.getBoundingClientRect").top <= 0
     setScrollDirection(dirY)
     setIsBelowHeader(isBelowHeader)
-    const roundedToTens = Math.round((10 * y) / window.innerHeight)
-    const newPercentageScrolled = Math.min(roundedToTens, 10) * 10
-    if (newPercentageScrolled !== percentageVHScrolled)
-      setPercentageVHScrolled(newPercentageScrolled)
   })
 
   useScrollTopOnRouteChange(scrollContainerEl)
@@ -127,7 +117,7 @@ export const MobileLayout = ({ children, focusMode }) => {
       <MobileNavigationItems />
       <Navigation.ContentContainer>
         <ContentWrapper ref={scrollContainerEl} {...bindScroll()}>
-          {hasLoaded && <Portrait blur={percentageVHScrolled} />}
+          {hasLoaded && <Portrait />}
           {!focusMode && <InitialCardOffset height={initialContentHeight} />}
           <Card focusMode={focusMode}>
             <InitialContent ref={initialContentEl}>
