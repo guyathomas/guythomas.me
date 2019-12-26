@@ -53,10 +53,6 @@ const InitialCardOffset = styled.div`
     props.height
       ? `calc(100vh - ${props.height}px - ${CARD_TOP_PADDING}px)`
       : "75vh"};
-  max-height: ${props =>
-    props.height
-      ? `calc(calc(var(--vh, 1vh) * 100) - ${props.height}px - ${CARD_TOP_PADDING}px)`
-      : "70vh"};
 `
 
 const HamburgerPositioner = styled.div`
