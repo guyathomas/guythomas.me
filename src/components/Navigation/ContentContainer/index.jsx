@@ -13,10 +13,9 @@ import { TransitionConstants } from "../../Layout/Transition"
 const transformPageSize = props =>
   props.isNavigationExpanded
     ? css`
-        transform: scale(0.7) translateY(-2rem);
+        transform: scale(0.5) translateY(-5rem);
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
         cursor: pointer;
-        position: absolute;
         height: 100vh;
         overflow: hidden;
       `
@@ -28,6 +27,8 @@ const ContentContainerStyles = styled.div`
   flex-shrink: 0;
   bottom: 0;
   width: 100%;
+  height: 100%;
+  position: absolute;
   display: flex;
   ${transformPageSize}
 `
