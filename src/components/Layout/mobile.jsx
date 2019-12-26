@@ -6,7 +6,7 @@ import result from "lodash/result"
 import { useScroll } from "react-use-gesture"
 import ReactResizeDetector from "react-resize-detector"
 
-import { TransitionConstants } from './Transition'
+import { TransitionConstants } from "./Transition"
 import { Navigation } from "../Navigation"
 import { Bio } from "../Bio"
 import { SocialLine } from "../SocialLine"
@@ -17,11 +17,6 @@ const CARD_TOP_PADDING = 28
 const VHWithFallback = (units = 0) => css`
   height: ${units}vh; /* Fallback for browsers that do not support Custom Properties */
   height: calc(var(--vh, 1vh) * ${units});
-`
-
-const Main = styled.main`
-  ${VHWithFallback(100)};
-  overflow-y: hidden;
 `
 
 const Portrait = styled.div`
@@ -88,8 +83,6 @@ const HamburgerPositioner = styled.div`
 `
 
 const ContentWrapper = styled.div`
-  overflow-y: scroll;
-  height: 100%;
   pointer-events: ${props => (props.isNavigationExpanded ? "none" : "all")};
 `
 
@@ -103,18 +96,24 @@ const MobileNavigationItems = styled(Navigation.Links)`
 `
 
 export const MobileLayout = ({ children, focusMode }) => {
-  const [isBelowHeader, setIsBelowHeader] = useState(false);
+  const [isBelowHeader, setIsBelowHeader] = useState(false)
   const [scrollDirection, setScrollDirection] = useState(null)
   const [initialContentHeight, setInitialContentHeight] = useState(0)
   const [hasLoaded, setHasLoaded] = useState(false)
   const scrollContainerEl = useRef(null)
   const initialContentEl = useRef(null)
 
-  const bindScrollDirection = useScroll(({ direction: [dirX, dirY] }) => {
-    const isBelowHeader = result(initialContentEl, "current.getBoundingClientRect").top <= 0
-    setScrollDirection(dirY)
-    setIsBelowHeader(isBelowHeader)
-  })
+  const bindWindowScroll = useScroll(
+    ({ direction: [dirX, dirY] }) => {
+      const isBelowHeader =
+        result(initialContentEl, "current.getBoundingClientRect").top <= 0
+      setScrollDirection(dirY)
+      setIsBelowHeader(isBelowHeader)
+    },
+    { domTarget: window }
+  )
+
+  useEffect(bindWindowScroll, [bindWindowScroll])
 
   useEffect(() => {
     const setViewHeightVariable = debounce(() => {
@@ -141,26 +140,24 @@ export const MobileLayout = ({ children, focusMode }) => {
       <HamburgerPositioner hide={hideHamburger}>
         <Navigation.Hamburger disableNavigation={hideHamburger} />
       </HamburgerPositioner>
-      <Main>
-        <MobileNavigationItems />
-        <Navigation.ContentContainer>
-          <ContentWrapper ref={scrollContainerEl} {...bindScrollDirection()}>
-            {hasLoaded && <Portrait />}
-            {!focusMode && <InitialCardOffset height={initialContentHeight} />}
-            <Card focusMode={focusMode}>
-              <InitialContent ref={initialContentEl}>
-                <ReactResizeDetector
-                  handleHeight
-                  onResize={handleSetCurrentHeight}
-                />
-                <Bio small={focusMode} />
-                <SocialLine />
-              </InitialContent>
-              {children}
-            </Card>
-          </ContentWrapper>
-        </Navigation.ContentContainer>
-      </Main>
+      <MobileNavigationItems />
+      <Navigation.ContentContainer>
+        <ContentWrapper ref={scrollContainerEl}>
+          {hasLoaded && <Portrait />}
+          {!focusMode && <InitialCardOffset height={initialContentHeight} />}
+          <Card focusMode={focusMode}>
+            <InitialContent ref={initialContentEl}>
+              <ReactResizeDetector
+                handleHeight
+                onResize={handleSetCurrentHeight}
+              />
+              <Bio small={focusMode} />
+              <SocialLine />
+            </InitialContent>
+            {children}
+          </Card>
+        </ContentWrapper>
+      </Navigation.ContentContainer>
     </>
   )
 }
