@@ -13,7 +13,6 @@ import { SocialLine } from "../SocialLine"
 import "./style.css"
 
 const CARD_TOP_PADDING = 28
-const TOP_THRESHOLD = 100;
 
 const VHWithFallback = (units = 0) => css`
   height: ${units}vh; /* Fallback for browsers that do not support Custom Properties */
@@ -41,7 +40,7 @@ const Card = styled.div`
   position: relative;
   padding: 1rem 0.5rem;
   ${TransitionConstants.transitions.page}
-  border-radius: ${props => (props.isCardAtTop ? "0" : "1rem 1rem 0 0")};
+  border-radius: ${props => (props.focusMode ? "0" : "1rem 1rem 0 0")};
   min-height: 100vh;
   &::after {
     display: ${props => (props.focusMode ? "none" : "block")}
@@ -104,19 +103,17 @@ const MobileNavigationItems = styled(Navigation.Links)`
 `
 
 export const MobileLayout = ({ children, focusMode }) => {
-  const [isCardAtTop, setIsCardAtTop] = useState(focusMode)
+  const [isBelowHeader, setIsBelowHeader] = useState(false);
   const [scrollDirection, setScrollDirection] = useState(null)
   const [initialContentHeight, setInitialContentHeight] = useState(0)
   const [hasLoaded, setHasLoaded] = useState(false)
   const scrollContainerEl = useRef(null)
-  const cardEl = useRef(null)
   const initialContentEl = useRef(null)
 
   const bindScrollDirection = useScroll(({ direction: [dirX, dirY] }) => {
-    const { top } = result(cardEl, "current.getBoundingClientRect")
-    const cardIsAtTop = top <= TOP_THRESHOLD
+    const isBelowHeader = result(initialContentEl, "current.getBoundingClientRect").top <= 0
     setScrollDirection(dirY)
-    setIsCardAtTop(cardIsAtTop)
+    setIsBelowHeader(isBelowHeader)
   })
 
   useEffect(() => {
@@ -136,7 +133,7 @@ export const MobileLayout = ({ children, focusMode }) => {
     setHasLoaded(true)
   }, [])
 
-  const hideHamburger = scrollDirection === 1 && isCardAtTop
+  const hideHamburger = scrollDirection === 1 && isBelowHeader
   const handleSetCurrentHeight = (_, height) => setInitialContentHeight(height)
 
   return (
@@ -150,7 +147,7 @@ export const MobileLayout = ({ children, focusMode }) => {
           <ContentWrapper ref={scrollContainerEl} {...bindScrollDirection()}>
             {hasLoaded && <Portrait />}
             {!focusMode && <InitialCardOffset height={initialContentHeight} />}
-            <Card ref={cardEl} isCardAtTop={isCardAtTop} focusMode={focusMode}>
+            <Card focusMode={focusMode}>
               <InitialContent ref={initialContentEl}>
                 <ReactResizeDetector
                   handleHeight
