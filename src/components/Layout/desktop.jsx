@@ -1,7 +1,8 @@
-import React, { useContext, useRef, useEffect, useState } from "react"
+import React, { useContext, useRef, useState } from "react"
 import styled from "@emotion/styled"
 import throttle from "lodash/throttle"
 
+import { useScrollTopOnRouteChange } from "./hooks"
 import { TransitionConstants } from "../Layout/Transition"
 import { Bio } from "../Bio"
 import { SocialLine } from "../SocialLine"
@@ -104,14 +105,7 @@ export const DesktopLayout = ({ children, focusMode = false }) => {
       : setScrolledPastSocial(false)
   }, 100)
 
-  useEffect(() => {
-    /*
-    HACK: gatsby-plugin-layout preserves scroll position between navigation
-    Is to have the window element scroll, but because of the layout here
-    I cannot have the window scrolling. So scroll to top when children changes
-  */
-    postWrapperRef.current.scrollTo(0, 0)
-  }, [postWrapperRef, children])
+  useScrollTopOnRouteChange(postWrapperRef)
 
   return (
     <Main maxWidth={breakpoints.max}>

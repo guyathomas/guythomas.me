@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from "react"
 import styled from "@emotion/styled"
-import { css } from "@emotion/core"
-import debounce from "lodash/debounce"
+
 import result from "lodash/result"
 import { useScroll } from "react-use-gesture"
 import ReactResizeDetector from "react-resize-detector"
 
+import { useScrollTopOnRouteChange } from "./hooks"
 import { TransitionConstants } from "./Transition"
 import { Navigation } from "../Navigation"
 import { Bio } from "../Bio"
@@ -51,9 +51,7 @@ const InitialCardOffset = styled.div`
   ${TransitionConstants.transitions.page}
   height: 100vh; /* Largest value, will be reduced by max-height */
   max-height: ${props =>
-    props.height
-      ? `calc(100vh - ${props.height}px - ${CARD_TOP_PADDING}px)`
-      : "75vh"};
+    `calc(100vh - ${props.height || 0}px - ${CARD_TOP_PADDING}px)`};
 `
 
 const HamburgerPositioner = styled.div`
@@ -76,6 +74,7 @@ const HamburgerPositioner = styled.div`
 
 const ContentWrapper = styled.div`
   pointer-events: ${props => (props.isNavigationExpanded ? "none" : "all")};
+  overflow-y: scroll;
 `
 
 const InitialContent = styled.div``
@@ -103,13 +102,15 @@ export const MobileLayout = ({ children, focusMode }) => {
       setScrollDirection(dirY)
       setIsBelowHeader(isBelowHeader)
       const roundedToTens = Math.round((10 * y) / window.innerHeight)
-      const newPercentageScrolled = Math.min(roundedToTens, 10) * 10;
-      if ( newPercentageScrolled !== percentageVHScrolled ) setPercentageVHScrolled(newPercentageScrolled)
+      const newPercentageScrolled = Math.min(roundedToTens, 10) * 10
+      if (newPercentageScrolled !== percentageVHScrolled)
+        setPercentageVHScrolled(newPercentageScrolled)
     },
     { domTarget: window }
   )
 
   useEffect(bindWindowScroll, [bindWindowScroll, window])
+  useScrollTopOnRouteChange(scrollContainerEl)
 
   useEffect(() => {
     setHasLoaded(true)
