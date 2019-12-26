@@ -10,13 +10,15 @@ const INITIAL_CONTEXT_STATE = {
   status: "entered",
 }
 
-const pageTransitionMs = 250;
+const pageTransitionMs = 250
 
 export const TransitionConstants = {
   pageTransitionMs,
   transitions: {
-    page: css`transition: all ${pageTransitionMs}ms ease-in-out;`
-  }
+    page: css`
+      transition: all ${pageTransitionMs}ms ease-in-out;
+    `,
+  },
 }
 
 export const TransitionContext = createContext(INITIAL_CONTEXT_STATE)

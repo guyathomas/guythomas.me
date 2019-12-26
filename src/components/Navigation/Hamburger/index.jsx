@@ -56,7 +56,8 @@ const HamburgerWrapper = styled.button`
 
 export const Hamburger = ({ disableNavigation = false }) => {
   const { state, dispatchers } = React.useContext(AppStateContext)
-  const handleOnClick = () => !disableNavigation && dispatchers.toggleNavigation()
+  const handleOnClick = () =>
+    !disableNavigation && dispatchers.toggleNavigation()
   const menuIconName = state.isNavigationExpanded ? "cross" : "hamburger"
 
   return (

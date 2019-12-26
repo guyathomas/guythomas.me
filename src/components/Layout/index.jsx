@@ -53,9 +53,7 @@ export default ({ children, ...routerProps }) => {
         <LayoutForPlatform focusMode={focusMode}>
           <GlobalStyles />
           <TransitionContextProvider pathname={routerProps.location.pathname}>
-            <ContentTransition>
-              {children}
-            </ContentTransition>
+            <ContentTransition>{children}</ContentTransition>
           </TransitionContextProvider>
         </LayoutForPlatform>
       </AppStateContext.Provider>

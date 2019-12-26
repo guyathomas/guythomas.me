@@ -6,7 +6,7 @@ import { SEO } from "../components/Seo"
 export default ({ focusMode = false, ...props }) => {
   const posts = props.data.allMarkdownRemark.edges
   return (
-      <>
+    <>
       <SEO title="All posts" />
       <main>
         {posts.map(post => (

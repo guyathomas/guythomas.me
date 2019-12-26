@@ -1,4 +1,4 @@
-import 'intersection-observer';
-import smoothscroll from 'smoothscroll-polyfill';
+import "intersection-observer"
+import smoothscroll from "smoothscroll-polyfill"
 
-smoothscroll.polyfill();
+smoothscroll.polyfill()
