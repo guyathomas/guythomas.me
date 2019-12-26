@@ -33,7 +33,7 @@ const Card = styled.div`
   border-radius: ${props => (props.focusMode ? "0" : "1rem 1rem 0 0")};
   min-height: 100vh;
   &::after {
-    display: ${props => (props.focusMode ? "none" : "block")}
+    display: ${props => (props.focusMode ? "none" : "block")};
     content: "";
     height: 3px;
     width: 3rem;
