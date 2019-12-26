@@ -1,6 +1,7 @@
 import React from "react"
 import styled from "@emotion/styled"
 
+import { TransitionConstants } from "../Layout/Transition"
 import LinkedIn from "./icons/linkedin.svg"
 import Github from "./icons/github.svg"
 import Medium from "./icons/medium.svg"
@@ -43,7 +44,7 @@ const VerticalLineLayout = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  transition: opacity 250ms ease-in-out;
+  ${TransitionConstants.transitions.page}
   opacity: ${props => (props.visible ? 1 : 0)};
 `
 

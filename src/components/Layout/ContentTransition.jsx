@@ -17,12 +17,12 @@ const getTransitionStyles = transition => {
       `
     case "entered":
       return css`
-        transition: opacity ${TransitionConstants.pageTransitionMs}ms ease-in-out;
+        ${TransitionConstants.transitions.page}
         opacity: 1;
       `
     case "exiting":
       return css`
-        transition: all ${TransitionConstants.pageTransitionMs}ms ease-in-out;
+        ${TransitionConstants.transitions.page}
         opacity: 0;
       `
     default:

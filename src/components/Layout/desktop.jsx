@@ -2,6 +2,7 @@ import React, { useContext, useRef, useState } from "react"
 import styled from "@emotion/styled"
 import throttle from "lodash/throttle"
 
+import { TransitionConstants } from "../Layout/Transition"
 import { Bio } from "../Bio"
 import { SocialLine } from "../SocialLine"
 import { Navigation } from "../Navigation"
@@ -41,7 +42,7 @@ const Panel = styled.div`
   align-items: center;
   justify-content: flex-end;
   position: relative;
-  transition: all 250ms ease-in-out;
+  ${TransitionConstants.transitions.page}
 `
 
 const OptionalPanel = styled(Panel)`

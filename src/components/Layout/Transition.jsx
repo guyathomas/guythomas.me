@@ -1,4 +1,6 @@
 import React, { createContext, useContext } from "react"
+import { css } from "@emotion/core"
+
 import {
   TransitionGroup,
   Transition as ReactTransition,
@@ -8,8 +10,13 @@ const INITIAL_CONTEXT_STATE = {
   status: "entered",
 }
 
+const pageTransitionMs = 250;
+
 export const TransitionConstants = {
-  pageTransitionMs: 250
+  pageTransitionMs,
+  transitions: {
+    page: css`transition: all ${pageTransitionMs}ms ease-in-out;`
+  }
 }
 
 export const TransitionContext = createContext(INITIAL_CONTEXT_STATE)

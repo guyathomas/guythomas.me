@@ -3,6 +3,7 @@ import styled from "@emotion/styled"
 import { css } from "@emotion/core"
 
 import { AppStateContext } from "../../Layout"
+import { TransitionConstants } from "../../Layout/Transition"
 /*
   Wrap main content so that when navigation is expanded
   it will shrink
@@ -23,7 +24,7 @@ const ContentContainerStyles = styled.div`
   height: 100%;
   width: 100%;
   overflow: hidden;
-  transition: all 250ms ease-in-out;
+  ${TransitionConstants.transitions.page}
   transform-origin: bottom;
   flex-shrink: 0;
   bottom: 0;

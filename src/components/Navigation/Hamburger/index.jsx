@@ -1,13 +1,16 @@
 import React from "react"
 import styled from "@emotion/styled"
-import { AppStateContext } from "../../Layout"
+import { css } from "@emotion/core"
 
-const MenuIconLine = `
+import { AppStateContext } from "../../Layout"
+import { TransitionConstants } from "../../Layout/Transition"
+
+const MenuIconLine = css`
   width: 30px;
   height: 2px;
-  transition: all 250ms ease-in-out;
+  ${TransitionConstants.transitions.page}
 `
-const MenuIconPsuedo = `
+const MenuIconPsuedo = css`
   ${MenuIconLine}
   content: "";
   position: absolute;

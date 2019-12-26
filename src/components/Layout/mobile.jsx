@@ -6,6 +6,7 @@ import result from "lodash/result"
 import { useScroll } from "react-use-gesture"
 import ReactResizeDetector from "react-resize-detector"
 
+import { TransitionConstants } from './Transition'
 import { Navigation } from "../Navigation"
 import { Bio } from "../Bio"
 import { SocialLine } from "../SocialLine"
@@ -38,7 +39,7 @@ const Card = styled.div`
   background-color: white;
   position: relative;
   padding: 1rem 0.5rem;
-  transition: all 250ms ease-in-out;
+  ${TransitionConstants.transitions.page}
   border-radius: ${props => (props.isCardAtTop ? "0" : "1rem 1rem 0 0")};
   min-height: 100vh;
   &::after {
@@ -56,7 +57,7 @@ const Card = styled.div`
 `
 
 const InitialCardOffset = styled.div`
-  transition: all 250ms ease-in-out;
+  ${TransitionConstants.transitions.page}
   height: 100vh;
   max-height: ${props =>
     props.height
@@ -83,7 +84,7 @@ const HamburgerPositioner = styled.div`
     width: auto;
   }
   opacity: ${props => (props.hide ? 0 : 1)};
-  transition: opacity 250ms ease-in-out;
+  ${TransitionConstants.transitions.page}
 `
 
 const ContentWrapper = styled.div`

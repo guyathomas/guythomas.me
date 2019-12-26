@@ -1,5 +1,6 @@
 import React from "react"
 import { Global, css } from "@emotion/core"
+import { TransitionConstants } from "./Transition"
 
 // Create smooth transitions for header links
 const enumerateHeaderStyles = (svgSelector = "", headerPsuedoClass = "") =>
@@ -11,7 +12,7 @@ const headerLinkStyles = css`
   ${enumerateHeaderStyles(`.header-anchor svg`)} {
     opacity: 0;
     visibility: visible;
-    transition: opacity 250ms ease-in-out;
+    ${TransitionConstants.transitions.page}
   }
   ${enumerateHeaderStyles(`.header-anchor svg`, ":hover")},
   ${enumerateHeaderStyles(`.header-anchor:focus svg`)} {
