@@ -2,7 +2,6 @@ import React from "react"
 
 import { PostSnippit } from "../components/PostSnippit"
 import { SEO } from "../components/Seo"
-import { Layout } from "../components/Layout"
 
 export default ({ focusMode = false, ...props }) => {
   const posts = props.data.allMarkdownRemark.edges

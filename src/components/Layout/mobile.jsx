@@ -6,7 +6,6 @@ import result from "lodash/result"
 import { useScroll } from "react-use-gesture"
 import ReactResizeDetector from "react-resize-detector"
 
-import { AppStateContext } from "../Layout"
 import { Navigation } from "../Navigation"
 import { Bio } from "../Bio"
 import { SocialLine } from "../SocialLine"
