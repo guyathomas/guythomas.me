@@ -14,18 +14,13 @@ import "./style.css"
 
 const CARD_TOP_PADDING = 28
 
-const VHWithFallback = (units = 0) => css`
-  height: ${units}vh; /* Fallback for browsers that do not support Custom Properties */
-  height: calc(var(--vh, 1vh) * ${units});
-`
-
 const Portrait = styled.div`
   z-index: -1;
   position: fixed;
   background-image: url("https://res.cloudinary.com/dqvlfpaev/image/upload/v1574619573/cropped-black-and-white-portrait_cir0bd.png");
   background-repeat: no-repeat;
   width: 100%;
-  ${VHWithFallback(85)};
+  height: 85vh;
   background-size: cover;
   background-position: center;
 `
@@ -53,7 +48,7 @@ const Card = styled.div`
 
 const InitialCardOffset = styled.div`
   ${TransitionConstants.transitions.page}
-  height: 100vh;
+  height: 100vh; /* Largest value, will be reduced by max-height */
   max-height: ${props =>
     props.height
       ? `calc(100vh - ${props.height}px - ${CARD_TOP_PADDING}px)`
@@ -98,7 +93,7 @@ const MobileNavigationItems = styled(Navigation.Links)`
 export const MobileLayout = ({ children, focusMode }) => {
   const [isBelowHeader, setIsBelowHeader] = useState(false)
   const [scrollDirection, setScrollDirection] = useState(null)
-  const [initialContentHeight, setInitialContentHeight] = useState(0)
+  const [initialContentHeight, setInitialContentHeight] = useState()
   const [hasLoaded, setHasLoaded] = useState(false)
   const scrollContainerEl = useRef(null)
   const initialContentEl = useRef(null)
@@ -133,7 +128,9 @@ export const MobileLayout = ({ children, focusMode }) => {
   }, [])
 
   const hideHamburger = scrollDirection === 1 && isBelowHeader
-  const handleSetCurrentHeight = (_, height) => setInitialContentHeight(height)
+  const handleSetCurrentHeight = (_, height) =>
+    (!initialContentHeight || height > initialContentHeight) &&
+    setInitialContentHeight(height)
 
   return (
     <>
