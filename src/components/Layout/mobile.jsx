@@ -15,15 +15,19 @@ import "./style.css"
 const CARD_TOP_PADDING = 28
 
 const Portrait = styled.div`
+  /* Make portrait extend outside viewport so blur effect doesn't look janky */
+  left: -1%;
+  top: -1%;
+  width: 102%;
+  filter: ${props => `blur(${(props.blur / 100) * 5 || 0}px)`};
+  
   z-index: -1;
   position: fixed;
   background-image: url("https://res.cloudinary.com/dqvlfpaev/image/upload/v1574619573/cropped-black-and-white-portrait_cir0bd.png");
   background-repeat: no-repeat;
-  width: 100%;
   height: 85vh;
   background-size: cover;
   background-position: center;
-  filter: ${props => `blur(${(props.blur / 100) * 5 || 0}px)`};
 `
 
 const Card = styled.div`
@@ -95,21 +99,17 @@ export const MobileLayout = ({ children, focusMode }) => {
   const scrollContainerEl = useRef(null)
   const initialContentEl = useRef(null)
 
-  const bindWindowScroll = useScroll(
-    ({ direction: [dirX, dirY], xy: [x, y] }) => {
-      const isBelowHeader =
-        result(initialContentEl, "current.getBoundingClientRect").top <= 0
-      setScrollDirection(dirY)
-      setIsBelowHeader(isBelowHeader)
-      const roundedToTens = Math.round((10 * y) / window.innerHeight)
-      const newPercentageScrolled = Math.min(roundedToTens, 10) * 10
-      if (newPercentageScrolled !== percentageVHScrolled)
-        setPercentageVHScrolled(newPercentageScrolled)
-    },
-    { domTarget: window }
-  )
+  const bindScroll = useScroll(({ direction: [dirX, dirY], xy: [x, y] }) => {
+    const isBelowHeader =
+      result(initialContentEl, "current.getBoundingClientRect").top <= 0
+    setScrollDirection(dirY)
+    setIsBelowHeader(isBelowHeader)
+    const roundedToTens = Math.round((10 * y) / window.innerHeight)
+    const newPercentageScrolled = Math.min(roundedToTens, 10) * 10
+    if (newPercentageScrolled !== percentageVHScrolled)
+      setPercentageVHScrolled(newPercentageScrolled)
+  })
 
-  useEffect(bindWindowScroll, [bindWindowScroll, window])
   useScrollTopOnRouteChange(scrollContainerEl)
 
   useEffect(() => {
@@ -126,7 +126,7 @@ export const MobileLayout = ({ children, focusMode }) => {
       </HamburgerPositioner>
       <MobileNavigationItems />
       <Navigation.ContentContainer>
-        <ContentWrapper ref={scrollContainerEl}>
+        <ContentWrapper ref={scrollContainerEl} {...bindScroll()}>
           {hasLoaded && <Portrait blur={percentageVHScrolled} />}
           {!focusMode && <InitialCardOffset height={initialContentHeight} />}
           <Card focusMode={focusMode}>
