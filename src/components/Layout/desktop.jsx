@@ -128,7 +128,7 @@ export const DesktopLayout = ({ children, focusMode = false }) => {
           <Panel large={focusMode}>
             <PostWrapper ref={postWrapperRef} onScroll={onScroll}>
               <div ref={socialLineRef}>
-                <Bio small />
+                <Bio small={focusMode} />
                 <SocialLine />
               </div>
               {children}
