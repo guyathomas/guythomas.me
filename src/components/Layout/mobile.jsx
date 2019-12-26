@@ -13,7 +13,7 @@ import { SocialLine } from "../SocialLine"
 import "./style.css"
 
 const CARD_TOP_PADDING = 28
-const TOP_THRESHOLD = 20;
+const TOP_THRESHOLD = 100;
 
 const VHWithFallback = (units = 0) => css`
   height: ${units}vh; /* Fallback for browsers that do not support Custom Properties */
