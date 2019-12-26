@@ -43,7 +43,7 @@ const VerticalLineLayout = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  transition: opacity 0.3s;
+  transition: opacity 250ms ease-in-out;
   opacity: ${props => (props.visible ? 1 : 0)};
 `
 

@@ -41,7 +41,7 @@ const Panel = styled.div`
   align-items: center;
   justify-content: flex-end;
   position: relative;
-  transition: all 0.2s linear;
+  transition: all 250ms ease-in-out;
 `
 
 const OptionalPanel = styled(Panel)`

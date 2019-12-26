@@ -23,7 +23,7 @@ const ContentContainerStyles = styled.div`
   height: 100%;
   width: 100%;
   overflow: hidden;
-  transition: all 0.4s;
+  transition: all 250ms ease-in-out;
   transform-origin: bottom;
   flex-shrink: 0;
   bottom: 0;

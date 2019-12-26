@@ -11,7 +11,7 @@ const headerLinkStyles = css`
   ${enumerateHeaderStyles(`.header-anchor svg`)} {
     opacity: 0;
     visibility: visible;
-    transition: opacity 0.25s linear;
+    transition: opacity 250ms ease-in-out;
   }
   ${enumerateHeaderStyles(`.header-anchor svg`, ":hover")},
   ${enumerateHeaderStyles(`.header-anchor:focus svg`)} {

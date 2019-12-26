@@ -38,7 +38,7 @@ const Card = styled.div`
   background-color: white;
   position: relative;
   padding: 1rem 0.5rem;
-  transition: all 0.25s ease-in-out;
+  transition: all 250ms ease-in-out;
   border-radius: ${props => (props.isCardAtTop ? "0" : "1rem 1rem 0 0")};
   min-height: 100vh;
   &::after {
@@ -56,7 +56,7 @@ const Card = styled.div`
 `
 
 const InitialCardOffset = styled.div`
-  transition: all 0.25s ease-in-out;
+  transition: all 250ms ease-in-out;
   height: 100vh;
   max-height: ${props =>
     props.height
@@ -83,7 +83,7 @@ const HamburgerPositioner = styled.div`
     width: auto;
   }
   opacity: ${props => (props.hide ? 0 : 1)};
-  transition: opacity 0.25s ease-in-out;
+  transition: opacity 250ms ease-in-out;
 `
 
 const ContentWrapper = styled.div`

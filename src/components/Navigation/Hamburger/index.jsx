@@ -5,7 +5,7 @@ import { AppStateContext } from "../../Layout"
 const MenuIconLine = `
   width: 30px;
   height: 2px;
-  transition: all 250ms cubic-bezier(0.86, 0, 0.07, 1);
+  transition: all 250ms ease-in-out;
 `
 const MenuIconPsuedo = `
   ${MenuIconLine}

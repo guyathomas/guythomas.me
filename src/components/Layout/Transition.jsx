@@ -6,7 +6,10 @@ import {
 
 const INITIAL_CONTEXT_STATE = {
   status: "entered",
-  timeout: 250,
+}
+
+export const TransitionConstants = {
+  pageTransitionMs: 250
 }
 
 export const TransitionContext = createContext(INITIAL_CONTEXT_STATE)
@@ -19,8 +22,8 @@ export const TransitionContextProvider = ({ children, pathname }) => {
       <ReactTransition
         key={pathname}
         timeout={{
-          enter: transitionContextValue.timeout,
-          exit: transitionContextValue.timeout,
+          enter: TransitionConstants.pageTransitionMs,
+          exit: TransitionConstants.pageTransitionMs,
         }}
       >
         {status => (

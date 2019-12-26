@@ -2,7 +2,7 @@ import React, { useContext } from "react"
 import styled from "@emotion/styled"
 import { css } from "@emotion/core"
 
-import { TransitionContext } from "./Transition"
+import { TransitionContext, TransitionConstants } from "./Transition"
 
 const ContentTransitionStyled = styled.div`
   ${props => getTransitionStyles(props.transition)}
@@ -17,12 +17,12 @@ const getTransitionStyles = transition => {
       `
     case "entered":
       return css`
-        transition: opacity ${transition.timeout}ms ease-in-out;
+        transition: opacity ${TransitionConstants.pageTransitionMs}ms ease-in-out;
         opacity: 1;
       `
     case "exiting":
       return css`
-        transition: all ${transition.timeout}ms ease-in-out;
+        transition: all ${TransitionConstants.pageTransitionMs}ms ease-in-out;
         opacity: 0;
       `
     default:
