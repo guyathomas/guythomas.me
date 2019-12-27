@@ -8,6 +8,8 @@
 import React from "react"
 import styled from "@emotion/styled"
 
+import { TransitionConstants } from "../Layout/Transition"
+
 const BioContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -37,16 +39,20 @@ const Description = styled.div`
   margin-top: 1rem;
 `
 
+const AboutMeWrapper = styled.div`
+  max-height: ${props => (props.small ? "0px" : "10vh")};
+  overflow: hidden;
+  ${TransitionConstants.transitions.page}
+`
+
 export const Bio = ({ small = false }) => (
   <BioContainer>
     <Title>Guy Thomas</Title>
-    {!small && (
-      <>
-        <Role>Software Engineer</Role>
-        <Description>
-          I love tinkering, teaching and exploring the outdoors.
-        </Description>
-      </>
-    )}
+    <AboutMeWrapper small={small}>
+      <Role>Software Engineer</Role>
+      <Description>
+        I love tinkering, teaching and exploring the outdoors.
+      </Description>
+    </AboutMeWrapper>
   </BioContainer>
 )
