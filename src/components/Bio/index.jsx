@@ -40,9 +40,7 @@ const Description = styled.div`
 `
 
 const AboutMeWrapper = styled.div`
-  max-height: ${props => (props.small ? "0px" : "10vh")};
-  overflow: hidden;
-  ${TransitionConstants.transitions.page}
+  display: ${props => (props.small ? "none" : "block")};
 `
 
 export const Bio = ({ small = false }) => (
