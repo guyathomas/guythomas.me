@@ -85,7 +85,8 @@ const InitialContent = styled.div``
 const AllContentWrapper = styled.div`
   display: block;
   width: 100vw;
-  height: 100vh;
+  height: 100vh; /* Fallback for browsers that do not support Custom Properties */
+  height: calc(var(--vh, 1vh) * 100);
   justify-content: space-between;
   overflow-x: scroll;
   position: relative;
@@ -127,6 +128,21 @@ export const MobileLayout = ({ children, focusMode }) => {
   useEffect(() => {
     setHasLoaded(true)
   }, [])
+
+  useEffect(() => {
+    const setViewHeightVariable = () => {
+      const vh = window.innerHeight * 0.01
+      // Set VH CSS variable so that 100vh will take mobile nav bars into consideration
+      document.documentElement.style.setProperty("--vh", `${vh}px`)
+    }
+
+    setViewHeightVariable()
+    window.addEventListener("resize", setViewHeightVariable)
+
+    return () => window.removeEventListener("resize", setViewHeightVariable)
+  }, [])
+
+
 
   const hideHamburger = scrollDirection === 1 && isBelowHeader
   const handleSetCurrentHeight = (_, height) => setInitialContentHeight(height)
