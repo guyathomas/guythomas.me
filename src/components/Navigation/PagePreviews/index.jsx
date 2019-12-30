@@ -77,7 +77,7 @@ export const PagePreviews = ({ activeIndex, links }) => {
   return (
     <>
       {previews}
-      <DummySpace left={(links.length) * 8 + 4} />
+      <DummySpace left={(links.length) * ContentContainer.PAGE_PREVIEW_SPACING + 4} />
     </>
   )
 }

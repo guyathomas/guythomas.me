@@ -103,7 +103,7 @@ export const MobileLayout = ({ children, focusMode }) => {
 
   // TODO: Move this into calculated value
   const remInPx = 16
-  const distanceBetweenPreviews = 8 * remInPx
+  const distanceBetweenPreviews = Navigation.ContentContainer.PAGE_PREVIEW_SPACING * remInPx
   const remOffset = 3
 
   const bindScroll = useScroll(({ direction: [dirX, dirY] }) => {

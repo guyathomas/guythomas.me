@@ -34,10 +34,15 @@ const ContentContainerStyles = styled.div`
   ${transformPageSize};
 `
 
+/*
+  Unfortunately this causes a terrible experience
+  when the browser does not support css transitions
+  TODO: Change to use react spring and manually transition it
+*/
 const offsetMap = {
-  before: -8,
+  before: 0, // -8
   active: 0,
-  after: 8,
+  after: 0, // 8
 }
 
 export const ContentContainer = ({
@@ -62,7 +67,7 @@ export const ContentContainer = ({
       onClick={handleSelectCurrentView}
       isNavigationExpanded={state.isNavigationExpanded}
       className={className}
-      left={index * 8}
+      left={index * ContentContainer.PAGE_PREVIEW_SPACING}
       translateX={offsetMap[viewState] || 0}
       zIndex={zIndex}
     >
@@ -70,3 +75,5 @@ export const ContentContainer = ({
     </ContentContainerStyles>
   )
 }
+
+ContentContainer.PAGE_PREVIEW_SPACING = 16;
