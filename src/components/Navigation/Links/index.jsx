@@ -15,7 +15,7 @@ const NavItem = styled.li`
   margin: 0;
 `
 
-const links = [
+export const links = [
   { label: "Home", path: "/" },
   { label: "Blog", path: "/blog" },
 ]

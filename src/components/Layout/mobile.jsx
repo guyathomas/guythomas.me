@@ -1,13 +1,17 @@
-import React, { useState, useRef, useEffect } from "react"
+import React, { useContext, useState, useRef, useEffect } from "react"
 import styled from "@emotion/styled"
 
+import get from "lodash/get"
 import result from "lodash/result"
+import throttle from "lodash/throttle"
 import { useScroll } from "react-use-gesture"
 import ReactResizeDetector from "react-resize-detector"
 
+import { LayoutContext } from "../Layout"
 import { useScrollTopOnRouteChange } from "./hooks"
 import { TransitionConstants } from "./Transition"
 import { Navigation } from "../Navigation"
+import { links } from "../Navigation/Links"
 import { Bio } from "../Bio"
 import { SocialLine } from "../SocialLine"
 import "./style.css"
@@ -78,11 +82,13 @@ const ContentWrapper = styled.div`
 
 const InitialContent = styled.div``
 
-const MobileNavigationItems = styled(Navigation.Links)`
-  margin: 0;
-  padding: 2rem 15% 0;
-  justify-content: center;
-  flex-direction: column;
+const AllContentWrapper = styled.div`
+  display: block;
+  width: 100vw;
+  height: 100vh;
+  justify-content: space-between;
+  overflow-x: scroll;
+  position: relative;
 `
 
 export const MobileLayout = ({ children, focusMode }) => {
@@ -92,6 +98,12 @@ export const MobileLayout = ({ children, focusMode }) => {
   const [hasLoaded, setHasLoaded] = useState(false)
   const scrollContainerEl = useRef(null)
   const initialContentEl = useRef(null)
+  const [activePagePreviewIndex, setActivePagePreviewIndex] = useState(0)
+
+  // TODO: Move this into calculated value
+  const remInPx = 16
+  const distanceBetweenPreviews = 8 * remInPx
+  const remOffset = 3
 
   const bindScroll = useScroll(({ direction: [dirX, dirY] }) => {
     const isBelowHeader =
@@ -99,6 +111,16 @@ export const MobileLayout = ({ children, focusMode }) => {
     setScrollDirection(dirY)
     setIsBelowHeader(isBelowHeader)
   })
+
+  const throttledScrollListener = throttle(({ xy: [x, y] }) => {
+    const indexOfFocusedPreview = Math.floor(
+      (x + remOffset * remInPx) / distanceBetweenPreviews
+    )
+    if (indexOfFocusedPreview !== activePagePreviewIndex) {
+      setActivePagePreviewIndex(indexOfFocusedPreview)
+    }
+  }, 50)
+  const bindPagePreviewScroll = useScroll(throttledScrollListener)
 
   useScrollTopOnRouteChange(scrollContainerEl)
 
@@ -109,29 +131,44 @@ export const MobileLayout = ({ children, focusMode }) => {
   const hideHamburger = scrollDirection === 1 && isBelowHeader
   const handleSetCurrentHeight = (_, height) => setInitialContentHeight(height)
 
+  // Separate into custom hook
+  const { routerProps } = useContext(LayoutContext)
+  const pathname = get(routerProps, "location.pathname")
+  const visibleLinks = links.filter(({ path }) => path !== pathname)
+
   return (
     <>
       <HamburgerPositioner hide={hideHamburger}>
         <Navigation.Hamburger disableNavigation={hideHamburger} />
       </HamburgerPositioner>
-      <MobileNavigationItems />
-      <Navigation.ContentContainer>
-        <ContentWrapper ref={scrollContainerEl} {...bindScroll()}>
-          {hasLoaded && <Portrait />}
-          {!focusMode && <InitialCardOffset height={initialContentHeight} />}
-          <Card focusMode={focusMode}>
-            <InitialContent ref={initialContentEl}>
-              <ReactResizeDetector
-                handleHeight
-                onResize={handleSetCurrentHeight}
-              />
-              <Bio small={focusMode} />
-              <SocialLine />
-            </InitialContent>
-            {children}
-          </Card>
-        </ContentWrapper>
-      </Navigation.ContentContainer>
+      <AllContentWrapper {...bindPagePreviewScroll()}>
+        <Navigation.ContentContainer
+          activeIndex={activePagePreviewIndex}
+          index={0}
+          zIndex={visibleLinks.length + 1}
+          viewState={activePagePreviewIndex === 0 ? "active" : "before"}
+        >
+          <ContentWrapper ref={scrollContainerEl} {...bindScroll()}>
+            {hasLoaded && <Portrait />}
+            {!focusMode && <InitialCardOffset height={initialContentHeight} />}
+            <Card focusMode={focusMode}>
+              <InitialContent ref={initialContentEl}>
+                <ReactResizeDetector
+                  handleHeight
+                  onResize={handleSetCurrentHeight}
+                />
+                <Bio small={focusMode} />
+                <SocialLine />
+              </InitialContent>
+              {children}
+            </Card>
+          </ContentWrapper>
+        </Navigation.ContentContainer>
+        <Navigation.PagePreviews
+          activeIndex={activePagePreviewIndex}
+          links={visibleLinks}
+        />
+      </AllContentWrapper>
     </>
   )
 }
