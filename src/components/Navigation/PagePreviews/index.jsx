@@ -36,8 +36,8 @@ const DummySpace = styled.div`
   position: absolute;
   left: ${props => props.left}rem;
   z-index: 1;
-  transform: scale(0.7) translateY(-1rem);
-  transform-origin: bottom;
+  transform: scale(0.7) translateY(12rem);
+  transform-origin: top;
   pointer-events: none;
 `
 
