@@ -17,7 +17,7 @@ const transformPageSize = props =>
         transform: scale(0.7) translateY(12rem) translateX(${props.translateX}rem);
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
         cursor: pointer;
-        height: 100vh;
+        height: 90vh;
       `
     : css``
 
