@@ -7,7 +7,7 @@ import throttle from "lodash/throttle"
 import { useScroll } from "react-use-gesture"
 import ReactResizeDetector from "react-resize-detector"
 
-import { LayoutContext } from "../Layout"
+import { LayoutContext, AppStateContext } from "../Layout"
 import { useScrollTopOnRouteChange } from "./hooks"
 import { TransitionConstants } from "./Transition"
 import { Navigation } from "../Navigation"
@@ -77,7 +77,7 @@ const HamburgerPositioner = styled.div`
 
 const ContentWrapper = styled.div`
   pointer-events: ${props => (props.isNavigationExpanded ? "none" : "all")};
-  overflow-y: scroll;
+  overflow-y: ${props => (props.isNavigationExpanded ? "hidden" : "scroll")};
 `
 
 const InitialContent = styled.div``
@@ -152,6 +152,10 @@ export const MobileLayout = ({ children, focusMode }) => {
   const pathname = get(routerProps, "location.pathname")
   const visibleLinks = links.filter(({ path }) => path !== pathname)
 
+  const {
+    state: { isNavigationExpanded },
+  } = React.useContext(AppStateContext)
+
   return (
     <>
       <HamburgerPositioner hide={hideHamburger}>
@@ -164,7 +168,7 @@ export const MobileLayout = ({ children, focusMode }) => {
           zIndex={visibleLinks.length + 1}
           viewState={activePagePreviewIndex === 0 ? "active" : "before"}
         >
-          <ContentWrapper ref={scrollContainerEl} {...bindScroll()}>
+          <ContentWrapper isNavigationExpanded={isNavigationExpanded} ref={scrollContainerEl} {...bindScroll()}>
             {hasLoaded && <Portrait />}
             {!focusMode && <InitialCardOffset height={initialContentHeight} />}
             <Card focusMode={focusMode}>

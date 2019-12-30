@@ -31,7 +31,7 @@ const ContentContainerStyles = styled.div`
   position: absolute;
   left: ${props => props.left}rem;
   z-index: ${props => props.zIndex || 1};
-  ${transformPageSize}
+  ${transformPageSize};
 `
 
 const offsetMap = {
