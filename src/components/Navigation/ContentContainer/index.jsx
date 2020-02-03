@@ -3,7 +3,7 @@ import styled from "@emotion/styled"
 import { css } from "@emotion/core"
 import noop from "lodash/noop"
 
-import { AppStateContext } from "../../Layout"
+import { AppStateContext, LayoutContext } from "../../Layout"
 import { TransitionConstants } from "../../Layout/Transition"
 
 /*
@@ -25,7 +25,7 @@ const ContentContainerStyles = styled.div`
   ${TransitionConstants.transitions.page}
   flex-shrink: 0;
   width: 100%;
-  height: 100%;
+  height: ${props => (!props.forceDocumentScrolling ? "100%" : "unset")};
   display: flex;
   transform-origin: top;
   position: absolute;
@@ -54,6 +54,7 @@ export const ContentContainer = ({
   zIndex,
 }) => {
   const { state, dispatchers } = React.useContext(AppStateContext)
+  const { viewMode } = React.useContext(LayoutContext)
 
   const handleSelectCurrentView = () => {
     if (state.isNavigationExpanded) {
@@ -70,6 +71,7 @@ export const ContentContainer = ({
       left={index * ContentContainer.PAGE_PREVIEW_SPACING}
       translateX={offsetMap[viewState] || 0}
       zIndex={zIndex}
+      forceDocumentScrolling={viewMode === "resume"}
     >
       {children}
     </ContentContainerStyles>

@@ -45,6 +45,7 @@ const Panel = styled.div`
 const OptionalPanel = styled(Panel)`
   display: none;
   overflow: hidden;
+  height: 100vh;
   @media (min-width: ${props => props.hideAtPx}px) {
     display: block;
   }
@@ -82,7 +83,8 @@ export const DesktopLayoutPanels = ({ children }) => {
     theme: { breakpoints },
     viewMode,
   } = useContext(LayoutContext)
-  const isFocusMode = viewMode === "focus"
+  const isRightPanelLarge = viewMode === "focus" || viewMode === "resume"
+
   return (
     <Main maxWidth={breakpoints.max}>
       <MainInner>
@@ -93,9 +95,9 @@ export const DesktopLayoutPanels = ({ children }) => {
         <DesktopNavigationItems />
         <Navigation.ContentContainer>
           <OptionalPanel hideAtPx={breakpoints.md}>
-            <Portrait blur={isFocusMode} />
+            <Portrait blur={viewMode === "focus"} />
           </OptionalPanel>
-          <Panel large={isFocusMode}>{children}</Panel>
+          <Panel large={isRightPanelLarge}>{children}</Panel>
         </Navigation.ContentContainer>
       </MainInner>
     </Main>
