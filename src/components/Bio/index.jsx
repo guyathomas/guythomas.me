@@ -8,8 +8,6 @@
 import React from "react"
 import styled from "@emotion/styled"
 
-import { TransitionConstants } from "../Layout/Transition"
-
 const BioContainer = styled.div`
   display: flex;
   flex-direction: column;

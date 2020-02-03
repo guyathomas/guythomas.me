@@ -1,11 +1,14 @@
 import React, { createContext, useState, useEffect } from "react"
+import get from "lodash/get"
 import debounce from "lodash/debounce"
 import { MobileLayout } from "./mobile"
 import { DesktopLayout } from "./desktop"
+import { DesktopLayoutPanels } from './DesktopLayoutPanels';
 import GlobalStyles from "./global-styles"
 import { useAppState } from "./store"
 import { ContentTransition } from "./ContentTransition"
 import { TransitionContextProvider } from "./Transition"
+import { VANILLA_LAYOUT } from "./constants"
 
 const theme = {
   breakpoints: {
@@ -45,17 +48,26 @@ export default ({ children, ...routerProps }) => {
   const appState = useAppState()
 
   if (isLoading || typeof isMobile !== "boolean") return null
-  const layoutMeta = { theme, screenSize, isMobile, routerProps }
+  const layoutMeta = { theme, screenSize, isMobile, routerProps, focusMode }
   const LayoutForPlatform = isMobile ? MobileLayout : DesktopLayout
+  const useEmptyLayout =
+    get(routerProps, "pageContext.layout") === VANILLA_LAYOUT
+
+  const main = useEmptyLayout ? (
+    <DesktopLayoutPanels>{children}</DesktopLayoutPanels>
+  ) : (
+    <LayoutForPlatform>
+      <GlobalStyles />
+      {children}
+    </LayoutForPlatform>
+  )
+
   return (
     <LayoutContext.Provider value={layoutMeta}>
       <AppStateContext.Provider value={appState}>
-        <LayoutForPlatform focusMode={focusMode}>
-          <GlobalStyles />
-          <TransitionContextProvider pathname={routerProps.location.pathname}>
-            <ContentTransition>{children}</ContentTransition>
-          </TransitionContextProvider>
-        </LayoutForPlatform>
+        <TransitionContextProvider pathname={routerProps.location.pathname}>
+          <ContentTransition>{main}</ContentTransition>
+        </TransitionContextProvider>
       </AppStateContext.Provider>
     </LayoutContext.Provider>
   )

@@ -63,3 +63,11 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
     })
   }
 }
+
+exports.onCreatePage = ({ page, actions }) => {
+  const { createPage } = actions
+  if (page.path.match(new RegExp(/^\/resume\//))) {
+    page.context.layout = 'vanillaLayout'
+    createPage(page)
+  }
+}
