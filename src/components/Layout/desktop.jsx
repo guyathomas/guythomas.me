@@ -19,7 +19,7 @@ const PostWrapper = styled.div`
 export const DesktopLayout = ({ children }) => {
   const socialLineRef = useRef(null)
   const postWrapperRef = useRef(null)
-  const { focusMode } = useContext(LayoutContext)
+  const { viewMode } = useContext(LayoutContext)
 
   const [onScroll, hasScrolledPastSocialLine] = useScrolledPastRef(
     socialLineRef
@@ -31,7 +31,7 @@ export const DesktopLayout = ({ children }) => {
     <DesktopLayoutPanels>
       <PostWrapper ref={postWrapperRef} onScroll={onScroll}>
         <div ref={socialLineRef}>
-          <Bio small={focusMode} />
+          <Bio small={viewMode === "focus"} />
           <SocialLine />
         </div>
         {children}

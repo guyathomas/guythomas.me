@@ -1,8 +1,6 @@
-import React from "react"
-
 import IndexComponent from "."
 
-export default props => <IndexComponent {...props} focusMode />
+export default IndexComponent
 
 export const pageQuery = graphql`
   query {

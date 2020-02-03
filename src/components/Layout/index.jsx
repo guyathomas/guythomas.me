@@ -3,7 +3,7 @@ import get from "lodash/get"
 import debounce from "lodash/debounce"
 import { MobileLayout } from "./mobile"
 import { DesktopLayout } from "./desktop"
-import { DesktopLayoutPanels } from './DesktopLayoutPanels';
+import { DesktopLayoutPanels } from "./DesktopLayoutPanels"
 import GlobalStyles from "./global-styles"
 import { useAppState } from "./store"
 import { ContentTransition } from "./ContentTransition"
@@ -28,8 +28,14 @@ export default ({ children, ...routerProps }) => {
   const [screenSize, setScreenSize] = useState({})
   const [isLoading, setIsLoading] = useState(true)
   const [isMobile, setIsMobile] = useState(null)
-  const pathsWithCard = new Set(["/"])
-  const focusMode = !pathsWithCard.has(routerProps.path)
+  const focusModeRoutes = ["^/blog/"]
+  const resumeModeRoutes = ["^/resume/"]
+  
+  let viewMode = "splitScreen"
+  const routeDoesMatch = route => routerProps.path.match(new RegExp(route))
+  if (focusModeRoutes.some(routeDoesMatch)) viewMode = "focus"
+  if (resumeModeRoutes.some(routeDoesMatch)) viewMode = "resume"
+
   useEffect(() => {
     setIsLoading(false)
   }, [])
@@ -48,7 +54,7 @@ export default ({ children, ...routerProps }) => {
   const appState = useAppState()
 
   if (isLoading || typeof isMobile !== "boolean") return null
-  const layoutMeta = { theme, screenSize, isMobile, routerProps, focusMode }
+  const layoutMeta = { theme, screenSize, isMobile, routerProps, viewMode }
   const LayoutForPlatform = isMobile ? MobileLayout : DesktopLayout
   const useEmptyLayout =
     get(routerProps, "pageContext.layout") === VANILLA_LAYOUT

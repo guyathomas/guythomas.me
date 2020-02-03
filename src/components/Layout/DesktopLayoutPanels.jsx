@@ -77,11 +77,12 @@ const DesktopNavigationItems = styled(Navigation.Links)`
   text-align: right;
 `
 
-export const DesktopLayoutPanels = ({ children, focusMode = false }) => {
+export const DesktopLayoutPanels = ({ children }) => {
   const {
     theme: { breakpoints },
+    viewMode,
   } = useContext(LayoutContext)
-
+  const isFocusMode = viewMode === "focus"
   return (
     <Main maxWidth={breakpoints.max}>
       <MainInner>
@@ -92,11 +93,9 @@ export const DesktopLayoutPanels = ({ children, focusMode = false }) => {
         <DesktopNavigationItems />
         <Navigation.ContentContainer>
           <OptionalPanel hideAtPx={breakpoints.md}>
-            <Portrait blur={focusMode} />
+            <Portrait blur={isFocusMode} />
           </OptionalPanel>
-          <Panel large={focusMode}>
-            {children}
-          </Panel>
+          <Panel large={isFocusMode}>{children}</Panel>
         </Navigation.ContentContainer>
       </MainInner>
     </Main>

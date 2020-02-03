@@ -3,7 +3,7 @@ import React from "react"
 import { PostSnippit } from "../components/PostSnippit"
 import { SEO } from "../components/Seo"
 
-export default ({ focusMode = false, ...props }) => {
+export default props => {
   const posts = props.data.allMarkdownRemark.edges
   return (
     <>

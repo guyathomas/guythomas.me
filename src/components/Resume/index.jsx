@@ -1,9 +1,3 @@
-import React from 'react';
-// import { RESUME_JSON } from './fixtures';
+import React from "react"
 
-export const Resume = ({ resume }) => (
-    <div>
-        Resume Component
-    </div>
-  )
-  
+export const Resume = ({ resume }) => <div>Resume Component</div>

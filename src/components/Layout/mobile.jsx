@@ -34,10 +34,10 @@ const Card = styled.div`
   position: relative;
   padding: 1rem 0.5rem;
   ${TransitionConstants.transitions.page}
-  border-radius: ${props => (props.focusMode ? "0" : "1rem 1rem 0 0")};
+  border-radius: ${props => (props.isFocusMode ? "0" : "1rem 1rem 0 0")};
   min-height: 100vh;
   &::after {
-    display: ${props => (props.focusMode ? "none" : "block")};
+    display: ${props => (props.isFocusMode ? "none" : "block")};
     content: "";
     height: 3px;
     width: 3rem;
@@ -92,7 +92,7 @@ const AllContentWrapper = styled.div`
   position: relative;
 `
 
-export const MobileLayout = ({ children, focusMode }) => {
+export const MobileLayout = ({ children }) => {
   const [isBelowHeader, setIsBelowHeader] = useState(false)
   const [scrollDirection, setScrollDirection] = useState(null)
   const [initialContentHeight, setInitialContentHeight] = useState()
@@ -103,7 +103,8 @@ export const MobileLayout = ({ children, focusMode }) => {
 
   // TODO: Move this into calculated value
   const remInPx = 16
-  const distanceBetweenPreviews = Navigation.ContentContainer.PAGE_PREVIEW_SPACING * remInPx
+  const distanceBetweenPreviews =
+    Navigation.ContentContainer.PAGE_PREVIEW_SPACING * remInPx
   const remOffset = 3
 
   const bindScroll = useScroll(({ direction: [dirX, dirY] }) => {
@@ -142,13 +143,12 @@ export const MobileLayout = ({ children, focusMode }) => {
     return () => window.removeEventListener("resize", setViewHeightVariable)
   }, [])
 
-
-
   const hideHamburger = scrollDirection === 1 && isBelowHeader
   const handleSetCurrentHeight = (_, height) => setInitialContentHeight(height)
 
   // Separate into custom hook
-  const { routerProps } = useContext(LayoutContext)
+  const { routerProps, viewMode } = useContext(LayoutContext)
+  const isFocusMode = viewMode === "focus"
   const pathname = get(routerProps, "location.pathname")
   const visibleLinks = links.filter(({ path }) => path !== pathname)
 
@@ -168,16 +168,22 @@ export const MobileLayout = ({ children, focusMode }) => {
           zIndex={visibleLinks.length + 1}
           viewState={activePagePreviewIndex === 0 ? "active" : "before"}
         >
-          <ContentWrapper isNavigationExpanded={isNavigationExpanded} ref={scrollContainerEl} {...bindScroll()}>
+          <ContentWrapper
+            isNavigationExpanded={isNavigationExpanded}
+            ref={scrollContainerEl}
+            {...bindScroll()}
+          >
             {hasLoaded && <Portrait />}
-            {!focusMode && <InitialCardOffset height={initialContentHeight} />}
-            <Card focusMode={focusMode}>
+            {!isFocusMode && (
+              <InitialCardOffset height={initialContentHeight} />
+            )}
+            <Card isFocusMode={isFocusMode}>
               <InitialContent ref={initialContentEl}>
                 <ReactResizeDetector
                   handleHeight
                   onResize={handleSetCurrentHeight}
                 />
-                <Bio small={focusMode} />
+                <Bio small={isFocusMode} />
                 <SocialLine />
               </InitialContent>
               {children}
