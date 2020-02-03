@@ -1,5 +1,6 @@
-import { useContext, useEffect } from "react"
+import { useContext, useEffect, useState } from "react"
 import get from "lodash/get"
+import throttle from "lodash/throttle"
 import { LayoutContext } from "."
 
 export const useScrollTopOnRouteChange = (scrollContainerEl) => {
@@ -13,4 +14,17 @@ export const useScrollTopOnRouteChange = (scrollContainerEl) => {
       */
     scrollContainerEl.current.scrollTo(0, 0)
   }, [scrollContainerEl, pathname])
+}
+
+export const useScrolledPastRef = (ref) => {
+  const [hasScrolledPastRef, setHasScrolledPastRef] = useState(false)
+
+  const onScroll = throttle(() => {
+    if (!ref.current) return
+    const { top, height } = ref.current.getBoundingClientRect()
+    top + height < 0
+      ? setHasScrolledPastRef(true)
+      : setHasScrolledPastRef(false)
+  }, 100)
+  return [ onScroll, hasScrolledPastRef ]
 }

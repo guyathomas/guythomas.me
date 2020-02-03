@@ -2,7 +2,7 @@ import React, { useContext, useRef, useState } from "react"
 import styled from "@emotion/styled"
 import throttle from "lodash/throttle"
 
-import { useScrollTopOnRouteChange } from "./hooks"
+import { useScrollTopOnRouteChange, useScrolledPastRef } from "./hooks"
 import { TransitionConstants } from "../Layout/Transition"
 import { Bio } from "../Bio"
 import { SocialLine } from "../SocialLine"
@@ -95,16 +95,8 @@ export const DesktopLayout = ({ children, focusMode = false }) => {
   } = useContext(LayoutContext)
   const socialLineRef = useRef(null)
   const postWrapperRef = useRef(null)
-  const [scrolledPastSocial, setScrolledPastSocial] = useState(false)
-
-  const onScroll = throttle(() => {
-    if (!socialLineRef.current) return
-    const { top, height } = socialLineRef.current.getBoundingClientRect()
-    top + height < 0
-      ? setScrolledPastSocial(true)
-      : setScrolledPastSocial(false)
-  }, 100)
-
+  
+  const [ onScroll, hasScrolledPastSocialLine ] = useScrolledPastRef(socialLineRef)
   useScrollTopOnRouteChange(postWrapperRef)
 
   return (
@@ -126,7 +118,7 @@ export const DesktopLayout = ({ children, focusMode = false }) => {
                 <SocialLine />
               </div>
               {children}
-              <SocialLine orientation="vertical" visible={scrolledPastSocial} />
+              <SocialLine orientation="vertical" visible={hasScrolledPastSocialLine} />
             </PostWrapper>
           </Panel>
         </Navigation.ContentContainer>
