@@ -24,11 +24,12 @@ const Portrait = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
-  background-image: url("https://res.cloudinary.com/dqvlfpaev/image/upload/v1574619573/cropped-black-and-white-portrait_cir0bd.png");
+  background-image: url("${props => props.url}");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
-  filter: ${props => (props.blur ? "blur(5px)" : "none")};
+  /* filter: ${props => (props.blur ? "blur(5px) grayscale(100%)" : "blur(0) grayscale(0)")}; */
+  filter: ${props => (props.blur ? "blur(5px)" : "blur(0)")};
 `
 
 const Panel = styled.div`
@@ -84,6 +85,8 @@ export const DesktopLayoutPanels = ({ children }) => {
     viewMode,
   } = useContext(LayoutContext)
   const isRightPanelLarge = viewMode === "focus" || viewMode === "resume"
+  const blackAndWhiteURL = "https://res.cloudinary.com/dqvlfpaev/image/upload/v1574619573/cropped-black-and-white-portrait_cir0bd.png"
+  const colorURL = "https://res.cloudinary.com/dqvlfpaev/image/upload/v1580691840/avatar_sz1jui.jpg"
 
   return (
     <Main maxWidth={breakpoints.max}>
@@ -95,7 +98,7 @@ export const DesktopLayoutPanels = ({ children }) => {
         <DesktopNavigationItems />
         <Navigation.ContentContainer>
           <OptionalPanel hideAtPx={breakpoints.md}>
-            <Portrait blur={viewMode === "focus"} />
+            <Portrait blur={viewMode === "focus"} url={blackAndWhiteURL} />
           </OptionalPanel>
           <Panel large={isRightPanelLarge}>{children}</Panel>
         </Navigation.ContentContainer>
