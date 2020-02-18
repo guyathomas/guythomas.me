@@ -1,7 +1,6 @@
 // custom typefaces
 
-require("typeface-open-sans")
-require("typeface-work-sans")
+require("typeface-lato")
 
 // Line highlighting & numbers
 require("./gatsby-remark-prismjs")
