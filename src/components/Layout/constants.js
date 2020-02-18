@@ -1,1 +1,0 @@
-export const VANILLA_LAYOUT = 'vanillaLayout'
