@@ -11,7 +11,7 @@ export default props => {
       <SEO title="All posts" />
       <main>
         <Bio />
-        {posts.map(post => (
+        {false && posts.map(post => (
           <PostSnippit key={post.node.fields.slug} {...post} />
         ))}
       </main>
