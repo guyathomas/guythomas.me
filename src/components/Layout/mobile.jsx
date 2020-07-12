@@ -78,6 +78,7 @@ const HamburgerPositioner = styled.div`
 const ContentWrapper = styled.div`
   pointer-events: ${props => (props.isNavigationExpanded ? "none" : "all")};
   overflow-y: ${props => (props.isNavigationExpanded ? "hidden" : "scroll")};
+  width: 100%;
 `
 
 const InitialContent = styled.div``
