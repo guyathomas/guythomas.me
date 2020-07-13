@@ -46,7 +46,7 @@ const Panel = styled.div`
 const OptionalPanel = styled(Panel)`
   display: none;
   overflow: hidden;
-  height: 100vh;
+  height: 100%;
   @media (min-width: ${props => props.hideAtPx}px) {
     display: block;
   }
