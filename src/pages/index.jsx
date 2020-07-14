@@ -1,7 +1,8 @@
 import React from "react"
 
-import { PostSnippit } from "../components/PostSnippit"
-import { SEO } from "../components/Seo"
+import { PostSnippit } from "components/PostSnippit"
+import { SEO } from "components/Seo"
+import { Bio } from "components/Bio"
 
 export default props => {
   const posts = props.data.allMarkdownRemark.edges
@@ -9,7 +10,8 @@ export default props => {
     <>
       <SEO title="All posts" />
       <main>
-        {posts.map(post => (
+        <Bio />
+        {false && posts.map(post => (
           <PostSnippit key={post.node.fields.slug} {...post} />
         ))}
       </main>

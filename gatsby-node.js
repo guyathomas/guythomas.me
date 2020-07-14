@@ -1,7 +1,7 @@
 const path = require(`path`)
 const { createFilePath } = require(`gatsby-source-filesystem`)
 
-const createPages = (allEdges, name) => {
+const createPages = (createPage, allEdges, name) => {
   allEdges
     .filter(edge => edge.node.fields.sourceInstanceName === name)
     .forEach((post, index, edges) => {
@@ -54,8 +54,8 @@ exports.createPages = async ({ graphql, actions }) => {
 
   // Create blog posts pages.
   const posts = result.data.allMarkdownRemark.edges
-  createPages(posts, "blog")
-  createPages(posts, "notes")
+  createPages(createPage, posts, "blog")
+  createPages(createPage, posts, "notes")
 }
 
 exports.onCreateNode = ({ node, actions, getNode }) => {
@@ -74,7 +74,7 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
 exports.onCreatePage = ({ page, actions }) => {
   const { createPage } = actions
   if (page.path.match(new RegExp(/^\/resume\//))) {
-    page.context.layout = 'vanillaLayout'
+    page.context.layout = "vanillaLayout"
     createPage(page)
   }
 }

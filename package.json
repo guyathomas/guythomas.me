@@ -47,13 +47,13 @@
     "react-typography": "^0.16.19",
     "react-use-gesture": "^6.0.14",
     "smoothscroll-polyfill": "^0.4.4",
-    "typeface-open-sans": "0.0.75",
-    "typeface-work-sans": "0.0.72",
+    "typeface-lato": "0.0.75",
     "typography": "^0.16.19",
     "typography-breakpoint-constants": "^0.16.19"
   },
   "devDependencies": {
     "gatsby-source-instance-name-for-remark": "^0.1.1",
+    "gatsby-plugin-root-import": "^2.0.5",
     "prettier": "^1.19.1"
   },
   "homepage": "https://github.com/gatsbyjs/gatsby-starter-blog#readme",
