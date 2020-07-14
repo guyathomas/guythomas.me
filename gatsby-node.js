@@ -1,13 +1,14 @@
 const path = require(`path`)
 const { createFilePath } = require(`gatsby-source-filesystem`)
 
-const createPages = (allEdges, name) => {
+const createPages = (createPage, allEdges, name) => {
+  const PostTemplate = path.resolve(`./src/templates/post.js`)
   allEdges
     .filter(edge => edge.node.fields.sourceInstanceName === name)
     .forEach((post, index, edges) => {
       const previous = index === edges.length - 1 ? null : edges[index + 1].node
       const next = index === 0 ? null : edges[index - 1].node
-      const path = `/${name}${post.node.fields.slug}`
+      const path = `/${post.node.fields.sourceInstanceName}${post.node.fields.slug}`
       createPage({
         path,
         component: PostTemplate,
@@ -23,8 +24,6 @@ const createPages = (allEdges, name) => {
 
 exports.createPages = async ({ graphql, actions }) => {
   const { createPage } = actions
-
-  const PostTemplate = path.resolve(`./src/templates/post.js`)
   const result = await graphql(
     `
       {
@@ -54,8 +53,8 @@ exports.createPages = async ({ graphql, actions }) => {
 
   // Create blog posts pages.
   const posts = result.data.allMarkdownRemark.edges
-  createPages(posts, "blog")
-  createPages(posts, "notes")
+  createPages(createPage, posts, "blog")
+  createPages(createPage, posts, "notes")
 }
 
 exports.onCreateNode = ({ node, actions, getNode }) => {
