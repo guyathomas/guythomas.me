@@ -11,7 +11,7 @@ export const pageQuery = graphql`
     }
     allMarkdownRemark(
       sort: { fields: [frontmatter___date], order: DESC }
-      filter: { fields: { sourceInstanceName: { eq: "blog" } } }
+      filter: { fields: { sourceInstanceName: { eq: "notes" } } }
     ) {
       edges {
         node {

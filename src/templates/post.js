@@ -5,7 +5,7 @@ import styled from "@emotion/styled"
 import { SEO } from "../components/Seo"
 import { PostMeta } from "../components/PostMeta"
 
-const BlogTitle = styled.h2`
+const Title = styled.h2`
   margin-top: 2.5rem;
   margin-bottom: 1rem;
 `
@@ -18,7 +18,7 @@ export default ({ data: { markdownRemark: post } }) => (
     />
     <article>
       <header>
-        <BlogTitle>{post.frontmatter.title}</BlogTitle>
+        <Title>{post.frontmatter.title}</Title>
         <PostMeta date={post.frontmatter.date} />
       </header>
       <section dangerouslySetInnerHTML={{ __html: post.html }} />
@@ -27,7 +27,7 @@ export default ({ data: { markdownRemark: post } }) => (
 )
 
 export const pageQuery = graphql`
-  query BlogPostBySlug($slug: String!) {
+  query PostBySlug($slug: String!) {
     site {
       siteMetadata {
         title

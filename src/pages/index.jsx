@@ -30,6 +30,7 @@ export const pageQuery = graphql`
           excerpt
           fields {
             slug
+            sourceInstanceName
           }
           frontmatter {
             date(formatString: "MMMM DD, YYYY")

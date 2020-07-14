@@ -19,6 +19,13 @@ module.exports = {
     {
       resolve: `gatsby-source-filesystem`,
       options: {
+        path: `${__dirname}/content/notes`,
+        name: `notes`,
+      },
+    },
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
         path: `${__dirname}/content/assets`,
         name: `assets`,
       },
@@ -52,6 +59,7 @@ module.exports = {
         ],
       },
     },
+    `gatsby-source-instance-name-for-remark`,
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
     {

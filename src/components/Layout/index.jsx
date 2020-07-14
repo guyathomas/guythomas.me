@@ -28,7 +28,8 @@ export default ({ children, ...routerProps }) => {
   const [screenSize, setScreenSize] = useState({})
   const [isLoading, setIsLoading] = useState(true)
   const [isMobile, setIsMobile] = useState(null)
-  const focusModeRoutes = ["^/blog/"]
+  // TODO: Change to have only home page not use focusMode
+  const focusModeRoutes = ["^/blog/", "^/notes/"]
   const resumeModeRoutes = ["^/resume/"]
   
   let viewMode = "splitScreen"
