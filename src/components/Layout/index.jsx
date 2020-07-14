@@ -29,12 +29,12 @@ export default ({ children, ...routerProps }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [isMobile, setIsMobile] = useState(null)
   // TODO: Change to have only home page not use focusMode
-  const focusModeRoutes = ["^/blog/", "^/notes/"]
+  const splitScreenRoutes = ["^/$"]
   const resumeModeRoutes = ["^/resume/"]
-  
-  let viewMode = "splitScreen"
+
+  let viewMode = "focus"
   const routeDoesMatch = route => routerProps.path.match(new RegExp(route))
-  if (focusModeRoutes.some(routeDoesMatch)) viewMode = "focus"
+  if (splitScreenRoutes.some(routeDoesMatch)) viewMode = "splitScreen"
   if (resumeModeRoutes.some(routeDoesMatch)) viewMode = "resume"
 
   useEffect(() => {
