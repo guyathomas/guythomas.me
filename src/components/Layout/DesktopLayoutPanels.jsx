@@ -2,10 +2,13 @@ import React, { useContext } from "react"
 import styled from "@emotion/styled"
 
 import { TransitionConstants } from "./Transition"
-import { Navigation } from "../Navigation"
+import { Hamburger } from "../Hamburger"
 import { SEO } from "../Seo"
+
 import "./style.css"
 import { LayoutContext } from "."
+import { Link } from "gatsby"
+import { links } from "../../constants"
 
 const Main = styled.main`
   height: 100vh;
@@ -28,7 +31,8 @@ const Portrait = styled.div`
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
-  /* filter: ${props => (props.blur ? "blur(5px) grayscale(100%)" : "blur(0) grayscale(0)")}; */
+  /* filter: ${props =>
+    props.blur ? "blur(5px) grayscale(100%)" : "blur(0) grayscale(0)"}; */
   filter: ${props => (props.blur ? "blur(5px)" : "blur(0)")};
 `
 
@@ -36,6 +40,7 @@ const Panel = styled.div`
   display: flex;
   flex-grow: ${props => (props.large ? 3 : 1)};
   flex-basis: 0;
+  flex-shrink: 1;
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
@@ -44,6 +49,7 @@ const Panel = styled.div`
 `
 
 const OptionalPanel = styled(Panel)`
+  flex-shrink: 2;
   display: none;
   overflow: hidden;
   height: 100%;
@@ -69,8 +75,11 @@ const HamburgerPositioner = styled.div`
     width: auto;
   }
 `
-
-const DesktopNavigationItems = styled(Navigation.Links)`
+const NavList = styled.ul`
+  list-style: none;
+  display: flex;
+  font-size: 1.5rem;
+  margin: 0;
   position: absolute;
   right: 0;
   flex-direction: column;
@@ -79,29 +88,42 @@ const DesktopNavigationItems = styled(Navigation.Links)`
   text-align: right;
 `
 
+const NavItem = styled.li`
+  margin: 0;
+`
+const Content = styled.div`
+  height: 100%;
+`
+
 export const DesktopLayoutPanels = ({ children }) => {
   const {
     theme: { breakpoints },
     viewMode,
   } = useContext(LayoutContext)
-  const isRightPanelLarge = viewMode === "focus" || viewMode === "resume"
-  const blackAndWhiteURL = "https://res.cloudinary.com/dqvlfpaev/image/upload/v1574619573/cropped-black-and-white-portrait_cir0bd.png"
-  const colorURL = "https://res.cloudinary.com/dqvlfpaev/image/upload/v1580691840/avatar_sz1jui.jpg"
+  const isRightPanelLarge = viewMode !== "splitScreen"
+  const blackAndWhiteURL =
+    "https://res.cloudinary.com/dqvlfpaev/image/upload/v1574619573/cropped-black-and-white-portrait_cir0bd.png"
+  const colorURL =
+    "https://res.cloudinary.com/dqvlfpaev/image/upload/v1580691840/avatar_sz1jui.jpg"
 
   return (
     <Main maxWidth={breakpoints.max}>
       <MainInner>
-        <HamburgerPositioner>
-          <Navigation.Hamburger />
-        </HamburgerPositioner>
-        <SEO title="All posts" />
-        <DesktopNavigationItems />
-        <Navigation.ContentContainer>
-          <OptionalPanel hideAtPx={breakpoints.md}>
-            <Portrait blur={viewMode === "focus"} url={blackAndWhiteURL} />
-          </OptionalPanel>
-          <Panel large={isRightPanelLarge}>{children}</Panel>
-        </Navigation.ContentContainer>
+        <OptionalPanel hideAtPx={breakpoints.md}>
+          <Portrait blur={isRightPanelLarge} url={blackAndWhiteURL} />
+        </OptionalPanel>
+        <Panel large={isRightPanelLarge}>
+          <Content>
+            {/* <NavList>
+              {links.map(({ label, path }) => (
+                <NavItem>
+                  <Link to={path}>{label}</Link>
+                </NavItem>
+              ))}
+            </NavList> */}
+            {children}
+          </Content>
+        </Panel>
       </MainInner>
     </Main>
   )

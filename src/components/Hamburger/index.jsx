@@ -2,8 +2,7 @@ import React from "react"
 import styled from "@emotion/styled"
 import { css } from "@emotion/core"
 
-import { AppStateContext } from "../../Layout"
-import { TransitionConstants } from "../../Layout/Transition"
+import { TransitionConstants } from "../Layout/Transition"
 
 const MenuIconLine = css`
   width: 30px;
@@ -54,14 +53,11 @@ const HamburgerWrapper = styled.button`
   outline: none;
 `
 
-export const Hamburger = ({ disableNavigation = false }) => {
-  const { state, dispatchers } = React.useContext(AppStateContext)
-  const handleOnClick = () =>
-    !disableNavigation && dispatchers.toggleNavigation()
-  const menuIconName = state.isNavigationExpanded ? "cross" : "hamburger"
+export const Hamburger = ({ onClick, isActive }) => {
+  const menuIconName = isActive ? "cross" : "hamburger"
 
   return (
-    <HamburgerWrapper onClick={handleOnClick}>
+    <HamburgerWrapper onClick={onClick}>
       <MenuIcon menuIconName={menuIconName} />
     </HamburgerWrapper>
   )

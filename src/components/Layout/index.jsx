@@ -5,10 +5,8 @@ import { MobileLayout } from "./mobile"
 import { DesktopLayout } from "./desktop"
 import { DesktopLayoutPanels } from "./DesktopLayoutPanels"
 import GlobalStyles from "./global-styles"
-import { useAppState } from "./store"
 import { ContentTransition } from "./ContentTransition"
 import { TransitionContextProvider } from "./Transition"
-import { VANILLA_LAYOUT } from "./constants"
 
 const theme = {
   breakpoints: {
@@ -22,7 +20,6 @@ const theme = {
 }
 
 export const LayoutContext = createContext(theme)
-export const AppStateContext = createContext(null)
 
 export default ({ children, ...routerProps }) => {
   const [screenSize, setScreenSize] = useState({})
@@ -52,30 +49,20 @@ export default ({ children, ...routerProps }) => {
     return () => window.removeEventListener("resize", debouncedSetScreen)
   }, [])
 
-  const appState = useAppState()
-
   if (isLoading || typeof isMobile !== "boolean") return null
   const layoutMeta = { theme, screenSize, isMobile, routerProps, viewMode }
   const LayoutForPlatform = isMobile ? MobileLayout : DesktopLayout
-  const useEmptyLayout =
-    get(routerProps, "pageContext.layout") === VANILLA_LAYOUT
-
-  const main = useEmptyLayout ? (
-    <DesktopLayoutPanels>{children}</DesktopLayoutPanels>
-  ) : (
-    <LayoutForPlatform>
-      <GlobalStyles />
-      {children}
-    </LayoutForPlatform>
-  )
 
   return (
     <LayoutContext.Provider value={layoutMeta}>
-      <AppStateContext.Provider value={appState}>
-        <TransitionContextProvider pathname={routerProps.location.pathname}>
-          <ContentTransition>{main}</ContentTransition>
-        </TransitionContextProvider>
-      </AppStateContext.Provider>
+      <TransitionContextProvider pathname={routerProps.location.pathname}>
+        <ContentTransition>
+          <LayoutForPlatform>
+            <GlobalStyles />
+            {children}
+          </LayoutForPlatform>
+        </ContentTransition>
+      </TransitionContextProvider>
     </LayoutContext.Provider>
   )
 }
