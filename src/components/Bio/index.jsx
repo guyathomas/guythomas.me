@@ -37,18 +37,14 @@ const Description = styled.div`
   margin-top: 1rem;
 `
 
-const AboutMeWrapper = styled.div`
-  display: ${props => (props.small ? "none" : "block")};
-`
-
-export const Bio = ({ small = false }) => (
+export const Bio = () => (
   <BioContainer>
     <Title>Guy Thomas</Title>
-    <AboutMeWrapper small={small}>
+    <div>
       <Role>Software Engineer</Role>
       <Description>
         I love tinkering, teaching and exploring the outdoors.
       </Description>
-    </AboutMeWrapper>
+    </div>
   </BioContainer>
 )
