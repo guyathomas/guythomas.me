@@ -8,7 +8,7 @@ import ReactResizeDetector from "react-resize-detector"
 
 import { LayoutContext } from "../Layout"
 import { useScrollTopOnRouteChange } from "./hooks"
-import { TransitionConstants } from "./Transition"
+import { TRANSITIONS } from "../../contexts/Transition"
 import { Hamburger } from "../Hamburger"
 import { Bio } from "../Bio"
 import { SocialLine } from "../SocialLine"
@@ -31,8 +31,8 @@ const Card = styled.div`
   background-color: white;
   position: relative;
   padding: 1rem 0.5rem;
-  ${TransitionConstants.transitions.page}
   border-radius: ${props => (props.isFocusMode ? "0" : "1rem 1rem 0 0")};
+  ${TRANSITIONS.page}
   min-height: 100vh;
   &::after {
     display: ${props => (props.isFocusMode ? "none" : "block")};
@@ -49,7 +49,7 @@ const Card = styled.div`
 `
 
 const InitialCardOffset = styled.div`
-  ${TransitionConstants.transitions.page}
+  ${TRANSITIONS.page}
   height: 100vh; /* Largest value, will be reduced by max-height */
   max-height: ${props =>
     `calc(100vh - ${props.height || 0}px - ${CARD_TOP_PADDING}px)`};
@@ -70,7 +70,7 @@ const HamburgerPositioner = styled.div`
     width: auto;
   }
   opacity: ${props => (props.hide ? 0 : 1)};
-  ${TransitionConstants.transitions.page}
+  ${TRANSITIONS.page}
 `
 
 const ContentWrapper = styled.div`

@@ -1,9 +1,9 @@
 import React, { useContext } from "react"
 import styled from "@emotion/styled"
 
-import { TransitionConstants } from "./Transition"
+import { TRANSITIONS } from "../../contexts/Transition"
 import { Hamburger } from "../Hamburger"
-import { SEO } from "../Seo"
+import { SEO } from "../SEO"
 
 import "./style.css"
 import { LayoutContext } from "."
@@ -45,7 +45,7 @@ const Panel = styled.div`
   align-items: center;
   justify-content: flex-end;
   position: relative;
-  ${TransitionConstants.transitions.page}
+  ${TRANSITIONS.page}
 `
 
 const OptionalPanel = styled(Panel)`

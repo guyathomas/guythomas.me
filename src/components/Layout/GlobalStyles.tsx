@@ -1,18 +1,18 @@
 import React from "react"
 import { Global, css } from "@emotion/core"
-import { TransitionConstants } from "./Transition"
+import { TRANSITIONS } from "~contexts/Transition"
 
 // Create smooth transitions for header links
 const enumerateHeaderStyles = (svgSelector = "", headerPsuedoClass = "") =>
   ["h1", "h2", "h3", "h4", "h5", "h6"]
-    .map(h => `${h}${headerPsuedoClass} ${svgSelector}`)
+    .map((h) => `${h}${headerPsuedoClass} ${svgSelector}`)
     .join(",")
 
 const headerLinkStyles = css`
   ${enumerateHeaderStyles(`.header-anchor svg`)} {
     opacity: 0;
     visibility: visible;
-    ${TransitionConstants.transitions.page}
+    ${TRANSITIONS.page}
   }
   ${enumerateHeaderStyles(`.header-anchor svg`, ":hover")},
   ${enumerateHeaderStyles(`.header-anchor:focus svg`)} {
@@ -20,8 +20,4 @@ const headerLinkStyles = css`
   }
 `
 
-export default () => (
-  <>
-    <Global styles={headerLinkStyles} />
-  </>
-)
+export const GlobalStyles = () => <Global styles={headerLinkStyles} />

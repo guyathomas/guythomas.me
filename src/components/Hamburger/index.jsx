@@ -2,12 +2,12 @@ import React from "react"
 import styled from "@emotion/styled"
 import { css } from "@emotion/core"
 
-import { TransitionConstants } from "../Layout/Transition"
+import { TRANSITIONS } from "../../contexts/Transition"
 
 const MenuIconLine = css`
   width: 30px;
   height: 2px;
-  ${TransitionConstants.transitions.page}
+  ${TRANSITIONS.page}
 `
 const MenuIconPsuedo = css`
   ${MenuIconLine}
