@@ -1,3 +1,4 @@
+// eslint-disable-next-line
 const path = require("path")
 
 module.exports = {
@@ -11,6 +12,12 @@ module.exports = {
     },
   },
   plugins: [
+    {
+      resolve: `gatsby-plugin-graphql-codegen`,
+      options: {
+        fileName: `./src/types/gatsby-graphql.ts`,
+      },
+    },
     `gatsby-plugin-typescript`,
     {
       resolve: "gatsby-plugin-root-import",
@@ -18,6 +25,7 @@ module.exports = {
         "~components": path.join(__dirname, "src/components"),
         "~templates": path.join(__dirname, "src/templates"),
         "~styles": path.join(__dirname, "src/styles"),
+        "~types": path.join(__dirname, "src/types"),
       },
     },
     `gatsby-source-instance-name-for-remark`, // will atatch gatsby-source-filesystem `name` field to node

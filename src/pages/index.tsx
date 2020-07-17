@@ -1,28 +1,38 @@
 import React from "react"
-import { Basic, GlobalLayout } from "~templates"
-import { PostSnippitGrid } from "~components/PostSnippitGrid"
+import { graphql } from "gatsby"
 
-export default (props) => {
-  const posts = props.data.allMarkdownRemark.edges
+import { PostSnippitGrid } from "~components/PostSnippitGrid"
+import { Hero, GlobalLayout } from "~templates"
+import { PageIndexQuery } from "~types/gatsby-graphql"
+
+interface IndexProps {
+  data: PageIndexQuery
+}
+
+const Index: React.FC<IndexProps> = (props) => {
+  const recentPosts = props.data.recent.edges
   return (
     <GlobalLayout>
-      <Basic title="Notes">
-        <PostSnippitGrid posts={posts} />
-      </Basic>
+      <Hero>
+        <PostSnippitGrid title="Recent Posts" posts={recentPosts} />
+      </Hero>
     </GlobalLayout>
   )
 }
 
+export default Index
+
 export const pageQuery = graphql`
-  query {
+  query PageIndex {
     site {
       siteMetadata {
         title
       }
     }
-    allMarkdownRemark(
+    recent: allMarkdownRemark(
       sort: { fields: [frontmatter___date], order: DESC }
-      filter: { fields: { sourceInstanceName: { eq: "notes" } } }
+      filter: { fields: { sourceInstanceName: { eq: "blog" } } }
+      limit: 2
     ) {
       edges {
         node {

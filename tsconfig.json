@@ -10,11 +10,12 @@
     "esModuleInterop": true,
     "noUnusedLocals": false,
     "allowJs": true,
-    "baseUrl": ".",
+    "baseUrl": "src",
     "paths": {
-      "~components/*": ["src/components/*"],
-      "~templates": ["src/templates"],
-      "~styles": ["src/styles"]
+      "~components/*": ["components/*"],
+      "~types/*": ["types/*"],
+      "~templates": ["templates"],
+      "~styles": ["styles"]
     }
   },
   "exclude": ["node_modules", "public", ".cache"]

@@ -8,11 +8,15 @@
 import React from "react"
 import { Helmet } from "react-helmet"
 import { useStaticQuery, graphql } from "gatsby"
+import { SeoQuery } from "~types/gatsby-graphql"
 
 interface SEOProps {
   description?: string
   lang?: string
-  meta?: any[]
+  meta?: React.DetailedHTMLProps<
+    React.MetaHTMLAttributes<HTMLMetaElement>,
+    HTMLMetaElement
+  >[]
   title: string
 }
 
@@ -22,9 +26,9 @@ export const SEO: React.FC<SEOProps> = ({
   meta = [],
   title,
 }) => {
-  const { site } = useStaticQuery(
+  const { site } = useStaticQuery<SeoQuery>(
     graphql`
-      query {
+      query SEO {
         site {
           siteMetadata {
             title
@@ -36,7 +40,7 @@ export const SEO: React.FC<SEOProps> = ({
     `
   )
 
-  const metaDescription = description || site.siteMetadata.description
+  const metaDescription = description || site?.siteMetadata?.description || ""
 
   return (
     <Helmet
@@ -44,7 +48,7 @@ export const SEO: React.FC<SEOProps> = ({
         lang,
       }}
       title={title}
-      titleTemplate={`%s | ${site.siteMetadata.title}`}
+      titleTemplate={`%s | ${site?.siteMetadata?.title || ""}`}
       meta={[
         {
           name: `description`,
@@ -68,7 +72,7 @@ export const SEO: React.FC<SEOProps> = ({
         },
         {
           name: `twitter:creator`,
-          content: site.siteMetadata.author,
+          content: site?.siteMetadata?.author || undefined,
         },
         {
           name: `twitter:title`,
@@ -78,7 +82,8 @@ export const SEO: React.FC<SEOProps> = ({
           name: `twitter:description`,
           content: metaDescription,
         },
-      ].concat(meta)}
+        ...meta,
+      ]}
     />
   )
 }

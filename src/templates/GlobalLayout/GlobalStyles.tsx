@@ -19,4 +19,4 @@ const headerLinkStyles = css`
   }
 `
 
-export const GlobalStyles = () => <Global styles={headerLinkStyles} />
+export const GlobalStyles: React.FC = () => <Global styles={headerLinkStyles} />

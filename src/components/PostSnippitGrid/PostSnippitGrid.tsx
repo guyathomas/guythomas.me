@@ -1,10 +1,11 @@
 import React from "react"
 
 import { PostSnippitItem } from "./PostSnippitItem"
+import { Post } from "./types"
 
 interface PostSnippitGridProps {
   title?: string
-  posts: any[]
+  posts: Post[]
 }
 
 export const PostSnippitGrid: React.FC<PostSnippitGridProps> = ({
@@ -15,7 +16,7 @@ export const PostSnippitGrid: React.FC<PostSnippitGridProps> = ({
     <div>
       {title && <h2>{title}</h2>}
       {posts.map((post) => (
-        <PostSnippitItem key={post.node.fields.slug} {...post} />
+        <PostSnippitItem key={post?.node?.fields?.slug || ""} post={post} />
       ))}
     </div>
   )

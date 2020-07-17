@@ -64,7 +64,10 @@ export const Header: React.FC = () => {
         </Link>
         <LinkItems>
           {LINKS.map((link) => (
-            <LinkItem isActive={location.pathname === link.path}>
+            <LinkItem
+              key={link.path}
+              isActive={location.pathname === link.path}
+            >
               <Link to={link.path}>{link.label}</Link>
             </LinkItem>
           ))}

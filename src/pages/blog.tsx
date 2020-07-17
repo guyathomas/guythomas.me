@@ -1,9 +1,16 @@
 import React from "react"
 import { Basic, GlobalLayout } from "~templates"
+import { graphql } from "gatsby"
 import { PostSnippitGrid } from "~components/PostSnippitGrid"
 
-export default (props) => {
-  const posts = props.data.allMarkdownRemark.edges
+import { BlogIndexQuery } from "~types/gatsby-graphql"
+
+interface BlogProps {
+  data: BlogIndexQuery
+}
+
+const Blog: React.FC<BlogProps> = ({ data }) => {
+  const posts = data.allMarkdownRemark.edges
   return (
     <GlobalLayout>
       <Basic title="Blog">
@@ -13,8 +20,10 @@ export default (props) => {
   )
 }
 
+export default Blog
+
 export const pageQuery = graphql`
-  query {
+  query BlogIndex {
     site {
       siteMetadata {
         title

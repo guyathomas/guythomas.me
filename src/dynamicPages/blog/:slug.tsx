@@ -3,21 +3,22 @@ import { graphql } from "gatsby"
 
 import { GlobalLayout, Basic } from "~templates"
 import { SEO } from "~components/SEO"
+import { PostBySlugQuery } from "~types/gatsby-graphql"
 
 interface PostProps {
-  data: any
+  data: PostBySlugQuery
 }
 
 const Post: React.FC<PostProps> = ({ data: { markdownRemark: post } }) => {
   return (
     <GlobalLayout>
       <SEO
-        title={post.frontmatter.title}
-        description={post.frontmatter.description || post.excerpt}
+        title={`${post?.frontmatter?.title || ""}`}
+        description={post?.frontmatter?.description || post?.excerpt || ""}
       />
-      <Basic title={post.frontmatter.title}>
+      <Basic title={post?.frontmatter?.title || ""}>
         <article>
-          <section dangerouslySetInnerHTML={{ __html: post.html }} />
+          <section dangerouslySetInnerHTML={{ __html: post?.html || "" }} />
         </article>
       </Basic>
     </GlobalLayout>
