@@ -1,16 +1,16 @@
 import React from "react"
-import Basic from "../templates/Basic"
-import Layout from "../components/Layout"
+import { Basic } from "../templates/Basic"
+import { GlobalLayout } from "../templates/GlobalLayout"
 import { PostSnippitGrid } from "../components/PostSnippitGrid"
 
 export default (props) => {
   const posts = props.data.allMarkdownRemark.edges
   return (
-    <Layout>
+    <GlobalLayout>
       <Basic title="Blog">
         <PostSnippitGrid posts={posts} />
       </Basic>
-    </Layout>
+    </GlobalLayout>
   )
 }
 

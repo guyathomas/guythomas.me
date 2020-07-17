@@ -1,26 +1,17 @@
 import React from "react"
 import { graphql } from "gatsby"
-import styled from "@emotion/styled"
 
-import Layout from "../../components/Layout"
+import { GlobalLayout } from "../../templates/GlobalLayout"
 import { SEO } from "../../components/SEO"
-import Basic from "../Basic"
-
-const Title = styled.h2`
-  margin-top: 2.5rem;
-  margin-bottom: 1rem;
-`
+import { Basic } from "../../templates/Basic"
 
 interface PostProps {
   data: any
 }
 
-export default (props: any) => {
-  const {
-    data: { markdownRemark: post },
-  } = props
+const Post: React.FC<PostProps> = ({ data: { markdownRemark: post } }) => {
   return (
-    <Layout>
+    <GlobalLayout>
       <SEO
         title={post.frontmatter.title}
         description={post.frontmatter.description || post.excerpt}
@@ -30,9 +21,11 @@ export default (props: any) => {
           <section dangerouslySetInnerHTML={{ __html: post.html }} />
         </article>
       </Basic>
-    </Layout>
+    </GlobalLayout>
   )
 }
+
+export default Post
 
 export const pageQuery = graphql`
   query PostBySlug($slug: String!) {

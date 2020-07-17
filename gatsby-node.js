@@ -2,7 +2,7 @@ const path = require(`path`)
 const { createFilePath } = require(`gatsby-source-filesystem`)
 
 const createPages = (createPage, allEdges, name) => {
-  const PostTemplate = path.resolve(`./src/templates/Post/Post.tsx`)
+  const PostTemplate = path.resolve(`./src/dynamicPages/Blog/:slug.tsx`)
   allEdges
     .filter((edge) => edge.node.fields.sourceInstanceName === name)
     .forEach((post, index, edges) => {
@@ -54,6 +54,7 @@ exports.createPages = async ({ graphql, actions }) => {
   // Create blog posts pages.
   const posts = result.data.allMarkdownRemark.edges
   createPages(createPage, posts, "blog")
+  createPages(createPage, posts, "notes")
 }
 
 exports.onCreateNode = ({ node, actions, getNode }) => {

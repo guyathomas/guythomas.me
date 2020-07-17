@@ -104,7 +104,6 @@ module.exports = {
       resolve: `gatsby-plugin-alias-imports`,
       options: {
         alias: {
-          "~contexts": "src/contexts",
           "~constants": "src/constants",
           "~components": "src/components",
         },

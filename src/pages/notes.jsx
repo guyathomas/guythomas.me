@@ -1,16 +1,15 @@
 import React from "react"
-
-import { PostSnippitGrid } from "../components/PostSnippitGrid"
-import { Hero } from "../templates/Hero"
+import { Basic } from "../templates/Basic"
 import { GlobalLayout } from "../templates/GlobalLayout"
+import { PostSnippitGrid } from "../components/PostSnippitGrid"
 
 export default (props) => {
-  const recentPosts = props.data.recent.edges
+  const posts = props.data.allMarkdownRemark.edges
   return (
     <GlobalLayout>
-      <Hero>
-        <PostSnippitGrid title="Recent Posts" posts={recentPosts} />
-      </Hero>
+      <Basic title="Notes">
+        <PostSnippitGrid posts={posts} />
+      </Basic>
     </GlobalLayout>
   )
 }
@@ -22,10 +21,9 @@ export const pageQuery = graphql`
         title
       }
     }
-    recent: allMarkdownRemark(
+    allMarkdownRemark(
       sort: { fields: [frontmatter___date], order: DESC }
-      filter: { fields: { sourceInstanceName: { eq: "blog" } } }
-      limit: 2
+      filter: { fields: { sourceInstanceName: { eq: "notes" } } }
     ) {
       edges {
         node {

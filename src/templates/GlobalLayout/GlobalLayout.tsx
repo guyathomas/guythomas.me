@@ -1,11 +1,14 @@
 import React from "react"
-import { WrapPageElementNodeArgs } from "gatsby"
 import PageTransition from "gatsby-plugin-page-transitions"
 
-import { Header } from "../Header"
+import { Header } from "../../components/Header"
 import { GlobalStyles } from "./GlobalStyles"
 
-export const Layout: React.FC<WrapPageElementNodeArgs> = ({ children }) => {
+interface GlobalLayoutProps {
+  children: React.ReactNode
+}
+
+export const GlobalLayout: React.FC<GlobalLayoutProps> = ({ children }) => {
   return (
     <>
       <GlobalStyles />
