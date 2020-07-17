@@ -14,6 +14,9 @@ module.exports = {
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript",
     "prettier",
     "prettier/@typescript-eslint",
     "prettier/react",
@@ -23,6 +26,24 @@ module.exports = {
   settings: {
     react: {
       version: "detect",
+    },
+    "import/extensions": [".js", ".jsx", ".ts", ".tsx"],
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx", ".d.ts"],
+    },
+    "import/resolver": {
+      alias: {
+        map: [
+          ["~styles", "./src/styles"],
+          ["~components", "./src/components"],
+          ["~templates", "./src/templates"],
+          ["~types", "./src/types"],
+        ],
+        extensions: [".ts", ".tsx", ".js", ".jsx"],
+      },
+      node: {
+        extensions: [".js", ".jsx", ".ts", ".tsx"],
+      },
     },
   },
   env: {
