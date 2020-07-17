@@ -20,6 +20,7 @@ module.exports = {
         "~styles": path.join(__dirname, "src/styles"),
       },
     },
+    `gatsby-source-instance-name-for-remark`, // will atatch gatsby-source-filesystem `name` field to node
     `gatsby-plugin-page-transitions`,
     {
       resolve: `gatsby-source-filesystem`,
@@ -71,7 +72,7 @@ module.exports = {
         ],
       },
     },
-    `gatsby-source-instance-name-for-remark`,
+
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
     {
