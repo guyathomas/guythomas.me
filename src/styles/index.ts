@@ -1,2 +1,2 @@
-export { COLOR_PALETTE } from "./colorPallette"
+export { COLOR_PALETTE } from "./colorPalette"
 export { BREAKPOINTS } from "./breakpoints"

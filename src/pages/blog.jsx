@@ -1,7 +1,6 @@
 import React from "react"
-import { Basic } from "../templates/Basic"
-import { GlobalLayout } from "../templates/GlobalLayout"
-import { PostSnippitGrid } from "../components/PostSnippitGrid"
+import { Basic, GlobalLayout } from "~templates"
+import { PostSnippitGrid } from "~components/PostSnippitGrid"
 
 export default (props) => {
   const posts = props.data.allMarkdownRemark.edges

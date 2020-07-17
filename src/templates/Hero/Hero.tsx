@@ -1,6 +1,6 @@
 import React from "react"
 import styled from "@emotion/styled"
-import { BREAKPOINTS, COLOR_PALETTE } from "~constants"
+import { BREAKPOINTS, COLOR_PALETTE } from "~styles"
 import HeroBanner from "./HeroBanner.svg"
 
 const Main = styled.main`

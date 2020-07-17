@@ -1,9 +1,8 @@
 import React from "react"
 import { graphql } from "gatsby"
 
-import { GlobalLayout } from "../../templates/GlobalLayout"
-import { SEO } from "../../components/SEO"
-import { Basic } from "../../templates/Basic"
+import { GlobalLayout, Basic } from "~templates"
+import { SEO } from "~components/SEO"
 
 interface PostProps {
   data: any

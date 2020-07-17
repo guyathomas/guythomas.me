@@ -1,5 +1,6 @@
 const path = require(`path`)
 const { createFilePath } = require(`gatsby-source-filesystem`)
+const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin")
 
 const createPages = (createPage, allEdges, name) => {
   const PostTemplate = path.resolve(`./src/dynamicPages/Blog/:slug.tsx`)
@@ -68,4 +69,12 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
       value,
     })
   }
+}
+
+exports.onCreateWebpackConfig = ({ actions }) => {
+  actions.setWebpackConfig({
+    resolve: {
+      plugins: [new TsconfigPathsPlugin()],
+    },
+  })
 }

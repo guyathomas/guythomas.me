@@ -1,7 +1,7 @@
 import React from "react"
 import { graphql } from "gatsby"
 
-import { SEO } from "../components/Seo"
+import { SEO } from "~components/Seo"
 
 export default () => (
   <div>

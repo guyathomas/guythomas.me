@@ -1,8 +1,7 @@
 import React from "react"
 
-import { PostSnippitGrid } from "../components/PostSnippitGrid"
-import { Hero } from "../templates/Hero"
-import { GlobalLayout } from "../templates/GlobalLayout"
+import { PostSnippitGrid } from "~components/PostSnippitGrid"
+import { Hero, GlobalLayout } from "~templates"
 
 export default (props) => {
   const recentPosts = props.data.recent.edges

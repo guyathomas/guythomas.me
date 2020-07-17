@@ -1,9 +1,16 @@
 import React from "react"
 import styled from "@emotion/styled"
-import { LINKS, BREAKPOINTS, COLOR_PALETTE } from "~constants"
+import { BREAKPOINTS, COLOR_PALETTE } from "~styles"
 import { useLocation } from "@reach/router"
-import { Link } from "../Link"
+import { Link } from "~components/Link"
 import Avatar from "./Avatar.svg"
+
+interface AppLink {
+  label: string
+  path: string
+}
+
+export const LINKS: AppLink[] = [{ label: "Blog", path: "/blog" }]
 
 const HeaderContent = styled.div`
   display: flex;

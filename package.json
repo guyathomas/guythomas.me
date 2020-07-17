@@ -45,12 +45,14 @@
     "react-typography": "^0.16.19",
     "react-use-gesture": "^7.0.15",
     "smoothscroll-polyfill": "^0.4.4",
+    "tsconfig-paths-webpack-plugin": "^3.2.0",
     "typeface-open-sans": "0.0.75",
     "typeface-work-sans": "0.0.72",
     "typography": "^0.16.19",
     "typography-breakpoint-constants": "^0.16.19"
   },
   "devDependencies": {
+    "gatsby-plugin-root-import": "^2.0.5",
     "gatsby-source-instance-name-for-remark": "^0.1.1",
     "prettier": "^2.0.5",
     "typescript": "^3.9.6"

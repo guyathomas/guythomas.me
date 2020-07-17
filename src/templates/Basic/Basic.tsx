@@ -1,6 +1,6 @@
 import React from "react"
 import styled from "@emotion/styled"
-import { BREAKPOINTS } from "~constants"
+import { BREAKPOINTS } from "~styles"
 
 interface BasicProps {
   children: React.ReactNode

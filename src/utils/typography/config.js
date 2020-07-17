@@ -1,5 +1,6 @@
 import { MOBILE_MEDIA_QUERY } from "typography-breakpoint-constants"
-import { COLOR_PALETTE } from "~constants"
+import { COLOR_PALETTE } from "~styles"
+
 const theme = {
   title: "guythomas.me",
   baseFontSize: "16px",

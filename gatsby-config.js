@@ -1,3 +1,5 @@
+const path = require("path")
+
 module.exports = {
   siteMetadata: {
     title: `Guy Thomas`,
@@ -10,6 +12,14 @@ module.exports = {
   },
   plugins: [
     `gatsby-plugin-typescript`,
+    {
+      resolve: "gatsby-plugin-root-import",
+      options: {
+        "~components": path.join(__dirname, "src/components"),
+        "~templates": path.join(__dirname, "src/templates"),
+        "~styles": path.join(__dirname, "src/styles"),
+      },
+    },
     `gatsby-plugin-page-transitions`,
     {
       resolve: `gatsby-source-filesystem`,
@@ -97,15 +107,6 @@ module.exports = {
       options: {
         rule: {
           include: /(components|templates)\/.*svg$/,
-        },
-      },
-    },
-    {
-      resolve: `gatsby-plugin-alias-imports`,
-      options: {
-        alias: {
-          "~constants": "src/constants",
-          "~components": "src/components",
         },
       },
     },

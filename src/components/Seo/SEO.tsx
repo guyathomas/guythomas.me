@@ -10,10 +10,10 @@ import { Helmet } from "react-helmet"
 import { useStaticQuery, graphql } from "gatsby"
 
 interface SEOProps {
-  title: string
   description?: string
   lang?: string
   meta?: any[]
+  title: string
 }
 
 export const SEO: React.FC<SEOProps> = ({
