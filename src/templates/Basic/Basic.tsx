@@ -8,13 +8,19 @@ interface BasicProps {
 }
 
 const BasicWrapper = styled.div`
-  max-width: ${BREAKPOINTS.lg}px;
+  max-width: ${BREAKPOINTS.md}px;
   margin: auto;
+  padding: 1rem;
+  padding-top: 0;
+`
+
+const PageTitle = styled.h1`
+  font-weight: 500;
 `
 
 export const Basic: React.FC<BasicProps> = ({ title, children }) => (
   <BasicWrapper>
-    <h1>{title}</h1>
+    <PageTitle>{title}</PageTitle>
     {children}
   </BasicWrapper>
 )

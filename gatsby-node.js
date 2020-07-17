@@ -2,7 +2,7 @@ const path = require(`path`)
 const { createFilePath } = require(`gatsby-source-filesystem`)
 
 const createPages = (createPage, allEdges, name) => {
-  const PostTemplate = path.resolve(`./src/templates/Post/index.ts`)
+  const PostTemplate = path.resolve(`./src/templates/Post/Post.tsx`)
   allEdges
     .filter((edge) => edge.node.fields.sourceInstanceName === name)
     .forEach((post, index, edges) => {

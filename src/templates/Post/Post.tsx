@@ -3,7 +3,8 @@ import { graphql } from "gatsby"
 import styled from "@emotion/styled"
 
 import Layout from "../../components/Layout"
-import { LayoutContext } from "~contexts"
+import { SEO } from "../../components/SEO"
+import Basic from "../Basic"
 
 const Title = styled.h2`
   margin-top: 2.5rem;
@@ -14,21 +15,21 @@ interface PostProps {
   data: any
 }
 
-export const Post: React.FC<PostProps> = (props) => {
-  // const {
-  //   data: { markdownRemark: post },
-  // } = props
+export default (props: any) => {
+  const {
+    data: { markdownRemark: post },
+  } = props
   return (
     <Layout>
-      {/* <SEO
+      <SEO
         title={post.frontmatter.title}
         description={post.frontmatter.description || post.excerpt}
-      /> */}
-      <article>
-        <header>{/* <Title>{post.frontmatter.title}</Title> */}</header>
-        Body
-        {/* <section dangerouslySetInnerHTML={{ __html: post.html }} /> */}
-      </article>
+      />
+      <Basic title={post.frontmatter.title}>
+        <article>
+          <section dangerouslySetInnerHTML={{ __html: post.html }} />
+        </article>
+      </Basic>
     </Layout>
   )
 }

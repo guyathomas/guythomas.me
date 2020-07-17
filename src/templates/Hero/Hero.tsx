@@ -4,8 +4,10 @@ import { BREAKPOINTS, COLOR_PALETTE } from "~constants"
 import HeroBanner from "./HeroBanner.svg"
 
 const Main = styled.main`
-  max-width: ${BREAKPOINTS.lg}px;
+  max-width: ${BREAKPOINTS.md}px;
   margin: auto;
+  padding: 1rem;
+  padding-top: 0;
 `
 
 interface HeroProps {
