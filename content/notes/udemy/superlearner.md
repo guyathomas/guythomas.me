@@ -2,6 +2,7 @@
 title: Superlearner
 date: "2020-07-12T20:39:13.695Z"
 description: "Notes from https://www.udemy.com/course/become-a-superlearner-2-speed-reading-memory-accelerated-learning/"
+tags: ["notes"]
 ---
 
 ## Chapter 8

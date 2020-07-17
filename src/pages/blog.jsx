@@ -1,6 +1,18 @@
-import IndexComponent from "."
+import React from "react"
+import Basic from "../templates/Basic"
+import Layout from "../components/Layout"
+import { PostSnippitGrid } from "../components/PostSnippitGrid"
 
-export default IndexComponent
+export default (props) => {
+  const posts = props.data.allMarkdownRemark.edges
+  return (
+    <Layout>
+      <Basic title="Blog">
+        <PostSnippitGrid posts={posts} />
+      </Basic>
+    </Layout>
+  )
+}
 
 export const pageQuery = graphql`
   query {

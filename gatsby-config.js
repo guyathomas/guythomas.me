@@ -10,6 +10,7 @@ module.exports = {
   },
   plugins: [
     `gatsby-plugin-typescript`,
+    `gatsby-plugin-page-transitions`,
     {
       resolve: `gatsby-source-filesystem`,
       options: {
@@ -95,14 +96,8 @@ module.exports = {
       resolve: "gatsby-plugin-react-svg",
       options: {
         rule: {
-          include: /icons\/\w+\.svg$/, // See below to configure properly
+          include: /(components|templates)\/.*svg$/,
         },
-      },
-    },
-    {
-      resolve: `gatsby-plugin-layout`,
-      options: {
-        component: require.resolve(`./src/components/Layout/index.tsx`),
       },
     },
     {
@@ -110,6 +105,8 @@ module.exports = {
       options: {
         alias: {
           "~contexts": "src/contexts",
+          "~constants": "src/constants",
+          "~components": "src/components",
         },
       },
     },

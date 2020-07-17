@@ -13,7 +13,7 @@ interface LayoutContextData {
   layoutType: LayoutType
 }
 
-interface LayoutProviderWrapperProps extends ScreenSize {
+interface LayoutProviderWrapperProps {
   children: React.ReactNode
 }
 
@@ -23,6 +23,7 @@ const INITIAL_LAYOUT_CONTEXT: LayoutContextData = {
 }
 
 export const LayoutContext = React.createContext(INITIAL_LAYOUT_CONTEXT)
+
 export const LayoutProvider: React.FC<LayoutProviderWrapperProps> = ({
   children,
 }) => {
@@ -30,8 +31,13 @@ export const LayoutProvider: React.FC<LayoutProviderWrapperProps> = ({
   const layoutType: LayoutType =
     location.pathname === "/" ? "equal" : "biased-right"
   return (
-    <ReactResizeDetector handleWidth handleHeight>
-      {screenSize => (
+    <ReactResizeDetector
+      handleWidth
+      handleHeight
+      refreshMode="debounce"
+      refreshRate={500}
+    >
+      {(screenSize: ScreenSize) => (
         <LayoutContext.Provider value={{ screenSize, layoutType }}>
           {children}
         </LayoutContext.Provider>

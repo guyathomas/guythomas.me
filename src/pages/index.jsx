@@ -1,19 +1,17 @@
 import React from "react"
 
-import { PostSnippit } from "../components/PostSnippit"
-import { SEO } from "../components/Seo"
+import { PostSnippitGrid } from "../components/PostSnippitGrid"
+import Hero from "../templates/Hero"
+import Layout from "../components/Layout"
 
-export default props => {
-  const posts = props.data.allMarkdownRemark.edges
+export default (props) => {
+  const recentPosts = props.data.recent.edges
   return (
-    <>
-      <SEO title="All posts" />
-      <main>
-        {posts.map(post => (
-          <PostSnippit key={post.node.fields.slug} {...post} />
-        ))}
-      </main>
-    </>
+    <Layout>
+      <Hero>
+        <PostSnippitGrid title="Recent Posts" posts={recentPosts} />
+      </Hero>
+    </Layout>
   )
 }
 
@@ -24,7 +22,10 @@ export const pageQuery = graphql`
         title
       }
     }
-    allMarkdownRemark(sort: { fields: [frontmatter___date], order: DESC }) {
+    recent: allMarkdownRemark(
+      sort: { fields: [frontmatter___date], order: DESC }
+      limit: 2
+    ) {
       edges {
         node {
           excerpt

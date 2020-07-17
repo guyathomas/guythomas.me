@@ -2,6 +2,7 @@
 title: Testing Course
 date: "2020-07-12T20:39:13.695Z"
 description: "Notes from https://testingjavascript.com/"
+tags: ["notes"]
 ---
 
 # Testing Course
@@ -10,7 +11,7 @@ description: "Notes from https://testingjavascript.com/"
 
 ### Writing a testing library
 
-```javascript // highlight-line
+```javascript
 const sum = (a, b) => a + b
 const subtract = (a, b) => a - b
 
