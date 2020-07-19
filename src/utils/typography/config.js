@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import { MOBILE_MEDIA_QUERY } from "typography-breakpoint-constants"
 import { COLOR_PALETTE } from "~styles"
 
@@ -28,12 +30,14 @@ const theme = {
     },
     blockquote: {
       ...scale(1 / 5),
+
       color: COLOR_PALETTE.secondary.color,
       fontStyle: "italic",
       paddingLeft: rhythm(13 / 16),
       marginLeft: rhythm(-1),
-      borderLeft: `${rhythm(3 / 16)} solid ${COLOR_PALETTE.strokePrimary}`
-        .color,
+      borderLeft: `${rhythm(3 / 16)} solid ${
+        COLOR_PALETTE.strokePrimary.color
+      }`,
     },
     "blockquote > :last-child": {
       marginBottom: 0,
@@ -92,3 +96,5 @@ const theme = {
 }
 
 export default theme
+
+/* eslint-enable */

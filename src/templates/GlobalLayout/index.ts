@@ -1,1 +1,1 @@
-export { GlobalLayout } from "./GlobalLayout"
+export { GlobalLayout, ThemeContext } from "./GlobalLayout"

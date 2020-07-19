@@ -1,10 +1,10 @@
 const DM_MEDIA_QUERY = "(prefers-color-scheme: dark)"
 
-let DARK_MODE = false
-
 export const DarkMode = {
   get mediaQuery(): MediaQueryList {
-    return matchMedia(DM_MEDIA_QUERY)
+    // eslint-disable-next-line
+    // @ts-ignore
+    return global.matchMedia ? global.matchMedia(DM_MEDIA_QUERY) : {}
   },
 
   get supported(): boolean {
@@ -12,11 +12,14 @@ export const DarkMode = {
   },
 
   get enabled(): boolean {
-    return DARK_MODE
-  },
-
-  set enable(val: boolean) {
-    DARK_MODE = val
+    if (typeof document === "undefined") {
+      return !this.mediaQuery.matches
+    }
+    const classList = document.body.classList || []
+    if (!classList.contains("dark-mode") && !classList.contains("light-mode")) {
+      return !this.mediaQuery.matches
+    }
+    return classList.contains("dark-mode")
   },
 
   observe(callback: (darkMode: boolean) => void): void {

@@ -1,7 +1,15 @@
 import React from "react"
 import styled from "@emotion/styled"
+import useDarkMode from "use-dark-mode"
+import { ThemeContext } from "~templates"
 import { BREAKPOINTS, COLOR_PALETTE } from "~styles"
-import HeroBanner from "./HeroBanner.svg"
+import { HeroBanner } from "./HeroBanner"
+
+const MainContainer = styled.div`
+  padding-top: 3rem;
+  display: flex;
+  flex-direction: column;
+`
 
 const Main = styled.main`
   max-width: ${BREAKPOINTS.md}px;
@@ -16,20 +24,29 @@ interface HeroProps {
 
 const HeroBannerContainer = styled.div`
   width: 100%;
-  background-color: ${COLOR_PALETTE.backgroundBrand.color};
   max-height: 500px;
+`
+
+const CenterHero = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  align-items: center;
 `
 
 export const Hero: React.FC<HeroProps> = ({ children }) => {
+  const { isDarkMode } = React.useContext(ThemeContext)
+  const { toggle } = useDarkMode()
   return (
     <>
-      <HeroBannerContainer>
-        <HeroBanner />
+      <HeroBannerContainer onClick={toggle}>
+        <CenterHero>
+          <HeroBanner isDay={!isDarkMode} />
+        </CenterHero>
       </HeroBannerContainer>
-      <Main>{children}</Main>
+      <MainContainer>
+        <Main>{children}</Main>
+      </MainContainer>
     </>
   )
 }

@@ -23,7 +23,8 @@ const HeaderContent = styled.div`
 `
 
 const HeaderWrapper = styled.header`
-  background-color: ${COLOR_PALETTE.backgroundBrand.color};
+  transition: background-color 1s;
+  background-color: ${(_) => COLOR_PALETTE.backgroundBrand.color};
 `
 
 const LinkItems = styled.ul`

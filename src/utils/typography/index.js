@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import Typography from "typography"
 import theme from "./config"
 
@@ -11,3 +13,5 @@ if (process.env.NODE_ENV !== `production`) {
 export default typography
 export const rhythm = typography.rhythm
 export const scale = typography.scale
+
+/* eslint-enable */

@@ -1,5 +1,6 @@
 import React from "react"
 import { Global, css } from "@emotion/core"
+import { COLOR_PALETTE } from "~styles"
 
 // Create smooth transitions for header links, to fade in on hover
 const enumerateHeaderStyles = (svgSelector = "", headerPsuedoClass = "") =>
@@ -8,6 +9,10 @@ const enumerateHeaderStyles = (svgSelector = "", headerPsuedoClass = "") =>
     .join(",")
 
 const headerLinkStyles = css`
+  html {
+    background-color: ${COLOR_PALETTE.backgroundPrimary.color};
+  }
+
   ${enumerateHeaderStyles(`.header-anchor svg`)} {
     opacity: 0;
     visibility: visible;
