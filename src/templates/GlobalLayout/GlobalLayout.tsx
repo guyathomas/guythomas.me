@@ -18,7 +18,6 @@ export const ThemeContext = React.createContext<ThemeContextProps>({
 })
 
 const ContentWrapper = styled.div`
-  padding-top: 3rem;
   transition: background-color 1s;
   background-color: ${() => COLOR_PALETTE.backgroundPrimary.color};
 `

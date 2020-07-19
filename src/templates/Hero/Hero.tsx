@@ -6,7 +6,6 @@ import { BREAKPOINTS, COLOR_PALETTE } from "~styles"
 import { HeroBanner } from "./HeroBanner"
 
 const MainContainer = styled.div`
-  padding-top: 3rem;
   display: flex;
   flex-direction: column;
 `
@@ -15,7 +14,6 @@ const Main = styled.main`
   max-width: ${BREAKPOINTS.md}px;
   margin: auto;
   padding: 1rem;
-  padding-top: 0;
 `
 
 interface HeroProps {
@@ -23,15 +21,16 @@ interface HeroProps {
 }
 
 const HeroBannerContainer = styled.div`
-  width: 100%;
-  max-height: 500px;
+  background-color: ${(_) => COLOR_PALETTE.backgroundBrand.color};
+  transition: background-color 1s;
+  padding-top: 3rem;
 `
 
 const CenterHero = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
   align-items: center;
+  justify-content: flex-end;
 `
 
 export const Hero: React.FC<HeroProps> = ({ children }) => {
