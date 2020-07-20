@@ -1,3 +1,6 @@
+// eslint-disable-next-line
+const path = require("path")
+
 module.exports = {
   siteMetadata: {
     title: `Guy Thomas`,
@@ -9,11 +12,37 @@ module.exports = {
     },
   },
   plugins: [
+    `gatsby-plugin-use-dark-mode`,
+    {
+      resolve: `gatsby-plugin-graphql-codegen`,
+      options: {
+        fileName: `./src/types/gatsby-graphql.ts`,
+      },
+    },
+    `gatsby-plugin-typescript`,
+    {
+      resolve: "gatsby-plugin-root-import",
+      options: {
+        "~components": path.join(__dirname, "src/components"),
+        "~templates": path.join(__dirname, "src/templates"),
+        "~styles": path.join(__dirname, "src/styles"),
+        "~types": path.join(__dirname, "src/types"),
+      },
+    },
+    `gatsby-source-instance-name-for-remark`, // will atatch gatsby-source-filesystem `name` field to node
+    `gatsby-plugin-page-transitions`,
     {
       resolve: `gatsby-source-filesystem`,
       options: {
         path: `${__dirname}/content/blog`,
         name: `blog`,
+      },
+    },
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        path: `${__dirname}/content/notes`,
+        name: `notes`,
       },
     },
     {
@@ -31,7 +60,7 @@ module.exports = {
             resolve: `gatsby-remark-autolink-headers`,
             options: {
               className: "header-anchor",
-              isIconAfterH: true,
+              isIconAfterHeader: true,
             },
           },
           {
@@ -52,6 +81,7 @@ module.exports = {
         ],
       },
     },
+
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
     {
@@ -86,14 +116,8 @@ module.exports = {
       resolve: "gatsby-plugin-react-svg",
       options: {
         rule: {
-          include: /icons\/\w+\.svg$/, // See below to configure properly
+          include: /(components|templates)\/.*svg$/,
         },
-      },
-    },
-    {
-      resolve: `gatsby-plugin-layout`,
-      options: {
-        component: require.resolve(`./src/components/Layout/index.jsx`),
       },
     },
   ],
