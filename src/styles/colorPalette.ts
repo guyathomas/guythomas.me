@@ -50,7 +50,7 @@ export const COLOR_PALETTE: { [key in ColorPaletteType]: ColorType } = {
     },
   },
   secondary: {
-    dark: "rgba(255,255,255,0.7",
+    dark: "rgba(255,255,255,0.7)",
     light: "rgba(12,11,49,0.7)",
     cssVariable: "--theme-secondary",
     get color(): string {

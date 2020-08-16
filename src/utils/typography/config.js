@@ -4,7 +4,7 @@ import { MOBILE_MEDIA_QUERY } from "typography-breakpoint-constants"
 import { COLOR_PALETTE } from "~styles"
 
 const theme = {
-  title: "guythomas.me",
+  title: "Guy",
   baseFontSize: "16px",
   baseLineHeight: 1.75,
   scaleRatio: 5 / 2,
