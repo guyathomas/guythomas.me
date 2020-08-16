@@ -16,10 +16,11 @@ interface ThemeContextProps {
 export const ThemeContext = React.createContext<ThemeContextProps>({
   isDarkMode: false,
 })
-
 const ContentWrapper = styled.div`
   transition: background-color 1s;
   background-color: ${() => COLOR_PALETTE.backgroundPrimary.color};
+  /* TODO: Just hard code header height for now. Calculate properly later */
+  min-height: calc(100vh - 112px);
 `
 
 export const GlobalLayout: React.FC<GlobalLayoutProps> = ({ children }) => {
