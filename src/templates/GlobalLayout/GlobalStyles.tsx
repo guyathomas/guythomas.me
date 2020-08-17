@@ -11,6 +11,7 @@ const enumerateHeaderStyles = (svgSelector = "", headerPsuedoClass = "") =>
 const headerLinkStyles = css`
   html {
     background-color: ${COLOR_PALETTE.backgroundPrimary.color};
+    scroll-behavior: smooth;
   }
 
   ${enumerateHeaderStyles(`.header-anchor svg`)} {

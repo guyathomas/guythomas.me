@@ -1,0 +1,17 @@
+<svg viewBox="0 0 60 60" version="1.1"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="Sun" stroke-width="1" fill-rule="evenodd">
+        <g transform="translate(7.000000, 8.000000)" stroke-width="3.2">
+            <line x1="12.48" y1="11.48" x2="6.72" y2="5.72" id="Line-Copy-6" stroke-linecap="round"></line>
+            <line x1="13.48" y1="32.96" x2="7.72" y2="38.72" id="Line-Copy-3" stroke-linecap="round"></line>
+            <line x1="23.72" y1="36.7051852" x2="23.72" y2="44.48" id="Line-Copy-5" stroke-linecap="round"></line>
+            <line x1="33.96" y1="32.96" x2="39.72" y2="38.72" id="Line-Copy-7" stroke-linecap="round"></line>
+            <line x1="37.538137" y1="22.0835842" x2="45.3129518" y2="22.0835842" id="Line-Copy-4" stroke-linecap="round"></line>
+            <line x1="33.32" y1="12.48" x2="39.08" y2="6.72" id="Line-Copy-3" stroke-linecap="round"></line>
+            <circle id="Oval" cx="22.96" cy="21.96" r="8.96"></circle>
+            <line x1="8.26186297" y1="22.0764158" x2="0.487048157" y2="22.0764158" id="Line-Copy-4" stroke-linecap="round"></line>
+            <line x1="23.72" y1="8.09481481" x2="23.72" y2="0.32" id="Line-Copy-5" stroke-linecap="round"></line>
+        </g>
+    </g>
+</svg>
