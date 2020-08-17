@@ -3,6 +3,7 @@ import styled from "@emotion/styled"
 import { BREAKPOINTS, COLOR_PALETTE } from "~styles"
 import { useLocation } from "@reach/router"
 import { Link } from "~components/Link"
+import { DarkModeToggle } from "~components/DarkModeToggle"
 import Avatar from "./Avatar.svg"
 
 interface AppLink {
@@ -53,16 +54,24 @@ const AvatarWrapper = styled.div`
   width: 5rem;
 `
 
+const AvatarAndDarkMode = styled.div`
+  display: flex;
+  align-items: end;
+`
+
 export const Header: React.FC = () => {
   const location = useLocation()
   return (
     <HeaderWrapper>
       <HeaderContent>
-        <Link to="/">
-          <AvatarWrapper>
-            <Avatar />
-          </AvatarWrapper>
-        </Link>
+        <AvatarAndDarkMode>
+          <Link to="/">
+            <AvatarWrapper>
+              <Avatar />
+            </AvatarWrapper>
+          </Link>
+          <DarkModeToggle />
+        </AvatarAndDarkMode>
         <LinkItems>
           {LINKS.map((link) => (
             <LinkItem

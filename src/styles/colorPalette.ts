@@ -3,6 +3,8 @@ import { DarkMode } from "./DarkMode"
 export type ColorPaletteType =
   | "primary"
   | "secondary"
+  | "blackOrWhite"
+  | "whiteOrBlack"
   | "placeholder"
   | "positive"
   | "negative"
@@ -37,6 +39,22 @@ export const COLOR_PALETTE: { [key in ColorPaletteType]: ColorType } = {
     dark: "rgba(33,58,68,1)",
     light: "rgba(222,237,243,1)",
     cssVariable: "--theme-background-brand",
+    get color(): string {
+      return getColor.call(this)
+    },
+  },
+  blackOrWhite: {
+    dark: "rgba(0,0,0,1)",
+    light: "rgba(255,255,255,1)",
+    cssVariable: "--theme-black-or-white",
+    get color(): string {
+      return getColor.call(this)
+    },
+  },
+  whiteOrBlack: {
+    dark: "rgba(255,255,255,1)",
+    light: "rgba(0,0,0,1)",
+    cssVariable: "--theme-white-or-black",
     get color(): string {
       return getColor.call(this)
     },
