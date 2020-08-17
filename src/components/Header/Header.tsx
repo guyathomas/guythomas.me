@@ -70,7 +70,7 @@ export const Header: React.FC = () => {
               <Avatar />
             </AvatarWrapper>
           </Link>
-          <DarkModeToggle />
+          <DarkModeToggle toggleType="clock" />
         </AvatarAndDarkMode>
         <LinkItems>
           {LINKS.map((link) => (
