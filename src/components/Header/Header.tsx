@@ -59,6 +59,11 @@ const AvatarAndDarkMode = styled.div`
   align-items: end;
 `
 
+const GuyThomas = styled.h1`
+  margin: 0;
+  text-align: center;
+`
+
 export const Header: React.FC = () => {
   const location = useLocation()
   return (
@@ -70,8 +75,9 @@ export const Header: React.FC = () => {
               <Avatar />
             </AvatarWrapper>
           </Link>
-          <DarkModeToggle toggleType="clock" />
+          <DarkModeToggle toggleType="sun" />
         </AvatarAndDarkMode>
+        <GuyThomas>Guy Thomas</GuyThomas>
         <LinkItems>
           {LINKS.map((link) => (
             <LinkItem
