@@ -13,6 +13,7 @@
     "baseUrl": "src",
     "paths": {
       "~components/*": ["components/*"],
+      "~context/*": ["context/*"],
       "~types/*": ["types/*"],
       "~templates": ["templates"],
       "~styles": ["styles"]

@@ -1,17 +1,12 @@
 import React from "react"
 import styled from "@emotion/styled"
 import { BREAKPOINTS, COLOR_PALETTE } from "~styles"
-import { useLocation } from "@reach/router"
+import { PageSizeContext } from "~context/PageSize"
 import { Link } from "~components/Link"
-import { DarkModeToggle } from "~components/DarkModeToggle"
+import { NavLinks } from "~components/NavLinks"
+import { Hamburger } from "~components/Hamburger"
+// import { DarkModeToggle } from "~components/DarkModeToggle"
 import Avatar from "./Avatar.svg"
-
-interface AppLink {
-  label: string
-  path: string
-}
-
-export const LINKS: AppLink[] = [{ label: "Blog", path: "/blog" }]
 
 const HeaderContent = styled.div`
   display: flex;
@@ -25,33 +20,43 @@ const HeaderContent = styled.div`
 
 const HeaderWrapper = styled.header`
   transition: background-color 1s;
-  background-color: ${(_) => COLOR_PALETTE.backgroundBrand.color};
+  background-color: ${() => COLOR_PALETTE.backgroundBrand.color};
+  border-bottom: ${() => COLOR_PALETTE.strokePrimary.color};
 `
 
-const LinkItems = styled.ul`
+const LinkItemsStyle = styled.ul`
   display: flex;
   list-style: none;
   margin: 0;
-`
-
-interface LinkItemProps {
-  isActive: boolean
-}
-const LinkItem = styled.li<LinkItemProps>`
-  margin-left: 3rem;
   font-size: 1.25rem;
-  margin-bottom: 0;
-  color: ${(props) =>
-    props.isActive ? COLOR_PALETTE.interactiveActive.color : "inherit"};
-
-  &:hover {
-    color: ${COLOR_PALETTE.interactiveActive.color};
+  & > li {
+    margin-left: 3rem;
+    margin-bottom: 0;
   }
 `
 
+interface LinkItemsProps {
+  children: React.ReactNode
+  onMenuToggle: () => void
+  isMenuActive: boolean
+}
+
+const LinkItems: React.FC<LinkItemsProps> = ({
+  children,
+  onMenuToggle,
+  isMenuActive,
+}) => {
+  const { width } = React.useContext(PageSizeContext)
+  if (width > BREAKPOINTS.sm) {
+    return <LinkItemsStyle>{children}</LinkItemsStyle>
+  }
+  return <Hamburger isExpanded={isMenuActive} onClick={onMenuToggle} />
+}
+
 const AvatarWrapper = styled.div`
-  height: 5rem;
-  width: 5rem;
+  height: 4rem;
+  width: 4rem;
+  margin-right: 1rem;
 `
 
 const AvatarAndDarkMode = styled.div`
@@ -59,34 +64,47 @@ const AvatarAndDarkMode = styled.div`
   align-items: end;
 `
 
-const GuyThomas = styled.h1`
-  margin: 0;
-  text-align: center;
+const SiteTitleWrapper = styled.div`
+  position: relative;
+  width: 100%;
 `
 
-export const Header: React.FC = () => {
-  const location = useLocation()
+const SiteTitle = styled.h1`
+  margin: 0;
+`
+
+const AdaptiveSiteTitle: React.FC = () => {
+  const { width } = React.useContext(PageSizeContext)
+  const isMobile = width < BREAKPOINTS.sm
+  const siteTitle = isMobile ? "Guy" : "Guy Thomas"
+  return (
+    <SiteTitleWrapper>
+      <SiteTitle>{siteTitle}</SiteTitle>
+    </SiteTitleWrapper>
+  )
+}
+
+interface HeaderProps {
+  onMenuToggle: () => void
+  isMenuActive: boolean
+}
+
+export const Header: React.FC<HeaderProps> = ({
+  onMenuToggle,
+  isMenuActive,
+}) => {
   return (
     <HeaderWrapper>
       <HeaderContent>
         <AvatarAndDarkMode>
-          <Link to="/">
-            <AvatarWrapper>
-              <Avatar />
-            </AvatarWrapper>
-          </Link>
-          <DarkModeToggle toggleType="sun" />
+          <AvatarWrapper onClick={onMenuToggle}>
+            <Avatar />
+          </AvatarWrapper>
+          {/* <DarkModeToggle toggleType="sun" /> */}
         </AvatarAndDarkMode>
-        <GuyThomas>Guy Thomas</GuyThomas>
-        <LinkItems>
-          {LINKS.map((link) => (
-            <LinkItem
-              key={link.path}
-              isActive={location.pathname === link.path}
-            >
-              <Link to={link.path}>{link.label}</Link>
-            </LinkItem>
-          ))}
+        <AdaptiveSiteTitle />
+        <LinkItems onMenuToggle={onMenuToggle} isMenuActive={isMenuActive}>
+          <NavLinks />
         </LinkItems>
       </HeaderContent>
     </HeaderWrapper>

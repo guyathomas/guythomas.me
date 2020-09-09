@@ -25,6 +25,7 @@ module.exports = {
       // TODO: This config is shared in storybook config. Can I not duplicate this config?
       options: {
         "~components": path.join(__dirname, "src/components"),
+        "~context": path.join(__dirname, "src/context"),
         "~templates": path.join(__dirname, "src/templates"),
         "~styles": path.join(__dirname, "src/styles"),
         "~types": path.join(__dirname, "src/types"),

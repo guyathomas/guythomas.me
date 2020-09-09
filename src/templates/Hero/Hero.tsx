@@ -21,7 +21,7 @@ interface HeroProps {
 }
 
 const HeroBannerContainer = styled.div`
-  background-color: ${(_) => COLOR_PALETTE.backgroundBrand.color};
+  background-color: ${() => COLOR_PALETTE.backgroundBrand.color};
   transition: background-color 1s;
   padding-top: 3rem;
   display: flex;
