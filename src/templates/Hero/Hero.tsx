@@ -1,6 +1,5 @@
 import React from "react"
 import styled from "@emotion/styled"
-import useDarkMode from "use-dark-mode"
 import { ThemeContext } from "~templates"
 import { BREAKPOINTS, COLOR_PALETTE } from "~styles"
 import { HeroBanner } from "./HeroBanner"
@@ -35,10 +34,9 @@ const CenterHero = styled(HeroBanner)`
 
 export const Hero: React.FC<HeroProps> = ({ children }) => {
   const { isDarkMode } = React.useContext(ThemeContext)
-  const { toggle } = useDarkMode()
   return (
     <>
-      <HeroBannerContainer onClick={toggle}>
+      <HeroBannerContainer>
         <CenterHero isDay={!isDarkMode} />
       </HeroBannerContainer>
       <MainContainer>
