@@ -5,8 +5,7 @@ import { PageSizeContext } from "~context/PageSize"
 import { Link } from "~components/Link"
 import { NavLinks } from "~components/NavLinks"
 import { Hamburger } from "~components/Hamburger"
-// import { DarkModeToggle } from "~components/DarkModeToggle"
-import Avatar from "./Avatar.svg"
+import { DarkModeToggle } from "~components/DarkModeToggle"
 
 const HeaderContent = styled.div`
   display: flex;
@@ -53,15 +52,9 @@ const LinkItems: React.FC<LinkItemsProps> = ({
   return <Hamburger isExpanded={isMenuActive} onClick={onMenuToggle} />
 }
 
-const AvatarWrapper = styled.div`
-  height: 4rem;
-  width: 4rem;
-  margin-right: 1rem;
-`
-
 const AvatarAndDarkMode = styled.div`
   display: flex;
-  align-items: end;
+  align-items: center;
 `
 
 const SiteTitleWrapper = styled.div`
@@ -89,6 +82,13 @@ interface HeaderProps {
   isMenuActive: boolean
 }
 
+const DarkModeToggleWrapper = styled.div`
+  padding: 11px;
+  display: flex;
+  align-items: center;
+  margin-right: 8px;
+`
+
 export const Header: React.FC<HeaderProps> = ({
   onMenuToggle,
   isMenuActive,
@@ -97,12 +97,13 @@ export const Header: React.FC<HeaderProps> = ({
     <HeaderWrapper>
       <HeaderContent>
         <AvatarAndDarkMode>
-          <AvatarWrapper onClick={onMenuToggle}>
-            <Avatar />
-          </AvatarWrapper>
-          {/* <DarkModeToggle toggleType="sun" /> */}
+          <DarkModeToggleWrapper>
+            <DarkModeToggle toggleType="sun" />
+          </DarkModeToggleWrapper>
+          <Link to="/">
+            <AdaptiveSiteTitle />
+          </Link>
         </AvatarAndDarkMode>
-        <AdaptiveSiteTitle />
         <LinkItems onMenuToggle={onMenuToggle} isMenuActive={isMenuActive}>
           <NavLinks />
         </LinkItems>

@@ -20,9 +20,10 @@ const TRANSITION_DURATION_HALF = `${TRANSITION_DURATION_MS / 2}ms`
 
 const ToggleButton = styled.button<ToggleButtonProps>`
   border-radius: 50%;
+  flex-shrink: 0;
   cursor: pointer;
-  width: 40px;
-  height: 40px;
+  width: 24px;
+  height: 24px;
   border: none;
   background-color: ${COLOR_PALETTE.blackOrWhite.color};
   outline: none;
