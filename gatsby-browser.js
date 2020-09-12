@@ -1,11 +1,13 @@
 // custom typefaces
 
-require("typeface-open-sans")
-require("typeface-work-sans")
+import "typeface-open-sans"
+import "typeface-work-sans"
 
 // Line highlighting & numbers
-require("./gatsby-remark-prismjs")
+import "./gatsby-remark-prismjs"
 
-exports.onClientEntry = () => {
+export const onClientEntry = () => {
   require("./polyfill")
 }
+
+export { wrapRootElement } from "./src/utils/auth"
