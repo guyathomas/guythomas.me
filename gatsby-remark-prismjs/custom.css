@@ -19,3 +19,15 @@ Custom Styles
 .gatsby-highlight {
   border-radius: 0;
 }
+
+@media (prefers-color-scheme: light) {
+  .header-anchor {
+    fill: var(--theme-primary, rgba(12, 11, 49, 1));
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .header-anchor {
+    fill: var(--theme-primary, rgba(255, 255, 255, 1));
+  }
+}
