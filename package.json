@@ -33,6 +33,7 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
+    "@auth0/auth0-react": "^1.0.0",
     "@emotion/core": "^10.0.34",
     "@emotion/styled": "^10.0.27",
     "@react-hook/resize-observer": "^1.1.0",

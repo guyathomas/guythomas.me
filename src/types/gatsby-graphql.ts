@@ -2543,6 +2543,7 @@ export type SitePageFieldsEnum =
   | 'pluginCreator___pluginOptions___plugins___ssrAPIs'
   | 'pluginCreator___pluginOptions___plugins___pluginFilepath'
   | 'pluginCreator___pluginOptions___fileName'
+  | 'pluginCreator___pluginOptions____actions'
   | 'pluginCreator___pluginOptions____components'
   | 'pluginCreator___pluginOptions____context'
   | 'pluginCreator___pluginOptions____templates'
@@ -2766,6 +2767,7 @@ export type SitePluginFieldsEnum =
   | 'pluginOptions___plugins___ssrAPIs'
   | 'pluginOptions___plugins___pluginFilepath'
   | 'pluginOptions___fileName'
+  | 'pluginOptions____actions'
   | 'pluginOptions____components'
   | 'pluginOptions____context'
   | 'pluginOptions____templates'
@@ -2904,6 +2906,7 @@ export type SitePluginPackageJsonPeerDependenciesFilterListInput = {
 export type SitePluginPluginOptions = {
   plugins?: Maybe<Array<Maybe<SitePluginPluginOptionsPlugins>>>;
   fileName?: Maybe<Scalars['String']>;
+  _actions?: Maybe<Scalars['String']>;
   _components?: Maybe<Scalars['String']>;
   _context?: Maybe<Scalars['String']>;
   _templates?: Maybe<Scalars['String']>;
@@ -2933,6 +2936,7 @@ export type SitePluginPluginOptions = {
 export type SitePluginPluginOptionsFilterInput = {
   plugins?: Maybe<SitePluginPluginOptionsPluginsFilterListInput>;
   fileName?: Maybe<StringQueryOperatorInput>;
+  _actions?: Maybe<StringQueryOperatorInput>;
   _components?: Maybe<StringQueryOperatorInput>;
   _context?: Maybe<StringQueryOperatorInput>;
   _templates?: Maybe<StringQueryOperatorInput>;
@@ -3058,7 +3062,7 @@ export type PostBySlugQueryVariables = Exact<{
 
 export type PostBySlugQuery = { site?: Maybe<{ siteMetadata?: Maybe<Pick<SiteSiteMetadata, 'title'>> }>, markdownRemark?: Maybe<(
     Pick<MarkdownRemark, 'id' | 'excerpt' | 'html'>
-    & { frontmatter?: Maybe<Pick<MarkdownRemarkFrontmatter, 'title' | 'date' | 'description'>> }
+    & { frontmatter?: Maybe<Pick<MarkdownRemarkFrontmatter, 'title' | 'date'>> }
   )> };
 
 export type BlogIndexQueryVariables = Exact<{ [key: string]: never; }>;

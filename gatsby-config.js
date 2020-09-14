@@ -24,6 +24,7 @@ module.exports = {
       resolve: "gatsby-plugin-root-import",
       // TODO: This config is shared in storybook config. Can I not duplicate this config?
       options: {
+        "~actions": path.join(__dirname, "src/actions"),
         "~components": path.join(__dirname, "src/components"),
         "~context": path.join(__dirname, "src/context"),
         "~templates": path.join(__dirname, "src/templates"),
