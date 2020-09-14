@@ -13,16 +13,16 @@ export const wrapRootElement = ({
 }: {
   element: React.ReactNode
 }): React.ReactNode => {
-  if (!process.env.AUTH0_DOMAIN || !process.env.AUTH0_CLIENT_ID) {
+  if (!process.env.GATSBY_AUTH0_DOMAIN || !process.env.GATSBY_AUTH0_CLIENT_ID) {
     return <>{element}</>
   }
   return (
     <Auth0Provider
-      domain={process.env.AUTH0_DOMAIN}
-      clientId={process.env.AUTH0_CLIENT_ID}
+      domain={process.env.GATSBY_AUTH0_DOMAIN}
+      clientId={process.env.GATSBY_AUTH0_CLIENT_ID}
       redirectUri={window.location.origin}
       onRedirectCallback={onRedirectCallback}
-      audience="api.guythomas.me"
+      audience={process.env.GATSBY_AUTH0_AUDIENCE_GUYTHOMAS_API}
     >
       {element}
     </Auth0Provider>

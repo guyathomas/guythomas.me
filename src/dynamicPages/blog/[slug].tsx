@@ -19,8 +19,6 @@ interface CommentInputProps {
 interface CommentsProps {
   slug: string
 }
-const { AUTH0_CLIENT_ID_GUYTHOMAS_API: audience } = process.env
-
 const CommentInput: React.FC<CommentInputProps> = ({ refetch, slug }) => {
   const { loginWithPopup, isAuthenticated, getAccessTokenSilently } = useAuth0()
   const [newComment, setNewComment] = React.useState("")
@@ -28,7 +26,7 @@ const CommentInput: React.FC<CommentInputProps> = ({ refetch, slug }) => {
   const onSubmit = async () => {
     try {
       const accessToken = await getAccessTokenSilently({
-        audience,
+        audience: process.env.GATSBY_AUTH0_AUDIENCE_GUYTHOMAS_API,
       })
       await actions.postCommentForSlug(slug, { body: newComment }, accessToken)
       setNewComment("")
@@ -41,7 +39,9 @@ const CommentInput: React.FC<CommentInputProps> = ({ refetch, slug }) => {
     return (
       <button
         onClick={() => {
-          void loginWithPopup({ audience })
+          void loginWithPopup({
+            audience: process.env.GATSBY_AUTH0_AUDIENCE_GUYTHOMAS_API,
+          })
         }}
       >
         Log In To Comment
