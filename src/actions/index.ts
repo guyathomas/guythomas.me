@@ -1,6 +1,6 @@
 const BASE_URL =
   process.env.NODE_ENV === "production"
-    ? "https://api.guythomas.me"
+    ? "https://guythomas-me-api.herokuapp.com"
     : "http://localhost:3000"
 
 export interface Comment {
