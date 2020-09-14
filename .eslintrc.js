@@ -34,6 +34,7 @@ module.exports = {
     "import/resolver": {
       alias: {
         map: [
+          ["~actions", "./src/actions"],
           ["~styles", "./src/styles"],
           ["~components", "./src/components"],
           ["~context", "./src/context"],

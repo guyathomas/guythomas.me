@@ -12,6 +12,7 @@
     "allowJs": true,
     "baseUrl": "src",
     "paths": {
+      "~actions": ["actions"],
       "~components/*": ["components/*"],
       "~context/*": ["context/*"],
       "~types/*": ["types/*"],
