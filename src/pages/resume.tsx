@@ -1,13 +1,15 @@
 import React from "react"
 import styled from "@emotion/styled"
+import { COLOR_PALETTE } from "~styles"
+import { ThemeProvider } from "../templates/GlobalLayout"
 
 const PageContainer = styled.div`
-  background-color: black;
   display: grid;
   grid-template-columns: 1fr;
-
+  justify-content: center;
+  color: ${() => COLOR_PALETTE.primary.color};
   @media (min-width: 1024px) {
-    grid-template-columns: auto auto;
+    grid-template-columns: 1fr 2fr;
   }
 `
 
@@ -15,30 +17,30 @@ const Avatar = styled.div`
   width: 150px;
   height: 150px;
   border-radius: 50%;
-  background-color: blue;
+  background-color: wheat;
   @media (min-width: 1024px) {
     width: 300px;
     height: 300px;
-    background-color: lightgray;
   }
 `
 
 const SectionTitle = styled.div`
-  background-color: gray;
+  display: flex;
+  justify-content: center;
   text-transform: uppercase;
+  background-color: ${() => COLOR_PALETTE.backgroundSecondary.color};
   @media (min-width: 1024px) {
+    justify-content: flex-end;
     &:nth-child(odd) {
-      background-color: lightgray;
     }
   }
 `
 
 const AvatarContainer = styled.div`
-  background-color: gray;
   display: flex;
   justify-content: center;
+  background-color: ${() => COLOR_PALETTE.backgroundPrimary.color};
   @media (min-width: 1024px) {
-    background-color: white;
     justify-content: flex-end;
     align-items: center;
     padding-bottom: 10rem;
@@ -90,7 +92,6 @@ const SocialTile = styled.div`
   width: 38px;
   height: 38px;
   border-radius: 5px;
-  background-color: lightgray;
   margin: 0.5rem 0.5rem 0;
 `
 const SocialTilesWrapper = styled.div`
@@ -126,11 +127,20 @@ const DescriptionAndSocial = styled.div`
     align-items: flex-end;
   }
 `
-
-const Bio = styled.div`
+const SectionContent = styled.div`
   padding: 3.15rem 3.5rem 1.4rem;
+  background-color: ${() => COLOR_PALETTE.backgroundPrimary.color};
   @media (min-width: 1024px) {
     padding: 4.375rem 5.25rem 1.6625rem;
+  }
+`
+
+const SectionContentInner = styled.div`
+  max-width: 1400px;
+`
+
+const Bio = styled(SectionContentInner)`
+  @media (min-width: 1024px) {
     display: flex;
     flex-direction: column;
     height: 100vh;
@@ -145,45 +155,50 @@ interface SectionProps {
   children: React.ReactNode
 }
 
-const SectionContent = styled.div``
 const Section: React.FC<SectionProps> = ({ title, children }) => (
   <>
     <SectionTitle>
       <div>{title}</div>
     </SectionTitle>
-    <SectionContent>{children}</SectionContent>
+    <SectionContent>
+      <SectionContentInner>{children}</SectionContentInner>
+    </SectionContent>
   </>
 )
 
 const Resume: React.FC = () => {
   return (
-    <PageContainer>
-      <AvatarContainer>
-        <Avatar />
-      </AvatarContainer>
-      <Bio>
-        <Titles>
-          <TitlesWrapper>
-            <FirstName>Guy</FirstName>
-            <LastName>Thomas</LastName>
-            <DescriptionAndSocial>
-              <Description>
-                Full Stack Developer &amp; Front-end Expert
-              </Description>
-              <SocialTiles />
-            </DescriptionAndSocial>
-          </TitlesWrapper>
-        </Titles>
-        <Contacts>
-          <Contact title="Location" detail="San Francisco" />
-          <Contact title="Location" detail="San Francisco" />
-          <Contact title="Location" detail="San Francisco" />
-        </Contacts>
-      </Bio>
-      <Section title="First!">Some Content</Section>
-      <Section title="Second!">Some Content</Section>
-      <Section title="Third!">Some Content</Section>
-    </PageContainer>
+    <ThemeProvider>
+      <PageContainer>
+        <AvatarContainer>
+          <Avatar />
+        </AvatarContainer>
+        <SectionContent>
+          <Bio>
+            <Titles>
+              <TitlesWrapper>
+                <FirstName>Guy</FirstName>
+                <LastName>Thomas</LastName>
+                <DescriptionAndSocial>
+                  <Description>
+                    Full Stack Developer &amp; Front-end Expert
+                  </Description>
+                  <SocialTiles />
+                </DescriptionAndSocial>
+              </TitlesWrapper>
+            </Titles>
+            <Contacts>
+              <Contact title="Location" detail="San Francisco" />
+              <Contact title="Location" detail="San Francisco" />
+              <Contact title="Location" detail="San Francisco" />
+            </Contacts>
+          </Bio>
+        </SectionContent>
+        <Section title="First!">Some Content</Section>
+        <Section title="Second!">Some Content</Section>
+        <Section title="Third!">Some Content</Section>
+      </PageContainer>
+    </ThemeProvider>
   )
 }
 
