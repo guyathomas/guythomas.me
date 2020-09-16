@@ -1,6 +1,16 @@
 import React from "react"
 import styled from "@emotion/styled"
 
+const PageContainer = styled.div`
+  background-color: black;
+  display: grid;
+  grid-template-columns: 1fr;
+
+  @media (min-width: 1024px) {
+    grid-template-columns: auto auto;
+  }
+`
+
 const Avatar = styled.div`
   width: 150px;
   height: 150px;
@@ -9,36 +19,30 @@ const Avatar = styled.div`
   @media (min-width: 1024px) {
     width: 300px;
     height: 300px;
+    background-color: lightgray;
   }
 `
+
+const SectionTitle = styled.div`
+  background-color: gray;
+  text-transform: uppercase;
+  @media (min-width: 1024px) {
+    &:nth-child(odd) {
+      background-color: lightgray;
+    }
+  }
+`
+
 const AvatarContainer = styled.div`
-  grid-area: avatar;
+  background-color: gray;
   display: flex;
   justify-content: center;
-  padding: 1.75rem 1.75rem 0rem;
   @media (min-width: 1024px) {
-    background-color: gray;
+    background-color: white;
+    justify-content: flex-end;
     align-items: center;
-  }
-`
-
-const PageContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  background-color: black;
-`
-
-const Hero = styled.div`
-  display: grid;
-  grid-template-areas:
-    "avatar"
-    "content";
-
-  @media (min-width: 1024px) {
-    height: 100vh;
-    grid-template-areas:
-      "avatar content"
-      "avatar content";
+    padding-bottom: 10rem;
+    padding-right: 3rem;
   }
 `
 
@@ -111,7 +115,7 @@ const LastName = styled(FirstName)`
   font-weight: bold;
 `
 
-const FinalRow = styled.div`
+const DescriptionAndSocial = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -123,47 +127,62 @@ const FinalRow = styled.div`
   }
 `
 
-const Content = styled.div`
-  grid-area: content;
+const Bio = styled.div`
   padding: 3.15rem 3.5rem 1.4rem;
   @media (min-width: 1024px) {
     padding: 4.375rem 5.25rem 1.6625rem;
     display: flex;
     flex-direction: column;
+    height: 100vh;
   }
 `
 
 const Description = styled.h2`
   margin-bottom: 0;
 `
+interface SectionProps {
+  title: string
+  children: React.ReactNode
+}
+
+const SectionContent = styled.div``
+const Section: React.FC<SectionProps> = ({ title, children }) => (
+  <>
+    <SectionTitle>
+      <div>{title}</div>
+    </SectionTitle>
+    <SectionContent>{children}</SectionContent>
+  </>
+)
 
 const Resume: React.FC = () => {
   return (
     <PageContainer>
-      <Hero>
-        <AvatarContainer>
-          <Avatar />
-        </AvatarContainer>
-        <Content>
-          <Titles>
-            <TitlesWrapper>
-              <FirstName>Guy</FirstName>
-              <LastName>Thomas</LastName>
-              <FinalRow>
-                <Description>
-                  Full Stack Developer &amp; Front-end Expert
-                </Description>
-                <SocialTiles />
-              </FinalRow>
-            </TitlesWrapper>
-          </Titles>
-          <Contacts>
-            <Contact title="Location" detail="San Francisco" />
-            <Contact title="Location" detail="San Francisco" />
-            <Contact title="Location" detail="San Francisco" />
-          </Contacts>
-        </Content>
-      </Hero>
+      <AvatarContainer>
+        <Avatar />
+      </AvatarContainer>
+      <Bio>
+        <Titles>
+          <TitlesWrapper>
+            <FirstName>Guy</FirstName>
+            <LastName>Thomas</LastName>
+            <DescriptionAndSocial>
+              <Description>
+                Full Stack Developer &amp; Front-end Expert
+              </Description>
+              <SocialTiles />
+            </DescriptionAndSocial>
+          </TitlesWrapper>
+        </Titles>
+        <Contacts>
+          <Contact title="Location" detail="San Francisco" />
+          <Contact title="Location" detail="San Francisco" />
+          <Contact title="Location" detail="San Francisco" />
+        </Contacts>
+      </Bio>
+      <Section title="First!">Some Content</Section>
+      <Section title="Second!">Some Content</Section>
+      <Section title="Third!">Some Content</Section>
     </PageContainer>
   )
 }
