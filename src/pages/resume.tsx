@@ -32,7 +32,11 @@ const SectionTitle = styled.div`
   padding: 1.75rem;
   border-top: 1px solid ${() => COLOR_PALETTE.strokePrimary.color};
   border-bottom: 1px solid ${() => COLOR_PALETTE.strokePrimary.color};
+  position: sticky;
+  top: 0;
+  z-index: 1;
   @media (min-width: 1024px) {
+    position: static;
     border: 0;
     justify-content: flex-end;
     padding: 4.375rem 5.25rem 1.6625rem;
@@ -48,6 +52,7 @@ const SectionTitle = styled.div`
 const AvatarContainer = styled.div`
   display: flex;
   justify-content: center;
+  padding-top: 5rem;
   background-color: ${() => COLOR_PALETTE.backgroundSecondary.color};
   @media (min-width: 1024px) {
     justify-content: flex-end;
@@ -151,9 +156,10 @@ const SectionContent = styled.div`
 `
 
 const SectionContentInner = styled.div`
-  padding: 3.15rem 3.5rem 1.4rem;
+  padding: 3rem 1rem 1rem;
   max-width: 1400px;
   @media (min-width: 1024px) {
+    padding: 3rem 3rem 1rem;
     padding: 4rem 5rem;
   }
 `
@@ -208,6 +214,7 @@ const TimelineListItem = styled.li``
 const TimelineList = styled.ul`
   margin-left: 0;
   margin-top: 1rem;
+  padding-left: 0.5rem;
   list-style-position: outside;
 `
 interface TimelineProps {
