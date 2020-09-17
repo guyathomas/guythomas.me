@@ -53,6 +53,7 @@ const AvatarContainer = styled.div`
   display: flex;
   justify-content: center;
   padding-top: 5rem;
+  background-color: ${() => COLOR_PALETTE.backgroundPrimary.color};
   @media (min-width: 1024px) {
     background-color: ${() => COLOR_PALETTE.backgroundSecondary.color};
     justify-content: flex-end;
@@ -314,11 +315,48 @@ const Resume: React.FC = () => {
               "Lead several technology changes with the with the introduction of Graphql, Cypress and auto generated Typescript types",
             ]}
           />
+          <Timeline
+            title="Reflektive"
+            titlePre="26th June, 2017 – 28th February, 2019"
+            subtitle="Software Engineer"
+            bullets={[
+              "Planned, developed and maintained many of our core products with React and Redux",
+              "Lead migration from Backbone to React",
+              "Cut build time by 50% by migrating Webpack 3 > 4",
+              "Migrated ~500 tests to Jest to reduce testing feedback loop",
+            ]}
+          />
+          <Timeline
+            title="IBM"
+            titlePre="7th July, 2014 – 3rd June, 2016"
+            subtitle="Software Engineer"
+            bullets={[
+              "Developed internal websites to pitch solutions",
+              "Developed data models to target customer behavior",
+            ]}
+          />
         </Section>
-        <Section title="Education">Some Content</Section>
-        <Section title="Education">Some Content</Section>
-        <Section title="Education">Some Content</Section>
-        <Section title="Education">Some Content</Section>
+        <Section title="Education">
+          <Timeline
+            title="Bradfield CS"
+            titlePre="2017"
+            subtitle="Computer Architecture"
+            bullets={[
+              "Building a strong mental model of the actual execution of programs by a microprocessor to better reason about the code I write",
+            ]}
+          />
+          <Timeline
+            title="Monash University"
+            titlePre="2011 - 2013"
+            subtitle="Bachelor of Commerce"
+            description="Major in Finance &amp; Information Technology"
+            bullets={[
+              "Built systems for business administration with VBA & Excel",
+              "Architected and Implemented relational databases",
+              "Modelled publically available financial data to provide company valuations",
+            ]}
+          />
+        </Section>
       </PageContainer>
     </ThemeProvider>
   )
