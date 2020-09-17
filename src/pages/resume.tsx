@@ -131,6 +131,11 @@ const DescriptionAndSocial = styled.div`
 `
 const SectionContent = styled.div`
   background-color: ${() => COLOR_PALETTE.backgroundPrimary.color};
+  @media (min-width: 1024px) {
+    &:nth-child(4n + 2) {
+      background-color: ${() => COLOR_PALETTE.backgroundSecondary.color};
+    }
+  }
 `
 
 const SectionContentInner = styled.div`
@@ -191,14 +196,30 @@ const Resume: React.FC = () => {
             </Titles>
             <Contacts>
               <Contact title="Location" detail="San Francisco" />
-              <Contact title="Location" detail="San Francisco" />
-              <Contact title="Location" detail="San Francisco" />
+              <Contact
+                title="Web"
+                detail="guythomas.me"
+                detailLink="https://guythomas.me"
+              />
+              <Contact
+                title="Email"
+                detail="guythomas721@gmail.com"
+                detailLink="mailto:guythomas@gmail.com"
+              />
             </Contacts>
           </Bio>
         </SectionContent>
-        <Section title="First!">Some Content</Section>
-        <Section title="Second!">Some Content</Section>
-        <Section title="Third!">Some Content</Section>
+        <Section title="Intro">
+          I live and breathe Javascript, Typescript, React, HTML and CSS.
+          I&apos;m a Software Engineer agnostic of languages &amp; frameworks
+          and have worked with all sorts of tech including GraphQL, Cypress and
+          much more - just ask me.
+        </Section>
+        <Section title="Experience">Some Content</Section>
+        <Section title="Education">Some Content</Section>
+        <Section title="Education">Some Content</Section>
+        <Section title="Education">Some Content</Section>
+        <Section title="Education">Some Content</Section>
       </PageContainer>
     </ThemeProvider>
   )
