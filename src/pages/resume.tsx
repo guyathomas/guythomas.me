@@ -162,6 +162,56 @@ interface SectionProps {
   children: React.ReactNode
 }
 
+const TimelineOuter = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  @media (min-width: 1024px) {
+    grid-template-columns: 1fr 1fr;
+  }
+`
+
+const TimelineTitles = styled.div``
+const TimelineDetails = styled.div``
+
+const TimelinePre = styled.h5``
+const TimelineTitle = styled.h3``
+const TimelineSubtitle = styled.h4``
+const TimelineDescription = styled.span``
+
+const TimelineListItem = styled.li``
+
+const TimelineList = styled.ol``
+interface TimelineProps {
+  titlePre: string
+  title: string
+  subtitle: string
+  description?: string
+  bullets: string[]
+}
+const Timeline: React.FC<TimelineProps> = ({
+  titlePre,
+  title,
+  subtitle,
+  description,
+  bullets,
+}) => (
+  <TimelineOuter>
+    <TimelineTitles>
+      <TimelinePre>{titlePre}</TimelinePre>
+      <TimelineTitle>{title}</TimelineTitle>
+      <TimelineTitle>{subtitle}</TimelineTitle>
+      {description && <TimelineTitle>{description}</TimelineTitle>}
+    </TimelineTitles>
+    <TimelineDetails>
+      <TimelineList>
+        {bullets.map((bullet) => (
+          <TimelineListItem key={bullet}>{bullet}</TimelineListItem>
+        ))}
+      </TimelineList>
+    </TimelineDetails>
+  </TimelineOuter>
+)
+
 const Section: React.FC<SectionProps> = ({ title, children }) => (
   <>
     <SectionTitle>
@@ -215,7 +265,20 @@ const Resume: React.FC = () => {
           and have worked with all sorts of tech including GraphQL, Cypress and
           much more - just ask me.
         </Section>
-        <Section title="Experience">Some Content</Section>
+        <Section title="Experience">
+          <Timeline
+            title="Lyft"
+            titlePre="15th April, 2019 – Present"
+            subtitle="Senior Software Engineer"
+            description="Frontend Lead"
+            bullets={[
+              "Built a Marketplace experience dynamic navigation with React & X-State",
+              "Linked our teams data model to the Lyft Graphql server in Go to enable a dynamic frontend",
+              "Built an ecosystem of npm packages that enabled zero configuration I18n and CMS content for all Frontend services",
+              "Lead several technology changes with the with the introduction of Graphql, Cypress and auto generated Typescript types",
+            ]}
+          />
+        </Section>
         <Section title="Education">Some Content</Section>
         <Section title="Education">Some Content</Section>
         <Section title="Education">Some Content</Section>
