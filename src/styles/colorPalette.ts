@@ -5,21 +5,13 @@ export type ColorPaletteType =
   | "secondary"
   | "blackOrWhite"
   | "whiteOrBlack"
-  | "placeholder"
-  | "positive"
-  | "negative"
   | "interactive"
   | "interactiveActive"
-  | "primaryInverse"
   | "backgroundPrimary"
   | "backgroundSecondary"
-  | "backgroundBrand"
-  | "elevationOverlay"
+  | "backgroundTertiary"
+  | "backgroundSky"
   | "strokePrimary"
-  | "strokeSecondary"
-  | "strokeTertiary"
-  | "strokePrimaryInverse"
-  | "strokeNegative"
 
 type ColorType = {
   color: string
@@ -35,10 +27,10 @@ function getColor(this: ColorType): string {
 }
 
 export const COLOR_PALETTE: { [key in ColorPaletteType]: ColorType } = {
-  backgroundBrand: {
+  backgroundSky: {
     dark: "rgba(33,58,68,1)",
     light: "rgba(222,237,243,1)",
-    cssVariable: "--theme-background-brand",
+    cssVariable: "--theme-background-sky",
     get color(): string {
       return getColor.call(this)
     },
@@ -60,7 +52,7 @@ export const COLOR_PALETTE: { [key in ColorPaletteType]: ColorType } = {
     },
   },
   primary: {
-    dark: "rgba(255,255,255,1)",
+    dark: "rgba(247,247,247,1)",
     light: "rgba(12,11,49,1)",
     cssVariable: "--theme-primary",
     get color(): string {
@@ -71,30 +63,6 @@ export const COLOR_PALETTE: { [key in ColorPaletteType]: ColorType } = {
     dark: "rgba(255,255,255,0.7)",
     light: "rgba(12,11,49,0.7)",
     cssVariable: "--theme-secondary",
-    get color(): string {
-      return getColor.call(this)
-    },
-  },
-  placeholder: {
-    dark: "rgba(255,255,255,0.45)",
-    light: "rgba(12,11,49,0.45)",
-    cssVariable: "--theme-placeholder",
-    get color(): string {
-      return getColor.call(this)
-    },
-  },
-  positive: {
-    dark: "rgba(80,174,139,1)",
-    light: "rgba(0,130,76,1)",
-    cssVariable: "--theme-positive",
-    get color(): string {
-      return getColor.call(this)
-    },
-  },
-  negative: {
-    dark: "rgba(239,135,113,1)",
-    light: "rgba(219,54,21,1)",
-    cssVariable: "--theme-negative",
     get color(): string {
       return getColor.call(this)
     },
@@ -115,16 +83,8 @@ export const COLOR_PALETTE: { [key in ColorPaletteType]: ColorType } = {
       return getColor.call(this)
     },
   },
-  primaryInverse: {
-    dark: "rgba(23,23,31,1)",
-    light: "rgba(255,255,255,1)",
-    cssVariable: "--theme-primary-inverse",
-    get color(): string {
-      return getColor.call(this)
-    },
-  },
   backgroundPrimary: {
-    dark: "rgba(23,23,31,1)",
+    dark: "rgba(45,46,46,1)",
     light: "rgba(255,255,255,1)",
     cssVariable: "--theme-background-primary",
     get color(): string {
@@ -132,57 +92,25 @@ export const COLOR_PALETTE: { [key in ColorPaletteType]: ColorType } = {
     },
   },
   backgroundSecondary: {
-    dark: "rgba(31,31,42,1)",
-    light: "rgba(244,244,250,1)",
+    dark: "rgba(43,44,44,1)",
+    light: "rgba(251,251,251,1)",
     cssVariable: "--theme-background-secondary",
     get color(): string {
       return getColor.call(this)
     },
   },
-  elevationOverlay: {
-    dark: "rgba(215,222,255,1)",
-    light: "rgba(255,255,255,0)",
-    cssVariable: "--theme-elevation-overlay",
+  backgroundTertiary: {
+    dark: "rgba(41,42,42,1)",
+    light: "rgba(248,248,248,1)",
+    cssVariable: "--theme-background-tertiary",
     get color(): string {
       return getColor.call(this)
     },
   },
   strokePrimary: {
-    dark: "rgba(255,255,255,1)",
-    light: "rgba(12,11,49,1)",
+    dark: "rgba(64,66,66,1)",
+    light: "rgba(147,147,147,1)",
     cssVariable: "--theme-stroke-primary",
-    get color(): string {
-      return getColor.call(this)
-    },
-  },
-  strokeSecondary: {
-    dark: "rgba(255,255,255,0.45)",
-    light: "rgba(12,11,49,0.45)",
-    cssVariable: "--theme-stroke-secondary",
-    get color(): string {
-      return getColor.call(this)
-    },
-  },
-  strokeTertiary: {
-    dark: "rgba(255,255,255,0.16)",
-    light: "rgba(12,11,49,0.16)",
-    cssVariable: "--theme-stroke-tertiary",
-    get color(): string {
-      return getColor.call(this)
-    },
-  },
-  strokePrimaryInverse: {
-    dark: "rgba(23,23,31,1)",
-    light: "rgba(255,255,255,1)",
-    cssVariable: "--theme-stroke-primary-inverse",
-    get color(): string {
-      return getColor.call(this)
-    },
-  },
-  strokeNegative: {
-    dark: "rgba(239,135,113,1)",
-    light: "rgba(219,54,21,1)",
-    cssVariable: "--theme-stroke-negative",
     get color(): string {
       return getColor.call(this)
     },

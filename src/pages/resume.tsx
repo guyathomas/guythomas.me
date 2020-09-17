@@ -29,10 +29,18 @@ const SectionTitle = styled.div`
   justify-content: center;
   text-transform: uppercase;
   background-color: ${() => COLOR_PALETTE.backgroundSecondary.color};
+  padding: 1.75rem;
+  border-top: 1px solid ${() => COLOR_PALETTE.strokePrimary.color};
+  border-bottom: 1px solid ${() => COLOR_PALETTE.strokePrimary.color};
   @media (min-width: 1024px) {
+    border: 0;
     justify-content: flex-end;
+    padding: 4.375rem 5.25rem 1.6625rem;
     &:nth-child(4n + 1) {
-      background-color: ${() => COLOR_PALETTE.backgroundPrimary.color};
+      background-color: ${() => COLOR_PALETTE.backgroundSecondary.color};
+    }
+    &:nth-child(4n + 3) {
+      background-color: ${() => COLOR_PALETTE.backgroundTertiary.color};
     }
   }
 `
@@ -40,7 +48,7 @@ const SectionTitle = styled.div`
 const AvatarContainer = styled.div`
   display: flex;
   justify-content: center;
-  background-color: ${() => COLOR_PALETTE.backgroundPrimary.color};
+  background-color: ${() => COLOR_PALETTE.backgroundSecondary.color};
   @media (min-width: 1024px) {
     justify-content: flex-end;
     align-items: center;
@@ -132,8 +140,12 @@ const DescriptionAndSocial = styled.div`
 const SectionContent = styled.div`
   background-color: ${() => COLOR_PALETTE.backgroundPrimary.color};
   @media (min-width: 1024px) {
-    &:nth-child(4n + 2) {
+    justify-content: flex-end;
+    &:nth-child(4n) {
       background-color: ${() => COLOR_PALETTE.backgroundSecondary.color};
+    }
+    &:nth-child(4n + 2) {
+      background-color: ${() => COLOR_PALETTE.backgroundPrimary.color};
     }
   }
 `
@@ -142,7 +154,7 @@ const SectionContentInner = styled.div`
   padding: 3.15rem 3.5rem 1.4rem;
   max-width: 1400px;
   @media (min-width: 1024px) {
-    padding: 4.375rem 5.25rem 1.6625rem;
+    padding: 4rem 5rem;
   }
 `
 
@@ -173,14 +185,31 @@ const TimelineOuter = styled.div`
 const TimelineTitles = styled.div``
 const TimelineDetails = styled.div``
 
-const TimelinePre = styled.h5``
-const TimelineTitle = styled.h3``
-const TimelineSubtitle = styled.h4``
-const TimelineDescription = styled.span``
+const TimelinePre = styled.h5`
+  opacity: 0.6;
+  font-size: 0.7rem;
+  margin: 1rem 0 1rem;
+`
+const TimelineTitle = styled.h3`
+  margin: 1rem 0 1rem;
+`
+const TimelineSubtitle = styled.h4`
+  margin: 0;
+  font-size: 0.8rem;
+  margin: 1rem 0 1rem;
+`
+const TimelineDescription = styled.span`
+  font-style: italic;
+  margin: 1rem 0 1rem;
+`
 
 const TimelineListItem = styled.li``
 
-const TimelineList = styled.ol``
+const TimelineList = styled.ul`
+  margin-left: 0;
+  margin-top: 1rem;
+  list-style-position: outside;
+`
 interface TimelineProps {
   titlePre: string
   title: string
@@ -199,8 +228,8 @@ const Timeline: React.FC<TimelineProps> = ({
     <TimelineTitles>
       <TimelinePre>{titlePre}</TimelinePre>
       <TimelineTitle>{title}</TimelineTitle>
-      <TimelineTitle>{subtitle}</TimelineTitle>
-      {description && <TimelineTitle>{description}</TimelineTitle>}
+      <TimelineSubtitle>{subtitle}</TimelineSubtitle>
+      {description && <TimelineDescription>{description}</TimelineDescription>}
     </TimelineTitles>
     <TimelineDetails>
       <TimelineList>
