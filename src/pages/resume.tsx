@@ -53,8 +53,8 @@ const AvatarContainer = styled.div`
   display: flex;
   justify-content: center;
   padding-top: 5rem;
-  background-color: ${() => COLOR_PALETTE.backgroundSecondary.color};
   @media (min-width: 1024px) {
+    background-color: ${() => COLOR_PALETTE.backgroundSecondary.color};
     justify-content: flex-end;
     align-items: center;
     padding-bottom: 10rem;
@@ -77,7 +77,7 @@ const Titles = styled.div`
   }
 `
 const Contacts = styled.div`
-  border-top: 1px solid gray;
+  border-top: 1px solid ${() => COLOR_PALETTE.strokePrimary.color};
   text-align: center;
   @media (min-width: 1024px) {
     text-align: initial;

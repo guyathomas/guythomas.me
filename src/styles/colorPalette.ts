@@ -109,7 +109,7 @@ export const COLOR_PALETTE: { [key in ColorPaletteType]: ColorType } = {
   },
   strokePrimary: {
     dark: "rgba(64,66,66,1)",
-    light: "rgba(147,147,147,1)",
+    light: "rgba(236,236,236,1)",
     cssVariable: "--theme-stroke-primary",
     get color(): string {
       return getColor.call(this)
