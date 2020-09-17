@@ -31,7 +31,8 @@ const SectionTitle = styled.div`
   background-color: ${() => COLOR_PALETTE.backgroundSecondary.color};
   @media (min-width: 1024px) {
     justify-content: flex-end;
-    &:nth-child(odd) {
+    &:nth-child(4n + 1) {
+      background-color: ${() => COLOR_PALETTE.backgroundPrimary.color};
     }
   }
 `
@@ -45,6 +46,7 @@ const AvatarContainer = styled.div`
     align-items: center;
     padding-bottom: 10rem;
     padding-right: 3rem;
+    height: 100vh;
   }
 `
 
@@ -128,22 +130,22 @@ const DescriptionAndSocial = styled.div`
   }
 `
 const SectionContent = styled.div`
-  padding: 3.15rem 3.5rem 1.4rem;
   background-color: ${() => COLOR_PALETTE.backgroundPrimary.color};
+`
+
+const SectionContentInner = styled.div`
+  padding: 3.15rem 3.5rem 1.4rem;
+  max-width: 1400px;
   @media (min-width: 1024px) {
     padding: 4.375rem 5.25rem 1.6625rem;
   }
 `
 
-const SectionContentInner = styled.div`
-  max-width: 1400px;
-`
-
 const Bio = styled(SectionContentInner)`
   @media (min-width: 1024px) {
+    height: 100%;
     display: flex;
     flex-direction: column;
-    height: 100vh;
   }
 `
 
