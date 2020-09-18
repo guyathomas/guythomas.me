@@ -17,14 +17,27 @@ const PageContainer = styled.div`
   }
 `
 
-const Avatar = styled.div`
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  background-color: wheat;
+const ProfileContainer = styled.div`
+  width: 200px;
+  height: 200px;
+  margin-top: 2rem;
   @media ${DESKTOP} {
     width: 300px;
     height: 300px;
+  }
+`
+
+const ProfileSection = styled.div`
+  display: flex;
+  justify-content: center;
+  background-color: ${() => COLOR_PALETTE.backgroundPrimary.color};
+  @media ${DESKTOP} {
+    background-color: ${() => COLOR_PALETTE.backgroundSecondary.color};
+    justify-content: flex-end;
+    align-items: center;
+    padding-bottom: 10rem;
+    padding-right: 3rem;
+    height: 100vh;
   }
 `
 
@@ -50,21 +63,6 @@ const SectionTitle = styled.div`
     &:nth-child(4n + 3) {
       background-color: ${() => COLOR_PALETTE.backgroundTertiary.color};
     }
-  }
-`
-
-const AvatarContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  padding-top: 5rem;
-  background-color: ${() => COLOR_PALETTE.backgroundPrimary.color};
-  @media ${DESKTOP} {
-    background-color: ${() => COLOR_PALETTE.backgroundSecondary.color};
-    justify-content: flex-end;
-    align-items: center;
-    padding-bottom: 10rem;
-    padding-right: 3rem;
-    height: 100vh;
   }
 `
 
@@ -270,9 +268,14 @@ const Resume: React.FC = () => {
   return (
     <ThemeProvider>
       <PageContainer>
-        <AvatarContainer>
-          <Avatar />
-        </AvatarContainer>
+        <ProfileSection>
+          <ProfileContainer>
+            <img
+              src="https://res.cloudinary.com/dqvlfpaev/image/upload/v1580691840/avatar_sz1jui.jpg"
+              alt="profile-picture"
+            />
+          </ProfileContainer>
+        </ProfileSection>
         <SectionContent>
           <Bio>
             <Titles>
