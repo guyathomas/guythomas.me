@@ -12,8 +12,18 @@ const PageContainer = styled.div`
   grid-template-columns: 1fr;
   justify-content: center;
   color: ${() => COLOR_PALETTE.primary.color};
+  color-adjust: exact; /* Tries to print background images */
   @media ${DESKTOP} {
     grid-template-columns: 1fr 2fr;
+  }
+  @media only print {
+    grid-template-columns: repeat(6, 1fr);
+    min-height: 100vh;
+    grid-template-areas:
+      "profile profile bio bio bio bio"
+      "intro-content intro-content intro-content intro-content intro-content intro-content"
+      "experience-title experience-title experience-title experience-title education-title education-title"
+      "experience-content experience-content experience-content experience-content education-content education-content";
   }
 `
 
@@ -24,6 +34,9 @@ const ProfileContainer = styled.div`
   @media ${DESKTOP} {
     width: 300px;
     height: 300px;
+  }
+  @media print {
+    margin-top: 0;
   }
 `
 
@@ -38,6 +51,13 @@ const ProfileSection = styled.div`
     padding-bottom: 10rem;
     padding-right: 3rem;
     height: 100vh;
+  }
+  @media print {
+    background-color: ${() => COLOR_PALETTE.backgroundPrimary.color};
+    grid-area: profile;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 `
 
@@ -63,6 +83,25 @@ const SectionTitle = styled.div`
     &:nth-child(4n + 3) {
       background-color: ${() => COLOR_PALETTE.backgroundTertiary.color};
     }
+  }
+  @media print {
+    text-align: initial;
+    padding: 0.5rem;
+  }
+`
+const EducationTitle = styled(SectionTitle)`
+  @media only print {
+    grid-area: education-title;
+  }
+`
+const ExperienceTitle = styled(SectionTitle)`
+  @media only print {
+    grid-area: experience-title;
+  }
+`
+const IntroTitle = styled(SectionTitle)`
+  @media only print {
+    display: none;
   }
 `
 
@@ -91,9 +130,19 @@ const Contacts = styled.div`
     display: flex;
     justify-content: space-between;
   }
+  @media only print {
+    display: flex;
+    justify-content: space-between;
+  }
 `
 
 const ContactWrapper = styled.div``
+const ContactTitle = styled.h4`
+  @media print {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+`
 
 const Contact: React.FC<{
   title: string
@@ -103,7 +152,7 @@ const Contact: React.FC<{
   const detailContent = detailLink ? <a href={detailLink}>{detail}</a> : detail
   return (
     <ContactWrapper>
-      <h3>{title}</h3>
+      <ContactTitle>{title}</ContactTitle>
       <span>{detailContent}</span>
     </ContactWrapper>
   )
@@ -114,7 +163,14 @@ const FirstName = styled.h1`
 `
 const LastName = styled(FirstName)`
   font-weight: bold;
+  @media print {
+    margin-left: 1rem;
+  }
 `
+
+interface GridAreaProps {
+  printGridArea: string
+}
 
 const SectionContent = styled.div`
   background-color: ${() => COLOR_PALETTE.backgroundPrimary.color};
@@ -128,6 +184,27 @@ const SectionContent = styled.div`
     }
   }
 `
+const EducationSection = styled(SectionContent)`
+  @media only print {
+    grid-area: education-content;
+  }
+`
+const BioWrapper = styled(SectionContent)`
+  @media only print {
+    grid-area: bio;
+  }
+`
+const IntroContent = styled(SectionContent)`
+  @media only print {
+    grid-area: intro-content;
+    padding-top: 1rem;
+  }
+`
+const ExperienceSection = styled(SectionContent)`
+  @media only print {
+    grid-area: experience-content;
+  }
+`
 
 const SectionContentInner = styled.div`
   padding: 3rem 1rem 1rem;
@@ -135,6 +212,9 @@ const SectionContentInner = styled.div`
   @media ${DESKTOP} {
     padding: 3rem 3rem 1rem;
     padding: 4rem 5rem;
+  }
+  @media only print {
+    padding-top: 0;
   }
 `
 
@@ -144,10 +224,17 @@ const Bio = styled(SectionContentInner)`
     display: flex;
     flex-direction: column;
   }
+  @media print {
+    grid-area: bio;
+  }
 `
 
 const Description = styled.h2`
   margin-bottom: 0;
+  @media print {
+    margin-top: 1rem;
+    font-size: 1.5rem;
+  }
 `
 interface SectionProps {
   title: string
@@ -184,7 +271,12 @@ const TimelineDescription = styled.span`
   margin: 1rem 0 1rem;
 `
 
-const TimelineListItem = styled.li``
+const TimelineListItem = styled.li`
+  @media only print {
+    font-size: 85%;
+    margin-bottom: 1rem;
+  }
+`
 
 const TimelineList = styled.ul`
   margin-left: 0;
@@ -223,16 +315,11 @@ const Timeline: React.FC<TimelineProps> = ({
   </TimelineOuter>
 )
 
-const Section: React.FC<SectionProps> = ({ title, children }) => (
-  <>
-    <SectionTitle>
-      <div>{title}</div>
-    </SectionTitle>
-    <SectionContent>
-      <SectionContentInner>{children}</SectionContentInner>
-    </SectionContent>
-  </>
-)
+const Names = styled.div`
+  @media print {
+    display: flex;
+  }
+`
 
 const Resume: React.FC = () => {
   return (
@@ -246,11 +333,13 @@ const Resume: React.FC = () => {
             />
           </ProfileContainer>
         </ProfileSection>
-        <SectionContent>
+        <BioWrapper>
           <Bio>
             <Titles>
-              <FirstName>Guy</FirstName>
-              <LastName>Thomas</LastName>
+              <Names>
+                <FirstName>Guy</FirstName>
+                <LastName>Thomas</LastName>
+              </Names>
               <Description>
                 Full Stack Developer &amp; Front-end Expert
               </Description>
@@ -269,68 +358,77 @@ const Resume: React.FC = () => {
               />
             </Contacts>
           </Bio>
-        </SectionContent>
-        <Section title="Intro">
-          I live and breathe Javascript, Typescript, React, HTML and CSS.
-          I&apos;m a Software Engineer agnostic of languages &amp; frameworks
-          and have worked with all sorts of tech including GraphQL, Cypress and
-          much more - just ask me.
-        </Section>
-        <Section title="Experience">
-          <Timeline
-            title="Lyft"
-            titlePre="15th April, 2019 – Present"
-            subtitle="Senior Software Engineer"
-            description="Frontend Lead"
-            bullets={[
-              "Built a Marketplace experience dynamic navigation with React & X-State",
-              "Linked our teams data model to the Lyft Graphql server in Go to enable a dynamic frontend",
-              "Built an ecosystem of npm packages that enabled zero configuration I18n and CMS content for all Frontend services",
-              "Lead several technology changes with the with the introduction of Graphql, Cypress and auto generated Typescript types",
-            ]}
-          />
-          <Timeline
-            title="Reflektive"
-            titlePre="26th June, 2017 – 28th February, 2019"
-            subtitle="Software Engineer"
-            bullets={[
-              "Planned, developed and maintained many of our core products with React and Redux",
-              "Lead migration from Backbone to React",
-              "Cut build time by 50% by migrating Webpack 3 > 4",
-              "Migrated ~500 tests to Jest to reduce testing feedback loop",
-            ]}
-          />
-          <Timeline
-            title="IBM"
-            titlePre="7th July, 2014 – 3rd June, 2016"
-            subtitle="Software Engineer"
-            bullets={[
-              "Developed internal websites to pitch solutions",
-              "Developed data models to target customer behavior",
-            ]}
-          />
-        </Section>
-        <Section title="Education">
-          <Timeline
-            title="Bradfield CS"
-            titlePre="2017"
-            subtitle="Computer Architecture"
-            bullets={[
-              "Building a strong mental model of the actual execution of programs by a microprocessor to better reason about the code I write",
-            ]}
-          />
-          <Timeline
-            title="Monash University"
-            titlePre="2011 - 2013"
-            subtitle="Bachelor of Commerce"
-            description="Major in Finance &amp; Information Technology"
-            bullets={[
-              "Built systems for business administration with VBA & Excel",
-              "Architected and Implemented relational databases",
-              "Modelled publically available financial data to provide company valuations",
-            ]}
-          />
-        </Section>
+        </BioWrapper>
+        <IntroTitle>Intro</IntroTitle>
+        <IntroContent>
+          <SectionContentInner>
+            I live and breathe Javascript, Typescript, React, HTML and CSS.
+            I&apos;m a Software Engineer agnostic of languages &amp; frameworks
+            and have worked with all sorts of tech including GraphQL, Cypress
+            and much more - just ask me.
+          </SectionContentInner>
+        </IntroContent>
+        <ExperienceTitle>Experience</ExperienceTitle>
+        <ExperienceSection>
+          <SectionContentInner>
+            <Timeline
+              title="Lyft"
+              titlePre="15th April, 2019 – Present"
+              subtitle="Senior Software Engineer"
+              description="Frontend Lead"
+              bullets={[
+                "Built a Marketplace experience dynamic navigation with React & X-State",
+                "Linked our teams data model to the Lyft Graphql server in Go to enable a dynamic frontend",
+                "Built an ecosystem of npm packages that enabled zero configuration I18n and CMS content for all Frontend services",
+                "Lead several technology changes with the with the introduction of Graphql, Cypress and auto generated Typescript types",
+              ]}
+            />
+            <Timeline
+              title="Reflektive"
+              titlePre="26th June, 2017 – 28th February, 2019"
+              subtitle="Software Engineer"
+              bullets={[
+                "Planned, developed and maintained many of our core products with React and Redux",
+                "Lead migration from Backbone to React",
+                "Cut build time by 50% by migrating Webpack 3 > 4",
+                "Migrated ~500 tests to Jest to reduce testing feedback loop",
+              ]}
+            />
+            <Timeline
+              title="IBM"
+              titlePre="7th July, 2014 – 3rd June, 2016"
+              subtitle="Software Engineer"
+              bullets={[
+                "Developed internal websites to pitch solutions",
+                "Developed data models to target customer behavior",
+              ]}
+            />
+          </SectionContentInner>
+        </ExperienceSection>
+        <EducationTitle>Education</EducationTitle>
+        <EducationSection>
+          <SectionContentInner>
+            <Timeline
+              title="Bradfield CS"
+              titlePre="2017"
+              subtitle="Computer Architecture"
+              bullets={[
+                "Building a strong mental model of the actual execution of programs by a microprocessor to better reason about the code I write",
+              ]}
+            />
+            <Timeline
+              title="Monash University"
+              titlePre="2011 - 2013"
+              subtitle="Bachelor of Commerce"
+              description="Major in Finance &amp; Information Technology"
+              bullets={[
+                "Built systems for business administration with VBA & Excel",
+                "Architected and Implemented relational databases",
+                "Modelled publically available financial data to provide company valuations",
+              ]}
+            />
+          </SectionContentInner>
+        </EducationSection>
       </PageContainer>
     </ThemeProvider>
   )
