@@ -131,7 +131,7 @@ const SectionContent = styled.div`
 
 const SectionContentInner = styled.div`
   padding: 3rem 1rem 1rem;
-  max-width: 1400px;
+  max-width: 1200px;
   @media ${DESKTOP} {
     padding: 3rem 3rem 1rem;
     padding: 4rem 5rem;
@@ -158,7 +158,7 @@ const TimelineOuter = styled.div`
   display: grid;
   grid-template-columns: 1fr;
   @media ${DESKTOP} {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 2fr;
   }
 `
 
