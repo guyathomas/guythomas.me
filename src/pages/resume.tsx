@@ -108,24 +108,6 @@ const Contact: React.FC<{
   )
 }
 
-const SocialTile = styled.div`
-  width: 38px;
-  height: 38px;
-  border-radius: 5px;
-  margin: 0.5rem 0.5rem 0;
-`
-const SocialTilesWrapper = styled.div`
-  display: flex;
-`
-
-const SocialTiles: React.FC = () => (
-  <SocialTilesWrapper>
-    {[1, 2, 3, 4].map((num) => (
-      <SocialTile key={num} />
-    ))}
-  </SocialTilesWrapper>
-)
-
 const FirstName = styled.h1`
   margin: 0;
 `
@@ -136,17 +118,6 @@ const LastName = styled(FirstName)`
   font-weight: bold;
 `
 
-const DescriptionAndSocial = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-bottom: 2rem;
-  @media ${DESKTOP} {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-end;
-  }
-`
 const SectionContent = styled.div`
   background-color: ${() => COLOR_PALETTE.backgroundPrimary.color};
   @media ${DESKTOP} {
@@ -282,12 +253,9 @@ const Resume: React.FC = () => {
               <TitlesWrapper>
                 <FirstName>Guy</FirstName>
                 <LastName>Thomas</LastName>
-                <DescriptionAndSocial>
-                  <Description>
-                    Full Stack Developer &amp; Front-end Expert
-                  </Description>
-                  <SocialTiles />
-                </DescriptionAndSocial>
+                <Description>
+                  Full Stack Developer &amp; Front-end Expert
+                </Description>
               </TitlesWrapper>
             </Titles>
             <Contacts>
