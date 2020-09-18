@@ -3,12 +3,16 @@ import styled from "@emotion/styled"
 import { COLOR_PALETTE } from "~styles"
 import { ThemeProvider } from "../templates/GlobalLayout"
 
+const BREAKPOINT = "1024px"
+const DESKTOP = `(min-width: ${BREAKPOINT})`
+const MOBILE = `(max-width: ${BREAKPOINT})`
+
 const PageContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr;
   justify-content: center;
   color: ${() => COLOR_PALETTE.primary.color};
-  @media (min-width: 1024px) {
+  @media ${DESKTOP} {
     grid-template-columns: 1fr 2fr;
   }
 `
@@ -18,7 +22,7 @@ const Avatar = styled.div`
   height: 150px;
   border-radius: 50%;
   background-color: wheat;
-  @media (min-width: 1024px) {
+  @media ${DESKTOP} {
     width: 300px;
     height: 300px;
   }
@@ -26,18 +30,18 @@ const Avatar = styled.div`
 
 const SectionTitle = styled.div`
   display: flex;
-  justify-content: center;
   text-transform: uppercase;
   background-color: ${() => COLOR_PALETTE.backgroundSecondary.color};
+  justify-content: center;
   padding: 1.75rem;
-  border-top: 1px solid ${() => COLOR_PALETTE.strokePrimary.color};
-  border-bottom: 1px solid ${() => COLOR_PALETTE.strokePrimary.color};
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  @media (min-width: 1024px) {
-    position: static;
-    border: 0;
+  @media ${MOBILE} {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    border-top: 1px solid ${() => COLOR_PALETTE.strokePrimary.color};
+    border-bottom: 1px solid ${() => COLOR_PALETTE.strokePrimary.color};
+  }
+  @media ${DESKTOP} {
     justify-content: flex-end;
     padding: 4.375rem 5.25rem 1.6625rem;
     &:nth-child(4n + 1) {
@@ -54,7 +58,7 @@ const AvatarContainer = styled.div`
   justify-content: center;
   padding-top: 5rem;
   background-color: ${() => COLOR_PALETTE.backgroundPrimary.color};
-  @media (min-width: 1024px) {
+  @media ${DESKTOP} {
     background-color: ${() => COLOR_PALETTE.backgroundSecondary.color};
     justify-content: flex-end;
     align-items: center;
@@ -65,23 +69,25 @@ const AvatarContainer = styled.div`
 `
 
 const Titles = styled.div`
-  position: relative;
   display: flex;
+  position: relative;
   flex-direction: column;
   align-items: center;
-  text-align: center;
-  @media (min-width: 1024px) {
+  @media ${MOBILE} {
+    text-align: center;
+  }
+  @media ${DESKTOP} {
     flex-grow: 1;
-    text-align: initial;
     flex-direction: row;
     justify-content: space-between;
   }
 `
 const Contacts = styled.div`
   border-top: 1px solid ${() => COLOR_PALETTE.strokePrimary.color};
-  text-align: center;
-  @media (min-width: 1024px) {
-    text-align: initial;
+  @media ${MOBILE} {
+    text-align: center;
+  }
+  @media ${DESKTOP} {
     padding-bottom: 1.75rem;
     display: flex;
     justify-content: space-between;
@@ -137,7 +143,7 @@ const DescriptionAndSocial = styled.div`
   flex-direction: column;
   align-items: center;
   padding-bottom: 2rem;
-  @media (min-width: 1024px) {
+  @media ${DESKTOP} {
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-end;
@@ -145,7 +151,7 @@ const DescriptionAndSocial = styled.div`
 `
 const SectionContent = styled.div`
   background-color: ${() => COLOR_PALETTE.backgroundPrimary.color};
-  @media (min-width: 1024px) {
+  @media ${DESKTOP} {
     justify-content: flex-end;
     &:nth-child(4n) {
       background-color: ${() => COLOR_PALETTE.backgroundSecondary.color};
@@ -159,14 +165,14 @@ const SectionContent = styled.div`
 const SectionContentInner = styled.div`
   padding: 3rem 1rem 1rem;
   max-width: 1400px;
-  @media (min-width: 1024px) {
+  @media ${DESKTOP} {
     padding: 3rem 3rem 1rem;
     padding: 4rem 5rem;
   }
 `
 
 const Bio = styled(SectionContentInner)`
-  @media (min-width: 1024px) {
+  @media ${DESKTOP} {
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -184,7 +190,7 @@ interface SectionProps {
 const TimelineOuter = styled.div`
   display: grid;
   grid-template-columns: 1fr;
-  @media (min-width: 1024px) {
+  @media ${DESKTOP} {
     grid-template-columns: 1fr 1fr;
   }
 `
