@@ -9,7 +9,10 @@ interface AppLink {
   path: string
 }
 
-const LINKS: AppLink[] = [{ label: "Blog", path: "/blog" }]
+const LINKS: AppLink[] = [
+  { label: "Blog", path: "/blog" },
+  { label: "Resume", path: "/resume" },
+]
 
 interface LinksProps {
   onClick?: () => void
