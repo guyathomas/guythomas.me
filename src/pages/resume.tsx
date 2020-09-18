@@ -158,6 +158,7 @@ const TimelineOuter = styled.div`
   display: grid;
   grid-template-columns: 1fr;
   @media ${DESKTOP} {
+    grid-gap: 2rem;
     grid-template-columns: 1fr 2fr;
   }
 `
