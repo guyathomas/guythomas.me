@@ -71,13 +71,14 @@ const Titles = styled.div`
   position: relative;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 1rem;
   @media ${MOBILE} {
     text-align: center;
   }
   @media ${DESKTOP} {
-    flex-grow: 1;
-    flex-direction: row;
-    justify-content: space-between;
+    height: 100%;
+    justify-content: center;
+    align-items: flex-start;
   }
 `
 const Contacts = styled.div`
@@ -110,9 +111,6 @@ const Contact: React.FC<{
 
 const FirstName = styled.h1`
   margin: 0;
-`
-const TitlesWrapper = styled.div`
-  width: 100%;
 `
 const LastName = styled(FirstName)`
   font-weight: bold;
@@ -250,13 +248,11 @@ const Resume: React.FC = () => {
         <SectionContent>
           <Bio>
             <Titles>
-              <TitlesWrapper>
-                <FirstName>Guy</FirstName>
-                <LastName>Thomas</LastName>
-                <Description>
-                  Full Stack Developer &amp; Front-end Expert
-                </Description>
-              </TitlesWrapper>
+              <FirstName>Guy</FirstName>
+              <LastName>Thomas</LastName>
+              <Description>
+                Full Stack Developer &amp; Front-end Expert
+              </Description>
             </Titles>
             <Contacts>
               <Contact title="Location" detail="San Francisco" />
