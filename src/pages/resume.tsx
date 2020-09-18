@@ -12,8 +12,17 @@ const PageContainer = styled.div`
   grid-template-columns: 1fr;
   justify-content: center;
   color: ${() => COLOR_PALETTE.primary.color};
+
   @media ${DESKTOP} {
     grid-template-columns: 1fr 2fr;
+  }
+  @media only print {
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-areas:
+      "bio bio bio bio bio bio"
+      "intro-body intro-body intro-body intro-body intro-body intro-body"
+      "experience-title experience-title experience-title experience-title education-title education-title"
+      "experience-body experience-body experience-body experience-body education-body education-body";
   }
 `
 
@@ -41,12 +50,15 @@ const ProfileSection = styled.div`
   }
 `
 
-const SectionTitle = styled.div`
+const SectionTitle = styled.div<GridAreaProps>`
   display: flex;
   text-transform: uppercase;
   background-color: ${() => COLOR_PALETTE.backgroundSecondary.color};
   justify-content: center;
   padding: 1.75rem;
+  @media only print {
+    grid-area: ${(props) => props.printGridArea};
+  }
   @media ${MOBILE} {
     position: sticky;
     top: 0;
@@ -63,6 +75,11 @@ const SectionTitle = styled.div`
     &:nth-child(4n + 3) {
       background-color: ${() => COLOR_PALETTE.backgroundTertiary.color};
     }
+  }
+`
+const SectionTitleHiddenOnPrint = styled(SectionTitle)`
+  @media only print {
+    display: none;
   }
 `
 
@@ -91,6 +108,10 @@ const Contacts = styled.div`
     display: flex;
     justify-content: space-between;
   }
+  @media only print {
+    display: flex;
+    justify-content: space-between;
+  }
 `
 
 const ContactWrapper = styled.div``
@@ -103,7 +124,7 @@ const Contact: React.FC<{
   const detailContent = detailLink ? <a href={detailLink}>{detail}</a> : detail
   return (
     <ContactWrapper>
-      <h3>{title}</h3>
+      <h4>{title}</h4>
       <span>{detailContent}</span>
     </ContactWrapper>
   )
@@ -116,7 +137,11 @@ const LastName = styled(FirstName)`
   font-weight: bold;
 `
 
-const SectionContent = styled.div`
+interface GridAreaProps {
+  printGridArea: string
+}
+
+const SectionContent = styled.div<GridAreaProps>`
   background-color: ${() => COLOR_PALETTE.backgroundPrimary.color};
   @media ${DESKTOP} {
     justify-content: flex-end;
@@ -126,6 +151,9 @@ const SectionContent = styled.div`
     &:nth-child(4n + 2) {
       background-color: ${() => COLOR_PALETTE.backgroundPrimary.color};
     }
+  }
+  @media only print {
+    grid-area: ${(props) => props.printGridArea};
   }
 `
 
@@ -223,22 +251,11 @@ const Timeline: React.FC<TimelineProps> = ({
   </TimelineOuter>
 )
 
-const Section: React.FC<SectionProps> = ({ title, children }) => (
-  <>
-    <SectionTitle>
-      <div>{title}</div>
-    </SectionTitle>
-    <SectionContent>
-      <SectionContentInner>{children}</SectionContentInner>
-    </SectionContent>
-  </>
-)
-
 const Resume: React.FC = () => {
   return (
     <ThemeProvider>
       <PageContainer>
-        <ProfileSection>
+        <ProfileSection style={{ gridArea: "profile" }}>
           <ProfileContainer>
             <img
               src="https://res.cloudinary.com/dqvlfpaev/image/upload/v1580691840/avatar_sz1jui.jpg"
@@ -246,7 +263,7 @@ const Resume: React.FC = () => {
             />
           </ProfileContainer>
         </ProfileSection>
-        <SectionContent>
+        <SectionContent printGridArea="bio">
           <Bio>
             <Titles>
               <FirstName>Guy</FirstName>
@@ -270,67 +287,82 @@ const Resume: React.FC = () => {
             </Contacts>
           </Bio>
         </SectionContent>
-        <Section title="Intro">
-          I live and breathe Javascript, Typescript, React, HTML and CSS.
-          I&apos;m a Software Engineer agnostic of languages &amp; frameworks
-          and have worked with all sorts of tech including GraphQL, Cypress and
-          much more - just ask me.
-        </Section>
-        <Section title="Experience">
-          <Timeline
-            title="Lyft"
-            titlePre="15th April, 2019 – Present"
-            subtitle="Senior Software Engineer"
-            description="Frontend Lead"
-            bullets={[
-              "Built a Marketplace experience dynamic navigation with React & X-State",
-              "Linked our teams data model to the Lyft Graphql server in Go to enable a dynamic frontend",
-              "Built an ecosystem of npm packages that enabled zero configuration I18n and CMS content for all Frontend services",
-              "Lead several technology changes with the with the introduction of Graphql, Cypress and auto generated Typescript types",
-            ]}
-          />
-          <Timeline
-            title="Reflektive"
-            titlePre="26th June, 2017 – 28th February, 2019"
-            subtitle="Software Engineer"
-            bullets={[
-              "Planned, developed and maintained many of our core products with React and Redux",
-              "Lead migration from Backbone to React",
-              "Cut build time by 50% by migrating Webpack 3 > 4",
-              "Migrated ~500 tests to Jest to reduce testing feedback loop",
-            ]}
-          />
-          <Timeline
-            title="IBM"
-            titlePre="7th July, 2014 – 3rd June, 2016"
-            subtitle="Software Engineer"
-            bullets={[
-              "Developed internal websites to pitch solutions",
-              "Developed data models to target customer behavior",
-            ]}
-          />
-        </Section>
-        <Section title="Education">
-          <Timeline
-            title="Bradfield CS"
-            titlePre="2017"
-            subtitle="Computer Architecture"
-            bullets={[
-              "Building a strong mental model of the actual execution of programs by a microprocessor to better reason about the code I write",
-            ]}
-          />
-          <Timeline
-            title="Monash University"
-            titlePre="2011 - 2013"
-            subtitle="Bachelor of Commerce"
-            description="Major in Finance &amp; Information Technology"
-            bullets={[
-              "Built systems for business administration with VBA & Excel",
-              "Architected and Implemented relational databases",
-              "Modelled publically available financial data to provide company valuations",
-            ]}
-          />
-        </Section>
+        <SectionTitleHiddenOnPrint printGridArea="intro-title">
+          <div>Intro</div>
+        </SectionTitleHiddenOnPrint>
+        <SectionContent printGridArea="intro-body">
+          <SectionContentInner>
+            I live and breathe Javascript, Typescript, React, HTML and CSS.
+            I&apos;m a Software Engineer agnostic of languages &amp; frameworks
+            and have worked with all sorts of tech including GraphQL, Cypress
+            and much more - just ask me.
+          </SectionContentInner>
+        </SectionContent>
+        <SectionTitle printGridArea="experience-title">
+          <div>Experience</div>
+        </SectionTitle>
+        <SectionContent printGridArea="experience-body">
+          <SectionContentInner>
+            <Timeline
+              title="Lyft"
+              titlePre="15th April, 2019 – Present"
+              subtitle="Senior Software Engineer"
+              description="Frontend Lead"
+              bullets={[
+                "Built a Marketplace experience dynamic navigation with React & X-State",
+                "Linked our teams data model to the Lyft Graphql server in Go to enable a dynamic frontend",
+                "Built an ecosystem of npm packages that enabled zero configuration I18n and CMS content for all Frontend services",
+                "Lead several technology changes with the with the introduction of Graphql, Cypress and auto generated Typescript types",
+              ]}
+            />
+            <Timeline
+              title="Reflektive"
+              titlePre="26th June, 2017 – 28th February, 2019"
+              subtitle="Software Engineer"
+              bullets={[
+                "Planned, developed and maintained many of our core products with React and Redux",
+                "Lead migration from Backbone to React",
+                "Cut build time by 50% by migrating Webpack 3 > 4",
+                "Migrated ~500 tests to Jest to reduce testing feedback loop",
+              ]}
+            />
+            <Timeline
+              title="IBM"
+              titlePre="7th July, 2014 – 3rd June, 2016"
+              subtitle="Software Engineer"
+              bullets={[
+                "Developed internal websites to pitch solutions",
+                "Developed data models to target customer behavior",
+              ]}
+            />
+          </SectionContentInner>
+        </SectionContent>
+        <SectionTitle printGridArea="education-title">
+          <div>Education</div>
+        </SectionTitle>
+        <SectionContent printGridArea="education-body">
+          <SectionContentInner>
+            <Timeline
+              title="Bradfield CS"
+              titlePre="2017"
+              subtitle="Computer Architecture"
+              bullets={[
+                "Building a strong mental model of the actual execution of programs by a microprocessor to better reason about the code I write",
+              ]}
+            />
+            <Timeline
+              title="Monash University"
+              titlePre="2011 - 2013"
+              subtitle="Bachelor of Commerce"
+              description="Major in Finance &amp; Information Technology"
+              bullets={[
+                "Built systems for business administration with VBA & Excel",
+                "Architected and Implemented relational databases",
+                "Modelled publically available financial data to provide company valuations",
+              ]}
+            />
+          </SectionContentInner>
+        </SectionContent>
       </PageContainer>
     </ThemeProvider>
   )
