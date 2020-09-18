@@ -20,7 +20,7 @@ interface HeroProps {
 }
 
 const HeroBannerContainer = styled.div`
-  background-color: ${() => COLOR_PALETTE.backgroundBrand.color};
+  background-color: ${() => COLOR_PALETTE.backgroundSky.color};
   transition: background-color 1s;
   padding-top: 3rem;
   display: flex;

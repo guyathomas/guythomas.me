@@ -19,7 +19,7 @@ const HeaderContent = styled.div`
 
 const HeaderWrapper = styled.header`
   transition: background-color 1s;
-  background-color: ${() => COLOR_PALETTE.backgroundBrand.color};
+  background-color: ${() => COLOR_PALETTE.backgroundSky.color};
   border-bottom: ${() => COLOR_PALETTE.strokePrimary.color};
 `
 

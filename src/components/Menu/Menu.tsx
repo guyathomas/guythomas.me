@@ -6,8 +6,8 @@ import { NavLinks } from "~components/NavLinks"
 
 const MenuContainer = styled.ul`
   height: 100vh;
-  background-color: ${() => COLOR_PALETTE.backgroundBrand.color};
-  border-top: 1px solid ${() => COLOR_PALETTE.strokeSecondary.color};
+  background-color: ${() => COLOR_PALETTE.backgroundSky.color};
+  border-top: 1px solid ${() => COLOR_PALETTE.strokePrimary.color};
   margin-left: 0;
   width: 200px;
   list-style: none;

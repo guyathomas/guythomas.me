@@ -29,8 +29,8 @@ const StyledMenu = styled(Menu)<StyledMenuProps>`
   top: 0;
   bottom: 0;
   width: 100%;
-  opacity: ${props => (props.isActive ? 1 : 0)};
-  pointer-events: ${props => (props.isActive ? "all" : "none")};
+  opacity: ${(props) => (props.isActive ? 1 : 0)};
+  pointer-events: ${(props) => (props.isActive ? "all" : "none")};
   transition: opacity 200ms ease-out;
   @media (min-width: ${BREAKPOINTS.sm}px) {
     display: none;

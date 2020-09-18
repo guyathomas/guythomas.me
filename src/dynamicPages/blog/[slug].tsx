@@ -36,17 +36,12 @@ const CommentInput: React.FC<CommentInputProps> = ({ refetch, slug }) => {
     }
   }
   if (!isAuthenticated) {
-    return (
-      <button
-        onClick={() => {
-          void loginWithPopup({
-            audience: process.env.GATSBY_AUTH0_AUDIENCE_GUYTHOMAS_API,
-          })
-        }}
-      >
-        Log In To Comment
-      </button>
-    )
+    const onClick = async () => {
+      await loginWithPopup({
+        audience: process.env.GATSBY_AUTH0_AUDIENCE_GUYTHOMAS_API,
+      })
+    }
+    return <button onClick={onClick}>Log In To Comment</button>
   }
   return (
     <>
