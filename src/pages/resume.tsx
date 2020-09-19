@@ -2,10 +2,44 @@ import React from "react"
 import styled from "@emotion/styled"
 import { COLOR_PALETTE } from "~styles"
 import { ThemeProvider } from "../templates/GlobalLayout"
+import lightResumePdf from "../../static/resume-light.pdf"
+import darkResumePdf from "../../static/resume-dark.pdf"
+import useDarkMode from "use-dark-mode"
 
 const BREAKPOINT = "1024px"
 const DESKTOP = `(min-width: ${BREAKPOINT})`
 const MOBILE = `(max-width: ${BREAKPOINT})`
+
+interface SVGProps {
+  className?: string
+}
+const DownloadSvg: React.FC<SVGProps> = ({ className }) => (
+  <svg
+    className={className}
+    viewBox="0 0 8 11"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M3.64645 8.35355C3.84171 8.54882 4.15829 8.54882 4.35355 8.35355L7.53553 5.17157C7.7308 4.97631 7.7308 4.65973 7.53553 4.46447C7.34027 4.2692 7.02369 4.2692 6.82843 4.46447L4 7.29289L1.17157 4.46447C0.976311 4.2692 0.659728 4.2692 0.464466 4.46447C0.269204 4.65973 0.269204 4.97631 0.464466 5.17157L3.64645 8.35355ZM3.5 2.18557e-08L3.5 8L4.5 8L4.5 -2.18557e-08L3.5 2.18557e-08Z"
+      fill="inherit"
+    />
+    <path d="M0 10H8V11H0V10Z" fill="inherit" />
+  </svg>
+)
+
+const StyledSvg = styled(DownloadSvg)`
+  height: 1.5rem;
+  width: 1.5rem;
+  margin-left: 1rem;
+  display: inline-block;
+  fill: ${() => COLOR_PALETTE.interactive.color};
+  &:hover {
+    fill: ${() => COLOR_PALETTE.interactiveActive.color};
+  }
+  @media print {
+    display: none;
+  }
+`
 
 const PageContainer = styled.div`
   display: grid;
@@ -58,6 +92,7 @@ const ProfileSection = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    padding-top: 1rem;
   }
 `
 
@@ -192,6 +227,7 @@ const EducationSection = styled(SectionContent)`
 const BioWrapper = styled(SectionContent)`
   @media only print {
     grid-area: bio;
+    padding-top: 1rem;
   }
 `
 const IntroContent = styled(SectionContent)`
@@ -231,6 +267,8 @@ const Bio = styled(SectionContentInner)`
 
 const Description = styled.h2`
   margin-bottom: 0;
+  display: flex;
+  align-items: center;
   @media print {
     margin-top: 1rem;
     font-size: 1.5rem;
@@ -257,24 +295,40 @@ const TimelinePre = styled.h5`
   opacity: 0.6;
   font-size: 0.7rem;
   margin: 1rem 0 1rem;
+  @media print {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
 `
 const TimelineTitle = styled.h3`
   margin: 1rem 0 1rem;
+  @media print {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
 `
 const TimelineSubtitle = styled.h4`
   margin: 0;
   font-size: 0.8rem;
   margin: 1rem 0 1rem;
+  @media print {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
 `
 const TimelineDescription = styled.span`
   font-style: italic;
   margin: 1rem 0 1rem;
+  @media print {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
 `
 
 const TimelineListItem = styled.li`
   @media only print {
     font-size: 85%;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
   }
 `
 
@@ -283,6 +337,10 @@ const TimelineList = styled.ul`
   margin-top: 1rem;
   padding-left: 0.5rem;
   list-style-position: outside;
+  @media only print {
+    margin-bottom: 0;
+    margin-top: 0.5rem;
+  }
 `
 interface TimelineProps {
   titlePre: string
@@ -322,6 +380,8 @@ const Names = styled.div`
 `
 
 const Resume: React.FC = () => {
+  const { value: isDarkMode } = useDarkMode()
+  const downloadLink = isDarkMode ? darkResumePdf : lightResumePdf
   return (
     <ThemeProvider>
       <PageContainer>
@@ -342,6 +402,9 @@ const Resume: React.FC = () => {
               </Names>
               <Description>
                 Full Stack Developer &amp; Front-end Expert
+                <a target="_blank" rel="noreferrer" href={downloadLink}>
+                  <StyledSvg />
+                </a>
               </Description>
             </Titles>
             <Contacts>
@@ -365,7 +428,7 @@ const Resume: React.FC = () => {
             I live and breathe Javascript, Typescript, React, HTML and CSS.
             I&apos;m a Software Engineer agnostic of languages &amp; frameworks
             and have worked with all sorts of tech including GraphQL, Cypress
-            and much more - just ask me.
+            and much more.
           </SectionContentInner>
         </IntroContent>
         <ExperienceTitle>Experience</ExperienceTitle>
