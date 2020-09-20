@@ -1,9 +1,11 @@
 import React from "react"
 import { graphql } from "gatsby"
 
-import { actions, Comment } from "~actions"
+import { actions, CommentResponse } from "~actions"
 import { GlobalLayout, Basic } from "~templates"
 import { SEO } from "~components/SEO"
+import { Comment } from "~components/Comment"
+import { CreateComment } from "~components/CreateComment"
 import { PostBySlugQuery, SitePageContext } from "~types/gatsby-graphql"
 import { useAuth0 } from "@auth0/auth0-react"
 
@@ -22,8 +24,8 @@ interface CommentsProps {
 const CommentInput: React.FC<CommentInputProps> = ({ refetch, slug }) => {
   const { loginWithPopup, isAuthenticated, getAccessTokenSilently } = useAuth0()
   const [newComment, setNewComment] = React.useState("")
-
-  const onSubmit = async () => {
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
     try {
       const accessToken = await getAccessTokenSilently({
         audience: process.env.GATSBY_AUTH0_AUDIENCE_GUYTHOMAS_API,
@@ -48,29 +50,21 @@ const CommentInput: React.FC<CommentInputProps> = ({ refetch, slug }) => {
     return <button onClick={onClick}>Log In To Comment</button>
   }
   return (
-    <>
-      <input
-        value={newComment}
-        onChange={(event) => {
-          setNewComment(event.target.value)
-        }}
-      />
-      <button
-        onClick={onSubmit}
-        disabled={newComment.length === 0 && newComment.length > 255}
-      >
-        Save Comment
-      </button>
-    </>
+    <CreateComment
+      onSubmit={onSubmit}
+      value={newComment}
+      onChange={(newValue) => {
+        setNewComment(newValue)
+      }}
+    />
   )
 }
 
 const Comments: React.FC<CommentsProps> = ({ slug }) => {
-  const [comments, setComments] = React.useState<Comment[]>([])
-
+  const [comments, setComments] = React.useState<CommentResponse[]>([])
   const fetchComments = React.useCallback(async () => {
     try {
-      const newComments = (await actions.getCommentsForSlug(slug)) as Comment[]
+      const newComments = await actions.getCommentsForSlug(slug)
       setComments(newComments)
     } catch (error) {
       console.error(error)
@@ -84,11 +78,20 @@ const Comments: React.FC<CommentsProps> = ({ slug }) => {
   return (
     <>
       <CommentInput refetch={fetchComments} slug={slug} />
-      {comments.map(({ author, body, id }) => (
-        <li key={id}>
-          {author}: {body}
-        </li>
-      ))}
+      <ol>
+        {comments.map(({ body, id, User, createdAt }) => (
+          <Comment
+            key={id}
+            user={
+              User?.username || User?.givenName || User?.name || "anonymous"
+            }
+            createdAt={createdAt}
+            pictureUrl={User?.pictureUrl}
+          >
+            {body}
+          </Comment>
+        ))}
+      </ol>
     </>
   )
 }

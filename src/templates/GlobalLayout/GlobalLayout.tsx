@@ -7,6 +7,10 @@ import { PageSizeProvider } from "~context/PageSize"
 import { COLOR_PALETTE, BREAKPOINTS } from "~styles"
 import { GlobalStyles } from "./GlobalStyles"
 import { ThemeProvider } from "./ThemeProvider"
+import dayjs from "dayjs"
+import relativeTime from "dayjs/plugin/relativeTime"
+
+dayjs.extend(relativeTime)
 
 interface GlobalLayoutProps {
   children: React.ReactNode

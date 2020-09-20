@@ -3,15 +3,26 @@ const BASE_URL =
     ? "https://guythomas-me-api.herokuapp.com"
     : "http://localhost:3000"
 
-export interface Comment {
-  id: string
-  author: string
-  body: string
+export interface CommentResponse {
+  id?: string
+  body?: string
+  User?: User
+  createdAt?: string
+}
+
+interface User {
+  id?: string
+  username?: string
+  givenName?: string
+  name?: string
+  pictureUrl?: string
 }
 
 export const actions = {
   getCommentsForSlug: (slug: string) =>
-    fetch(`${BASE_URL}/comments/${slug}`).then((res) => res.json()),
+    fetch(`${BASE_URL}/comments/${slug}`).then<CommentResponse[]>((res) =>
+      res.json()
+    ),
   postAuth0Login: (authToken: string) =>
     fetch(`${BASE_URL}/login/auth0`, {
       method: "POST",
