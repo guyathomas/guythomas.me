@@ -40,6 +40,10 @@ const CommentInput: React.FC<CommentInputProps> = ({ refetch, slug }) => {
       await loginWithPopup({
         audience: process.env.GATSBY_AUTH0_AUDIENCE_GUYTHOMAS_API,
       })
+      const accessToken = await getAccessTokenSilently({
+        audience: process.env.GATSBY_AUTH0_AUDIENCE_GUYTHOMAS_API,
+      })
+      await actions.postAuth0Login(accessToken)
     }
     return <button onClick={onClick}>Log In To Comment</button>
   }

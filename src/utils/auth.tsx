@@ -23,6 +23,8 @@ export const wrapRootElement = ({
       redirectUri={window.location.origin}
       onRedirectCallback={onRedirectCallback}
       audience={process.env.GATSBY_AUTH0_AUDIENCE_GUYTHOMAS_API}
+      useRefreshTokens
+      cacheLocation="localstorage"
     >
       {element}
     </Auth0Provider>
