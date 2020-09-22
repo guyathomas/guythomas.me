@@ -426,9 +426,8 @@ const Resume: React.FC = () => {
         <IntroContent>
           <SectionContentInner>
             I live and breathe Javascript, Typescript, React, HTML and CSS.
-            I&apos;m a Software Engineer agnostic of languages &amp; frameworks
-            and have worked with all sorts of tech including GraphQL, Cypress
-            and much more.
+            I&apos;m passionate about solving problems for users and fellow
+            engineers using whatever tech I need.
           </SectionContentInner>
         </IntroContent>
         <ExperienceTitle>Experience</ExperienceTitle>
@@ -440,10 +439,10 @@ const Resume: React.FC = () => {
               subtitle="Senior Software Engineer"
               description="Frontend Lead"
               bullets={[
-                "Built a Marketplace experience dynamic navigation with React & X-State",
-                "Linked our teams data model to the Lyft Graphql server in Go to enable a dynamic frontend",
+                "Built an app featuring dynamic user flows with React & X-State",
+                "Linked our data model to the Lyft Graphql server in Go to enable a dynamic frontend",
                 "Built an ecosystem of npm packages that enabled zero configuration I18n and CMS content for all Frontend services",
-                "Lead several technology changes with the with the introduction of Graphql, Cypress and auto generated Typescript types",
+                "Lead several technology changes with the introduction of Graphql, Cypress and auto generated Typescript types",
               ]}
             />
             <Timeline
