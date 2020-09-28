@@ -447,7 +447,7 @@ const Resume: React.FC = () => {
             />
             <Timeline
               title="Reflektive"
-              titlePre="26th June, 2017 – 28th February, 2019"
+              titlePre="26th June, 2017 – 31st January, 2019"
               subtitle="Software Engineer"
               bullets={[
                 "Planned, developed and maintained many of our core products with React and Redux",
