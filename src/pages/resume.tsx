@@ -348,15 +348,18 @@ interface TimelineProps {
   subtitle: string
   description?: string
   bullets: string[]
+  className?: string
 }
+
 const Timeline: React.FC<TimelineProps> = ({
   titlePre,
   title,
   subtitle,
   description,
   bullets,
+  className = "",
 }) => (
-  <TimelineOuter>
+  <TimelineOuter className={className}>
     <TimelineTitles>
       <TimelinePre>{titlePre}</TimelinePre>
       <TimelineTitle>{title}</TimelineTitle>
@@ -372,6 +375,13 @@ const Timeline: React.FC<TimelineProps> = ({
     </TimelineDetails>
   </TimelineOuter>
 )
+
+const LifeTimeline = styled(Timeline)`
+  color: ${() => COLOR_PALETTE.secondary.color};
+  @media print {
+    display: none;
+  }
+`
 
 const Names = styled.div`
   @media print {
@@ -445,6 +455,16 @@ const Resume: React.FC = () => {
                 "Lead several technology changes with the introduction of Graphql, Cypress and auto generated Typescript types",
               ]}
             />
+            <LifeTimeline
+              title="Life Experience"
+              subtitle="Chile, Argentina, Bolivia, Peru"
+              titlePre="1st February, 2019, 14th April, 2019"
+              bullets={[
+                "Hiking Machu Picchu",
+                "Taking Instagram photos on Salar de Uyuni",
+                "Petting Llamas",
+              ]}
+            />
             <Timeline
               title="Reflektive"
               titlePre="26th June, 2017 – 31st January, 2019"
@@ -454,6 +474,26 @@ const Resume: React.FC = () => {
                 "Lead migration from Backbone to React",
                 "Cut build time by 50% by migrating Webpack 3 > 4",
                 "Migrated ~500 tests to Jest to reduce testing feedback loop",
+              ]}
+            />
+            <LifeTimeline
+              title="Life Experience"
+              subtitle="Japan"
+              titlePre="11th December, 2016, 1st March, 2016"
+              bullets={[
+                "Teaching people ages 3-60 how to Ski",
+                "Shreeeeding Niseko",
+                "Making friends for life",
+              ]}
+            />
+            <LifeTimeline
+              title="Life Experience"
+              subtitle="Sweden, Norway, Denmark"
+              titlePre="4th June, 2016, 10th December, 2016"
+              bullets={[
+                "Visiting the midnight sun",
+                "Eating meatballs at Ikea",
+                "Hiking the first portion of the Kungsleden ( King Trail )",
               ]}
             />
             <Timeline
