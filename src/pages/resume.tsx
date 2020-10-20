@@ -8,6 +8,7 @@ import lightResumePdf from "../../static/resume-light.pdf"
 import darkResumePdf from "../../static/resume-dark.pdf"
 import useDarkMode from "use-dark-mode"
 import { ResumeQuery, Maybe } from "~types/gatsby-graphql"
+import { Tooltip } from "../components/Tooltip"
 
 const BREAKPOINT = "1024px"
 const DESKTOP = `(min-width: ${BREAKPOINT})`
@@ -55,6 +56,9 @@ const GithubSvg: React.FC<SVGProps> = ({ className }) => (
   </svg>
 )
 
+interface InteractiveSvgStylesProps {
+  isActive?: boolean
+}
 const InteractiveSvgStyles = () => css`
   height: 1.5rem;
   width: 1.5rem;
@@ -75,8 +79,15 @@ const InteractiveSvgStyles = () => css`
 const DowloadIcon = styled(DownloadSvg)`
   ${InteractiveSvgStyles}
 `
-const EditIcon = styled(EditSvg)`
+const EditIcon = styled(EditSvg)<InteractiveSvgStylesProps>`
   ${InteractiveSvgStyles}
+  &:active {
+    transform: scale(0.8);
+  }
+  fill: ${(props) =>
+    props.isActive
+      ? COLOR_PALETTE.interactiveActive.color
+      : COLOR_PALETTE.interactive.color};
 `
 const GithubIcon = styled(GithubSvg)`
   ${InteractiveSvgStyles}
@@ -416,6 +427,13 @@ const EditPanelContainer = styled.div`
   position: fixed;
   top: 1rem;
   right: 1rem;
+  padding: 2rem;
+  padding-top: 0;
+  background-color: ${() => COLOR_PALETTE.backgroundPrimary.color};
+  border: 1px solid ${() => COLOR_PALETTE.strokePrimary.color};
+  & > h3 {
+    margin-top: 3rem;
+  }
   @media print {
     display: none;
   }
@@ -430,6 +448,7 @@ const EditPanel: React.FC<EditPanelProps> = ({
 }) => {
   return (
     <EditPanelContainer>
+      <h3>Resume Config</h3>
       <input
         placeholder="Avatar URL"
         value={avatarUrl}
@@ -449,6 +468,7 @@ const ResumeActionContainer = styled.div`
 interface ResumeProps {
   data: ResumeQuery
 }
+
 const Resume: React.FC<ResumeProps> = ({
   data: {
     allResumeYaml: { nodes },
@@ -496,37 +516,47 @@ const Resume: React.FC<ResumeProps> = ({
                   {resumeData.tagline}
                 </Description>
                 <ResumeActionContainer>
-                  <a
-                    style={{ cursor: "pointer" }}
-                    target="_blank"
-                    rel="noreferrer"
-                    onClick={isEditing ? window.print : undefined}
-                    href={isEditing ? undefined : downloadLink}
+                  <Tooltip
+                    tooltip={isEditing ? "Print changes" : "Download PDF"}
                   >
-                    <DowloadIcon />
-                  </a>
-                  <a
-                    style={{ cursor: "pointer" }}
-                    target="_blank"
-                    rel="noreferrer"
-                    onClick={() => {
-                      setIsEditing(!isEditing)
-                      requestAnimationFrame(() => {
-                        const firstHeader = document.querySelector("h1")
-                        if (firstHeader) firstHeader.focus()
-                      })
-                    }}
+                    <a
+                      style={{ cursor: "pointer" }}
+                      target="_blank"
+                      rel="noreferrer"
+                      onClick={isEditing ? window.print : undefined}
+                      href={isEditing ? undefined : downloadLink}
+                    >
+                      <DowloadIcon />
+                    </a>
+                  </Tooltip>
+                  <Tooltip
+                    tooltip={isEditing ? "Stop editing" : "Edit this resume"}
                   >
-                    <EditIcon />
-                  </a>
-                  <a
-                    style={{ cursor: "pointer" }}
-                    target="_blank"
-                    rel="noreferrer"
-                    href="https://github.com/guyathomas/guythomas.me"
-                  >
-                    <GithubIcon />
-                  </a>
+                    <a
+                      style={{ cursor: "pointer" }}
+                      target="_blank"
+                      rel="noreferrer"
+                      onClick={() => {
+                        setIsEditing(!isEditing)
+                        requestAnimationFrame(() => {
+                          const firstHeader = document.querySelector("h1")
+                          if (firstHeader) firstHeader.focus()
+                        })
+                      }}
+                    >
+                      <EditIcon isActive={isEditing} />
+                    </a>
+                  </Tooltip>
+                  <Tooltip tooltip="View source">
+                    <a
+                      style={{ cursor: "pointer" }}
+                      target="_blank"
+                      rel="noreferrer"
+                      href="https://github.com/guyathomas/guythomas.me"
+                    >
+                      <GithubIcon />
+                    </a>
+                  </Tooltip>
                 </ResumeActionContainer>
               </DescriptionRow>
             </Titles>
