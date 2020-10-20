@@ -71,6 +71,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-helmet": "^6.1.0",
+    "react-popper-tooltip": "^3.1.0",
     "react-resize-detector": "^5.2.0",
     "react-typography": "^0.16.19",
     "smoothscroll-polyfill": "^0.4.4",
