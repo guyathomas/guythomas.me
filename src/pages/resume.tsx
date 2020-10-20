@@ -47,6 +47,9 @@ const InteractiveSvgStyles = () => css`
   margin-left: 1rem;
   display: inline-block;
   fill: ${COLOR_PALETTE.interactive.color};
+  &:last-child {
+    margin-right: 1rem;
+  }
   &:hover {
     fill: ${COLOR_PALETTE.interactiveActive.color};
   }
@@ -278,6 +281,17 @@ const Description = styled.h2`
   }
 `
 
+const DescriptionRow = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  @media ${DESKTOP} {
+    flex-direction: row;
+    justify-content: center;
+    align-items: baseline;
+  }
+`
+
 const TimelineOuter = styled.div`
   display: grid;
   grid-template-columns: 1fr;
@@ -393,10 +407,6 @@ interface EditPanelProps {
   avatarUrl?: string
   onChangeAvatarUrl: (url: string) => void
 }
-interface EditableConfig {
-  avatarUrl?: string
-  paddingScale?: number
-}
 const EditPanel: React.FC<EditPanelProps> = ({
   onChangeAvatarUrl,
   avatarUrl,
@@ -413,6 +423,11 @@ const EditPanel: React.FC<EditPanelProps> = ({
     </EditPanelContainer>
   )
 }
+
+const ResumeActionContainer = styled.div`
+  display: flex;
+  margin-top: 1.5rem;
+`
 
 interface ResumeProps {
   data: ResumeQuery
@@ -459,32 +474,36 @@ const Resume: React.FC<ResumeProps> = ({
                   {resumeData.lastName}
                 </LastName>
               </Names>
-              <Description contentEditable={isEditing}>
-                {resumeData.tagline}
-                <a
-                  style={{ cursor: "pointer" }}
-                  target="_blank"
-                  rel="noreferrer"
-                  onClick={isEditing ? window.print : undefined}
-                  href={isEditing ? undefined : downloadLink}
-                >
-                  <DowloadIcon />
-                </a>
-                <a
-                  style={{ cursor: "pointer" }}
-                  target="_blank"
-                  rel="noreferrer"
-                  onClick={() => {
-                    setIsEditing(!isEditing)
-                    requestAnimationFrame(() => {
-                      const firstHeader = document.querySelector("h1")
-                      if (firstHeader) firstHeader.focus()
-                    })
-                  }}
-                >
-                  <EditIcon />
-                </a>
-              </Description>
+              <DescriptionRow>
+                <Description contentEditable={isEditing}>
+                  {resumeData.tagline}
+                </Description>
+                <ResumeActionContainer>
+                  <a
+                    style={{ cursor: "pointer" }}
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={isEditing ? window.print : undefined}
+                    href={isEditing ? undefined : downloadLink}
+                  >
+                    <DowloadIcon />
+                  </a>
+                  <a
+                    style={{ cursor: "pointer" }}
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={() => {
+                      setIsEditing(!isEditing)
+                      requestAnimationFrame(() => {
+                        const firstHeader = document.querySelector("h1")
+                        if (firstHeader) firstHeader.focus()
+                      })
+                    }}
+                  >
+                    <EditIcon />
+                  </a>
+                </ResumeActionContainer>
+              </DescriptionRow>
             </Titles>
             <Contacts contentEditable={isEditing}>
               {resumeData.contactDetails?.map((contactDetail) => {
