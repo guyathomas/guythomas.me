@@ -71,9 +71,6 @@ const InteractiveSvgStyles = () => css`
   &:hover {
     fill: ${COLOR_PALETTE.interactiveActive.color};
   }
-  @media print {
-    display: none;
-  }
 `
 
 const DowloadIcon = styled(DownloadSvg)`
@@ -136,7 +133,6 @@ const ProfileSection = styled.div`
     align-items: center;
     padding-bottom: 10rem;
     padding-right: 3rem;
-    height: 100vh;
   }
   @media print {
     background-color: ${() => COLOR_PALETTE.backgroundPrimary.color};
@@ -424,18 +420,24 @@ const Names = styled.div`
 `
 
 const EditPanelContainer = styled.div`
-  position: fixed;
-  top: 1rem;
-  right: 1rem;
   padding: 2rem;
+  top: 0;
   padding-top: 0;
   background-color: ${() => COLOR_PALETTE.backgroundPrimary.color};
   border: 1px solid ${() => COLOR_PALETTE.strokePrimary.color};
+  position: sticky;
+  top: 0;
+  z-index: 2;
   & > h3 {
     margin-top: 3rem;
   }
   @media print {
     display: none;
+  }
+  @media ${DESKTOP} {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
   }
 `
 interface EditPanelProps {
@@ -463,6 +465,9 @@ const EditPanel: React.FC<EditPanelProps> = ({
 const ResumeActionContainer = styled.div`
   display: flex;
   margin-top: 1.5rem;
+  @media print {
+    display: none;
+  }
 `
 
 interface ResumeProps {
