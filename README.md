@@ -30,3 +30,6 @@
 - Make it easier to add / remove Timeline Item fields and Contact Detail fields
 - Allow saving of the changes to local storage
 - Allow changing of the padding prefix
+- Performance
+  - Stop bundling Auth0
+  - Load fonts async ( currently blocking )
