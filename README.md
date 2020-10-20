@@ -22,3 +22,11 @@
 - Home - Summarize each other page
   - Me - Long form history
   - Blog - Summary of all posts
+
+## TODO:
+
+### Resume
+
+- Make it easier to add / remove Timeline Item fields and Contact Detail fields
+- Allow saving of the changes to local storage
+- Allow changing of the padding prefix
