@@ -7,6 +7,9 @@ const TooltipContainerStyles = styled.div`
   padding: 0.5rem 1rem;
   border-radius: 1rem;
   background-color: ${() => COLOR_PALETTE.backgroundTertiary.color};
+  @media print {
+    display: none;
+  }
 `
 interface TooltipProps {
   children: React.ReactNode
