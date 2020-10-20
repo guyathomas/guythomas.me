@@ -128,6 +128,7 @@ const ProfileSection = styled.div`
   justify-content: center;
   background-color: ${() => COLOR_PALETTE.backgroundPrimary.color};
   @media ${DESKTOP} {
+    height: 100vh;
     background-color: ${() => COLOR_PALETTE.backgroundSecondary.color};
     justify-content: flex-end;
     align-items: center;
@@ -255,6 +256,9 @@ const EducationSection = styled(SectionContent)`
   }
 `
 const BioWrapper = styled(SectionContent)`
+  @media ${DESKTOP} {
+    height: 100vh;
+  }
   @media only print {
     grid-area: bio;
     padding-top: 1rem;
