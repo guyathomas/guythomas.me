@@ -1,0 +1,54 @@
+version: 1
+firstName: Guy
+lastName: Thomas
+avatar: https://res.cloudinary.com/dqvlfpaev/image/upload/v1580691840/avatar_sz1jui.jpg
+tagline: Full Stack Developer & Front-end Expert
+contactDetails:
+  - - Email
+    - !markdown "[guythomas721@gmail.com](mailto:guythomas721@gmail.com)"
+  - - Location
+    - San Francisco
+  - - Web
+    - !markdown "[guythomas.me](https://guythomas.me)"
+intro: I live and breathe Javascript, Typescript, React, HTML and CSS. I'm passionate about solving problems for users and fellow engineers using whatever tech I need.
+experience:
+  - date: 15th April, 2019 – Present
+    company: Lyft
+    title: Senior Software Engineer
+    subtitle: Frontend Lead
+    detailItems:
+      - Built an app featuring dynamic user flows with React & X-State
+      - Linked our data model to the Lyft Graphql server in Go to enable a dynamic frontend
+      - Built an ecosystem of npm packages that enabled zero configuration I18n and CMS content for all Frontend services
+      - Lead several technology changes with the introduction of Graphql, Cypress and auto generated Typescript types
+  - date: 26th June, 2017 – 31st January, 2019
+    company: Reflektive
+    title: Software Engineer
+    detailItems:
+      - Planned, developed and maintained many of our core products with React and Redux
+      - Lead migration from Backbone to React
+      - Cut build time by 50% by migrating Webpack 3 > 4
+      - Migrated ~500 tests to Jest to reduce testing feedback loop
+  - date: 7th July, 2014 – 3rd June, 2016
+    company: IBM
+    title: Software Engineer
+    detailItems:
+      - Developed internal websites to pitch solutions
+      - Developed data models to target customer behavior
+education:
+  - date: "2017"
+    company: Bradfield CS
+    title: Computer Architecture
+    detailItems:
+      - Building a strong mental model of the actual execution of programs by a microprocessor to better reason about the code I write
+  - date: 2011 - 2013
+    company: Monash University
+    title: Bachelor of Commerce
+    detailItems:
+      - Built systems for business administration with VBA & Excel
+      - Architected and Implemented relational databases
+      - Modelled publically available financial data to provide company valuations
+    # description: !markdown >
+    #   * Built systems for business administration with VBA & Excel
+    #   * Architected and Implemented relational databases
+    #   * Modelled publically available financial data to provide company valuations

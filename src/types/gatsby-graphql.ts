@@ -395,6 +395,7 @@ export type File = Node & {
   children: Array<Node>;
   internal: Internal;
   childMarkdownRemark?: Maybe<MarkdownRemark>;
+  childResumeYaml?: Maybe<ResumeYaml>;
 };
 
 
@@ -750,7 +751,63 @@ export type FileFieldsEnum =
   | 'childMarkdownRemark___internal___ignoreType'
   | 'childMarkdownRemark___internal___mediaType'
   | 'childMarkdownRemark___internal___owner'
-  | 'childMarkdownRemark___internal___type';
+  | 'childMarkdownRemark___internal___type'
+  | 'childResumeYaml___id'
+  | 'childResumeYaml___parent___id'
+  | 'childResumeYaml___parent___parent___id'
+  | 'childResumeYaml___parent___parent___children'
+  | 'childResumeYaml___parent___children'
+  | 'childResumeYaml___parent___children___id'
+  | 'childResumeYaml___parent___children___children'
+  | 'childResumeYaml___parent___internal___content'
+  | 'childResumeYaml___parent___internal___contentDigest'
+  | 'childResumeYaml___parent___internal___description'
+  | 'childResumeYaml___parent___internal___fieldOwners'
+  | 'childResumeYaml___parent___internal___ignoreType'
+  | 'childResumeYaml___parent___internal___mediaType'
+  | 'childResumeYaml___parent___internal___owner'
+  | 'childResumeYaml___parent___internal___type'
+  | 'childResumeYaml___children'
+  | 'childResumeYaml___children___id'
+  | 'childResumeYaml___children___parent___id'
+  | 'childResumeYaml___children___parent___children'
+  | 'childResumeYaml___children___children'
+  | 'childResumeYaml___children___children___id'
+  | 'childResumeYaml___children___children___children'
+  | 'childResumeYaml___children___internal___content'
+  | 'childResumeYaml___children___internal___contentDigest'
+  | 'childResumeYaml___children___internal___description'
+  | 'childResumeYaml___children___internal___fieldOwners'
+  | 'childResumeYaml___children___internal___ignoreType'
+  | 'childResumeYaml___children___internal___mediaType'
+  | 'childResumeYaml___children___internal___owner'
+  | 'childResumeYaml___children___internal___type'
+  | 'childResumeYaml___internal___content'
+  | 'childResumeYaml___internal___contentDigest'
+  | 'childResumeYaml___internal___description'
+  | 'childResumeYaml___internal___fieldOwners'
+  | 'childResumeYaml___internal___ignoreType'
+  | 'childResumeYaml___internal___mediaType'
+  | 'childResumeYaml___internal___owner'
+  | 'childResumeYaml___internal___type'
+  | 'childResumeYaml___version'
+  | 'childResumeYaml___firstName'
+  | 'childResumeYaml___lastName'
+  | 'childResumeYaml___avatar'
+  | 'childResumeYaml___tagline'
+  | 'childResumeYaml___contactDetails'
+  | 'childResumeYaml___intro'
+  | 'childResumeYaml___experience'
+  | 'childResumeYaml___experience___date'
+  | 'childResumeYaml___experience___company'
+  | 'childResumeYaml___experience___title'
+  | 'childResumeYaml___experience___subtitle'
+  | 'childResumeYaml___experience___detailItems'
+  | 'childResumeYaml___education'
+  | 'childResumeYaml___education___date'
+  | 'childResumeYaml___education___company'
+  | 'childResumeYaml___education___title'
+  | 'childResumeYaml___education___detailItems';
 
 export type FileFilterInput = {
   sourceInstanceName?: Maybe<StringQueryOperatorInput>;
@@ -793,6 +850,7 @@ export type FileFilterInput = {
   children?: Maybe<NodeFilterListInput>;
   internal?: Maybe<InternalFilterInput>;
   childMarkdownRemark?: Maybe<MarkdownRemarkFilterInput>;
+  childResumeYaml?: Maybe<ResumeYamlFilterInput>;
 };
 
 export type FileGroupConnection = {
@@ -1709,6 +1767,8 @@ export type Query = {
   allMarkdownRemark: MarkdownRemarkConnection;
   imageSharp?: Maybe<ImageSharp>;
   allImageSharp: ImageSharpConnection;
+  resumeYaml?: Maybe<ResumeYaml>;
+  allResumeYaml: ResumeYamlConnection;
   siteBuildMetadata?: Maybe<SiteBuildMetadata>;
   allSiteBuildMetadata: SiteBuildMetadataConnection;
   sitePlugin?: Maybe<SitePlugin>;
@@ -1757,6 +1817,7 @@ export type QueryFileArgs = {
   children?: Maybe<NodeFilterListInput>;
   internal?: Maybe<InternalFilterInput>;
   childMarkdownRemark?: Maybe<MarkdownRemarkFilterInput>;
+  childResumeYaml?: Maybe<ResumeYamlFilterInput>;
 };
 
 
@@ -1823,15 +1884,15 @@ export type QuerySitePageArgs = {
   internalComponentName?: Maybe<StringQueryOperatorInput>;
   componentChunkName?: Maybe<StringQueryOperatorInput>;
   matchPath?: Maybe<StringQueryOperatorInput>;
-  id?: Maybe<StringQueryOperatorInput>;
-  parent?: Maybe<NodeFilterInput>;
-  children?: Maybe<NodeFilterListInput>;
-  internal?: Maybe<InternalFilterInput>;
   isCreatedByStatefulCreatePages?: Maybe<BooleanQueryOperatorInput>;
   context?: Maybe<SitePageContextFilterInput>;
   pluginCreator?: Maybe<SitePluginFilterInput>;
   pluginCreatorId?: Maybe<StringQueryOperatorInput>;
   componentPath?: Maybe<StringQueryOperatorInput>;
+  id?: Maybe<StringQueryOperatorInput>;
+  parent?: Maybe<NodeFilterInput>;
+  children?: Maybe<NodeFilterListInput>;
+  internal?: Maybe<InternalFilterInput>;
 };
 
 
@@ -1915,6 +1976,31 @@ export type QueryAllImageSharpArgs = {
 };
 
 
+export type QueryResumeYamlArgs = {
+  id?: Maybe<StringQueryOperatorInput>;
+  parent?: Maybe<NodeFilterInput>;
+  children?: Maybe<NodeFilterListInput>;
+  internal?: Maybe<InternalFilterInput>;
+  version?: Maybe<IntQueryOperatorInput>;
+  firstName?: Maybe<StringQueryOperatorInput>;
+  lastName?: Maybe<StringQueryOperatorInput>;
+  avatar?: Maybe<StringQueryOperatorInput>;
+  tagline?: Maybe<StringQueryOperatorInput>;
+  contactDetails?: Maybe<StringQueryOperatorInput>;
+  intro?: Maybe<StringQueryOperatorInput>;
+  experience?: Maybe<ResumeYamlExperienceFilterListInput>;
+  education?: Maybe<ResumeYamlEducationFilterListInput>;
+};
+
+
+export type QueryAllResumeYamlArgs = {
+  filter?: Maybe<ResumeYamlFilterInput>;
+  sort?: Maybe<ResumeYamlSortInput>;
+  skip?: Maybe<Scalars['Int']>;
+  limit?: Maybe<Scalars['Int']>;
+};
+
+
 export type QuerySiteBuildMetadataArgs = {
   id?: Maybe<StringQueryOperatorInput>;
   parent?: Maybe<NodeFilterInput>;
@@ -1954,6 +2040,223 @@ export type QueryAllSitePluginArgs = {
   sort?: Maybe<SitePluginSortInput>;
   skip?: Maybe<Scalars['Int']>;
   limit?: Maybe<Scalars['Int']>;
+};
+
+export type ResumeYaml = Node & {
+  id: Scalars['ID'];
+  parent?: Maybe<Node>;
+  children: Array<Node>;
+  internal: Internal;
+  version?: Maybe<Scalars['Int']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  avatar?: Maybe<Scalars['String']>;
+  tagline?: Maybe<Scalars['String']>;
+  contactDetails?: Maybe<Array<Maybe<Array<Maybe<Scalars['String']>>>>>;
+  intro?: Maybe<Scalars['String']>;
+  experience?: Maybe<Array<Maybe<ResumeYamlExperience>>>;
+  education?: Maybe<Array<Maybe<ResumeYamlEducation>>>;
+};
+
+export type ResumeYamlConnection = {
+  totalCount: Scalars['Int'];
+  edges: Array<ResumeYamlEdge>;
+  nodes: Array<ResumeYaml>;
+  pageInfo: PageInfo;
+  distinct: Array<Scalars['String']>;
+  group: Array<ResumeYamlGroupConnection>;
+};
+
+
+export type ResumeYamlConnectionDistinctArgs = {
+  field: ResumeYamlFieldsEnum;
+};
+
+
+export type ResumeYamlConnectionGroupArgs = {
+  skip?: Maybe<Scalars['Int']>;
+  limit?: Maybe<Scalars['Int']>;
+  field: ResumeYamlFieldsEnum;
+};
+
+export type ResumeYamlEdge = {
+  next?: Maybe<ResumeYaml>;
+  node: ResumeYaml;
+  previous?: Maybe<ResumeYaml>;
+};
+
+export type ResumeYamlEducation = {
+  date?: Maybe<Scalars['String']>;
+  company?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  detailItems?: Maybe<Array<Maybe<Scalars['String']>>>;
+};
+
+export type ResumeYamlEducationFilterInput = {
+  date?: Maybe<StringQueryOperatorInput>;
+  company?: Maybe<StringQueryOperatorInput>;
+  title?: Maybe<StringQueryOperatorInput>;
+  detailItems?: Maybe<StringQueryOperatorInput>;
+};
+
+export type ResumeYamlEducationFilterListInput = {
+  elemMatch?: Maybe<ResumeYamlEducationFilterInput>;
+};
+
+export type ResumeYamlExperience = {
+  date?: Maybe<Scalars['String']>;
+  company?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  subtitle?: Maybe<Scalars['String']>;
+  detailItems?: Maybe<Array<Maybe<Scalars['String']>>>;
+};
+
+export type ResumeYamlExperienceFilterInput = {
+  date?: Maybe<StringQueryOperatorInput>;
+  company?: Maybe<StringQueryOperatorInput>;
+  title?: Maybe<StringQueryOperatorInput>;
+  subtitle?: Maybe<StringQueryOperatorInput>;
+  detailItems?: Maybe<StringQueryOperatorInput>;
+};
+
+export type ResumeYamlExperienceFilterListInput = {
+  elemMatch?: Maybe<ResumeYamlExperienceFilterInput>;
+};
+
+export type ResumeYamlFieldsEnum = 
+  | 'id'
+  | 'parent___id'
+  | 'parent___parent___id'
+  | 'parent___parent___parent___id'
+  | 'parent___parent___parent___children'
+  | 'parent___parent___children'
+  | 'parent___parent___children___id'
+  | 'parent___parent___children___children'
+  | 'parent___parent___internal___content'
+  | 'parent___parent___internal___contentDigest'
+  | 'parent___parent___internal___description'
+  | 'parent___parent___internal___fieldOwners'
+  | 'parent___parent___internal___ignoreType'
+  | 'parent___parent___internal___mediaType'
+  | 'parent___parent___internal___owner'
+  | 'parent___parent___internal___type'
+  | 'parent___children'
+  | 'parent___children___id'
+  | 'parent___children___parent___id'
+  | 'parent___children___parent___children'
+  | 'parent___children___children'
+  | 'parent___children___children___id'
+  | 'parent___children___children___children'
+  | 'parent___children___internal___content'
+  | 'parent___children___internal___contentDigest'
+  | 'parent___children___internal___description'
+  | 'parent___children___internal___fieldOwners'
+  | 'parent___children___internal___ignoreType'
+  | 'parent___children___internal___mediaType'
+  | 'parent___children___internal___owner'
+  | 'parent___children___internal___type'
+  | 'parent___internal___content'
+  | 'parent___internal___contentDigest'
+  | 'parent___internal___description'
+  | 'parent___internal___fieldOwners'
+  | 'parent___internal___ignoreType'
+  | 'parent___internal___mediaType'
+  | 'parent___internal___owner'
+  | 'parent___internal___type'
+  | 'children'
+  | 'children___id'
+  | 'children___parent___id'
+  | 'children___parent___parent___id'
+  | 'children___parent___parent___children'
+  | 'children___parent___children'
+  | 'children___parent___children___id'
+  | 'children___parent___children___children'
+  | 'children___parent___internal___content'
+  | 'children___parent___internal___contentDigest'
+  | 'children___parent___internal___description'
+  | 'children___parent___internal___fieldOwners'
+  | 'children___parent___internal___ignoreType'
+  | 'children___parent___internal___mediaType'
+  | 'children___parent___internal___owner'
+  | 'children___parent___internal___type'
+  | 'children___children'
+  | 'children___children___id'
+  | 'children___children___parent___id'
+  | 'children___children___parent___children'
+  | 'children___children___children'
+  | 'children___children___children___id'
+  | 'children___children___children___children'
+  | 'children___children___internal___content'
+  | 'children___children___internal___contentDigest'
+  | 'children___children___internal___description'
+  | 'children___children___internal___fieldOwners'
+  | 'children___children___internal___ignoreType'
+  | 'children___children___internal___mediaType'
+  | 'children___children___internal___owner'
+  | 'children___children___internal___type'
+  | 'children___internal___content'
+  | 'children___internal___contentDigest'
+  | 'children___internal___description'
+  | 'children___internal___fieldOwners'
+  | 'children___internal___ignoreType'
+  | 'children___internal___mediaType'
+  | 'children___internal___owner'
+  | 'children___internal___type'
+  | 'internal___content'
+  | 'internal___contentDigest'
+  | 'internal___description'
+  | 'internal___fieldOwners'
+  | 'internal___ignoreType'
+  | 'internal___mediaType'
+  | 'internal___owner'
+  | 'internal___type'
+  | 'version'
+  | 'firstName'
+  | 'lastName'
+  | 'avatar'
+  | 'tagline'
+  | 'contactDetails'
+  | 'intro'
+  | 'experience'
+  | 'experience___date'
+  | 'experience___company'
+  | 'experience___title'
+  | 'experience___subtitle'
+  | 'experience___detailItems'
+  | 'education'
+  | 'education___date'
+  | 'education___company'
+  | 'education___title'
+  | 'education___detailItems';
+
+export type ResumeYamlFilterInput = {
+  id?: Maybe<StringQueryOperatorInput>;
+  parent?: Maybe<NodeFilterInput>;
+  children?: Maybe<NodeFilterListInput>;
+  internal?: Maybe<InternalFilterInput>;
+  version?: Maybe<IntQueryOperatorInput>;
+  firstName?: Maybe<StringQueryOperatorInput>;
+  lastName?: Maybe<StringQueryOperatorInput>;
+  avatar?: Maybe<StringQueryOperatorInput>;
+  tagline?: Maybe<StringQueryOperatorInput>;
+  contactDetails?: Maybe<StringQueryOperatorInput>;
+  intro?: Maybe<StringQueryOperatorInput>;
+  experience?: Maybe<ResumeYamlExperienceFilterListInput>;
+  education?: Maybe<ResumeYamlEducationFilterListInput>;
+};
+
+export type ResumeYamlGroupConnection = {
+  totalCount: Scalars['Int'];
+  edges: Array<ResumeYamlEdge>;
+  nodes: Array<ResumeYaml>;
+  pageInfo: PageInfo;
+  field: Scalars['String'];
+  fieldValue?: Maybe<Scalars['String']>;
+};
+
+export type ResumeYamlSortInput = {
+  fields?: Maybe<Array<Maybe<ResumeYamlFieldsEnum>>>;
+  order?: Maybe<Array<Maybe<SortOrderEnum>>>;
 };
 
 export type Site = Node & {
@@ -2284,15 +2587,15 @@ export type SitePage = Node & {
   internalComponentName: Scalars['String'];
   componentChunkName: Scalars['String'];
   matchPath?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
-  parent?: Maybe<Node>;
-  children: Array<Node>;
-  internal: Internal;
   isCreatedByStatefulCreatePages?: Maybe<Scalars['Boolean']>;
   context?: Maybe<SitePageContext>;
   pluginCreator?: Maybe<SitePlugin>;
   pluginCreatorId?: Maybe<Scalars['String']>;
   componentPath?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  parent?: Maybe<Node>;
+  children: Array<Node>;
+  internal: Internal;
 };
 
 export type SitePageConnection = {
@@ -2398,92 +2701,6 @@ export type SitePageFieldsEnum =
   | 'internalComponentName'
   | 'componentChunkName'
   | 'matchPath'
-  | 'id'
-  | 'parent___id'
-  | 'parent___parent___id'
-  | 'parent___parent___parent___id'
-  | 'parent___parent___parent___children'
-  | 'parent___parent___children'
-  | 'parent___parent___children___id'
-  | 'parent___parent___children___children'
-  | 'parent___parent___internal___content'
-  | 'parent___parent___internal___contentDigest'
-  | 'parent___parent___internal___description'
-  | 'parent___parent___internal___fieldOwners'
-  | 'parent___parent___internal___ignoreType'
-  | 'parent___parent___internal___mediaType'
-  | 'parent___parent___internal___owner'
-  | 'parent___parent___internal___type'
-  | 'parent___children'
-  | 'parent___children___id'
-  | 'parent___children___parent___id'
-  | 'parent___children___parent___children'
-  | 'parent___children___children'
-  | 'parent___children___children___id'
-  | 'parent___children___children___children'
-  | 'parent___children___internal___content'
-  | 'parent___children___internal___contentDigest'
-  | 'parent___children___internal___description'
-  | 'parent___children___internal___fieldOwners'
-  | 'parent___children___internal___ignoreType'
-  | 'parent___children___internal___mediaType'
-  | 'parent___children___internal___owner'
-  | 'parent___children___internal___type'
-  | 'parent___internal___content'
-  | 'parent___internal___contentDigest'
-  | 'parent___internal___description'
-  | 'parent___internal___fieldOwners'
-  | 'parent___internal___ignoreType'
-  | 'parent___internal___mediaType'
-  | 'parent___internal___owner'
-  | 'parent___internal___type'
-  | 'children'
-  | 'children___id'
-  | 'children___parent___id'
-  | 'children___parent___parent___id'
-  | 'children___parent___parent___children'
-  | 'children___parent___children'
-  | 'children___parent___children___id'
-  | 'children___parent___children___children'
-  | 'children___parent___internal___content'
-  | 'children___parent___internal___contentDigest'
-  | 'children___parent___internal___description'
-  | 'children___parent___internal___fieldOwners'
-  | 'children___parent___internal___ignoreType'
-  | 'children___parent___internal___mediaType'
-  | 'children___parent___internal___owner'
-  | 'children___parent___internal___type'
-  | 'children___children'
-  | 'children___children___id'
-  | 'children___children___parent___id'
-  | 'children___children___parent___children'
-  | 'children___children___children'
-  | 'children___children___children___id'
-  | 'children___children___children___children'
-  | 'children___children___internal___content'
-  | 'children___children___internal___contentDigest'
-  | 'children___children___internal___description'
-  | 'children___children___internal___fieldOwners'
-  | 'children___children___internal___ignoreType'
-  | 'children___children___internal___mediaType'
-  | 'children___children___internal___owner'
-  | 'children___children___internal___type'
-  | 'children___internal___content'
-  | 'children___internal___contentDigest'
-  | 'children___internal___description'
-  | 'children___internal___fieldOwners'
-  | 'children___internal___ignoreType'
-  | 'children___internal___mediaType'
-  | 'children___internal___owner'
-  | 'children___internal___type'
-  | 'internal___content'
-  | 'internal___contentDigest'
-  | 'internal___description'
-  | 'internal___fieldOwners'
-  | 'internal___ignoreType'
-  | 'internal___mediaType'
-  | 'internal___owner'
-  | 'internal___type'
   | 'isCreatedByStatefulCreatePages'
   | 'context___slug'
   | 'context___postPath'
@@ -2588,7 +2805,93 @@ export type SitePageFieldsEnum =
   | 'pluginCreator___packageJson___peerDependencies___version'
   | 'pluginCreator___packageJson___keywords'
   | 'pluginCreatorId'
-  | 'componentPath';
+  | 'componentPath'
+  | 'id'
+  | 'parent___id'
+  | 'parent___parent___id'
+  | 'parent___parent___parent___id'
+  | 'parent___parent___parent___children'
+  | 'parent___parent___children'
+  | 'parent___parent___children___id'
+  | 'parent___parent___children___children'
+  | 'parent___parent___internal___content'
+  | 'parent___parent___internal___contentDigest'
+  | 'parent___parent___internal___description'
+  | 'parent___parent___internal___fieldOwners'
+  | 'parent___parent___internal___ignoreType'
+  | 'parent___parent___internal___mediaType'
+  | 'parent___parent___internal___owner'
+  | 'parent___parent___internal___type'
+  | 'parent___children'
+  | 'parent___children___id'
+  | 'parent___children___parent___id'
+  | 'parent___children___parent___children'
+  | 'parent___children___children'
+  | 'parent___children___children___id'
+  | 'parent___children___children___children'
+  | 'parent___children___internal___content'
+  | 'parent___children___internal___contentDigest'
+  | 'parent___children___internal___description'
+  | 'parent___children___internal___fieldOwners'
+  | 'parent___children___internal___ignoreType'
+  | 'parent___children___internal___mediaType'
+  | 'parent___children___internal___owner'
+  | 'parent___children___internal___type'
+  | 'parent___internal___content'
+  | 'parent___internal___contentDigest'
+  | 'parent___internal___description'
+  | 'parent___internal___fieldOwners'
+  | 'parent___internal___ignoreType'
+  | 'parent___internal___mediaType'
+  | 'parent___internal___owner'
+  | 'parent___internal___type'
+  | 'children'
+  | 'children___id'
+  | 'children___parent___id'
+  | 'children___parent___parent___id'
+  | 'children___parent___parent___children'
+  | 'children___parent___children'
+  | 'children___parent___children___id'
+  | 'children___parent___children___children'
+  | 'children___parent___internal___content'
+  | 'children___parent___internal___contentDigest'
+  | 'children___parent___internal___description'
+  | 'children___parent___internal___fieldOwners'
+  | 'children___parent___internal___ignoreType'
+  | 'children___parent___internal___mediaType'
+  | 'children___parent___internal___owner'
+  | 'children___parent___internal___type'
+  | 'children___children'
+  | 'children___children___id'
+  | 'children___children___parent___id'
+  | 'children___children___parent___children'
+  | 'children___children___children'
+  | 'children___children___children___id'
+  | 'children___children___children___children'
+  | 'children___children___internal___content'
+  | 'children___children___internal___contentDigest'
+  | 'children___children___internal___description'
+  | 'children___children___internal___fieldOwners'
+  | 'children___children___internal___ignoreType'
+  | 'children___children___internal___mediaType'
+  | 'children___children___internal___owner'
+  | 'children___children___internal___type'
+  | 'children___internal___content'
+  | 'children___internal___contentDigest'
+  | 'children___internal___description'
+  | 'children___internal___fieldOwners'
+  | 'children___internal___ignoreType'
+  | 'children___internal___mediaType'
+  | 'children___internal___owner'
+  | 'children___internal___type'
+  | 'internal___content'
+  | 'internal___contentDigest'
+  | 'internal___description'
+  | 'internal___fieldOwners'
+  | 'internal___ignoreType'
+  | 'internal___mediaType'
+  | 'internal___owner'
+  | 'internal___type';
 
 export type SitePageFilterInput = {
   path?: Maybe<StringQueryOperatorInput>;
@@ -2596,15 +2899,15 @@ export type SitePageFilterInput = {
   internalComponentName?: Maybe<StringQueryOperatorInput>;
   componentChunkName?: Maybe<StringQueryOperatorInput>;
   matchPath?: Maybe<StringQueryOperatorInput>;
-  id?: Maybe<StringQueryOperatorInput>;
-  parent?: Maybe<NodeFilterInput>;
-  children?: Maybe<NodeFilterListInput>;
-  internal?: Maybe<InternalFilterInput>;
   isCreatedByStatefulCreatePages?: Maybe<BooleanQueryOperatorInput>;
   context?: Maybe<SitePageContextFilterInput>;
   pluginCreator?: Maybe<SitePluginFilterInput>;
   pluginCreatorId?: Maybe<StringQueryOperatorInput>;
   componentPath?: Maybe<StringQueryOperatorInput>;
+  id?: Maybe<StringQueryOperatorInput>;
+  parent?: Maybe<NodeFilterInput>;
+  children?: Maybe<NodeFilterListInput>;
+  internal?: Maybe<InternalFilterInput>;
 };
 
 export type SitePageGroupConnection = {
@@ -3088,6 +3391,14 @@ export type NotesIndexQuery = { site?: Maybe<{ siteMetadata?: Maybe<Pick<SiteSit
         Pick<MarkdownRemark, 'excerpt'>
         & { fields?: Maybe<Pick<MarkdownRemarkFields, 'slug' | 'sourceInstanceName'>>, frontmatter?: Maybe<Pick<MarkdownRemarkFrontmatter, 'date' | 'title' | 'description'>> }
       ) }> } };
+
+export type ResumeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ResumeQuery = { allResumeYaml: { nodes: Array<(
+      Pick<ResumeYaml, 'id' | 'version' | 'tagline' | 'intro' | 'contactDetails' | 'avatar' | 'firstName' | 'lastName'>
+      & { experience?: Maybe<Array<Maybe<Pick<ResumeYamlExperience, 'date' | 'company' | 'title' | 'subtitle' | 'detailItems'>>>>, education?: Maybe<Array<Maybe<Pick<ResumeYamlEducation, 'date' | 'company' | 'title' | 'detailItems'>>>> }
+    )> } };
 
 export type GatsbyImageSharpFixedFragment = Pick<ImageSharpFixed, 'base64' | 'width' | 'height' | 'src' | 'srcSet'>;
 

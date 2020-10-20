@@ -1,10 +1,12 @@
 import React from "react"
 import styled from "@emotion/styled"
 import { COLOR_PALETTE } from "~styles"
+import { graphql } from "gatsby"
 import { ThemeProvider } from "../templates/GlobalLayout"
 import lightResumePdf from "../../static/resume-light.pdf"
 import darkResumePdf from "../../static/resume-dark.pdf"
 import useDarkMode from "use-dark-mode"
+import { ResumeQuery, Maybe } from "~types/gatsby-graphql"
 
 const BREAKPOINT = "1024px"
 const DESKTOP = `(min-width: ${BREAKPOINT})`
@@ -179,20 +181,6 @@ const ContactTitle = styled.h4`
   }
 `
 
-const Contact: React.FC<{
-  title: string
-  detail: string
-  detailLink?: string
-}> = ({ title, detail, detailLink }) => {
-  const detailContent = detailLink ? <a href={detailLink}>{detail}</a> : detail
-  return (
-    <ContactWrapper>
-      <ContactTitle>{title}</ContactTitle>
-      <span>{detailContent}</span>
-    </ContactWrapper>
-  )
-}
-
 const FirstName = styled.h1`
   margin: 0;
 `
@@ -202,10 +190,6 @@ const LastName = styled(FirstName)`
     margin-left: 1rem;
   }
 `
-
-interface GridAreaProps {
-  printGridArea: string
-}
 
 const SectionContent = styled.div`
   background-color: ${() => COLOR_PALETTE.backgroundPrimary.color};
@@ -274,10 +258,6 @@ const Description = styled.h2`
     font-size: 1.5rem;
   }
 `
-interface SectionProps {
-  title: string
-  children: React.ReactNode
-}
 
 const TimelineOuter = styled.div`
   display: grid;
@@ -291,7 +271,7 @@ const TimelineOuter = styled.div`
 const TimelineTitles = styled.div``
 const TimelineDetails = styled.div``
 
-const TimelinePre = styled.h5`
+const TimelineDate = styled.h5`
   opacity: 0.6;
   font-size: 0.7rem;
   margin: 1rem 0 1rem;
@@ -300,14 +280,14 @@ const TimelinePre = styled.h5`
     margin-bottom: 0.5rem;
   }
 `
-const TimelineTitle = styled.h3`
+const TimelineCompany = styled.h3`
   margin: 1rem 0 1rem;
   @media print {
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
   }
 `
-const TimelineSubtitle = styled.h4`
+const TimelineTitle = styled.h4`
   margin: 0;
   font-size: 0.8rem;
   margin: 1rem 0 1rem;
@@ -316,7 +296,7 @@ const TimelineSubtitle = styled.h4`
     margin-bottom: 0.5rem;
   }
 `
-const TimelineDescription = styled.span`
+const TimelineSubtitle = styled.span`
   font-style: italic;
   margin: 1rem 0 1rem;
   @media print {
@@ -343,192 +323,130 @@ const TimelineList = styled.ul`
   }
 `
 interface TimelineProps {
-  titlePre: string
-  title: string
-  subtitle: string
-  description?: string
-  bullets: string[]
+  date?: string
+  company?: string
+  title?: string
+  subtitle?: string
+  detailItems?: Maybe<string>[]
   className?: string
 }
 
 const Timeline: React.FC<TimelineProps> = ({
-  titlePre,
+  date,
+  company,
   title,
   subtitle,
-  description,
-  bullets,
+  detailItems = [],
   className = "",
 }) => (
   <TimelineOuter className={className}>
     <TimelineTitles>
-      <TimelinePre>{titlePre}</TimelinePre>
-      <TimelineTitle>{title}</TimelineTitle>
-      <TimelineSubtitle>{subtitle}</TimelineSubtitle>
-      {description && <TimelineDescription>{description}</TimelineDescription>}
+      {date && <TimelineDate>{date}</TimelineDate>}
+      {company && <TimelineCompany>{company}</TimelineCompany>}
+      {title && <TimelineTitle>{title}</TimelineTitle>}
+      {subtitle && <TimelineSubtitle>{subtitle}</TimelineSubtitle>}
     </TimelineTitles>
     <TimelineDetails>
       <TimelineList>
-        {bullets.map((bullet) => (
-          <TimelineListItem key={bullet}>{bullet}</TimelineListItem>
+        {detailItems.map((bullet) => (
+          <TimelineListItem key={String(bullet)}>{bullet}</TimelineListItem>
         ))}
       </TimelineList>
     </TimelineDetails>
   </TimelineOuter>
 )
 
-const LifeTimeline = styled(Timeline)`
-  color: ${() => COLOR_PALETTE.secondary.color};
-  @media print {
-    display: none;
-  }
-`
-
 const Names = styled.div`
   @media print {
     display: flex;
   }
 `
-
-const Resume: React.FC = () => {
+interface ResumeProps {
+  data: ResumeQuery
+}
+const Resume: React.FC<ResumeProps> = ({
+  data: {
+    allResumeYaml: { nodes },
+  },
+}) => {
   const { value: isDarkMode } = useDarkMode()
   const downloadLink = isDarkMode ? darkResumePdf : lightResumePdf
+  const resumeData = nodes[0]
   return (
     <ThemeProvider>
       <PageContainer>
         <ProfileSection>
           <ProfileContainer>
-            <img
-              src="https://res.cloudinary.com/dqvlfpaev/image/upload/v1580691840/avatar_sz1jui.jpg"
-              alt="profile-picture"
-            />
+            {resumeData.avatar && (
+              <img src={resumeData.avatar} alt="profile-picture" />
+            )}
           </ProfileContainer>
         </ProfileSection>
         <BioWrapper>
           <Bio>
             <Titles>
               <Names>
-                <FirstName>Guy</FirstName>
-                <LastName>Thomas</LastName>
+                <FirstName>{resumeData.firstName}</FirstName>
+                <LastName>{resumeData.lastName}</LastName>
               </Names>
               <Description>
-                Full Stack Developer &amp; Front-end Expert
+                {resumeData.tagline}
                 <a target="_blank" rel="noreferrer" href={downloadLink}>
                   <StyledSvg />
                 </a>
               </Description>
             </Titles>
             <Contacts>
-              <Contact title="Location" detail="San Francisco" />
-              <Contact
-                title="Web"
-                detail="guythomas.me"
-                detailLink="https://guythomas.me"
-              />
-              <Contact
-                title="Email"
-                detail="guythomas721@gmail.com"
-                detailLink="mailto:guythomas@gmail.com"
-              />
+              {resumeData.contactDetails?.map((contactDetail) => {
+                // Wow, TS really wants me to be safe here
+                const definitelyContactDetail = contactDetail || []
+                const stringTitle = String(definitelyContactDetail[0])
+                const stringDetail = String(definitelyContactDetail[1])
+                return (
+                  <ContactWrapper key={stringTitle}>
+                    <ContactTitle>{stringTitle}</ContactTitle>
+                    <span dangerouslySetInnerHTML={{ __html: stringDetail }} />
+                  </ContactWrapper>
+                )
+              })}
             </Contacts>
           </Bio>
         </BioWrapper>
         <IntroTitle>Intro</IntroTitle>
         <IntroContent>
-          <SectionContentInner>
-            I live and breathe Javascript, Typescript, React, HTML and CSS.
-            I&apos;m passionate about solving problems for users and fellow
-            engineers using whatever tech I need.
-          </SectionContentInner>
+          <SectionContentInner>{resumeData.intro}</SectionContentInner>
         </IntroContent>
         <ExperienceTitle>Experience</ExperienceTitle>
         <ExperienceSection>
           <SectionContentInner>
-            <Timeline
-              title="Lyft"
-              titlePre="15th April, 2019 – Present"
-              subtitle="Senior Software Engineer"
-              description="Frontend Lead"
-              bullets={[
-                "Built an app featuring dynamic user flows with React & X-State",
-                "Linked our data model to the Lyft Graphql server in Go to enable a dynamic frontend",
-                "Built an ecosystem of npm packages that enabled zero configuration I18n and CMS content for all Frontend services",
-                "Lead several technology changes with the introduction of Graphql, Cypress and auto generated Typescript types",
-              ]}
-            />
-            <LifeTimeline
-              title="Life Experience"
-              subtitle="Chile, Argentina, Bolivia, Peru"
-              titlePre="1st February, 2019, 14th April, 2019"
-              bullets={[
-                "Hiking Machu Picchu",
-                "Taking Instagram photos on Salar de Uyuni",
-                "Petting Llamas",
-              ]}
-            />
-            <Timeline
-              title="Reflektive"
-              titlePre="26th June, 2017 – 31st January, 2019"
-              subtitle="Software Engineer"
-              bullets={[
-                "Planned, developed and maintained many of our core products with React and Redux",
-                "Lead migration from Backbone to React",
-                "Cut build time by 50% by migrating Webpack 3 > 4",
-                "Migrated ~500 tests to Jest to reduce testing feedback loop",
-              ]}
-            />
-            <LifeTimeline
-              title="Life Experience"
-              subtitle="Japan"
-              titlePre="11th December, 2016, 1st March, 2016"
-              bullets={[
-                "Teaching people ages 3-60 how to Ski",
-                "Shreeeeding Niseko",
-                "Making friends for life",
-              ]}
-            />
-            <LifeTimeline
-              title="Life Experience"
-              subtitle="Sweden, Norway, Denmark"
-              titlePre="4th June, 2016, 10th December, 2016"
-              bullets={[
-                "Visiting the midnight sun",
-                "Eating meatballs at Ikea",
-                "Hiking the first portion of the Kungsleden ( King Trail )",
-              ]}
-            />
-            <Timeline
-              title="IBM"
-              titlePre="7th July, 2014 – 3rd June, 2016"
-              subtitle="Software Engineer"
-              bullets={[
-                "Developed internal websites to pitch solutions",
-                "Developed data models to target customer behavior",
-              ]}
-            />
+            {resumeData.experience?.map((experienceItem) => (
+              <Timeline
+                key={String(experienceItem?.date)}
+                company={experienceItem?.company || undefined}
+                title={experienceItem?.title || undefined}
+                subtitle={experienceItem?.subtitle || undefined}
+                date={experienceItem?.date || undefined}
+                detailItems={
+                  (experienceItem?.detailItems as string[]) || undefined
+                }
+              />
+            ))}
           </SectionContentInner>
         </ExperienceSection>
         <EducationTitle>Education</EducationTitle>
         <EducationSection>
           <SectionContentInner>
-            <Timeline
-              title="Bradfield CS"
-              titlePre="2017"
-              subtitle="Computer Architecture"
-              bullets={[
-                "Building a strong mental model of the actual execution of programs by a microprocessor to better reason about the code I write",
-              ]}
-            />
-            <Timeline
-              title="Monash University"
-              titlePre="2011 - 2013"
-              subtitle="Bachelor of Commerce"
-              description="Major in Finance &amp; Information Technology"
-              bullets={[
-                "Built systems for business administration with VBA & Excel",
-                "Architected and Implemented relational databases",
-                "Modelled publically available financial data to provide company valuations",
-              ]}
-            />
+            {resumeData.education?.map((experienceItem) => (
+              <Timeline
+                key={String(experienceItem?.date)}
+                company={experienceItem?.date || undefined}
+                title={experienceItem?.title || undefined}
+                date={experienceItem?.date || undefined}
+                detailItems={
+                  (experienceItem?.detailItems as string[]) || undefined
+                }
+              />
+            ))}
           </SectionContentInner>
         </EducationSection>
       </PageContainer>
@@ -537,3 +455,71 @@ const Resume: React.FC = () => {
 }
 
 export default Resume
+
+export const pageQuery = graphql`
+  query Resume {
+    allResumeYaml {
+      nodes {
+        id
+        version
+        tagline
+        intro
+        contactDetails
+        experience {
+          date
+          company
+          title
+          subtitle
+          detailItems
+        }
+        education {
+          date
+          company
+          title
+          detailItems
+        }
+        avatar
+        firstName
+        lastName
+      }
+    }
+  }
+`
+// 😢 Want to make this template more generic to help other people out,
+// Which means they may not want these stylized sections
+// const LifeTimeline = styled(Timeline)`
+//   color: ${() => COLOR_PALETTE.secondary.color};
+//   @media print {
+//     display: none;
+//   }
+// `
+/* <LifeTimeline
+    title="Life Experience"
+    subtitle="Chile, Argentina, Bolivia, Peru"
+    titlePre="1st February, 2019, 14th April, 2019"
+    bullets={[
+      "Hiking Machu Picchu",
+      "Taking Instagram photos of Salar de Uyuni",
+      "Petting Llamas",
+    ]}
+  />
+  <LifeTimeline
+    title="Life Experience"
+    subtitle="Japan"
+    titlePre="11th December, 2016, 1st March, 2016"
+    bullets={[
+      "Teaching people ages 3-60 how to Ski",
+      "Shreeeeding Niseko",
+      "Making friends for life",
+    ]}
+  />
+  <LifeTimeline
+    title="Life Experience"
+    subtitle="Sweden, Norway, Denmark"
+    titlePre="4th June, 2016, 10th December, 2016"
+    bullets={[
+      "Visiting the midnight sun",
+      "Eating meatballs at Ikea",
+      "Hiking the first portion of the Kungsleden ( King Trail )",
+    ]}
+  /> */

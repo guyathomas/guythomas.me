@@ -33,6 +33,14 @@ module.exports = {
       },
     },
     `gatsby-source-instance-name-for-remark`, // will atatch gatsby-source-filesystem `name` field to node
+    {
+      resolve: "gatsby-transformer-yaml-full",
+      options: {
+        plugins: [
+          "gatsby-yaml-full-markdown", // Enable !markdown tags
+        ],
+      },
+    },
     `gatsby-plugin-page-transitions`,
     {
       resolve: `gatsby-source-filesystem`,
@@ -53,6 +61,13 @@ module.exports = {
       options: {
         path: `${__dirname}/content/assets`,
         name: `assets`,
+      },
+    },
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        path: `${__dirname}/content/resume`,
+        name: `resume`,
       },
     },
     {
