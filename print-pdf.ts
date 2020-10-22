@@ -17,7 +17,7 @@ const colorSchemes = ["dark", "light"]
       waitUntil: "networkidle2",
     })
     await page.pdf({
-      path: `./static/resume-${color}.pdf`,
+      path: `./src/components/Resume/static/resume-${color}.pdf`,
       format: "A4",
       pageRanges: "1",
       printBackground: true,
