@@ -423,49 +423,6 @@ const Names = styled.div`
   }
 `
 
-const EditPanelContainer = styled.div`
-  padding: 2rem;
-  top: 0;
-  padding-top: 0;
-  background-color: ${() => COLOR_PALETTE.backgroundPrimary.color};
-  border: 1px solid ${() => COLOR_PALETTE.strokePrimary.color};
-  position: sticky;
-  top: 0;
-  z-index: 2;
-  & > h3 {
-    margin-top: 3rem;
-  }
-  @media print {
-    display: none;
-  }
-  @media ${DESKTOP} {
-    position: fixed;
-    top: 1rem;
-    right: 1rem;
-  }
-`
-interface EditPanelProps {
-  avatarUrl?: string
-  onChangeAvatarUrl: (url: string) => void
-}
-const EditPanel: React.FC<EditPanelProps> = ({
-  onChangeAvatarUrl,
-  avatarUrl,
-}) => {
-  return (
-    <EditPanelContainer>
-      <h3>Resume Config</h3>
-      <input
-        placeholder="Avatar URL"
-        value={avatarUrl}
-        onChange={(event) => {
-          onChangeAvatarUrl(event.target.value)
-        }}
-      />
-    </EditPanelContainer>
-  )
-}
-
 const ResumeActionContainer = styled.div`
   display: flex;
   margin-top: 1.5rem;
@@ -487,25 +444,13 @@ const Resume: React.FC<ResumeProps> = ({
   const downloadLink = isDarkMode ? darkResumePdf : lightResumePdf
   const resumeData = nodes[0]
   const [isEditing, setIsEditing] = React.useState(false)
-  const [localAvatarUrl, setLocalAvatarUrl] = React.useState("")
   return (
     <ThemeProvider>
       <PageContainer>
-        {isEditing && (
-          <EditPanel
-            avatarUrl={localAvatarUrl}
-            onChangeAvatarUrl={(url) => {
-              setLocalAvatarUrl(url)
-            }}
-          />
-        )}
         <ProfileSection>
           <ProfileContainer>
             {resumeData.avatar && (
-              <img
-                src={localAvatarUrl || resumeData.avatar}
-                alt="profile-picture"
-              />
+              <img src={resumeData.avatar} alt="profile-picture" />
             )}
           </ProfileContainer>
         </ProfileSection>
