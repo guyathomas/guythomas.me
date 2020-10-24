@@ -51,17 +51,19 @@ const GithubSvg: React.FC<SVGProps> = ({ className }) => (
   </svg>
 )
 
-const InteractiveSvgStyles = () => css`
+export const InteractiveSvgStyles = () => css`
   height: 1.5rem;
   width: 1.5rem;
   margin-left: 1rem;
   display: inline-block;
   fill: ${COLOR_PALETTE.interactive.color};
+  stroke: ${COLOR_PALETTE.interactive.color};
   &:last-child {
     margin-right: 1rem;
   }
   &:hover {
     fill: ${COLOR_PALETTE.interactiveActive.color};
+    stroke: ${COLOR_PALETTE.interactive.color};
   }
 `
 

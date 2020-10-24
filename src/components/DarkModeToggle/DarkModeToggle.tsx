@@ -25,7 +25,7 @@ const ToggleButton = styled.button<ToggleButtonProps>`
   width: 24px;
   height: 24px;
   border: none;
-  background-color: ${COLOR_PALETTE.blackOrWhite.color};
+  background-color: transparent;
   outline: none;
   position: relative;
   padding: 0;
@@ -45,8 +45,8 @@ const SVGWrapper = styled.div<SVGWrapperProps>`
   top: 0;
   height: 100%;
   width: 100%;
-  fill: ${COLOR_PALETTE.whiteOrBlack.color};
-  stroke: ${COLOR_PALETTE.whiteOrBlack.color};
+  fill: inherit;
+  stroke: inherit;
 `
 
 const SVGWrapperSun = styled(SVGWrapper)`
@@ -80,10 +80,12 @@ const SVGAnimation: React.FC = () => <Global styles={headerLinkStyles} />
 
 interface DarkModeToggleProps {
   toggleType?: "sun" | "clock"
+  className?: string
 }
 
 export const DarkModeToggle: React.FC<DarkModeToggleProps> = ({
   toggleType = "sun",
+  className,
 }) => {
   const { isDarkMode } = React.useContext(ThemeContext)
   const { toggle } = useDarkMode()
@@ -100,7 +102,11 @@ export const DarkModeToggle: React.FC<DarkModeToggleProps> = ({
   }
 
   return (
-    <SunToggleButton isDarkMode={isDarkMode} onClick={toggle}>
+    <SunToggleButton
+      className={className}
+      isDarkMode={isDarkMode}
+      onClick={toggle}
+    >
       <SVGWrapperSun enabled={isDarkMode}>
         <Sun />
       </SVGWrapperSun>

@@ -5,9 +5,9 @@ import useDarkMode from "use-dark-mode"
 import { ResumeQuery } from "~types/gatsby-graphql"
 import { Tooltip } from "~components/Tooltip"
 import { ThemeProvider } from "~templates"
-
+import styled from "@emotion/styled"
 import Timeline from "./Timeline"
-import { DowloadIcon, EditIcon, GithubIcon } from "./svgs"
+import { DowloadIcon, EditIcon, GithubIcon, InteractiveSvgStyles } from "./svgs"
 import {
   PageContainer,
   ProfileContainer,
@@ -32,7 +32,11 @@ import {
   Names,
   ResumeActionContainer,
 } from "./styles"
+import { DarkModeToggle } from "~components/DarkModeToggle"
 
+const DarkModeToggleAction = styled(DarkModeToggle)`
+  ${InteractiveSvgStyles}
+`
 const Resume: React.FC<{
   data: ResumeQuery
 }> = ({
@@ -111,6 +115,7 @@ const Resume: React.FC<{
                       <GithubIcon />
                     </a>
                   </Tooltip>
+                  <DarkModeToggleAction />
                 </ResumeActionContainer>
               </DescriptionRow>
             </Titles>

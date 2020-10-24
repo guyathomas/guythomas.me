@@ -55,6 +55,9 @@ const LinkItems: React.FC<LinkItemsProps> = ({
 const AvatarAndDarkMode = styled.div`
   display: flex;
   align-items: center;
+  color: ${COLOR_PALETTE.whiteOrBlack.color};
+  fill: ${COLOR_PALETTE.whiteOrBlack.color};
+  stroke: ${COLOR_PALETTE.whiteOrBlack.color};
 `
 
 const SiteTitleWrapper = styled.div`
