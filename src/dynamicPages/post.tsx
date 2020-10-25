@@ -2,7 +2,7 @@ import React from "react"
 import { graphql } from "gatsby"
 
 import { actions, CommentResponse } from "~actions"
-import { GlobalLayout, Basic } from "~templates"
+import { Post } from "~templates"
 import { SEO } from "~components/SEO"
 import { Comment } from "~components/Comment"
 import { CreateComment } from "~components/CreateComment"
@@ -96,7 +96,7 @@ const Comments: React.FC<CommentsProps> = ({ slug }) => {
   )
 }
 
-const Post: React.FC<PostProps> = ({
+const PostPage: React.FC<PostProps> = ({
   pageContext: { slug },
   data: { markdownRemark: post },
 }) => {
@@ -105,22 +105,20 @@ const Post: React.FC<PostProps> = ({
   // This will always exist, but default to make TS happy :)
   const cleanedSlug = slug?.slice(1, -1) || ""
   return (
-    <GlobalLayout>
+    <Post title={post?.frontmatter?.title || ""}>
       <SEO
         title={`${post?.frontmatter?.title || ""}`}
         description={post?.frontmatter?.description || post?.excerpt || ""}
       />
-      <Basic title={post?.frontmatter?.title || ""}>
-        <article>
-          <section dangerouslySetInnerHTML={{ __html: post?.html || "" }} />
-        </article>
-        <Comments slug={cleanedSlug} />
-      </Basic>
-    </GlobalLayout>
+      <article>
+        <section dangerouslySetInnerHTML={{ __html: post?.html || "" }} />
+      </article>
+      <Comments slug={cleanedSlug} />
+    </Post>
   )
 }
 
-export default Post
+export default PostPage
 
 export const pageQuery = graphql`
   query PostBySlug($slug: String!) {

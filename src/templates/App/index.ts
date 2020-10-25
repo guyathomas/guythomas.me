@@ -1,2 +1,2 @@
-export { GlobalLayout } from "./GlobalLayout"
+export { App } from "./App"
 export { ThemeContext, ThemeProvider } from "./ThemeProvider"

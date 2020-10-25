@@ -1,13 +1,14 @@
 import React from "react"
 import styled from "@emotion/styled"
 import { BREAKPOINTS } from "~styles"
+import { App } from "../App"
 
-interface BasicProps {
+interface PostProps {
   children: React.ReactNode
   title: string
 }
 
-const BasicWrapper = styled.div`
+const PostWrapper = styled.div`
   max-width: ${BREAKPOINTS.md}px;
   margin: auto;
   padding: 1rem;
@@ -18,9 +19,11 @@ const PageTitle = styled.h1`
   font-weight: 500;
 `
 
-export const Basic: React.FC<BasicProps> = ({ title, children }) => (
-  <BasicWrapper>
-    <PageTitle>{title}</PageTitle>
-    {children}
-  </BasicWrapper>
+export const Post: React.FC<PostProps> = ({ title, children }) => (
+  <App>
+    <PostWrapper>
+      <PageTitle>{title}</PageTitle>
+      {children}
+    </PostWrapper>
+  </App>
 )

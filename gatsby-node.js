@@ -3,7 +3,7 @@ const { createFilePath } = require(`gatsby-source-filesystem`)
 const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin")
 
 const createPages = (createPage, allEdges, name) => {
-  const PostTemplate = path.resolve(`./src/dynamicPages/blog/[slug].tsx`)
+  const PostTemplate = path.resolve(`./src/dynamicPages/post.tsx`)
   allEdges
     .filter((edge) => edge.node.fields.sourceInstanceName === name)
     .forEach((post, index, edges) => {

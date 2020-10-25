@@ -1,5 +1,5 @@
 import React from "react"
-import { Basic, GlobalLayout } from "~templates"
+import { Post } from "~templates"
 import { graphql } from "gatsby"
 import { PostSnippitGrid } from "~components/PostSnippitGrid"
 
@@ -12,11 +12,9 @@ interface BlogProps {
 const Blog: React.FC<BlogProps> = ({ data }) => {
   const posts = data.allMarkdownRemark.edges
   return (
-    <GlobalLayout>
-      <Basic title="Blog">
-        <PostSnippitGrid posts={posts} />
-      </Basic>
-    </GlobalLayout>
+    <Post title="Blog">
+      <PostSnippitGrid posts={posts} />
+    </Post>
   )
 }
 

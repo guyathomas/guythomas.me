@@ -12,7 +12,6 @@ module.exports = {
     },
   },
   plugins: [
-    `gatsby-plugin-use-dark-mode`,
     {
       resolve: `gatsby-plugin-graphql-codegen`,
       options: {

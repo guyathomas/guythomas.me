@@ -1,6 +1,5 @@
 import React from "react"
 import styled from "@emotion/styled"
-import useDarkMode from "use-dark-mode"
 import { Global, css } from "@emotion/core"
 
 import { COLOR_PALETTE } from "~styles"
@@ -87,12 +86,11 @@ export const DarkModeToggle: React.FC<DarkModeToggleProps> = ({
   toggleType = "sun",
   className,
 }) => {
-  const { isDarkMode } = React.useContext(ThemeContext)
-  const { toggle } = useDarkMode()
+  const { isDarkMode, toggleColorMode } = React.useContext(ThemeContext)
 
   if (toggleType === "clock") {
     return (
-      <ToggleButton isDarkMode={isDarkMode} onClick={toggle}>
+      <ToggleButton isDarkMode={isDarkMode} onClick={toggleColorMode}>
         <SVGWrapper enabled={isDarkMode}>
           <SVGAnimation />
           <Clock fastForward={isDarkMode} />
@@ -105,7 +103,7 @@ export const DarkModeToggle: React.FC<DarkModeToggleProps> = ({
     <SunToggleButton
       className={className}
       isDarkMode={isDarkMode}
-      onClick={toggle}
+      onClick={toggleColorMode}
     >
       <SVGWrapperSun enabled={isDarkMode}>
         <Sun />

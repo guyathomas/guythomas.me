@@ -1,3 +1,4 @@
+import React from "react"
 import { graphql } from "gatsby"
 
 export const pageQuery = graphql`
@@ -30,4 +31,20 @@ export const pageQuery = graphql`
   }
 `
 
-export { default } from "components/Resume"
+import Resume from "~components/Resume"
+import { ResumeQuery } from "~types/gatsby-graphql"
+import { ThemeProvider } from "~templates"
+
+const ResumePage: React.FC<{
+  data: ResumeQuery
+}> = ({
+  data: {
+    allResumeYaml: { nodes },
+  },
+}) => (
+  <ThemeProvider>
+    <Resume resumeData={nodes[0]} />
+  </ThemeProvider>
+)
+
+export default ResumePage

@@ -2,7 +2,7 @@ import React from "react"
 import { graphql } from "gatsby"
 
 import { PostSnippitGrid } from "~components/PostSnippitGrid"
-import { Hero, GlobalLayout } from "~templates"
+import { Hero, App } from "~templates"
 import { PageIndexQuery } from "~types/gatsby-graphql"
 
 interface IndexProps {
@@ -12,11 +12,11 @@ interface IndexProps {
 const Index: React.FC<IndexProps> = (props) => {
   const recentPosts = props.data.recent.edges
   return (
-    <GlobalLayout>
+    <App>
       <Hero>
         <PostSnippitGrid title="Recent Posts" posts={recentPosts} />
       </Hero>
-    </GlobalLayout>
+    </App>
   )
 }
 

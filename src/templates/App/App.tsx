@@ -3,16 +3,14 @@ import styled from "@emotion/styled"
 import PageTransition from "gatsby-plugin-page-transitions"
 import { Header } from "~components/Header"
 import { Menu } from "~components/Menu"
-import { PageSizeProvider } from "~context/PageSize"
 import { COLOR_PALETTE, BREAKPOINTS } from "~styles"
-import { GlobalStyles } from "./GlobalStyles"
-import { ThemeProvider } from "./ThemeProvider"
+import { Providers } from "./Providers"
 import dayjs from "dayjs"
 import relativeTime from "dayjs/plugin/relativeTime"
 
 dayjs.extend(relativeTime)
 
-interface GlobalLayoutProps {
+interface AppProps {
   children: React.ReactNode
 }
 
@@ -25,9 +23,11 @@ const ContentBackground = styled.div`
   /* This stops the collapsing margins creating a gap between the header and content */
   overflow-y: hidden;
 `
+
 interface StyledMenuProps {
   isActive: boolean
 }
+
 const StyledMenu = styled(Menu)<StyledMenuProps>`
   position: absolute;
   top: 0;
@@ -41,30 +41,27 @@ const StyledMenu = styled(Menu)<StyledMenuProps>`
   }
 `
 
-export const GlobalLayout: React.FC<GlobalLayoutProps> = ({ children }) => {
+export const App: React.FC<AppProps> = ({ children }) => {
   const [isMenuActive, setIsMenuActive] = React.useState(false)
   return (
-    <PageSizeProvider>
-      <ThemeProvider>
-        <GlobalStyles />
-        <Header
-          onMenuToggle={() => {
-            setIsMenuActive(!isMenuActive)
-          }}
-          isMenuActive={isMenuActive}
-        />
-        <PageTransition>
-          <ContentBackground>
-            {children}
-            <StyledMenu
-              isActive={isMenuActive}
-              onClick={() => {
-                setIsMenuActive(false)
-              }}
-            />
-          </ContentBackground>
-        </PageTransition>
-      </ThemeProvider>
-    </PageSizeProvider>
+    <Providers>
+      <Header
+        onMenuToggle={() => {
+          setIsMenuActive(!isMenuActive)
+        }}
+        isMenuActive={isMenuActive}
+      />
+      <PageTransition>
+        <ContentBackground>
+          {children}
+          <StyledMenu
+            isActive={isMenuActive}
+            onClick={() => {
+              setIsMenuActive(false)
+            }}
+          />
+        </ContentBackground>
+      </PageTransition>
+    </Providers>
   )
 }

@@ -1,3 +1,3 @@
-export { Basic } from "./Basic"
-export { Hero } from "./Hero"
-export { GlobalLayout, ThemeContext, ThemeProvider } from "./GlobalLayout"
+export { Post } from "./Post"
+export { Hero } from "~components/Hero"
+export { ThemeContext, ThemeProvider, App } from "./App"
