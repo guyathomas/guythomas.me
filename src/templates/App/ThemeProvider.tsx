@@ -4,7 +4,7 @@ import { COLOR_PALETTE } from "~styles"
 interface ThemeProviderProps {
   children: React.ReactNode
 }
-type ColorMode = "light" | "dark"
+export type ColorMode = "light" | "dark"
 const validColors = new Set<ColorMode>(["light", "dark"])
 interface ThemeContextValue {
   colorMode?: ColorMode
@@ -21,6 +21,7 @@ export const ThemeContext = React.createContext<ThemeContextValue>({
     return undefined
   },
   isDarkMode: false,
+  colorMode: undefined,
 })
 
 function isValidColorType(colorType: string): colorType is ColorMode {

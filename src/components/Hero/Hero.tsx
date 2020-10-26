@@ -33,11 +33,11 @@ const CenterHero = styled(HeroBanner)`
 `
 
 export const Hero: React.FC<HeroProps> = ({ children }) => {
-  const { isDarkMode } = React.useContext(ThemeContext)
+  const { colorMode } = React.useContext(ThemeContext)
   return (
     <>
       <HeroBannerContainer>
-        <CenterHero isDay={!isDarkMode} />
+        <CenterHero colorMode={colorMode} />
       </HeroBannerContainer>
       <MainContainer>
         <Main>{children}</Main>
