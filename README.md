@@ -1,7 +1,15 @@
 # [guythomas.me](https://guythomas.me/)
 
-![image](https://res.cloudinary.com/dqvlfpaev/image/upload/w_600,h_420/v1577567800/2019-12-28_13.15.27_suidij.gif)
-![image](https://res.cloudinary.com/dqvlfpaev/image/upload/h_420/v1577570391/2019-12-28_13.59.07_y8dukj.gif)
+A pre-configured blog and resume featuring dark mode
+
+## Blog / Landing Page
+
+![image](./docs/landing-page.gif)
+
+## Resume
+
+A resume that can be configured with a simple `YAML` file. A PDF version is downloadable ( which is conveniently the same output as printing the page with no boarders on A4 ). This resume in editable inline in the web page.
+![image](./docs/resume.gif)
 
 ## Stack
 
@@ -19,9 +27,9 @@
 
 ## Site Plan
 
-- Home - Summarize each other page
-  - Me - Long form history
+- Home - Recent posts
   - Blog - Summary of all posts
+  - Resume - A printable resume
 
 ## TODO:
 
