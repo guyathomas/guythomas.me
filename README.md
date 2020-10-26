@@ -25,6 +25,10 @@
 
 ## TODO:
 
+### Arch
+
+- Stop using JS to get width. Results in page load flickering depending on page width
+
 ### Resume
 
 - Make it easier to add / remove Timeline Item fields and Contact Detail fields
