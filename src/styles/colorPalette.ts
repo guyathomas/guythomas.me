@@ -1,4 +1,4 @@
-import { DarkMode } from "./DarkMode"
+import { darkMode } from "./DarkMode"
 
 export type ColorPaletteType =
   | "primary"
@@ -22,7 +22,7 @@ type ColorType = {
 
 function getColor(this: ColorType): string {
   return `var(${this.cssVariable}, ${
-    DarkMode.enabled ? this.dark : this.light
+    darkMode.enabled ? this.dark : this.light
   })`
 }
 

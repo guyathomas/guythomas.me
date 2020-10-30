@@ -1,8 +1,8 @@
-import { DarkMode } from "./DarkMode"
+import { darkMode } from "./DarkMode"
 
 function getColor(this: ColorType): string {
   return `var(${this.cssVariable}, ${
-    DarkMode.enabled ? this.dark : this.light
+    darkMode.enabled ? this.dark : this.light
   })`
 }
 
