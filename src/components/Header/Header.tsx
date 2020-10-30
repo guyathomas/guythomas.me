@@ -52,27 +52,19 @@ const LinkItems: React.FC<LinkItemsProps> = ({
   return <Hamburger isExpanded={isMenuActive} onClick={onMenuToggle} />
 }
 
-const AvatarAndDarkMode = styled.div`
-  display: flex;
-  align-items: center;
-  color: ${COLOR_PALETTE.whiteOrBlack.color};
-  fill: ${COLOR_PALETTE.whiteOrBlack.color};
-  stroke: ${COLOR_PALETTE.whiteOrBlack.color};
-`
-
 const SiteTitleWrapper = styled.div`
   position: relative;
   width: 100%;
 `
 
-const SiteTitle = styled.h1`
+const SiteTitle = styled.h2`
   margin: 0;
 `
 
 const AdaptiveSiteTitle: React.FC = () => {
   const { width } = React.useContext(PageSizeContext)
   const isMobile = width < BREAKPOINTS.sm
-  const siteTitle = isMobile ? "Guy" : "Guy Thomas"
+  const siteTitle = isMobile ? "Guy" : "Guy_Thomas"
   return (
     <SiteTitleWrapper>
       <SiteTitle>{siteTitle}</SiteTitle>
@@ -90,6 +82,14 @@ const DarkModeToggleWrapper = styled.div`
   display: flex;
   align-items: center;
   margin-right: 8px;
+  color: ${COLOR_PALETTE.whiteOrBlack.color};
+  fill: ${COLOR_PALETTE.whiteOrBlack.color};
+  stroke: ${COLOR_PALETTE.whiteOrBlack.color};
+`
+
+const TitleAndLinks = styled.div`
+  display: flex;
+  align-items: baseline;
 `
 
 export const Header: React.FC<HeaderProps> = ({
@@ -99,17 +99,17 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <HeaderWrapper>
       <HeaderContent>
-        <AvatarAndDarkMode>
-          <DarkModeToggleWrapper>
-            <DarkModeToggle toggleType="sun" />
-          </DarkModeToggleWrapper>
+        <TitleAndLinks>
           <Link to="/">
             <AdaptiveSiteTitle />
           </Link>
-        </AvatarAndDarkMode>
-        <LinkItems onMenuToggle={onMenuToggle} isMenuActive={isMenuActive}>
-          <NavLinks />
-        </LinkItems>
+          <LinkItems onMenuToggle={onMenuToggle} isMenuActive={isMenuActive}>
+            <NavLinks />
+          </LinkItems>
+        </TitleAndLinks>
+        <DarkModeToggleWrapper>
+          <DarkModeToggle toggleType="sun" />
+        </DarkModeToggleWrapper>
       </HeaderContent>
     </HeaderWrapper>
   )
