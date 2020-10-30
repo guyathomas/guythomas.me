@@ -33,6 +33,12 @@ A resume that can be configured with a simple `YAML` file. A PDF version is down
 
 ## TODO:
 
+- [This Blog](https://joshwcomeau.com/gatsby/) has some great ideas
+  - Table of contents on the right for desktop
+  - Add event listener for Dark Mode changes
+    - Abstract changes into plugin?
+  - Embedded JSX editor
+
 ### Arch
 
 - Stop using JS to get width. Results in page load flickering depending on page width
