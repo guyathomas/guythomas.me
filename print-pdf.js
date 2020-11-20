@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
 import puppeteer from "puppeteer"
 
 const colorSchemes = ["dark", "light"]
@@ -7,7 +6,7 @@ const colorSchemes = ["dark", "light"]
   const browser = await puppeteer.launch()
   const page = await browser.newPage()
 
-  await colorSchemes.reduce(async (lastResult, color): Promise<undefined> => {
+  await colorSchemes.reduce(async (lastResult, color) => {
     await lastResult
 
     await page.emulateMediaFeatures([

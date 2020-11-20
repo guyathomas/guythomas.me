@@ -34,6 +34,9 @@ const ToggleButton = styled.button<ToggleButtonProps>`
 const SunToggleButton = styled(ToggleButton)`
   transform: rotate(${(props) => (props.isDarkMode ? "90deg" : "0deg")});
   transition: all ${TRANSITION_DURATION_FULL} cubic-bezier(0.3, -1, 0.265, 1);
+  color: ${COLOR_PALETTE.whiteOrBlack.color};
+  fill: ${COLOR_PALETTE.whiteOrBlack.color};
+  stroke: ${COLOR_PALETTE.whiteOrBlack.color};
 `
 
 interface SVGWrapperProps {
@@ -90,7 +93,11 @@ export const DarkModeToggle: React.FC<DarkModeToggleProps> = ({
 
   if (toggleType === "clock") {
     return (
-      <ToggleButton isDarkMode={isDarkMode} onClick={toggleColorMode}>
+      <ToggleButton
+        className={className}
+        isDarkMode={isDarkMode}
+        onClick={toggleColorMode}
+      >
         <SVGWrapper enabled={isDarkMode}>
           <SVGAnimation />
           <Clock fastForward={isDarkMode} />

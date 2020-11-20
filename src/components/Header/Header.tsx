@@ -77,19 +77,12 @@ interface HeaderProps {
   isMenuActive: boolean
 }
 
-const DarkModeToggleWrapper = styled.div`
-  padding: 11px;
-  display: flex;
-  align-items: center;
+const StyledDarkModeToggleWrapper = styled(DarkModeToggle)`
   margin-right: 8px;
-  color: ${COLOR_PALETTE.whiteOrBlack.color};
-  fill: ${COLOR_PALETTE.whiteOrBlack.color};
-  stroke: ${COLOR_PALETTE.whiteOrBlack.color};
-`
-
-const TitleAndLinks = styled.div`
-  display: flex;
-  align-items: baseline;
+  margin-left: auto;
+  @media (max-width: ${BREAKPOINTS.sm}px) {
+    display: none;
+  }
 `
 
 export const Header: React.FC<HeaderProps> = ({
@@ -99,17 +92,13 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <HeaderWrapper>
       <HeaderContent>
-        <TitleAndLinks>
-          <Link to="/">
-            <AdaptiveSiteTitle />
-          </Link>
-          <LinkItems onMenuToggle={onMenuToggle} isMenuActive={isMenuActive}>
-            <NavLinks />
-          </LinkItems>
-        </TitleAndLinks>
-        <DarkModeToggleWrapper>
-          <DarkModeToggle toggleType="sun" />
-        </DarkModeToggleWrapper>
+        <Link to="/">
+          <AdaptiveSiteTitle />
+        </Link>
+        <LinkItems onMenuToggle={onMenuToggle} isMenuActive={isMenuActive}>
+          <NavLinks />
+        </LinkItems>
+        <StyledDarkModeToggleWrapper toggleType="sun" />
       </HeaderContent>
     </HeaderWrapper>
   )

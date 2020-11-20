@@ -37,8 +37,6 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
     <>
       <SVGAnimation />
       <svg className={className} viewBox="0 0 783 471" version="1.1">
-        <title>Mountains</title>
-        <desc>Created with Sketch.</desc>
         <defs>
           <linearGradient
             x1="50.0169503%"
