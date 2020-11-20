@@ -18,6 +18,7 @@ const MenuContainer = styled.ul`
   justify-content: flex-start;
   align-items: center;
   padding-top: 3rem;
+  background-color: 1s ease 0s;
   & > li {
     margin-bottom: 1rem;
     font-size: 2rem;
