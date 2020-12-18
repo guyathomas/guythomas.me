@@ -83,13 +83,6 @@ const Resume: React.FC<{
                     <DownloadIcon />
                   </a>
                 </Tooltip>
-                <button
-                  onClick={() => {
-                    console.log("zzz")
-                  }}
-                >
-                  Click Me
-                </button>
                 <Tooltip
                   tooltip={isEditing ? "Stop editing" : "Edit this resume"}
                 >
@@ -98,7 +91,6 @@ const Resume: React.FC<{
                     target="_blank"
                     rel="noreferrer"
                     onClick={() => {
-                      console.log("zzz isEditing", isEditing)
                       setIsEditing(!isEditing)
                       requestAnimationFrame(() => {
                         const firstHeader = document.querySelector("h1")
