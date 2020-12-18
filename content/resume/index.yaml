@@ -10,21 +10,21 @@ contactDetails:
     - San Francisco
   - - Web
     - !markdown "[guythomas.me](https://guythomas.me)"
-intro: I love empowering my peers more productive, reducing development times and increasing the reliability of applications at scale. I work across the stack, and specialize in anything frontend.
+intro: I love empowering peers to be more productive, reducing development times and increasing the reliability of applications at scale. I work across the stack, and specialize in anything frontend.
 experience:
   - date: 15th April, 2019 – Present
     company: Lyft
     title: Senior Software Engineer
-    subtitle: Frontend Lead
+    subtitle: Team Lead
     detailItems:
       - Team lead for an Insurance Marketplace for drivers to purchase policies. From MVP to multi-carrier support across Android, iOS and Web
       - Lead an E2E testing initiative across all of Lyft leveraging Cypress and replaying network snapshots in CI to support jailed testing constraints
-      - Lead the adoption across our entire org from a cloud based development workflow to a local workflow to enable a 3x increase in productivity increase
+      - Enable a 3x increase in productivity by leading the adoption for our entire org from a cloud based development workflow to a local workflow
   - date: 26th June, 2017 – 31st January, 2019
     company: Reflektive
     title: Software Engineer
     detailItems:
-      - "Team lead for our #1 product - built with React & Redux"
+      - Team lead for our core 'Reviews' product
       - Lead migration from Backbone to React
       - Cut build time by 50% by migrating Webpack 3 > 4
       - Migrated ~500 tests to Jest to reduce testing feedback loop
