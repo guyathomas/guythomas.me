@@ -56,6 +56,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     })
   }
   const toggleColorMode = () => {
+    console.log("zzz colorMode", colorMode)
     switch (colorMode) {
       case "dark":
         setColorMode("light")

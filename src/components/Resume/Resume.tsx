@@ -86,6 +86,7 @@ const Resume: React.FC<{
                     target="_blank"
                     rel="noreferrer"
                     onClick={() => {
+                      console.log("zzz isEditing", isEditing)
                       setIsEditing(!isEditing)
                       requestAnimationFrame(() => {
                         const firstHeader = document.querySelector("h1")
