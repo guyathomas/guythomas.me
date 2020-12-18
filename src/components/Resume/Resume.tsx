@@ -5,7 +5,12 @@ import { ResumeQuery } from "~types/gatsby-graphql"
 import { Tooltip } from "~components/Tooltip"
 import styled from "@emotion/styled"
 import Timeline from "./Timeline"
-import { DowloadIcon, EditIcon, GithubIcon, InteractiveSvgStyles } from "./svgs"
+import {
+  DownloadIcon,
+  EditIcon,
+  GithubIcon,
+  InteractiveSvgStyles,
+} from "./svgs"
 import {
   PageContainer,
   ProfileContainer,
@@ -75,9 +80,16 @@ const Resume: React.FC<{
                     onClick={isEditing ? window.print : undefined}
                     href={isEditing ? undefined : downloadLink}
                   >
-                    <DowloadIcon />
+                    <DownloadIcon />
                   </a>
                 </Tooltip>
+                <button
+                  onClick={() => {
+                    console.log("zzz")
+                  }}
+                >
+                  Click Me
+                </button>
                 <Tooltip
                   tooltip={isEditing ? "Stop editing" : "Edit this resume"}
                 >

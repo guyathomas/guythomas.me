@@ -67,7 +67,7 @@ export const InteractiveSvgStyles = () => css`
   }
 `
 
-export const DowloadIcon = styled(DownloadSvg)`
+export const DownloadIcon = styled(DownloadSvg)`
   ${InteractiveSvgStyles}
 `
 export const EditIcon = styled(EditSvg)<InteractiveSvgStylesProps>`
