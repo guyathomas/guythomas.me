@@ -21,7 +21,7 @@ module.exports = {
     `gatsby-plugin-typescript`,
     {
       resolve: "gatsby-plugin-root-import",
-      // TODO: This config is shared in storybook config. Can I not duplicate this config?
+      // TODO: This config is shared in storybook config. Can I share this config?
       options: {
         "~actions": path.join(__dirname, "src/actions"),
         "~components": path.join(__dirname, "src/components"),
@@ -31,7 +31,7 @@ module.exports = {
         "~types": path.join(__dirname, "src/types"),
       },
     },
-    `gatsby-source-instance-name-for-remark`, // will atatch gatsby-source-filesystem `name` field to node
+    `gatsby-source-instance-name-for-remark`, // will attach gatsby-source-filesystem `name` field to node
     {
       resolve: "gatsby-transformer-yaml-full",
       options: {
@@ -120,7 +120,7 @@ module.exports = {
         icon: `content/assets/favicon.png`,
       },
     },
-    `gatsby-plugin-offline`,
+    // `gatsby-plugin-offline`,
     `gatsby-plugin-react-helmet`,
     {
       resolve: `gatsby-plugin-typography`,
