@@ -1,5 +1,5 @@
 import React from "react"
-import { Global, css } from "@emotion/core"
+import { Global, css } from '@emotion/react'
 import { COLOR_PALETTE } from "~styles"
 
 const headerValues = ["h1", "h2", "h3", "h4", "h5", "h6"]
