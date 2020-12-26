@@ -1,18 +1,17 @@
 import React from "react"
 import ReactResizeDetector from "react-resize-detector"
-import { BREAKPOINTS } from "~styles"
 
 interface PageSizeContext {
-  width: number
-  height: number
+  width: number | null
+  height: number | null
 }
 interface PageSizeProviderProps {
   children: React.ReactNode
 }
 
 const INITIAL_PAGE_SIZE: PageSizeContext = {
-  width: BREAKPOINTS.md,
-  height: 0,
+  width: null,
+  height: null,
 }
 export const PageSizeContext = React.createContext<PageSizeContext>(
   INITIAL_PAGE_SIZE

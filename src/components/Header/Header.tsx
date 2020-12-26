@@ -46,9 +46,12 @@ const LinkItems: React.FC<LinkItemsProps> = ({
   isMenuActive,
 }) => {
   const { width } = React.useContext(PageSizeContext)
+  if (!width) return null
+
   if (width > BREAKPOINTS.sm) {
     return <LinkItemsStyle>{children}</LinkItemsStyle>
   }
+
   return <Hamburger isExpanded={isMenuActive} onClick={onMenuToggle} />
 }
 
@@ -60,17 +63,6 @@ const SiteTitleWrapper = styled.div`
 const SiteTitle = styled.h2`
   margin: 0;
 `
-
-const AdaptiveSiteTitle: React.FC = () => {
-  const { width } = React.useContext(PageSizeContext)
-  const isMobile = width < BREAKPOINTS.sm
-  const siteTitle = isMobile ? "Guy" : "Guy_Thomas"
-  return (
-    <SiteTitleWrapper>
-      <SiteTitle>{siteTitle}</SiteTitle>
-    </SiteTitleWrapper>
-  )
-}
 
 interface HeaderProps {
   onMenuToggle: () => void
@@ -93,7 +85,9 @@ export const Header: React.FC<HeaderProps> = ({
     <HeaderWrapper>
       <HeaderContent>
         <Link to="/">
-          <AdaptiveSiteTitle />
+          <SiteTitleWrapper>
+            <SiteTitle>Guy</SiteTitle>
+          </SiteTitleWrapper>
         </Link>
         <LinkItems onMenuToggle={onMenuToggle} isMenuActive={isMenuActive}>
           <NavLinks />
