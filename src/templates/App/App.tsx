@@ -19,7 +19,7 @@ const ContentBackground = styled.div`
   transition: background-color 1s;
   background-color: ${() => COLOR_PALETTE.backgroundPrimary.color};
   /* TODO: Just hard code header height for now. Calculate properly later */
-  min-height: calc(100vh - 112px);
+  min-height: calc(100vh - 67px);
   /* This stops the collapsing margins creating a gap between the header and content */
   overflow-y: hidden;
 `
