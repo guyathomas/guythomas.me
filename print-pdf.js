@@ -1,4 +1,4 @@
-import puppeteer from "puppeteer"
+const puppeteer = require("puppeteer")
 
 const colorSchemes = ["dark", "light"]
 
@@ -21,6 +21,7 @@ const colorSchemes = ["dark", "light"]
       pageRanges: "1",
       printBackground: true,
     })
+    console.log(`Printed: ${color}`)
     return undefined
   }, Promise.resolve())
   await browser.close()

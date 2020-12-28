@@ -18,28 +18,26 @@ experience:
     subtitle: Team Lead
     detailItems:
       - Team lead for an Insurance Marketplace for drivers to purchase policies. From MVP to multi-carrier support across Android, iOS and Web
-      - Lead an E2E testing initiative across all of Lyft leveraging Cypress and replaying network snapshots in CI to support jailed testing constraints
+      - Led an E2E testing initiative across all of Lyft leveraging Cypress and replaying network snapshots in CI to support jailed testing constraints
       - Enable a 3x increase in productivity by leading the adoption for our entire org from a cloud based development workflow to a local workflow
   - date: 26th June, 2017 – 31st January, 2019
     company: Reflektive
     title: Software Engineer
     detailItems:
-      - Team lead for our core 'Reviews' product
-      - Lead migration from Backbone to React
-      - Cut build time by 50% by migrating Webpack 3 > 4
-      - Migrated ~500 tests to Jest to reduce testing feedback loop
+      - Team lead for our core 'Reviews' product. Drove a rebuild of the entire workflow from Backbone to React with a whole new UI
+      - Cut development build times by 50% and reduced application load times over HTTP2 by implementing Webpack best practices
   - date: 7th July, 2014 – 3rd June, 2016
     company: IBM
     title: Software Engineer
     detailItems:
-      - Developed internal websites to pitch solutions
-      - Developed data models to target customer behavior
+      - Built marketing websites to pitch implementation solutions for upcoming contracts
+      - Developed data models for cell phone usage of customers
 education:
   - date: "2017"
     company: Bradfield CS
     title: Computer Architecture
     detailItems:
-      - Building a strong mental model of the actual execution of programs by a microprocessor to better reason about the code I write
+      - Building a mental model of the execution of programs by a microprocessor
   - date: 2011 - 2013
     company: Monash University
     title: Bachelor of Commerce
