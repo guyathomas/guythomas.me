@@ -1,6 +1,6 @@
 import React from "react"
 import styled from "@emotion/styled"
-import { css } from '@emotion/react'
+import { css } from "@emotion/react"
 
 const LINE_COLOR = "#007ACC"
 
@@ -11,7 +11,7 @@ interface HamburgerProps {
 
 const MenuIconLine = css`
   width: 100%;
-  height: 0.2rem;
+  height: 2px;
   transition: transform 120ms ease;
 `
 
@@ -31,22 +31,18 @@ const MenuIcon = styled.div<MenuIconProps>`
   ${MenuIconLine}
   background-color: ${(props) =>
     props.isExpanded ? "transparent" : LINE_COLOR};
-  transition: opacity 150ms cubic-bezier(.22,.61,.35,1);
+  transition: opacity 150ms cubic-bezier(0.22, 0.61, 0.35, 1);
   transition-delay: 120ms;
   &:before {
     ${MenuIconPsuedo}
     top: 0;
-    transform: rotate(
-      ${(props) => (props.isExpanded ? "41deg" : "0deg")}
-    );
+    transform: rotate(${(props) => (props.isExpanded ? "41deg" : "0deg")});
   }
-  
+
   &:after {
     ${MenuIconPsuedo}
     bottom: 0;
-    transform: rotate(
-      ${(props) => (props.isExpanded ? "-41deg" : "0deg")}
-    );
+    transform: rotate(${(props) => (props.isExpanded ? "-41deg" : "0deg")});
   }
 `
 
