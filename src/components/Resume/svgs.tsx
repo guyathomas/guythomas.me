@@ -1,14 +1,10 @@
 import React from "react"
 import styled from "@emotion/styled"
-import { css } from '@emotion/react'
+import { css } from "@emotion/react"
 import { COLOR_PALETTE } from "~styles"
 
 interface SVGProps {
   className?: string
-}
-
-interface InteractiveSvgStylesProps {
-  isActive?: boolean
 }
 
 const DownloadSvg: React.FC<SVGProps> = ({ className }) => (
@@ -51,6 +47,18 @@ const GithubSvg: React.FC<SVGProps> = ({ className }) => (
   </svg>
 )
 
+const SaveSvg: React.FC<SVGProps> = ({ className }) => (
+  <svg viewBox="64 64 896 896" data-icon="save" className={className}>
+    <path d="M893.3 293.3L730.7 130.7c-7.5-7.5-16.7-13-26.7-16V112H144c-17.7 0-32 14.3-32 32v736c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V338.5c0-17-6.7-33.2-18.7-45.2zM384 184h256v104H384V184zm456 656H184V184h136v136c0 17.7 14.3 32 32 32h320c17.7 0 32-14.3 32-32V205.8l136 136V840zM512 442c-79.5 0-144 64.5-144 144s64.5 144 144 144 144-64.5 144-144-64.5-144-144-144zm0 224c-44.2 0-80-35.8-80-80s35.8-80 80-80 80 35.8 80 80-35.8 80-80 80z"></path>
+  </svg>
+)
+
+const CloseSvg: React.FC<SVGProps> = ({ className }) => (
+  <svg viewBox="64 64 896 896" data-icon="close" className={className}>
+    <path d="M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 00203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z"></path>
+  </svg>
+)
+
 export const InteractiveSvgStyles = () => css`
   height: 1.5rem;
   width: 1.5rem;
@@ -70,15 +78,16 @@ export const InteractiveSvgStyles = () => css`
 export const DownloadIcon = styled(DownloadSvg)`
   ${InteractiveSvgStyles}
 `
-export const EditIcon = styled(EditSvg)<InteractiveSvgStylesProps>`
+
+export const SaveSvgIcon = styled(SaveSvg)`
   ${InteractiveSvgStyles}
-  &:active {
-    transform: scale(0.8);
-  }
-  fill: ${(props) =>
-    props.isActive
-      ? COLOR_PALETTE.interactiveActive.color
-      : COLOR_PALETTE.interactive.color};
+`
+
+export const CloseSvgIcon = styled(CloseSvg)`
+  ${InteractiveSvgStyles}
+`
+export const EditIcon = styled(EditSvg)`
+  ${InteractiveSvgStyles}
 `
 export const GithubIcon = styled(GithubSvg)`
   ${InteractiveSvgStyles}

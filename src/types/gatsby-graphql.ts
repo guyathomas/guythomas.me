@@ -814,7 +814,6 @@ export type FileFieldsEnum =
   | 'childResumeYaml___experience___date'
   | 'childResumeYaml___experience___company'
   | 'childResumeYaml___experience___title'
-  | 'childResumeYaml___experience___subtitle'
   | 'childResumeYaml___experience___detailItems'
   | 'childResumeYaml___education'
   | 'childResumeYaml___education___date'
@@ -2167,7 +2166,6 @@ export type ResumeYamlExperience = {
   date?: Maybe<Scalars['String']>;
   company?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
-  subtitle?: Maybe<Scalars['String']>;
   detailItems?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
@@ -2175,7 +2173,6 @@ export type ResumeYamlExperienceFilterInput = {
   date?: Maybe<StringQueryOperatorInput>;
   company?: Maybe<StringQueryOperatorInput>;
   title?: Maybe<StringQueryOperatorInput>;
-  subtitle?: Maybe<StringQueryOperatorInput>;
   detailItems?: Maybe<StringQueryOperatorInput>;
 };
 
@@ -2281,7 +2278,6 @@ export type ResumeYamlFieldsEnum =
   | 'experience___date'
   | 'experience___company'
   | 'experience___title'
-  | 'experience___subtitle'
   | 'experience___detailItems'
   | 'education'
   | 'education___date'
@@ -3622,7 +3618,7 @@ export type ResumeQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type ResumeQuery = { allResumeYaml: { nodes: Array<(
       Pick<ResumeYaml, 'id' | 'version' | 'tagline' | 'intro' | 'contactDetails' | 'avatar' | 'firstName' | 'lastName'>
-      & { experience?: Maybe<Array<Maybe<Pick<ResumeYamlExperience, 'date' | 'company' | 'title' | 'subtitle' | 'detailItems'>>>>, education?: Maybe<Array<Maybe<Pick<ResumeYamlEducation, 'date' | 'company' | 'title' | 'detailItems'>>>> }
+      & { experience?: Maybe<Array<Maybe<Pick<ResumeYamlExperience, 'date' | 'company' | 'title' | 'detailItems'>>>>, education?: Maybe<Array<Maybe<Pick<ResumeYamlEducation, 'date' | 'company' | 'title' | 'detailItems'>>>> }
     )> } };
 
 export type GatsbyImageSharpFixedFragment = Pick<ImageSharpFixed, 'base64' | 'width' | 'height' | 'src' | 'srcSet'>;
