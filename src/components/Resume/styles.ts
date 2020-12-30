@@ -4,6 +4,7 @@ import { DESKTOP, MOBILE } from "./constants"
 
 const SectionContent = styled.div`
   background-color: ${() => COLOR_PALETTE.backgroundPrimary.color};
+  position: relative;
   @media ${DESKTOP} {
     justify-content: flex-end;
     &:nth-child(4n) {
@@ -243,6 +244,32 @@ export const Names = styled.div`
 export const ResumeActionContainer = styled.div`
   display: flex;
   margin-top: 1.5rem;
+  @media print {
+    display: none;
+  }
+`
+interface SectionButtonProps {
+  actionType?: "positive" | "negative"
+}
+export const SectionButton = styled.button<SectionButtonProps>`
+  position: absolute;
+  outline: none;
+  cursor: pointer;
+  background-color: ${(props) =>
+    props.actionType === "negative" ? "#ff4d4f" : "#1890ff"};
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-weight: bold;
+  border: none;
+
+  &:active {
+    box-shadow: inset 0px 0px 5px #c1c1c1;
+  }
   @media print {
     display: none;
   }

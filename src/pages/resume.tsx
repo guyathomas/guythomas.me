@@ -1,5 +1,6 @@
 import React from "react"
 import { graphql } from "gatsby"
+import createPersistedState from "use-persisted-state"
 
 export const pageQuery = graphql`
   query Resume {
@@ -14,7 +15,6 @@ export const pageQuery = graphql`
           date
           company
           title
-          subtitle
           detailItems
         }
         education {
@@ -34,6 +34,10 @@ export const pageQuery = graphql`
 import Resume from "~components/Resume"
 import { ResumeQuery } from "~types/gatsby-graphql"
 import { ThemeProvider } from "~templates"
+import { ResumeJSON } from "~components/Resume/Resume"
+
+const STORAGE_KEY = "resume"
+const useResumeState = createPersistedState(STORAGE_KEY)
 
 const ResumePage: React.FC<{
   data: ResumeQuery
@@ -41,10 +45,22 @@ const ResumePage: React.FC<{
   data: {
     allResumeYaml: { nodes },
   },
-}) => (
-  <ThemeProvider>
-    <Resume resumeData={nodes[0]} />
-  </ThemeProvider>
-)
+}) => {
+  const [customResume, setCustomResume] = useResumeState<ResumeJSON>()
+  return (
+    <ThemeProvider>
+      <Resume
+        resumeData={customResume ? customResume : (nodes[0] as ResumeJSON)}
+        onSave={(newResume) => {
+          setCustomResume(newResume)
+        }}
+        onReset={() => {
+          setCustomResume(undefined)
+          localStorage?.removeItem(STORAGE_KEY)
+        }}
+      />
+    </ThemeProvider>
+  )
+}
 
 export default ResumePage

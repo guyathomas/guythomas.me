@@ -15,7 +15,6 @@ experience:
   - date: 15th April, 2019 – Present
     company: Lyft
     title: Senior Software Engineer
-    subtitle: Team Lead
     detailItems:
       - Team lead for an Insurance Marketplace for drivers to purchase policies. From MVP to multi-carrier support across Android, iOS and Web
       - Led an E2E testing initiative across all of Lyft leveraging Cypress and replaying network snapshots in CI to support jailed testing constraints

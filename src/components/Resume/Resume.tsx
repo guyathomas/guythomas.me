@@ -1,7 +1,7 @@
 import React from "react"
 import lightResumePdf from "./static/resume-light.pdf"
 import darkResumePdf from "./static/resume-dark.pdf"
-import { ResumeQuery } from "~types/gatsby-graphql"
+import { ResumeYamlExperience, ResumeQuery } from "~types/gatsby-graphql"
 import { Tooltip } from "~components/Tooltip"
 import styled from "@emotion/styled"
 import Timeline from "./Timeline"
@@ -10,6 +10,8 @@ import {
   EditIcon,
   GithubIcon,
   InteractiveSvgStyles,
+  SaveSvgIcon,
+  CloseSvgIcon,
 } from "./svgs"
 import {
   PageContainer,
@@ -34,143 +36,287 @@ import {
   DescriptionRow,
   Names,
   ResumeActionContainer,
+  SectionButton,
 } from "./styles"
 import { DarkModeToggle } from "~components/DarkModeToggle"
 import { ThemeContext } from "~templates"
+import { Formik, Form, FieldArray } from "formik"
 
 const DarkModeToggleAction = styled(DarkModeToggle)`
   ${InteractiveSvgStyles}
 `
+type EditedResumeFields = {
+  experience: string[]
+  education: string[]
+}
+type ExistingResumeFields = ResumeQuery["allResumeYaml"]["nodes"][0]
+export type ResumeJSON = ExistingResumeFields & EditedResumeFields
+
+const SampleTimeline: ResumeYamlExperience = {
+  title: "Title",
+  company: "Company",
+  date: "Date",
+  detailItems: ["First", "Second", "Third"],
+}
+
+const AddSection = styled(SectionButton)`
+  top: 30px;
+  right: 30px;
+`
+const noop = () => {
+  return
+}
+
 const Resume: React.FC<{
-  resumeData: ResumeQuery["allResumeYaml"]["nodes"][0]
-}> = ({ resumeData }) => {
+  resumeData: ResumeJSON
+  onSave: (newResume: ResumeJSON) => void
+  onReset: () => void
+}> = ({ resumeData, onSave, onReset }) => {
   const [isEditing, setIsEditing] = React.useState(false)
   const { isDarkMode } = React.useContext(ThemeContext)
   const downloadLink = isDarkMode ? darkResumePdf : lightResumePdf
   return (
-    <PageContainer>
-      <ProfileSection>
-        <ProfileContainer>
-          {resumeData.avatar && (
-            <img src={resumeData.avatar} alt="profile-picture" />
-          )}
-        </ProfileContainer>
-      </ProfileSection>
-      <BioWrapper>
-        <Bio>
-          <Titles>
-            <Names>
-              <FirstName contentEditable={isEditing}>
-                {resumeData.firstName}
-              </FirstName>
-              <LastName contentEditable={isEditing}>
-                {resumeData.lastName}
-              </LastName>
-            </Names>
-            <DescriptionRow>
-              <Description contentEditable={isEditing}>
-                {resumeData.tagline}
-              </Description>
-              <ResumeActionContainer>
-                <Tooltip tooltip={isEditing ? "Print changes" : "Download PDF"}>
-                  <a
-                    style={{ cursor: "pointer" }}
-                    target="_blank"
-                    rel="noreferrer"
-                    onClick={isEditing ? window.print : undefined}
-                    href={isEditing ? undefined : downloadLink}
-                  >
-                    <DownloadIcon />
-                  </a>
-                </Tooltip>
-                <Tooltip
-                  tooltip={isEditing ? "Stop editing" : "Edit this resume"}
+    <Formik initialValues={resumeData} onSubmit={noop}>
+      {({ values, setFieldValue }) => {
+        const createOnInput = (name: keyof ResumeJSON) => (
+          event: React.FormEvent<HTMLElement>
+        ) => {
+          setFieldValue(name, event.currentTarget.innerText)
+        }
+        return (
+          <Form>
+            <PageContainer>
+              <ProfileSection>
+                <ProfileContainer>
+                  {resumeData.avatar && (
+                    <img src={resumeData.avatar} alt="profile-picture" />
+                  )}
+                </ProfileContainer>
+              </ProfileSection>
+              <BioWrapper>
+                <Bio>
+                  <Titles>
+                    <Names>
+                      <FirstName
+                        contentEditable={isEditing}
+                        onInput={createOnInput("firstName")}
+                      >
+                        {resumeData.firstName}
+                      </FirstName>
+                      <LastName
+                        contentEditable={isEditing}
+                        onInput={createOnInput("lastName")}
+                      >
+                        {resumeData.lastName}
+                      </LastName>
+                    </Names>
+                    <DescriptionRow>
+                      <Description
+                        contentEditable={isEditing}
+                        onInput={createOnInput("tagline")}
+                      >
+                        {resumeData.tagline}
+                      </Description>
+                      <ResumeActionContainer>
+                        <Tooltip
+                          tooltip={isEditing ? "Print changes" : "Download PDF"}
+                        >
+                          <a
+                            style={{ cursor: "pointer" }}
+                            target="_blank"
+                            rel="noreferrer"
+                            onClick={isEditing ? window.print : undefined}
+                            href={isEditing ? undefined : downloadLink}
+                          >
+                            <DownloadIcon />
+                          </a>
+                        </Tooltip>
+                        {!isEditing && (
+                          <Tooltip tooltip={"Edit this resume"}>
+                            <a
+                              style={{ cursor: "pointer" }}
+                              target="_blank"
+                              rel="noreferrer"
+                              onClick={() => {
+                                setIsEditing(!isEditing)
+                                requestAnimationFrame(() => {
+                                  const firstHeader = document.querySelector(
+                                    "h1"
+                                  )
+                                  if (firstHeader) firstHeader.focus()
+                                })
+                              }}
+                            >
+                              <EditIcon />
+                            </a>
+                          </Tooltip>
+                        )}
+                        {isEditing && (
+                          <Tooltip tooltip={"Save Changes"}>
+                            <a
+                              style={{ cursor: "pointer" }}
+                              target="_blank"
+                              rel="noreferrer"
+                              onClick={() => {
+                                setIsEditing(!isEditing)
+                                if (onSave) onSave(values)
+                              }}
+                            >
+                              <SaveSvgIcon />
+                            </a>
+                          </Tooltip>
+                        )}
+                        {isEditing && (
+                          <Tooltip tooltip={"Discard Changes"}>
+                            <a
+                              style={{ cursor: "pointer" }}
+                              target="_blank"
+                              rel="noreferrer"
+                              onClick={() => {
+                                setIsEditing(!isEditing)
+                                if (onReset) onReset()
+                              }}
+                            >
+                              <CloseSvgIcon />
+                            </a>
+                          </Tooltip>
+                        )}
+                        <Tooltip tooltip="View source">
+                          <a
+                            style={{ cursor: "pointer" }}
+                            target="_blank"
+                            rel="noreferrer"
+                            href="https://github.com/guyathomas/guythomas.me"
+                          >
+                            <GithubIcon />
+                          </a>
+                        </Tooltip>
+                        <DarkModeToggleAction />
+                      </ResumeActionContainer>
+                    </DescriptionRow>
+                  </Titles>
+                  <Contacts>
+                    {resumeData.contactDetails?.map((contactDetail, index) => {
+                      // Wow, TS really wants me to be safe here
+                      const definitelyContactDetail = contactDetail || []
+                      const stringTitle = String(definitelyContactDetail[0])
+                      const stringDetail = String(definitelyContactDetail[1])
+                      if (!stringDetail) return null
+                      return (
+                        <ContactWrapper key={stringTitle}>
+                          <ContactTitle>{stringTitle}</ContactTitle>
+                          <span
+                            contentEditable={isEditing}
+                            onInput={(event) => {
+                              setFieldValue(
+                                `contactDetails[${index}][1]`,
+                                event.currentTarget.innerText
+                              )
+                            }}
+                            dangerouslySetInnerHTML={{ __html: stringDetail }}
+                          />
+                        </ContactWrapper>
+                      )
+                    })}
+                  </Contacts>
+                </Bio>
+              </BioWrapper>
+              <IntroTitle>Intro</IntroTitle>
+              <IntroContent>
+                <SectionContentInner
+                  contentEditable={isEditing}
+                  onInput={createOnInput("intro")}
                 >
-                  <a
-                    style={{ cursor: "pointer" }}
-                    target="_blank"
-                    rel="noreferrer"
-                    onClick={() => {
-                      setIsEditing(!isEditing)
-                      requestAnimationFrame(() => {
-                        const firstHeader = document.querySelector("h1")
-                        if (firstHeader) firstHeader.focus()
-                      })
-                    }}
-                  >
-                    <EditIcon isActive={isEditing} />
-                  </a>
-                </Tooltip>
-                <Tooltip tooltip="View source">
-                  <a
-                    style={{ cursor: "pointer" }}
-                    target="_blank"
-                    rel="noreferrer"
-                    href="https://github.com/guyathomas/guythomas.me"
-                  >
-                    <GithubIcon />
-                  </a>
-                </Tooltip>
-                <DarkModeToggleAction />
-              </ResumeActionContainer>
-            </DescriptionRow>
-          </Titles>
-          <Contacts contentEditable={isEditing}>
-            {resumeData.contactDetails?.map((contactDetail) => {
-              // Wow, TS really wants me to be safe here
-              const definitelyContactDetail = contactDetail || []
-              const stringTitle = String(definitelyContactDetail[0])
-              const stringDetail = String(definitelyContactDetail[1])
-              return (
-                <ContactWrapper key={stringTitle}>
-                  <ContactTitle>{stringTitle}</ContactTitle>
-                  <span dangerouslySetInnerHTML={{ __html: stringDetail }} />
-                </ContactWrapper>
-              )
-            })}
-          </Contacts>
-        </Bio>
-      </BioWrapper>
-      <IntroTitle>Intro</IntroTitle>
-      <IntroContent>
-        <SectionContentInner contentEditable={isEditing}>
-          {resumeData.intro}
-        </SectionContentInner>
-      </IntroContent>
-      <ExperienceTitle>Experience</ExperienceTitle>
-      <ExperienceSection>
-        <SectionContentInner contentEditable={isEditing}>
-          {resumeData.experience?.map((experienceItem) => (
-            <Timeline
-              key={String(experienceItem?.date)}
-              company={experienceItem?.company || undefined}
-              title={experienceItem?.title || undefined}
-              subtitle={experienceItem?.subtitle || undefined}
-              date={experienceItem?.date || undefined}
-              detailItems={
-                (experienceItem?.detailItems as string[]) || undefined
-              }
-            />
-          ))}
-        </SectionContentInner>
-      </ExperienceSection>
-      <EducationTitle>Education</EducationTitle>
-      <EducationSection>
-        <SectionContentInner contentEditable={isEditing}>
-          {resumeData.education?.map((experienceItem) => (
-            <Timeline
-              key={String(experienceItem?.date)}
-              company={experienceItem?.date || undefined}
-              title={experienceItem?.title || undefined}
-              date={experienceItem?.date || undefined}
-              detailItems={
-                (experienceItem?.detailItems as string[]) || undefined
-              }
-            />
-          ))}
-        </SectionContentInner>
-      </EducationSection>
-    </PageContainer>
+                  {resumeData.intro}
+                </SectionContentInner>
+              </IntroContent>
+              <ExperienceTitle>Experience</ExperienceTitle>
+              <ExperienceSection>
+                <SectionContentInner>
+                  <FieldArray name="experience">
+                    {({ remove, push }) => (
+                      <>
+                        {isEditing && (
+                          <AddSection
+                            onClick={() => {
+                              push(SampleTimeline)
+                            }}
+                          >
+                            +
+                          </AddSection>
+                        )}
+                        {values.experience?.map((item, index) => (
+                          <Timeline
+                            onRemove={() => {
+                              remove(index)
+                            }}
+                            onChange={(value) => {
+                              setFieldValue(`experience[${index}]`, value)
+                            }}
+                            innerHTML={
+                              typeof item === "string" ? item : undefined
+                            }
+                            contentEditable={isEditing}
+                            key={String(item?.date)}
+                            company={item?.company || undefined}
+                            title={item?.title || undefined}
+                            date={item?.date || undefined}
+                            detailItems={
+                              (item?.detailItems as string[]) || undefined
+                            }
+                          />
+                        ))}
+                      </>
+                    )}
+                  </FieldArray>
+                </SectionContentInner>
+              </ExperienceSection>
+              <EducationTitle>Education</EducationTitle>
+              <EducationSection>
+                <SectionContentInner>
+                  <FieldArray name="education">
+                    {({ remove, push }) => (
+                      <>
+                        {isEditing && (
+                          <AddSection
+                            onClick={() => {
+                              push(SampleTimeline)
+                            }}
+                          >
+                            +
+                          </AddSection>
+                        )}
+                        {values.education?.map((item, index) => (
+                          <Timeline
+                            onRemove={() => {
+                              remove(index)
+                            }}
+                            onChange={(value) => {
+                              setFieldValue(`education[${index}]`, value)
+                            }}
+                            innerHTML={
+                              typeof item === "string" ? item : undefined
+                            }
+                            contentEditable={isEditing}
+                            key={String(item?.date)}
+                            company={item?.company || undefined}
+                            title={item?.title || undefined}
+                            date={item?.date || undefined}
+                            detailItems={
+                              (item?.detailItems as string[]) || undefined
+                            }
+                          />
+                        ))}
+                      </>
+                    )}
+                  </FieldArray>
+                </SectionContentInner>
+              </EducationSection>
+            </PageContainer>
+          </Form>
+        )
+      }}
+    </Formik>
   )
 }
 
