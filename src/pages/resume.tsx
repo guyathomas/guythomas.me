@@ -33,7 +33,7 @@ export const pageQuery = graphql`
 
 import Resume from "~components/Resume"
 import { ResumeQuery } from "~types/gatsby-graphql"
-import { ThemeProvider } from "~templates"
+import { ThemeProvider } from "~context/ThemeProvider"
 import { ResumeJSON } from "~components/Resume/Resume"
 
 const STORAGE_KEY = "resume"
