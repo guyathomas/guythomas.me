@@ -39,7 +39,7 @@ import {
   SectionButton,
 } from "./styles"
 import { DarkModeToggle } from "~components/DarkModeToggle"
-import { ThemeContext } from "~templates"
+import { ThemeContext } from "~context/ThemeProvider"
 import { Formik, Form, FieldArray } from "formik"
 
 const DarkModeToggleAction = styled(DarkModeToggle)`

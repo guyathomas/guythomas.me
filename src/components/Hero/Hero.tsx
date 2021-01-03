@@ -1,6 +1,6 @@
 import React from "react"
 import styled from "@emotion/styled"
-import { ThemeContext } from "~templates"
+import { ThemeContext } from "~context/ThemeProvider"
 import { BREAKPOINTS, COLOR_PALETTE } from "~styles"
 import { HeroBanner } from "./HeroBanner"
 
