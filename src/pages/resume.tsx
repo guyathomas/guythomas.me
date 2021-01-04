@@ -32,7 +32,7 @@ export const pageQuery = graphql`
   }
 `
 
-import Resume from "~components/Resume"
+import Resume, { MOBILE, DESKTOP } from "~components/Resume"
 import Banner from "~components/Banner"
 import ButtonLink from "~components/ButtonLink"
 import { ResumeQuery } from "~types/gatsby-graphql"
@@ -42,11 +42,19 @@ import { ResumeJSON } from "~components/Resume/Resume"
 const STORAGE_KEY = "resume"
 const useResumeState = createPersistedState(STORAGE_KEY)
 const StyledButtonLink = styled(ButtonLink)`
-  margin-left: 1rem;
+  @media ${DESKTOP} {
+    margin-left: 1rem;
+  }
+  @media ${MOBILE} {
+    margin-top: 1rem;
+  }
 `
 const StyledBanner = styled(Banner)`
   @media only print {
     display: none;
+  }
+  @media ${MOBILE} {
+    flex-direction: column;
   }
 `
 
