@@ -4,7 +4,6 @@ import ContentEditable from "react-contenteditable"
 import {
   ResumeYamlExperience,
   ResumeYamlEducation,
-  Maybe,
 } from "~types/gatsby-graphql"
 
 import styled from "@emotion/styled"
@@ -15,7 +14,7 @@ interface TimelineProps {
   date?: string
   company?: string
   title?: string
-  detailItems?: Maybe<string>[]
+  details?: string
   className?: string
   contentEditable?: boolean
   onRemove?: () => void
@@ -70,21 +69,22 @@ const TimelineDate = styled(ContentEditable)`
 
 // eslint-disable-next-line
 // @ts-ignore
-const TimelineListItem = styled(ContentEditable)`
-  @media only print {
-    font-size: 85%;
-    margin-bottom: 0.5rem;
+const TimelineDetailsContent = styled(ContentEditable)`
+  & li {
+    @media only print {
+      font-size: 85%;
+      margin-bottom: 0.5rem;
+    }
   }
-`
-
-const TimelineList = styled.ul`
-  margin-left: 0;
-  margin-top: 1rem;
-  padding-left: 0.5rem;
-  list-style-position: outside;
-  @media only print {
-    margin-bottom: 0;
-    margin-top: 0.5rem;
+  & ul {
+    margin-left: 0;
+    margin-top: 1rem;
+    padding-left: 0.5rem;
+    list-style-position: outside;
+    @media only print {
+      margin-bottom: 0;
+      margin-top: 0.5rem;
+    }
   }
 `
 
@@ -104,7 +104,7 @@ const Timeline: React.FC<TimelineProps> = ({
   date = "",
   company = "",
   title = "",
-  detailItems = [],
+  details = "",
   className = "",
   contentEditable = false,
   onRemove,
@@ -150,23 +150,16 @@ const Timeline: React.FC<TimelineProps> = ({
         />
       </TimelineTitles>
       <TimelineDetails>
-        <TimelineList>
-          {detailItems.map((bullet, index) => (
-            <TimelineListItem
-              html={String(bullet)}
-              disabled={!contentEditable}
-              onChange={(event) => {
-                if (onChange) {
-                  // eslint-disable-next-line
-                  // @ts-ignore
-                  onChange(`detailItems[${index}]`, event.target.value)
-                }
-              }}
-              tagName="li"
-              key={index}
-            />
-          ))}
-        </TimelineList>
+        <TimelineDetailsContent
+          html={details}
+          disabled={!contentEditable}
+          onChange={(event) => {
+            if (onChange) {
+              onChange(`details`, event.target.value)
+            }
+          }}
+          tagName="div"
+        />
       </TimelineDetails>
     </TimelineOuter>
   )

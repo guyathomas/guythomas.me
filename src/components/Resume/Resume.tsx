@@ -45,18 +45,15 @@ import { Formik, Form, FieldArray } from "formik"
 const DarkModeToggleAction = styled(DarkModeToggle)`
   ${InteractiveSvgStyles}
 `
-type EditedResumeFields = {
-  experience: string[]
-  education: string[]
-}
-type ExistingResumeFields = ResumeQuery["allResumeYaml"]["nodes"][0]
-export type ResumeJSON = ExistingResumeFields & EditedResumeFields
+
+export type ResumeJSON = ResumeQuery["allResumeYaml"]["nodes"][0]
 
 const SampleTimeline: ResumeYamlExperience = {
   title: "Title",
   company: "Company",
   date: "Date",
-  detailItems: ["First", "Second", "Third"],
+  details:
+    "List of details<ul><li>First</li><li>Second</li><li>Third</li></ul>",
 }
 
 const AddSection = styled(SectionButton)`
@@ -262,11 +259,9 @@ const Resume: React.FC<{
                               contentEditable={isEditing}
                               company={item?.company || ""}
                               title={item?.title || ""}
-                              key={index}
                               date={item?.date || ""}
-                              detailItems={
-                                (item?.detailItems as string[]) || []
-                              }
+                              details={item?.details || ""}
+                              key={index}
                             />
                           )
                         })}
@@ -305,9 +300,7 @@ const Resume: React.FC<{
                               company={item?.company || ""}
                               title={item?.title || ""}
                               date={item?.date || ""}
-                              detailItems={
-                                (item?.detailItems as string[]) || []
-                              }
+                              details={item?.details || ""}
                             />
                           )
                         })}
