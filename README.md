@@ -38,6 +38,10 @@ A resume that can be configured with a simple `YAML` file. A PDF version is down
   - Add event listener for Dark Mode changes
     - Abstract changes into plugin?
   - Embedded JSX editor
+- Resume
+  - Form state does not reset upon clicking the reset button in the banner
+  - Add / remove contact information
+  - Fix styles for printed content ( currently breaks when the content is changed dramatically )
 
 ### Arch
 
