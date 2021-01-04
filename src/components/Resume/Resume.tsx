@@ -125,7 +125,11 @@ const Resume: React.FC<{
                             style={{ cursor: "pointer" }}
                             target="_blank"
                             rel="noreferrer"
-                            onClick={isEditing ? window.print : undefined}
+                            onClick={
+                              typeof window !== "undefined" && isEditing
+                                ? window.print
+                                : undefined
+                            }
                             href={isEditing ? undefined : downloadLink}
                           >
                             <DownloadIcon />
@@ -245,27 +249,27 @@ const Resume: React.FC<{
                             +
                           </AddSection>
                         )}
-                        {values.experience?.map((item, index) => (
-                          <Timeline
-                            onRemove={() => {
-                              remove(index)
-                            }}
-                            onChange={(value) => {
-                              setFieldValue(`experience[${index}]`, value)
-                            }}
-                            innerHTML={
-                              typeof item === "string" ? item : undefined
-                            }
-                            contentEditable={isEditing}
-                            key={String(item?.date)}
-                            company={item?.company || undefined}
-                            title={item?.title || undefined}
-                            date={item?.date || undefined}
-                            detailItems={
-                              (item?.detailItems as string[]) || undefined
-                            }
-                          />
-                        ))}
+                        {values.experience?.map((item, index) => {
+                          const name = `experience[${index}]`
+                          return (
+                            <Timeline
+                              onRemove={() => {
+                                remove(index)
+                              }}
+                              onChange={(fieldValue, value) => {
+                                setFieldValue(`${name}.${fieldValue}`, value)
+                              }}
+                              contentEditable={isEditing}
+                              company={item?.company || ""}
+                              title={item?.title || ""}
+                              key={index}
+                              date={item?.date || ""}
+                              detailItems={
+                                (item?.detailItems as string[]) || []
+                              }
+                            />
+                          )
+                        })}
                       </>
                     )}
                   </FieldArray>
@@ -286,27 +290,27 @@ const Resume: React.FC<{
                             +
                           </AddSection>
                         )}
-                        {values.education?.map((item, index) => (
-                          <Timeline
-                            onRemove={() => {
-                              remove(index)
-                            }}
-                            onChange={(value) => {
-                              setFieldValue(`education[${index}]`, value)
-                            }}
-                            innerHTML={
-                              typeof item === "string" ? item : undefined
-                            }
-                            contentEditable={isEditing}
-                            key={String(item?.date)}
-                            company={item?.company || undefined}
-                            title={item?.title || undefined}
-                            date={item?.date || undefined}
-                            detailItems={
-                              (item?.detailItems as string[]) || undefined
-                            }
-                          />
-                        ))}
+                        {values.education?.map((item, index) => {
+                          const name = `education[${index}]`
+                          return (
+                            <Timeline
+                              onRemove={() => {
+                                remove(index)
+                              }}
+                              onChange={(fieldValue, value) => {
+                                setFieldValue(`${name}.${fieldValue}`, value)
+                              }}
+                              contentEditable={isEditing}
+                              key={item?.date?.toString()}
+                              company={item?.company || ""}
+                              title={item?.title || ""}
+                              date={item?.date || ""}
+                              detailItems={
+                                (item?.detailItems as string[]) || []
+                              }
+                            />
+                          )
+                        })}
                       </>
                     )}
                   </FieldArray>

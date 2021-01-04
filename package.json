@@ -69,6 +69,7 @@
     "prismjs": "^1.22.0",
     "puppeteer": "^5.5.0",
     "react": "^17.0.1",
+    "react-contenteditable": "^3.3.5",
     "react-dom": "^17.0.1",
     "react-helmet": "^6.1.0",
     "react-popper-tooltip": "^3.1.1",

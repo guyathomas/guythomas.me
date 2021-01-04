@@ -1,5 +1,12 @@
 import React from "react"
-import { Maybe } from "~types/gatsby-graphql"
+import ContentEditable from "react-contenteditable"
+
+import {
+  ResumeYamlExperience,
+  ResumeYamlEducation,
+  Maybe,
+} from "~types/gatsby-graphql"
+
 import styled from "@emotion/styled"
 import { DESKTOP } from "./constants"
 import { SectionButton } from "./styles"
@@ -12,42 +19,34 @@ interface TimelineProps {
   className?: string
   contentEditable?: boolean
   onRemove?: () => void
-  onChange?: (value: string) => void
-  innerHTML?: string
+  onChange?: (fieldValue: TimelineFieldNames, value: string) => void
 }
 
 const TimelineOuter = styled.div`
   position: relative;
-  & > div {
-    display: grid;
-    grid-template-columns: 1fr;
-    @media ${DESKTOP} {
-      grid-gap: 2rem;
-      grid-template-columns: 1fr 2fr;
-    }
+  display: grid;
+  grid-template-columns: 1fr;
+  @media ${DESKTOP} {
+    grid-gap: 2rem;
+    grid-template-columns: 1fr 2fr;
   }
 `
 
 const TimelineTitles = styled.div``
 const TimelineDetails = styled.div``
 
-const TimelineDate = styled.h5`
-  opacity: 0.6;
-  font-size: 0.7rem;
+// eslint-disable-next-line
+// @ts-ignore
+const TimelineCompany = styled(ContentEditable)`
   margin: 1rem 0 1rem;
   @media print {
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
   }
 `
-const TimelineCompany = styled.h3`
-  margin: 1rem 0 1rem;
-  @media print {
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
-  }
-`
-const TimelineTitle = styled.h4`
+// eslint-disable-next-line
+// @ts-ignore
+const TimelineTitle = styled(ContentEditable)`
   margin: 0;
   font-size: 0.8rem;
   margin: 1rem 0 1rem;
@@ -57,7 +56,21 @@ const TimelineTitle = styled.h4`
   }
 `
 
-const TimelineListItem = styled.li`
+// eslint-disable-next-line
+// @ts-ignore
+const TimelineDate = styled(ContentEditable)`
+  opacity: 0.6;
+  font-size: 0.7rem;
+  margin: 1rem 0 1rem;
+  @media print {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+`
+
+// eslint-disable-next-line
+// @ts-ignore
+const TimelineListItem = styled(ContentEditable)`
   @media only print {
     font-size: 85%;
     margin-bottom: 0.5rem;
@@ -84,45 +97,19 @@ const RemoveSection = styled(SectionButton)`
     top: 20px;
   }
 `
+
+type TimelineFieldNames = keyof ResumeYamlEducation | keyof ResumeYamlExperience
+
 const Timeline: React.FC<TimelineProps> = ({
-  date,
-  company,
-  title,
+  date = "",
+  company = "",
+  title = "",
   detailItems = [],
   className = "",
   contentEditable = false,
   onRemove,
   onChange,
-  innerHTML,
 }) => {
-  const [initialHTML] = React.useState(innerHTML)
-  const test = React.useRef<HTMLDivElement>(null)
-  React.useEffect(() => {
-    if (contentEditable && onChange) {
-      onChange(test.current?.innerHTML || "")
-    }
-    // I don't want to force the memoization of onChange.
-    // Including in this array will cause an infinite loop since it changes on every render
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [contentEditable, test])
-
-  const content = initialHTML ? null : (
-    <>
-      <TimelineTitles>
-        {date && <TimelineDate>{date}</TimelineDate>}
-        {company && <TimelineCompany>{company}</TimelineCompany>}
-        {title && <TimelineTitle>{title}</TimelineTitle>}
-      </TimelineTitles>
-      <TimelineDetails>
-        <TimelineList>
-          {detailItems.map((bullet) => (
-            <TimelineListItem key={String(bullet)}>{bullet}</TimelineListItem>
-          ))}
-        </TimelineList>
-      </TimelineDetails>
-    </>
-  )
-
   return (
     <TimelineOuter className={className}>
       {contentEditable && (
@@ -130,22 +117,57 @@ const Timeline: React.FC<TimelineProps> = ({
           -
         </RemoveSection>
       )}
-      <div
-        ref={test}
-        contentEditable={contentEditable}
-        onInput={(event) => {
-          if (onChange) onChange(event.currentTarget.innerHTML)
-        }}
-        dangerouslySetInnerHTML={
-          initialHTML
-            ? {
-                __html: initialHTML,
-              }
-            : undefined
-        }
-      >
-        {content}
-      </div>
+      <TimelineTitles>
+        <TimelineCompany
+          html={company}
+          disabled={!contentEditable}
+          onChange={(event) => {
+            if (onChange) {
+              onChange("company", event.target.value)
+            }
+          }}
+          tagName="h3"
+        />
+        <TimelineDate
+          html={date}
+          disabled={!contentEditable}
+          onChange={(event) => {
+            if (onChange) {
+              onChange("date", event.target.value)
+            }
+          }}
+          tagName="h3"
+        />
+        <TimelineTitle
+          html={title}
+          disabled={!contentEditable}
+          onChange={(event) => {
+            if (onChange) {
+              onChange("title", event.target.value)
+            }
+          }}
+          tagName="h4"
+        />
+      </TimelineTitles>
+      <TimelineDetails>
+        <TimelineList>
+          {detailItems.map((bullet, index) => (
+            <TimelineListItem
+              html={String(bullet)}
+              disabled={!contentEditable}
+              onChange={(event) => {
+                if (onChange) {
+                  // eslint-disable-next-line
+                  // @ts-ignore
+                  onChange(`detailItems[${index}]`, event.target.value)
+                }
+              }}
+              tagName="li"
+              key={index}
+            />
+          ))}
+        </TimelineList>
+      </TimelineDetails>
     </TimelineOuter>
   )
 }
