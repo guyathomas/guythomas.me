@@ -1,2 +1,3 @@
 export { default } from "./Resume"
-export { MOBILE, DESKTOP } from "./constants"
+export { ResumeBanner } from "./ResumeBanner"
+export { ResumeBannerButton } from "./ResumeBannerButton"

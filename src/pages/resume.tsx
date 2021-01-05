@@ -1,7 +1,6 @@
 import React from "react"
 import { graphql } from "gatsby"
 import createPersistedState from "use-persisted-state"
-import styled from "@emotion/styled"
 
 export const pageQuery = graphql`
   query Resume {
@@ -32,31 +31,14 @@ export const pageQuery = graphql`
   }
 `
 
-import Resume, { MOBILE, DESKTOP } from "~components/Resume"
-import Banner from "~components/Banner"
-import ButtonLink from "~components/ButtonLink"
+import Resume, { ResumeBanner, ResumeBannerButton } from "~components/Resume"
+
 import { ResumeQuery } from "~types/gatsby-graphql"
 import { ThemeProvider } from "~context/ThemeProvider"
 import { ResumeJSON } from "~components/Resume/Resume"
 
 const STORAGE_KEY = "resume"
 const useResumeState = createPersistedState(STORAGE_KEY)
-const StyledButtonLink = styled(ButtonLink)`
-  @media ${DESKTOP} {
-    margin-left: 1rem;
-  }
-  @media ${MOBILE} {
-    margin-top: 1rem;
-  }
-`
-const StyledBanner = styled(Banner)`
-  @media only print {
-    display: none;
-  }
-  @media ${MOBILE} {
-    flex-direction: column;
-  }
-`
 
 const ResumePage: React.FC<{
   data: ResumeQuery
@@ -66,26 +48,27 @@ const ResumePage: React.FC<{
   },
 }) => {
   const [customResume, setCustomResume] = useResumeState<ResumeJSON>()
+  const [isEditing, setIsEditing] = React.useState(false)
   const resetChanges = React.useCallback(() => {
     setCustomResume(undefined)
     localStorage?.removeItem(STORAGE_KEY)
   }, [setCustomResume])
   return (
     <ThemeProvider>
-      {customResume && (
-        <StyledBanner>
+      {!isEditing && customResume && (
+        <ResumeBanner>
           You have modified this resume, but no one else can see the changes.
-          <StyledButtonLink onClick={resetChanges}>
+          <ResumeBannerButton onClick={resetChanges}>
             Discard Changes
-          </StyledButtonLink>
-          <StyledButtonLink
+          </ResumeBannerButton>
+          <ResumeBannerButton
             onClick={() => {
               typeof window !== "undefined" && window.print()
             }}
           >
             Print Resume
-          </StyledButtonLink>
-        </StyledBanner>
+          </ResumeBannerButton>
+        </ResumeBanner>
       )}
       <Resume
         resumeData={customResume ? customResume : nodes[0]}
@@ -93,6 +76,7 @@ const ResumePage: React.FC<{
           setCustomResume(newResume)
         }}
         onReset={resetChanges}
+        onEdit={setIsEditing}
       />
     </ThemeProvider>
   )
