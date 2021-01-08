@@ -40,12 +40,15 @@ import {
 } from "./styles"
 import { DarkModeToggle } from "~components/DarkModeToggle"
 import { ThemeContext } from "~context/ThemeProvider"
-import { Formik, Form, FieldArray } from "formik"
+import { Formik, Form, FieldArray, Field } from "formik"
 import { ResumeBanner } from "./ResumeBanner"
 import { ResumeBannerButton } from "./ResumeBannerButton"
 const DarkModeToggleAction = styled(DarkModeToggle)`
   ${InteractiveSvgStyles}
 `
+
+const DEFAULT_AVATAR_URL =
+  "https://e7.pngegg.com/pngimages/84/165/png-clipart-united-states-avatar-organization-information-user-avatar-service-computer-wallpaper.png"
 
 export type ResumeJSON = ResumeQuery["allResumeYaml"]["nodes"][0]
 
@@ -112,9 +115,17 @@ const Resume: React.FC<{
                 <PageContainer>
                   <ProfileSection>
                     <ProfileContainer>
-                      {resumeData.avatar && (
-                        <img src={resumeData.avatar} alt="profile-picture" />
+                      {isEditing && (
+                        <Field
+                          style={{ width: "100%" }}
+                          id="avatar"
+                          name="avatar"
+                        />
                       )}
+                      <img
+                        src={resumeData.avatar || DEFAULT_AVATAR_URL}
+                        alt="profile-picture"
+                      />
                     </ProfileContainer>
                   </ProfileSection>
                   <BioWrapper>
