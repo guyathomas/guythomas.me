@@ -56,7 +56,6 @@ export const PageContainer = styled.div`
   }
   @media only print {
     grid-template-columns: repeat(6, 1fr);
-    min-height: 100vh;
     grid-template-areas:
       "profile profile bio bio bio bio"
       "intro-content intro-content intro-content intro-content intro-content intro-content"
@@ -275,5 +274,12 @@ export const SectionButton = styled.button<SectionButtonProps>`
   }
   @media print {
     display: none;
+  }
+`
+
+export const Background = styled.div`
+  @media print {
+    background-color: ${() => COLOR_PALETTE.backgroundPrimary.color};
+    min-height: 100vh;
   }
 `

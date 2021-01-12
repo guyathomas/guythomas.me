@@ -37,6 +37,7 @@ import {
   Names,
   ResumeActionContainer,
   SectionButton,
+  Background,
 } from "./styles"
 import { DarkModeToggle } from "~components/DarkModeToggle"
 import { ThemeContext } from "~context/ThemeProvider"
@@ -81,7 +82,7 @@ const Resume: React.FC<{
     if (onEdit) onEdit(isEditing)
   }, [isEditing, onEdit])
   return (
-    <>
+    <Background>
       <Formik initialValues={resumeData} onSubmit={noop}>
         {({ values, setFieldValue }) => {
           const createOnInput = (name: keyof ResumeJSON) => (
@@ -369,7 +370,7 @@ const Resume: React.FC<{
           )
         }}
       </Formik>
-    </>
+    </Background>
   )
 }
 
