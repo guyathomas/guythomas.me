@@ -156,10 +156,13 @@ export const ContactTitle = styled.h4`
 `
 
 export const FirstName = styled.h1`
+  font-weight: bold;
   margin: 0;
+  @media print {
+    font-weight: initial;
+  }
 `
 export const LastName = styled(FirstName)`
-  font-weight: bold;
   @media print {
     margin-left: 1rem;
   }
