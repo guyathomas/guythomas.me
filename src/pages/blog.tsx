@@ -29,7 +29,11 @@ export const pageQuery = graphql`
     }
     allMarkdownRemark(
       sort: { fields: [frontmatter___date], order: DESC }
-      filter: { fields: { sourceInstanceName: { eq: "blog" } } }
+      filter: {
+        fields: { sourceInstanceName: { eq: "blog" } }
+        frontmatter: { published: { eq: true } }
+      }
+      limit: 2
     ) {
       edges {
         node {
