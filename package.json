@@ -21,7 +21,7 @@
     "build": "gatsby build",
     "clean": "gatsby clean",
     "develop": "gatsby develop",
-    "generate-resume": "./print-pdf.js",
+    "generate-resume": "ts-node ./print-pdf.js",
     "develop-network": "gatsby develop -H 0.0.0.0 -p 8000",
     "format": "prettier --write \"**/*.{js,jsx,json,md}\"",
     "lint": "eslint . --ext ts --ext tsx",

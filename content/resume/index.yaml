@@ -17,13 +17,14 @@ experience:
     title: Senior Software Engineer
     details: !markdown |
       * Team lead for an Insurance Marketplace for drivers to purchase policies. From MVP to multi-carrier support across Android, iOS and Web
-      * Led an E2E testing initiative across all of Lyft leveraging Cypress and replaying network snapshots in CI to support jailed testing constraints
+        * Built using React 16.8+ (hooks), Typescript, NextJS & Python
+      * Led an E2E testing initiative across all of Lyft allowing recording and replaying of HTTP responses with Cypress
       * Enabled a 3x increase in productivity by leading the adoption for our entire org from a cloud based development workflow to a local workflow
   - date: 26th June, 2017 – 31st January, 2019
     company: Reflektive
     title: Software Engineer
     details: !markdown |
-      * Team lead for our core 'Reviews' product. Drove a rebuild of the entire workflow from Backbone to React with a whole new UI
+      * Team lead for our core 'Reviews' product. Drove a rebuild of the entire product from Backbone to React & Redux
       * Cut development build times by 50% and reduced application load times over HTTP2 by implementing Webpack best practices
   - date: 7th July, 2014 – 3rd June, 2016
     company: IBM
