@@ -83,12 +83,13 @@ const SVGAnimation: React.FC = () => <Global styles={headerLinkStyles} />
 interface DarkModeToggleProps {
   toggleType?: "sun" | "clock"
   className?: string
+  ref?: React.ForwardedRef<HTMLButtonElement>
 }
 
-export const DarkModeToggle: React.FC<DarkModeToggleProps> = ({
-  toggleType = "sun",
-  className,
-}) => {
+export const DarkModeToggle = React.forwardRef<
+  HTMLButtonElement,
+  DarkModeToggleProps
+>(({ toggleType, className }, ref) => {
   const { isDarkMode, toggleColorMode } = React.useContext(ThemeContext)
 
   if (toggleType === "clock") {
@@ -97,6 +98,7 @@ export const DarkModeToggle: React.FC<DarkModeToggleProps> = ({
         className={className}
         isDarkMode={isDarkMode}
         onClick={toggleColorMode}
+        ref={ref}
       >
         <SVGWrapper enabled={isDarkMode}>
           <SVGAnimation />
@@ -111,6 +113,7 @@ export const DarkModeToggle: React.FC<DarkModeToggleProps> = ({
       className={className}
       isDarkMode={isDarkMode}
       onClick={toggleColorMode}
+      ref={ref}
     >
       <SVGWrapperSun enabled={isDarkMode}>
         <Sun />
@@ -120,4 +123,4 @@ export const DarkModeToggle: React.FC<DarkModeToggleProps> = ({
       </SVGWrapperSun>
     </SunToggleButton>
   )
-}
+})

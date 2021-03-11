@@ -7,10 +7,10 @@ const SectionContent = styled.div`
   position: relative;
   @media ${DESKTOP} {
     justify-content: flex-end;
-    &:nth-child(4n) {
+    &:nth-of-type(4n) {
       background-color: ${() => COLOR_PALETTE.backgroundSecondary.color};
     }
-    &:nth-child(4n + 2) {
+    &:nth-of-type(4n + 2) {
       background-color: ${() => COLOR_PALETTE.backgroundPrimary.color};
     }
   }
@@ -32,10 +32,10 @@ const SectionTitle = styled.div`
   @media ${DESKTOP} {
     justify-content: flex-end;
     padding: 4.375rem 5.25rem 1.6625rem;
-    &:nth-child(4n + 1) {
+    &:nth-of-type(4n + 1) {
       background-color: ${() => COLOR_PALETTE.backgroundSecondary.color};
     }
-    &:nth-child(4n + 3) {
+    &:nth-of-type(4n + 3) {
       background-color: ${() => COLOR_PALETTE.backgroundTertiary.color};
     }
   }

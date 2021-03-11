@@ -1,6 +1,5 @@
 import React from "react"
 import styled from "@emotion/styled"
-import PageTransition from "gatsby-plugin-page-transitions"
 import { Header } from "~components/Header"
 import { Menu } from "~components/Menu"
 import { COLOR_PALETTE, BREAKPOINTS } from "~styles"
@@ -51,17 +50,15 @@ export const App: React.FC<AppProps> = ({ children }) => {
         }}
         isMenuActive={isMenuActive}
       />
-      <PageTransition>
-        <ContentBackground>
-          {children}
-          <StyledMenu
-            isActive={isMenuActive}
-            onClick={() => {
-              setIsMenuActive(false)
-            }}
-          />
-        </ContentBackground>
-      </PageTransition>
+      <ContentBackground>
+        {children}
+        <StyledMenu
+          isActive={isMenuActive}
+          onClick={() => {
+            setIsMenuActive(false)
+          }}
+        />
+      </ContentBackground>
     </Providers>
   )
 }

@@ -233,7 +233,13 @@ const Resume: React.FC<{
                                 <GithubIcon />
                               </a>
                             </Tooltip>
-                            <DarkModeToggleAction />
+                            <Tooltip
+                              tooltip={`Toggle ${
+                                isDarkMode ? "light" : "dark"
+                              } mode`}
+                            >
+                              <DarkModeToggleAction />
+                            </Tooltip>
                           </ResumeActionContainer>
                         </DescriptionRow>
                       </Titles>

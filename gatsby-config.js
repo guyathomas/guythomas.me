@@ -31,7 +31,6 @@ module.exports = {
         "~types": path.join(__dirname, "src/types"),
       },
     },
-    `gatsby-source-instance-name-for-remark`, // will attach gatsby-source-filesystem `name` field to node
     {
       resolve: "gatsby-transformer-yaml-full",
       options: {
@@ -40,7 +39,6 @@ module.exports = {
         ],
       },
     },
-    `gatsby-plugin-page-transitions`,
     {
       resolve: `gatsby-source-filesystem`,
       options: {
