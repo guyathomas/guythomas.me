@@ -2,25 +2,32 @@ const path = require(`path`)
 const { createFilePath } = require(`gatsby-source-filesystem`)
 const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin")
 
-const createPages = (createPage, allEdges, name) => {
+// Could use lodash in the future. Didn't want to `npm i` just for this.
+const groupBy = (collection, iteratee) =>
+  collection.reduce((acc, item) => {
+    const id = iteratee(item)
+    const existingRecord = acc.get(id)
+    if (!existingRecord) acc.set(id, [])
+    return acc.set(id, [...acc.get(id), item])
+  }, new Map())
+
+const createPages = (createPage, edges = []) => {
   const PostTemplate = path.resolve(`./src/dynamicPages/post.tsx`)
-  allEdges
-    .filter((edge) => edge.node.fields.sourceInstanceName === name)
-    .forEach((post, index, edges) => {
-      const previous = index === edges.length - 1 ? null : edges[index + 1].node
-      const next = index === 0 ? null : edges[index - 1].node
-      const path = `/${post.node.fields.sourceInstanceName}${post.node.fields.slug}`
-      createPage({
-        path,
-        component: PostTemplate,
-        context: {
-          slug: post.node.fields.slug,
-          postPath: path,
-          previous,
-          next,
-        },
-      })
+  edges.forEach((post, index, edges) => {
+    const previous = index === edges.length - 1 ? null : edges[index + 1].node
+    const next = index === 0 ? null : edges[index - 1].node
+    const path = `/${post.node.fields.sourceInstanceName}${post.node.fields.slug}`
+    createPage({
+      path,
+      component: PostTemplate,
+      context: {
+        slug: post.node.fields.slug,
+        postPath: path,
+        previous,
+        next,
+      },
     })
+  })
 }
 
 exports.createPages = async ({ graphql, actions }) => {
@@ -53,9 +60,11 @@ exports.createPages = async ({ graphql, actions }) => {
   }
 
   // Create blog posts pages.
-  const posts = result.data.allMarkdownRemark.edges
-  createPages(createPage, posts, "blog")
-  createPages(createPage, posts, "notes")
+  const groupedPosts = groupBy(
+    result.data.allMarkdownRemark.edges,
+    (edge) => edge.node.fields.sourceInstanceName
+  )
+  groupedPosts.forEach((edges) => createPages(createPage, edges))
 }
 
 exports.onCreateNode = ({ node, actions, getNode }) => {
@@ -72,7 +81,7 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
     createNodeField({
       name: `sourceInstanceName`,
       node,
-      value,
+      value: parent.sourceInstanceName,
     })
   }
 }
