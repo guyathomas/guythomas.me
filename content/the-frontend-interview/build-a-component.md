@@ -5,4 +5,8 @@ published: true
 description: Define a spec for a UI component & then build it
 ---
 
+## Seven Segment LED
+
+<div class="full-bleed"></div>
+
 [Seven Segment Clock](embedded-codesandbox://seven-segment-clock)

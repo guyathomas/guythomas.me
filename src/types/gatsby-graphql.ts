@@ -777,6 +777,8 @@ export type SitePluginPluginOptions = {
   disableBgImageOnAlpha?: Maybe<Scalars['Boolean']>;
   disableBgImage?: Maybe<Scalars['Boolean']>;
   wrapperStyle?: Maybe<Scalars['String']>;
+  directory?: Maybe<Scalars['String']>;
+  embedOptions?: Maybe<SitePluginPluginOptionsEmbedOptions>;
   base64Width?: Maybe<Scalars['Int']>;
   stripMetadata?: Maybe<Scalars['Boolean']>;
   defaultQuality?: Maybe<Scalars['Int']>;
@@ -830,6 +832,18 @@ export type SitePluginPluginOptionsPluginsPluginOptions = {
   disableBgImageOnAlpha?: Maybe<Scalars['Boolean']>;
   disableBgImage?: Maybe<Scalars['Boolean']>;
   wrapperStyle?: Maybe<Scalars['String']>;
+  directory?: Maybe<Scalars['String']>;
+  embedOptions?: Maybe<SitePluginPluginOptionsPluginsPluginOptionsEmbedOptions>;
+};
+
+export type SitePluginPluginOptionsPluginsPluginOptionsEmbedOptions = {
+  view?: Maybe<Scalars['String']>;
+  hidenavigation?: Maybe<Scalars['Int']>;
+};
+
+export type SitePluginPluginOptionsEmbedOptions = {
+  view?: Maybe<Scalars['String']>;
+  hidenavigation?: Maybe<Scalars['Int']>;
 };
 
 export type SitePluginPackageJson = {
@@ -2426,6 +2440,8 @@ export type SitePluginPluginOptionsFilterInput = {
   disableBgImageOnAlpha?: Maybe<BooleanQueryOperatorInput>;
   disableBgImage?: Maybe<BooleanQueryOperatorInput>;
   wrapperStyle?: Maybe<StringQueryOperatorInput>;
+  directory?: Maybe<StringQueryOperatorInput>;
+  embedOptions?: Maybe<SitePluginPluginOptionsEmbedOptionsFilterInput>;
   base64Width?: Maybe<IntQueryOperatorInput>;
   stripMetadata?: Maybe<BooleanQueryOperatorInput>;
   defaultQuality?: Maybe<IntQueryOperatorInput>;
@@ -2483,6 +2499,18 @@ export type SitePluginPluginOptionsPluginsPluginOptionsFilterInput = {
   disableBgImageOnAlpha?: Maybe<BooleanQueryOperatorInput>;
   disableBgImage?: Maybe<BooleanQueryOperatorInput>;
   wrapperStyle?: Maybe<StringQueryOperatorInput>;
+  directory?: Maybe<StringQueryOperatorInput>;
+  embedOptions?: Maybe<SitePluginPluginOptionsPluginsPluginOptionsEmbedOptionsFilterInput>;
+};
+
+export type SitePluginPluginOptionsPluginsPluginOptionsEmbedOptionsFilterInput = {
+  view?: Maybe<StringQueryOperatorInput>;
+  hidenavigation?: Maybe<IntQueryOperatorInput>;
+};
+
+export type SitePluginPluginOptionsEmbedOptionsFilterInput = {
+  view?: Maybe<StringQueryOperatorInput>;
+  hidenavigation?: Maybe<IntQueryOperatorInput>;
 };
 
 export type SitePluginPackageJsonFilterInput = {
@@ -2644,6 +2672,9 @@ export type SitePageFieldsEnum =
   | 'pluginCreator___pluginOptions___disableBgImageOnAlpha'
   | 'pluginCreator___pluginOptions___disableBgImage'
   | 'pluginCreator___pluginOptions___wrapperStyle'
+  | 'pluginCreator___pluginOptions___directory'
+  | 'pluginCreator___pluginOptions___embedOptions___view'
+  | 'pluginCreator___pluginOptions___embedOptions___hidenavigation'
   | 'pluginCreator___pluginOptions___base64Width'
   | 'pluginCreator___pluginOptions___stripMetadata'
   | 'pluginCreator___pluginOptions___defaultQuality'
@@ -3539,6 +3570,7 @@ export type SitePluginFieldsEnum =
   | 'pluginOptions___plugins___pluginOptions___disableBgImageOnAlpha'
   | 'pluginOptions___plugins___pluginOptions___disableBgImage'
   | 'pluginOptions___plugins___pluginOptions___wrapperStyle'
+  | 'pluginOptions___plugins___pluginOptions___directory'
   | 'pluginOptions___plugins___nodeAPIs'
   | 'pluginOptions___plugins___browserAPIs'
   | 'pluginOptions___plugins___ssrAPIs'
@@ -3571,6 +3603,9 @@ export type SitePluginFieldsEnum =
   | 'pluginOptions___disableBgImageOnAlpha'
   | 'pluginOptions___disableBgImage'
   | 'pluginOptions___wrapperStyle'
+  | 'pluginOptions___directory'
+  | 'pluginOptions___embedOptions___view'
+  | 'pluginOptions___embedOptions___hidenavigation'
   | 'pluginOptions___base64Width'
   | 'pluginOptions___stripMetadata'
   | 'pluginOptions___defaultQuality'

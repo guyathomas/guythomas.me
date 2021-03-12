@@ -8,7 +8,9 @@ import { Comment } from "~components/Comment"
 import { CreateComment } from "~components/CreateComment"
 import { PostBySlugQuery, SitePageContext } from "~types/gatsby-graphql"
 import { useAuth0 } from "@auth0/auth0-react"
-
+import styled from "@emotion/styled"
+import { BREAKPOINTS } from "~styles"
+import "./post.css"
 interface PostProps {
   data: PostBySlugQuery
   pageContext: SitePageContext
@@ -96,6 +98,17 @@ const Comments: React.FC<CommentsProps> = ({ slug }) => {
   )
 }
 
+const Article = styled.article`
+  display: grid;
+  grid-template-columns: 1fr min(${BREAKPOINTS.md}px, 100%) 1fr;
+  & > * {
+    grid-column: 2;
+  }
+  & > .full-bleed + * {
+    grid-column: 1/4;
+  }
+`
+
 const PostPage: React.FC<PostProps> = ({
   pageContext: { slug },
   data: { markdownRemark: post },
@@ -110,9 +123,7 @@ const PostPage: React.FC<PostProps> = ({
         title={`${post?.frontmatter?.title || ""}`}
         description={post?.frontmatter?.description || post?.excerpt || ""}
       />
-      <article>
-        <section dangerouslySetInnerHTML={{ __html: post?.html || "" }} />
-      </article>
+      <Article dangerouslySetInnerHTML={{ __html: post?.html || "" }} />
       {/* <Comments slug={cleanedSlug} /> */}
     </Post>
   )
