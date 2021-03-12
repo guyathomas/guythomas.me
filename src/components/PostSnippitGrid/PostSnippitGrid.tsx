@@ -1,7 +1,8 @@
 import React from "react"
-
+import styled from "@emotion/styled"
 import { PostSnippitItem } from "./PostSnippitItem"
 import { Post } from "./types"
+import { BREAKPOINTS } from "~styles"
 
 interface PostSnippitGridProps {
   title?: string

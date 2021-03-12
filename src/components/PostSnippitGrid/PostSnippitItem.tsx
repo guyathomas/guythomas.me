@@ -2,6 +2,7 @@ import React from "react"
 import { Link } from "~components/Link"
 import styled from "@emotion/styled"
 import { Post } from "./types"
+import { BREAKPOINTS } from "~styles"
 
 interface PostSnippitItemProps {
   post: Post
@@ -17,6 +18,11 @@ const Time = styled.time`
   font-size: 0.8rem;
 `
 
+const Snippet = styled.div`
+  max-width: ${BREAKPOINTS.md}px;
+  margin: auto;
+`
+
 export const PostSnippitItem: React.FC<PostSnippitItemProps> = ({
   post: { node },
 }) => {
@@ -25,7 +31,7 @@ export const PostSnippitItem: React.FC<PostSnippitItemProps> = ({
     node?.fields?.slug || ""
   }`
   return (
-    <div key={node?.fields?.slug || ""}>
+    <Snippet key={node?.fields?.slug || ""}>
       <div>
         <Time>{node?.frontmatter?.date}</Time>
         <Heading>
@@ -39,6 +45,6 @@ export const PostSnippitItem: React.FC<PostSnippitItemProps> = ({
           }}
         />
       </section>
-    </div>
+    </Snippet>
   )
 }

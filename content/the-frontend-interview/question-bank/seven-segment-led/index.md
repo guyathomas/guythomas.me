@@ -1,4 +1,12 @@
-# Seven Segment LED
+---
+title: Seven Segment LED
+date: "2021-02-01T00:00:00.000Z"
+published: true
+description: Create a real-time 7 segment LED
+category: build-a-ui
+---
+
+[Seven Segment LED](./seven-segment-led)
 
 ## Prompt
 
