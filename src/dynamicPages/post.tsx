@@ -113,7 +113,7 @@ const PostPage: React.FC<PostProps> = ({
       <article>
         <section dangerouslySetInnerHTML={{ __html: post?.html || "" }} />
       </article>
-      <Comments slug={cleanedSlug} />
+      {/* <Comments slug={cleanedSlug} /> */}
     </Post>
   )
 }
