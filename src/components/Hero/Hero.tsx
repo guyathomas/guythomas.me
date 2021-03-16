@@ -1,23 +1,8 @@
 import React from "react"
 import styled from "@emotion/styled"
 import { ThemeContext } from "~context/ThemeProvider"
-import { BREAKPOINTS, COLOR_PALETTE } from "~styles"
+import { COLOR_PALETTE } from "~styles"
 import { HeroBanner } from "./HeroBanner"
-
-const MainContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-`
-
-const Main = styled.main`
-  max-width: ${BREAKPOINTS.md}px;
-  margin: auto;
-  padding: 1rem;
-`
-
-interface HeroProps {
-  children: React.ReactNode
-}
 
 const HeroBannerContainer = styled.div`
   background-color: ${() => COLOR_PALETTE.backgroundSky.color};
@@ -32,16 +17,11 @@ const CenterHero = styled(HeroBanner)`
   max-width: 700px;
 `
 
-export const Hero: React.FC<HeroProps> = ({ children }) => {
+export const Hero: React.FC = () => {
   const { colorMode } = React.useContext(ThemeContext)
   return (
-    <>
-      <HeroBannerContainer>
-        <CenterHero colorMode={colorMode} />
-      </HeroBannerContainer>
-      <MainContainer>
-        <Main>{children}</Main>
-      </MainContainer>
-    </>
+    <HeroBannerContainer>
+      <CenterHero colorMode={colorMode} />
+    </HeroBannerContainer>
   )
 }

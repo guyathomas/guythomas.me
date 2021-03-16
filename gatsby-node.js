@@ -2,7 +2,7 @@ const path = require(`path`)
 const { createFilePath } = require(`gatsby-source-filesystem`)
 const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin")
 
-// Could use lodash in the future. Didn't want to `npm i` just for this.
+// Could use lodash in the future. Didn't want to `npm i lodash` just for this.
 const groupBy = (collection, iteratee) =>
   collection.reduce((acc, item) => {
     const id = iteratee(item)
@@ -59,12 +59,13 @@ exports.createPages = async ({ graphql, actions }) => {
     throw result.errors
   }
 
-  // Create blog posts pages.
   const groupedPosts = groupBy(
     result.data.allMarkdownRemark.edges,
     (edge) => edge.node.fields.sourceInstanceName
   )
-  groupedPosts.forEach((edges) => createPages(createPage, edges))
+  createPages(createPage, groupedPosts.blog)
+  createPages(createPage, groupedPosts.nots)
+  createPages(createPage, groupedPosts["the-frontend-interview"])
 }
 
 exports.onCreateNode = ({ node, actions, getNode }) => {

@@ -1,7 +1,7 @@
 import React from "react"
-import { Post } from "~templates"
+import { Page } from "~templates"
 import { graphql } from "gatsby"
-import { PostSnippitGrid } from "~components/PostSnippitGrid"
+import { SummaryList } from "~components/SummaryList"
 
 import { TheFrontendInterviewQuery } from "~types/gatsby-graphql"
 
@@ -14,9 +14,9 @@ const TheFrontendInterview: React.FC<TheFrontendInterviewProps> = ({
 }) => {
   const posts = data.allMarkdownRemark.edges
   return (
-    <Post title="The Frontend Interview">
-      <PostSnippitGrid posts={posts} />
-    </Post>
+    <Page title="The Frontend Interview">
+      <SummaryList posts={posts} />
+    </Page>
   )
 }
 
