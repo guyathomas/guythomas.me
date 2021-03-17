@@ -9,5 +9,3 @@ import "./gatsby-remark-prismjs"
 export const onClientEntry = () => {
   require("./polyfill")
 }
-
-export { wrapRootElement } from "./src/utils/auth"
