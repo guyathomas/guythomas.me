@@ -44,15 +44,6 @@ exports.createPages = async ({ graphql, actions }) => {
             }
           }
         }
-        allTheFrontendInterviewYaml {
-          nodes {
-            sections {
-              slug
-              title
-              description
-            }
-          }
-        }
       }
     `
   )

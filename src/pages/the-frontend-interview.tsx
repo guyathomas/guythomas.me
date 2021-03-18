@@ -71,13 +71,13 @@ const descriptionMap: Record<QuestionCategory, string> = {
 
 const TheFrontendInterview: React.FC<TheFrontendInterviewProps> = ({
   data,
+  location: { pathname },
 }) => {
   const uniqueCategories = new Set(Object.values(QuestionCategory))
   const [
     selectedCategory,
     setSelectedCategory,
   ] = React.useState<QuestionCategory>(QuestionCategory.All)
-
   const visibleQuestions = data.allMarkdownRemark.nodes.filter(
     ({ frontmatter }) =>
       selectedCategory === QuestionCategory.All ||
@@ -107,7 +107,7 @@ const TheFrontendInterview: React.FC<TheFrontendInterviewProps> = ({
           visibleQuestions.map(({ frontmatter, fields }) => (
             <QuestionTypeTile
               description={frontmatter?.description!}
-              link={fields?.slug!}
+              link={`${pathname}${fields?.slug}`}
               title={frontmatter?.title!}
               key={fields?.slug!}
             />
