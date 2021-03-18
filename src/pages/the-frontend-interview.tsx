@@ -5,6 +5,7 @@ import { HLocation } from "@reach/router"
 import styled from "@emotion/styled"
 import { Query } from "~types/gatsby-graphql"
 import { BREAKPOINTS } from "~styles"
+import { Label, Select } from "@rebass/forms"
 
 interface TheFrontendInterviewProps {
   data: Query
@@ -13,7 +14,7 @@ interface TheFrontendInterviewProps {
 
 const QuestionTypeTileWrapper = styled.div``
 
-const SectionGrid = styled.div`
+const QuestionList = styled.div`
   max-width: ${BREAKPOINTS.md}px;
   margin: 0 auto;
 `
@@ -41,20 +42,47 @@ const QuestionTypeTile: React.FC<QuestionTypeTileProps> = ({
 
 const TheFrontendInterview: React.FC<TheFrontendInterviewProps> = ({
   data,
-  location,
 }) => {
-  const sections = data.allTheFrontendInterviewYaml.nodes[0].sections || []
+  const uniqueCategories = new Set([
+    "all",
+    ...data.allMarkdownRemark.nodes
+      .map((node) => node?.frontmatter?.category)
+      .filter(Boolean),
+  ])
+  const [selectedCategory, setSelectedCategory] = React.useState<string>("all")
+
+  const visibleQuestions = data.allMarkdownRemark.nodes.filter(
+    ({ frontmatter }) =>
+      selectedCategory === "all" || frontmatter?.category === selectedCategory
+  )
   return (
     <Page title="The Frontend Interview">
-      <SectionGrid>
-        {sections.map((section) => (
-          <QuestionTypeTile
-            title={section?.title!}
-            description={section?.description!}
-            link={`${location.pathname}${section?.slug || ""}`}
-          />
-        ))}
-      </SectionGrid>
+      <QuestionList>
+        <Label htmlFor="category">Question Category</Label>
+        <Select
+          id="category"
+          name="category"
+          onChange={(event) => {
+            setSelectedCategory(event.target.value)
+          }}
+        >
+          {[...uniqueCategories].map((category) => (
+            <option key={category}>{category}</option>
+          ))}
+        </Select>
+        {visibleQuestions.length ? (
+          visibleQuestions.map(({ frontmatter, fields }) => (
+            <QuestionTypeTile
+              description={frontmatter?.description!}
+              link={fields?.slug!}
+              title={frontmatter?.title!}
+              key={fields?.slug!}
+            />
+          ))
+        ) : (
+          <h3>No Questions for {selectedCategory}</h3>
+        )}
+      </QuestionList>
     </Page>
   )
 }
@@ -63,12 +91,21 @@ export default TheFrontendInterview
 
 export const pageQuery = graphql`
   query TheFrontendInterview {
-    allTheFrontendInterviewYaml {
+    allMarkdownRemark(
+      filter: {
+        fields: { sourceInstanceName: { eq: "the-frontend-interview" } }
+        frontmatter: { published: { eq: true } }
+      }
+    ) {
       nodes {
-        sections {
-          description
-          title
+        fields {
+          sourceInstanceName
           slug
+        }
+        frontmatter {
+          title
+          category
+          description
         }
       }
     }
