@@ -1,8 +1,8 @@
 import React from "react"
 import styled from "@emotion/styled"
-import { App } from "../App"
 import { BREAKPOINTS } from "~styles"
-interface PostProps {
+import { App } from "../App"
+interface PageProps {
   children: React.ReactNode
   title: string
 }
@@ -13,7 +13,7 @@ const PageTitle = styled.h1`
   margin: auto;
 `
 
-export const Post: React.FC<PostProps> = ({ title, children }) => (
+export const Page: React.FC<PageProps> = ({ title, children }) => (
   <App>
     <PageTitle>
       <h1>{title}</h1>

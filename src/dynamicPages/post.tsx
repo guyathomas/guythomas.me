@@ -1,14 +1,14 @@
 import React from "react"
 import { graphql } from "gatsby"
 
-import { Post } from "~templates"
+import { Page, App } from "~templates"
 import { SEO } from "~components/SEO"
-import { PostBySlugQuery, SitePageContext } from "~types/gatsby-graphql"
+import { PageBySlugQuery, SitePageContext } from "~types/gatsby-graphql"
 import styled from "@emotion/styled"
 import { BREAKPOINTS } from "~styles"
 import "./post.css"
-interface PostProps {
-  data: PostBySlugQuery
+interface ArticlePageProps {
+  data: PageBySlugQuery
   pageContext: SitePageContext
 }
 
@@ -23,30 +23,22 @@ const Article = styled.article`
   }
 `
 
-const PostPage: React.FC<PostProps> = ({
-  pageContext: { slug },
+const ArticlePage: React.FC<ArticlePageProps> = ({
   data: { markdownRemark: post },
-}) => {
-  // The slug returned here has a slash before and after the string we want, i.e. /some-slug/.
-  // Lets get rid of these, but don't remove all slashes, since we may eventually want nested slugs
-  // This will always exist, but default to make TS happy :)
-  const cleanedSlug = slug?.slice(1, -1) || ""
-  return (
-    <Post title={post?.frontmatter?.title || ""}>
-      <SEO
-        title={`${post?.frontmatter?.title || ""}`}
-        description={post?.frontmatter?.description || post?.excerpt || ""}
-      />
-      <Article dangerouslySetInnerHTML={{ __html: post?.html || "" }} />
-      {/* <Comments slug={cleanedSlug} /> */}
-    </Post>
-  )
-}
+}) => (
+  <Page title={post?.frontmatter?.title || ""}>
+    <SEO
+      title={`${post?.frontmatter?.title || ""}`}
+      description={post?.frontmatter?.description || post?.excerpt || ""}
+    />
+    <Article dangerouslySetInnerHTML={{ __html: post?.html || "" }} />
+  </Page>
+)
 
-export default PostPage
+export default ArticlePage
 
 export const pageQuery = graphql`
-  query PostBySlug($slug: String!) {
+  query PageBySlug($slug: String!) {
     site {
       siteMetadata {
         title

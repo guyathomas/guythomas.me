@@ -1,21 +1,32 @@
 import React from "react"
 import { graphql } from "gatsby"
 
-import { PostSnippitGrid } from "~components/PostSnippitGrid"
-import { Hero, App } from "~templates"
+import { SummaryList } from "~components/SummaryList"
+import { App } from "~templates"
+import { Hero } from "~components/Hero"
 import { PageIndexQuery } from "~types/gatsby-graphql"
+import { BREAKPOINTS } from "~styles"
+import styled from "@emotion/styled"
 
 interface IndexProps {
   data: PageIndexQuery
 }
 
+const PageTitle = styled.h1`
+  font-weight: 500;
+  max-width: ${BREAKPOINTS.md}px;
+  margin: auto;
+`
+
 const Index: React.FC<IndexProps> = (props) => {
   const recentPosts = props.data.recent.edges
   return (
     <App>
-      <Hero>
-        <PostSnippitGrid title="Recent Posts" posts={recentPosts} />
-      </Hero>
+      <Hero />
+      <PageTitle>
+        <h1>Recent Posts</h1>
+      </PageTitle>
+      <SummaryList posts={recentPosts} />
     </App>
   )
 }

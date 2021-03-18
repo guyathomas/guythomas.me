@@ -1,7 +1,7 @@
 import React from "react"
-import { Post } from "~templates"
+import { Page } from "~templates"
 import { graphql } from "gatsby"
-import { PostSnippitGrid } from "~components/PostSnippitGrid"
+import { SummaryList } from "~components/SummaryList"
 import { NotesIndexQuery } from "~types/gatsby-graphql"
 
 interface NotesProps {
@@ -11,9 +11,9 @@ interface NotesProps {
 const Notes: React.FC<NotesProps> = (props) => {
   const posts = props.data.allMarkdownRemark.edges
   return (
-    <Post title="Notes">
-      <PostSnippitGrid posts={posts} />
-    </Post>
+    <Page title="Notes">
+      <SummaryList posts={posts} />
+    </Page>
   )
 }
 
