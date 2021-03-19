@@ -18,9 +18,6 @@ module.exports = {
     "plugin:import/warnings",
     "plugin:import/typescript",
     "prettier",
-    "prettier/@typescript-eslint",
-    "prettier/react",
-    "prettier/standard",
   ],
   plugins: ["@typescript-eslint", "react", "react-hooks", "prettier"],
   settings: {

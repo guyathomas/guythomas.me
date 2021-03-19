@@ -22,16 +22,15 @@ Make a digital clock that represents current time in a UI similar to this image.
 
 ## Clarifying Questions
 
-- 12-hour or 24-hour clock? 24-hour. (If candidate wants to be a 12-hour clock, they can too)
-- Should I show seconds too? Not required.
-- Can I use HTML/SVG/Canvas/Flexbox/WebGL etc? Any frontend rendering technology is game.
-- How should I handle single-digit numbers (like the "1" in "1:00")? The tens digit should be a zero: "01:00"
-- Do I need to render the colon in between the hours and the seconds? Not required.
-- How accurate should the clock be? Accurate to within +/- 1 second of system clock, meaning the solution should update at least every second.
+- 12-hour or 24-hour clock? 24-hour.
+- Can HTML/SVG/Canvas/Flexbox/WebGL be used? Any frontend rendering technology is okay.
+- How should single-digit numbers be formatted (like the "1" in "1:00")? The tens digit should be a zero: "01:00"
+- Does the colon need to be rendered? Optional, if there's time at the end.
+- How accurate should the clock be? Update at least every second.
 
 ## Evaluation Criteria
 
 - Using a map of on/off states for each number
 - Recognizing the digit component and re-using it instead of repeating code
-- Using Date object properly
+- Using Date object properly ( looking at docs is fine )
 - Clearing up the interval once component is deleted
