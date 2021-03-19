@@ -101,17 +101,9 @@ module.exports = {
           `gatsby-remark-copy-linked-files`,
           `gatsby-remark-smartypants`,
           {
-            resolve: "gatsby-remark-embedded-codesandbox",
+            resolve: "@guyathomas/gatsby-remark-embedded-codesandbox",
             options: {
               directory: `${__dirname}/content/the-frontend-interview/codesandbox/`,
-              // Customise Codesandbox embedding options:
-              // https://codesandbox.io/docs/embedding#embed-options
-              embedOptions: {
-                view: "preview",
-                hidenavigation: 1,
-              },
-              getIframe: (url) =>
-                `<iframe src="${url}" class="embedded-codesandbox" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>`,
             },
           },
         ],

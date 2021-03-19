@@ -36,6 +36,7 @@
   "dependencies": {
     "@emotion/react": "^11.1.5",
     "@emotion/styled": "^11.1.5",
+    "@guyathomas/gatsby-remark-embedded-codesandbox": "^1.0.0",
     "@react-hook/resize-observer": "^1.2.0",
     "@rebass/forms": "^4.0.6",
     "dayjs": "^1.10.4",
