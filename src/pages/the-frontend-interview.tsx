@@ -107,7 +107,7 @@ const TheFrontendInterview: React.FC<TheFrontendInterviewProps> = ({
           visibleQuestions.map(({ frontmatter, fields }) => (
             <QuestionTypeTile
               description={frontmatter?.description!}
-              link={`${pathname}${fields?.slug}`}
+              link={`/the-frontend-interview${fields?.slug}`}
               title={frontmatter?.title!}
               key={fields?.slug!}
             />
