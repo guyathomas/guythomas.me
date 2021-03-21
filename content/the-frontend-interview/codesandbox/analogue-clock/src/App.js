@@ -14,28 +14,22 @@ const useCurrentTime = () => {
   return time
 }
 
-const FullScreenAndCenter = styled.div`
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`
+const Clock = ({ time }) => {
+  const hour = time.getHours()
+  const minute = time.getMinutes()
+  const second = time.getSeconds()
+  return (
+    <ClockFace>
+      <HourHand degreesComplete={(hour / 12) * 360} />
+      <MinuteHand degreesComplete={(minute / 60) * 360} />
+      <SecondHand degreesComplete={(second / 60) * 360} />
+    </ClockFace>
+  )
+}
 const App = () => {
   const currentTime = useCurrentTime()
-  const hour = currentTime.getHours()
-  const minute = currentTime.getMinutes()
-  const second = currentTime.getSeconds()
 
-  return (
-    <FullScreenAndCenter>
-      <ClockFace>
-        <HourHand degreesComplete={(hour / 12) * 360} />
-        <MinuteHand degreesComplete={(minute / 60) * 360} />
-        <SecondHand degreesComplete={(second / 60) * 360} />
-      </ClockFace>
-    </FullScreenAndCenter>
-  )
+  return <Clock time={currentTime} />
 }
 const Hand = styled.div`
   width: 50%;
@@ -47,6 +41,7 @@ const Hand = styled.div`
   transform: translateY(-50%)
     rotate(${(props) => (props.degreesComplete || 0) - 90}deg);
   transform-origin: left center;
+  transition: transform 1s linear;
   background-color: black;
 `
 
@@ -74,7 +69,10 @@ const ClockLabelWrapper = styled.div`
   left: 50%;
   top: 50%;
   transform:
-    /* Diameter Radius 0.8 scale to put numbers inside */ translateX(
+    /*
+    Diameter Radius 0.8 scale to put numbers inside
+    This logic is not necessary for the candidate, and hard coding the positioning for the labels 3,6,9 and 12 is fine
+    */ translateX(
       calc(
         -50% + ${(props) => Math.cos(Math.PI * 2 * (props.position - 0.25)) * 50 * 0.8}px
       )
