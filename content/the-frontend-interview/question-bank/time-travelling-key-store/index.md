@@ -30,6 +30,8 @@ store.get("name", timeStored) // 'Guy'
 
 ### Part 3
 
+Expand to now support fuzzy searching ( when specified a timestamp, return a value if it had been set BEFORE that timestamp )
+
 ```javascript
 const store = new Keystore()
 const timeStoredGuy = store.set("name", "Guy")
@@ -38,14 +40,9 @@ store.set("name", "James")
 store.get("name", timeStoredGuy + 1) // 'Guy'
 ```
 
-- Expand to now support fuzzy searching ( when specified a timestamp, return a value if it had been set BEFORE that timestamp )
-- Clarification: return undefined if no time had been set before
-- Clarification: linear lookup time is fine initially, but know you could reduce to nlog(n) with binary search
-  - Gotcha: When testing since we're using an actual clock, we'll need to either mock out Date.now
-
 ## Solution
 
-### Part 1 Variation
+### Part 1
 
 This component is pretty trivial, something like this will get you started
 
@@ -55,19 +52,21 @@ class Store {
     this._store = new Map()
   }
   get(key) {
-    return this_store.get(key)
+    return this._store.get(key)
   }
   set(key, value) {
-    return this_store.set(key, value)
+    return this._store.set(key, value)
   }
 }
 ```
 
-### Part 2 Variation
+### Part 2
 
 Implementation varies from the codesandbox, instead of storing a Value[], store them in a map for constant time lookups
 
 - `this._values = Map<key, Map<timestamp, value>>`
+
+### Part 3
 
 <div class="full-bleed"></div>
 
@@ -88,6 +87,10 @@ Implementation varies from the codesandbox, instead of storing a Value[], store 
 - What should be returned when there is no date value provided in `get`? Return last set value when timestamp
 
 ### Part 3
+
+- What should be returned if there are no entries before a given timestamp? Return `undefined`
+- Are there any time complexity constraints? Linear lookup time is fine initially, but how would you optimize further? Binary search since it's a sorted list
+- Any preference to how we test this async nature? We could wait, but that will slow our tests. Better to mock out Date.now
 
 ## Evaluation Criteria
 
