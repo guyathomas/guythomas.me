@@ -24,7 +24,6 @@ interface LinkItemProps {
 }
 const LinkItem = styled.li<LinkItemProps>`
   text-align: center;
-  border-bottom: 1px solid ${COLOR_PALETTE.strokePrimary.color};
   color: ${(props) =>
     props.isActive ? COLOR_PALETTE.interactiveActive.color : "inherit"};
 
