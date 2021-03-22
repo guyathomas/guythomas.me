@@ -20,9 +20,23 @@ store.get("name") // 'Guy'
 
 ### Part 2
 
-Expand the previous step to set a time the value was stored, and a lookup of a value at an exact time. i.e. `store.get('name', 1230)`
+Expand the previous step to set a time the value was stored, and a lookup of a value at an exact time.
+
+```javascript
+const store = new Keystore()
+const timeStored = store.set("name", "Guy")
+store.get("name", timeStored) // 'Guy'
+```
 
 ### Part 3
+
+```javascript
+const store = new Keystore()
+const timeStoredGuy = store.set("name", "Guy")
+// Wait 10 seconds
+store.set("name", "James")
+store.get("name", timeStoredGuy + 1) // 'Guy'
+```
 
 - Expand to now support fuzzy searching ( when specified a timestamp, return a value if it had been set BEFORE that timestamp )
 - Clarification: return undefined if no time had been set before
