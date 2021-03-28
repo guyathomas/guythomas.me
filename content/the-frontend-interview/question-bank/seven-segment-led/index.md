@@ -14,7 +14,7 @@ Make a digital clock that represents current time in a UI similar to this image.
 
 ![Seven Segment](./seven-segment-clock.png)
 
-## Solution
+## Solution / Demo
 
 <div class="full-bleed"></div>
 

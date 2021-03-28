@@ -10,7 +10,7 @@ category: build-a-component
 
 Create an analogue clock that will show the system time and update at least every second.
 
-## Solution
+## Solution / Demo
 
 <div class="full-bleed"></div>
 
@@ -24,8 +24,10 @@ Create an analogue clock that will show the system time and update at least ever
 ## Evaluation Criteria
 
 - Separation of components/modules
+
   - Calculating the time variables
   - Hand component
   - Digit component
+
 - Remove event listener on unmount
 - Are they able to explain how they would change the API for the clock component if it should support static times too?
