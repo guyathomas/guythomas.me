@@ -12,12 +12,16 @@ contactDetails:
     - !markdown "[guythomas.me](https://guythomas.me)"
 intro: I love empowering peers to be more productive, reducing development times and increasing the reliability of applications at scale. I work across the stack, and specialize in anything frontend.
 experience:
-  - date: 15th April, 2019 – Present
+  - date: 10th May, 2021 – Present
+    company: Instacart
+    title: Senior Software Engineer II
+    details: !markdown |
+      * Providing customers with incentives to increase spending with features built with Ruby and Typescript + React
+  - date: 15th April, 2019 – 21st May, 2021
     company: Lyft
     title: Senior Software Engineer
     details: !markdown |
-      * Team lead for an Insurance Marketplace for drivers to purchase policies. From MVP to multi-carrier support across Android, iOS and Web
-        * Built using React 16.8+ (hooks), Typescript, NextJS & Python
+      * Team lead for an Insurance Marketplace for drivers to purchase policies. From MVP to multi-carrier support across Android, iOS and Web. Built using React 16.8+ (hooks), Typescript, NextJS & Python
       * Led an E2E testing initiative across all of Lyft allowing recording and replaying of HTTP responses with Cypress
       * Enabled a 3x increase in productivity by leading the adoption for our entire org from a cloud based development workflow to a local workflow
   - date: 26th June, 2017 – 31st January, 2019
@@ -29,19 +33,16 @@ experience:
   - date: 7th July, 2014 – 3rd June, 2016
     company: IBM
     title: Software Engineer
-    details: !markdown |
-      * Built marketing websites to pitch implementation solutions for upcoming contracts
-      * Developed data models for cell phone usage of customers
 education:
-  - date: "2017"
-    company: Bradfield CS
-    title: Computer Architecture
+  - company: Covered App
+    title: React / Typescript / GraphQL / Postgres
     details: !markdown |
-      * Building a mental model of the execution of programs by a microprocessor
-  - date: 2011 - 2013
-    company: Monash University
-    title: Bachelor of Commerce
+      * Database Driven Design - changing fields in the database will create new GraphQL resolvers / queries / mutations and then create Typescript powered client code.
+      * This means that a schema change will trigger a build error for the client. Pretty cool eh?
+      * The client is statically built with NextJS and distributed with serverless systems.
+  - company: guythomas.me
+    title: React / Typescript / Gatsby / Netlify
     details: !markdown |
-      * Built systems for business administration with VBA & Excel
-      * Architected and Implemented relational databases
-      * Modelled publicly available financial data to provide company valuations
+        * `/blog` - a statically built blog from `.md` files
+        * `/resume` - a resume that supports editing by anyone and will persist in their localStorage. Resume content ( like this sentence ) is defined in a `.yml` file.
+  

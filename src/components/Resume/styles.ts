@@ -42,6 +42,7 @@ const SectionTitle = styled.div`
   @media print {
     text-align: initial;
     padding: 0.5rem;
+    margin-bottom: 1rem;
   }
 `
 
@@ -55,12 +56,12 @@ export const PageContainer = styled.div`
     grid-template-columns: 1fr 2fr;
   }
   @media only print {
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(12, 1fr);
     grid-template-areas:
-      "profile profile bio bio bio bio"
-      "intro-content intro-content intro-content intro-content intro-content intro-content"
-      "experience-title experience-title experience-title experience-title education-title education-title"
-      "experience-content experience-content experience-content experience-content education-content education-content";
+      "profile profile profile profile bio bio bio bio bio bio bio bio"
+      "intro-content intro-content intro-content intro-content intro-content intro-content intro-content intro-content intro-content intro-content intro-content intro-content"
+      "experience-title experience-title experience-title experience-title experience-title experience-title experience-title experience-title education-title education-title education-title education-title"
+      "experience-content experience-content experience-content experience-content experience-content experience-content experience-content experience-content education-content education-content education-content education-content";
   }
 `
 
@@ -178,7 +179,7 @@ export const BioWrapper = styled(SectionContent)`
   }
   @media only print {
     grid-area: bio;
-    padding-top: 1rem;
+    padding-top: 0.5rem;
   }
 `
 export const IntroContent = styled(SectionContent)`

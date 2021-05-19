@@ -18,7 +18,6 @@ export const pageQuery = graphql`
           details
         }
         education {
-          date
           company
           title
           details

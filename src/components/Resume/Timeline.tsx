@@ -39,7 +39,7 @@ const TimelineDetails = styled.div``
 const TimelineCompany = styled(ContentEditable)`
   margin: 1rem 0 1rem;
   @media print {
-    margin-top: 1.5rem;
+    margin-top: 0.5rem;
     margin-bottom: 0.5rem;
   }
 `

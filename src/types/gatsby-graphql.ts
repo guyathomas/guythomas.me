@@ -714,7 +714,6 @@ export type ResumeYamlExperience = {
 };
 
 export type ResumeYamlEducation = {
-  date?: Maybe<Scalars['String']>;
   company?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   details?: Maybe<Scalars['String']>;
@@ -1384,7 +1383,6 @@ export type ResumeYamlEducationFilterListInput = {
 };
 
 export type ResumeYamlEducationFilterInput = {
-  date?: Maybe<StringQueryOperatorInput>;
   company?: Maybe<StringQueryOperatorInput>;
   title?: Maybe<StringQueryOperatorInput>;
   details?: Maybe<StringQueryOperatorInput>;
@@ -1778,7 +1776,6 @@ export type FileFieldsEnum =
   | 'childrenResumeYaml___experience___title'
   | 'childrenResumeYaml___experience___details'
   | 'childrenResumeYaml___education'
-  | 'childrenResumeYaml___education___date'
   | 'childrenResumeYaml___education___company'
   | 'childrenResumeYaml___education___title'
   | 'childrenResumeYaml___education___details'
@@ -1833,7 +1830,6 @@ export type FileFieldsEnum =
   | 'childResumeYaml___experience___title'
   | 'childResumeYaml___experience___details'
   | 'childResumeYaml___education'
-  | 'childResumeYaml___education___date'
   | 'childResumeYaml___education___company'
   | 'childResumeYaml___education___title'
   | 'childResumeYaml___education___details'
@@ -3266,7 +3262,6 @@ export type ResumeYamlFieldsEnum =
   | 'experience___title'
   | 'experience___details'
   | 'education'
-  | 'education___date'
   | 'education___company'
   | 'education___title'
   | 'education___details';
@@ -3695,7 +3690,7 @@ export type ResumeQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type ResumeQuery = { allResumeYaml: { nodes: Array<(
       Pick<ResumeYaml, 'id' | 'version' | 'tagline' | 'intro' | 'contactDetails' | 'avatar' | 'firstName' | 'lastName'>
-      & { experience?: Maybe<Array<Maybe<Pick<ResumeYamlExperience, 'date' | 'company' | 'title' | 'details'>>>>, education?: Maybe<Array<Maybe<Pick<ResumeYamlEducation, 'date' | 'company' | 'title' | 'details'>>>> }
+      & { experience?: Maybe<Array<Maybe<Pick<ResumeYamlExperience, 'date' | 'company' | 'title' | 'details'>>>>, education?: Maybe<Array<Maybe<Pick<ResumeYamlEducation, 'company' | 'title' | 'details'>>>> }
     )> } };
 
 export type TheFrontendInterviewQueryVariables = Exact<{ [key: string]: never; }>;

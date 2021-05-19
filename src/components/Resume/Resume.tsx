@@ -328,7 +328,7 @@ const Resume: React.FC<{
                       </FieldArray>
                     </SectionContentInner>
                   </ExperienceSection>
-                  <EducationTitle>Education</EducationTitle>
+                  <EducationTitle>Projects</EducationTitle>
                   <EducationSection>
                     <SectionContentInner>
                       <FieldArray name="education">
