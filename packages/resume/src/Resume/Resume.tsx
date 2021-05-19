@@ -2,7 +2,7 @@ import React from "react"
 import lightResumePdf from "./static/resume-light.pdf"
 import darkResumePdf from "./static/resume-dark.pdf"
 import { ResumeYamlExperience, ResumeQuery } from "~types/gatsby-graphql"
-import { Tooltip } from "~components/Tooltip"
+import { Tooltip } from "@guythomas.me/common/components/Tooltip"
 import styled from "@emotion/styled"
 import Timeline from "./Timeline"
 import {
@@ -39,8 +39,8 @@ import {
   SectionButton,
   Background,
 } from "./styles"
-import { DarkModeToggle } from "~components/DarkModeToggle"
-import { ThemeContext } from "~context/ThemeProvider"
+import { DarkModeToggle } from "@guythomas.me/common/components/DarkModeToggle"
+import { ThemeContext } from "@guythomas.me/common/context/ThemeProvider"
 import { Formik, Form, FieldArray, Field } from "formik"
 import { ResumeBanner } from "./ResumeBanner"
 import { ResumeBannerButton } from "./ResumeBannerButton"

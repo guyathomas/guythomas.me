@@ -3,10 +3,18 @@
     "version": "1.0.0",
     "private": true,
     "scripts": {
+        "build": "tsc ."
     },
     "dependencies": {
+        "@emotion/react": "^11.4.0",
+        "@emotion/styled": "^11.3.0",
+        "add": "^2.0.6",
+        "react": "^17.0.2",
+        "react-popper-tooltip": "^4.2.0",
+        "react-resize-detector": "^6.7.1",
+        "yarn": "^1.22.10"
     },
-    "devDependencies": {
+    "peerDependencies": {
+        "gatsby": "*"
     }
-  }
-  
+}

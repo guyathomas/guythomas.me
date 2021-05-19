@@ -1,25 +1,12 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "module": "commonjs",
-    "target": "esnext",
-    "jsx": "preserve",
-    "lib": ["dom", "esnext"],
-    "strict": true,
-    "noEmit": true,
-    "isolatedModules": true,
-    "esModuleInterop": true,
-    "noUnusedLocals": false,
-    "allowJs": true,
     "baseUrl": "src",
     "paths": {
-      "~actions": ["actions"],
-      "~components/*": ["components/*"],
-      "~context/*": ["context/*"],
       "~types/*": ["types/*"],
-      "~templates": ["templates"],
-      "~styles": ["styles"]
+      "~templates": ["templates"]
     }
   },
   "exclude": ["node_modules", "public", ".cache"],
-  "include": ["src", "node_modules/@types/puppeteer/index.d.ts"]
+  "include": ["src"]
 }

@@ -1,9 +1,9 @@
 import React from "react"
 import styled from "@emotion/styled"
-import { COLOR_PALETTE } from "~styles"
+import { COLOR_PALETTE } from "@guythomas.me/common/styles"
 
-import { NavLinks } from "~components/NavLinks"
-import { DarkModeToggle } from "~components/DarkModeToggle"
+import { NavLinks } from "@guythomas.me/common/components/NavLinks"
+import { DarkModeToggle } from "@guythomas.me/common/components/DarkModeToggle"
 
 const MenuContainer = styled.ul`
   height: 100vh;

@@ -1,6 +1,6 @@
 import React from "react"
 import styled from "@emotion/styled"
-import { BREAKPOINTS } from "~styles"
+import { BREAKPOINTS } from "@guythomas.me/common/styles"
 import { App } from "../App"
 interface PageProps {
   children: React.ReactNode

@@ -1,11 +1,11 @@
 import React from "react"
 import { graphql } from "gatsby"
 
-import { SummaryList } from "~components/SummaryList"
+import { SummaryList } from "@guythomas.me/common/components/SummaryList"
 import { App } from "~templates"
-import { Hero } from "~components/Hero"
+import { Hero } from "@guythomas.me/common/components/Hero"
 import { PageIndexQuery } from "~types/gatsby-graphql"
-import { BREAKPOINTS } from "~styles"
+import { BREAKPOINTS } from "@guythomas.me/common/styles"
 import styled from "@emotion/styled"
 
 interface IndexProps {

@@ -1,7 +1,7 @@
 import React from "react"
-import { PageSizeProvider } from "~context/PageSize"
+import { PageSizeProvider } from "@guythomas.me/common/context/PageSize"
 import { GlobalStyles } from "./GlobalStyles"
-import { ThemeProvider } from "~context/ThemeProvider"
+import { ThemeProvider } from "@guythomas.me/common/context/ThemeProvider"
 import dayjs from "dayjs"
 import relativeTime from "dayjs/plugin/relativeTime"
 

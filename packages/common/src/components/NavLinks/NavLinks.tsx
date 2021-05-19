@@ -1,8 +1,8 @@
 import React from "react"
 import styled from "@emotion/styled"
-import { COLOR_PALETTE } from "~styles"
+import { COLOR_PALETTE } from "@guythomas.me/common/styles"
 import { useLocation } from "@reach/router"
-import { Link } from "~components/Link"
+import { Link } from "@guythomas.me/common/components/Link"
 
 interface AppLink {
   label: string

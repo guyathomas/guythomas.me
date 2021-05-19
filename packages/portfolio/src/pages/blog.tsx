@@ -1,7 +1,7 @@
 import React from "react"
 import { Page } from "~templates"
 import { graphql } from "gatsby"
-import { SummaryList } from "~components/SummaryList"
+import { SummaryList } from "@guythomas.me/common/components/SummaryList"
 import { BlogIndexQuery } from "~types/gatsby-graphql"
 
 interface BlogProps {

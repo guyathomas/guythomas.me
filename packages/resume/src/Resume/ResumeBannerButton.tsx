@@ -1,5 +1,5 @@
 import styled from "@emotion/styled"
-import ButtonLink from "~components/ButtonLink"
+import ButtonLink from "@guythomas.me/common/components/ButtonLink"
 
 import { DESKTOP, MOBILE } from "./constants"
 

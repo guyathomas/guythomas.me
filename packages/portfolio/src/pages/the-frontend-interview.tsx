@@ -4,7 +4,7 @@ import { graphql, Link } from "gatsby"
 import { HLocation } from "@reach/router"
 import styled from "@emotion/styled"
 import { Query } from "~types/gatsby-graphql"
-import { BREAKPOINTS } from "~styles"
+import { BREAKPOINTS } from "@guythomas.me/common/styles"
 import { Label, Select } from "@rebass/forms"
 
 interface TheFrontendInterviewProps {

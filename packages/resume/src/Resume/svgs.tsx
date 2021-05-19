@@ -1,7 +1,7 @@
 import React from "react"
 import styled from "@emotion/styled"
 import { css } from "@emotion/react"
-import { COLOR_PALETTE } from "~styles"
+import { COLOR_PALETTE } from "@guythomas.me/common/styles"
 
 interface SVGProps {
   className?: string

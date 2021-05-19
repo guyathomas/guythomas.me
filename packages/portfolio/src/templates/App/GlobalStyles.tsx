@@ -1,6 +1,6 @@
 import React from "react"
 import { Global, css } from '@emotion/react'
-import { COLOR_PALETTE } from "~styles"
+import { COLOR_PALETTE } from "@guythomas.me/common/styles"
 
 const headerValues = ["h1", "h2", "h3", "h4", "h5", "h6"]
 // Create smooth transitions for header links, to fade in on hover

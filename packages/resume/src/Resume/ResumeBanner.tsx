@@ -1,5 +1,5 @@
 import styled from "@emotion/styled"
-import Banner from "~components/Banner"
+import Banner from "@guythomas.me/common/components/Banner"
 
 import { MOBILE } from "./constants"
 

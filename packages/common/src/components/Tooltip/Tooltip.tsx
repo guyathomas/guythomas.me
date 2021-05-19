@@ -1,7 +1,7 @@
 import React, { Children, ReactElement } from "react"
 import styled from "@emotion/styled"
 import { usePopperTooltip } from "react-popper-tooltip"
-import { COLOR_PALETTE } from "~styles"
+import { COLOR_PALETTE } from "@guythomas.me/common/styles"
 
 const TooltipContainerStyles = styled.div<{ visible?: boolean }>`
   padding: 0.5rem 1rem;

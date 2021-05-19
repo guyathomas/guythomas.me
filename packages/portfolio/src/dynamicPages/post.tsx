@@ -2,10 +2,9 @@ import React from "react"
 import { graphql } from "gatsby"
 
 import { Page, App } from "~templates"
-import { SEO } from "~components/SEO"
 import { PageBySlugQuery, SitePageContext } from "~types/gatsby-graphql"
 import styled from "@emotion/styled"
-import { BREAKPOINTS } from "~styles"
+import { BREAKPOINTS } from "@guythomas.me/common/styles"
 import "./post.css"
 interface ArticlePageProps {
   data: PageBySlugQuery
@@ -27,10 +26,6 @@ const ArticlePage: React.FC<ArticlePageProps> = ({
   data: { markdownRemark: post },
 }) => (
   <Page title={post?.frontmatter?.title || ""}>
-    <SEO
-      title={`${post?.frontmatter?.title || ""}`}
-      description={post?.frontmatter?.description || post?.excerpt || ""}
-    />
     <Article dangerouslySetInnerHTML={{ __html: post?.html || "" }} />
   </Page>
 )

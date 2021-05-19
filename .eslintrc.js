@@ -1,4 +1,5 @@
 module.exports = {
+  root: true,
   parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaFeatures: {
@@ -30,14 +31,6 @@ module.exports = {
     },
     "import/resolver": {
       alias: {
-        map: [
-          ["~actions", "./src/actions"],
-          ["~styles", "./src/styles"],
-          ["~components", "./src/components"],
-          ["~context", "./src/context"],
-          ["~templates", "./src/templates"],
-          ["~types", "./src/types"],
-        ],
         extensions: [".ts", ".tsx", ".js", ".jsx"],
       },
       node: {

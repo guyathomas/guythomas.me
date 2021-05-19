@@ -1,5 +1,5 @@
 import styled from "@emotion/styled"
-import { COLOR_PALETTE } from "~styles"
+import { COLOR_PALETTE } from "@guythomas.me/common/styles"
 import { DESKTOP, MOBILE } from "./constants"
 
 const SectionContent = styled.div`

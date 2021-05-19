@@ -2,8 +2,8 @@ import React from "react"
 import styled from "@emotion/styled"
 import { Global, css } from "@emotion/react"
 
-import { COLOR_PALETTE } from "~styles"
-import { ThemeContext } from "~context/ThemeProvider"
+import { COLOR_PALETTE } from "@guythomas.me/common/styles"
+import { ThemeContext } from "@guythomas.me/common/context/ThemeProvider"
 
 import Moon from "./Moon.svg"
 import Sun from "./Sun.svg"

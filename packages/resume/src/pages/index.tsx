@@ -30,11 +30,14 @@ export const pageQuery = graphql`
   }
 `
 
-import Resume, { ResumeBanner, ResumeBannerButton } from "~components/Resume"
+import Resume, {
+  ResumeBanner,
+  ResumeBannerButton,
+} from "@guythomas.me/common/components/Resume"
 
 import { ResumeQuery } from "~types/gatsby-graphql"
-import { ThemeProvider } from "~context/ThemeProvider"
-import { ResumeJSON } from "~components/Resume/Resume"
+import { ThemeProvider } from "@guythomas.me/common/context/ThemeProvider"
+import { ResumeJSON } from "@guythomas.me/common/components/Resume/Resume"
 
 const STORAGE_KEY = "resume"
 const useResumeState = createPersistedState(STORAGE_KEY)

@@ -3,19 +3,26 @@
   "version": "1.0.0",
   "description": "A config driven blog and resume",
   "private": true,
-  "workspaces": ["packages/*"],
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {},
-  "dependencies": {},
-  "devDependencies": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/guyathomas/guythomas.me.git"
   },
-  "keywords": ["gatsby", "resume", "blog"],
+  "keywords": [
+    "gatsby",
+    "resume",
+    "blog"
+  ],
   "author": "Guy Thomas",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/guyathomas/guythomas.me/issues"
   },
-  "homepage": "https://github.com/guyathomas/guythomas.me#readme"
+  "homepage": "https://github.com/guyathomas/guythomas.me#readme",
+  "devDependencies": {
+    "typescript": "^4.2.4"
+  }
 }
