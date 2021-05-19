@@ -12,7 +12,7 @@ const colorSchemes = ["dark", "light"]
     await page.emulateMediaFeatures([
       { name: "prefers-color-scheme", value: color },
     ])
-    await page.goto(`http://localhost:8000/resume`, {
+    await page.goto(`http://localhost:${process.env.PORT || "8000"}/resume`, {
       waitUntil: "networkidle2",
     })
     await page.pdf({
