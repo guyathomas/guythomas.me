@@ -1,11 +1,11 @@
 import React from "react"
 import styled from "@emotion/styled"
-import { BREAKPOINTS, COLOR_PALETTE } from "@guythomas.me/common/styles"
-import { PageSizeContext } from "@guythomas.me/common/context/PageSize"
-import { Link } from "@guythomas.me/common/components/Link"
-import { NavLinks } from "@guythomas.me/common/components/NavLinks"
-import { Hamburger } from "@guythomas.me/common/components/Hamburger"
-import { DarkModeToggle } from "@guythomas.me/common/components/DarkModeToggle"
+import { BREAKPOINTS, COLOR_PALETTE } from "~styles"
+import { PageSizeContext } from "~context/PageSize"
+import { Link } from "~components/Link"
+import { NavLinks } from "~components/NavLinks"
+import { Hamburger } from "~components/Hamburger"
+import { DarkModeToggle } from "~components/DarkModeToggle"
 
 const HeaderContent = styled.div`
   display: flex;

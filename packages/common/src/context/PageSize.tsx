@@ -23,8 +23,10 @@ export const PageSizeProvider: React.FC<PageSizeProviderProps> = ({
   const [pageSize, setPageSize] = React.useState<PageSizeContext>(
     INITIAL_PAGE_SIZE
   )
-  const onResize = React.useCallback((width: number, height: number) => {
-    setPageSize({ width, height })
+  const onResize = React.useCallback((width?: number, height?: number) => {
+    if (width && height) {
+      setPageSize({ width, height })
+    }
   }, [])
 
   return (

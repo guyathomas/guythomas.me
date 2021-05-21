@@ -6,7 +6,9 @@ type Unobserve = () => void
 
 class DarkMode {
   private get mediaQuery(): MediaQueryList | undefined {
-    return global.matchMedia ? global.matchMedia(DM_MEDIA_QUERY) : undefined
+    return globalThis.matchMedia
+      ? globalThis.matchMedia(DM_MEDIA_QUERY)
+      : undefined
   }
   public get enabled(): boolean {
     if (typeof document === "undefined") {

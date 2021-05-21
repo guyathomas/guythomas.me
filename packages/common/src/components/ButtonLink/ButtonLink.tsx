@@ -1,6 +1,6 @@
 import React from "react"
 import styled from "@emotion/styled"
-import { COLOR_PALETTE } from "@guythomas.me/common/styles"
+import { COLOR_PALETTE } from "~styles"
 
 interface ButtonLinkProps {
   children: React.ReactNode

@@ -3,11 +3,16 @@
     "module": "commonjs",
     "target": "esnext",
     "jsx": "preserve",
+    "moduleResolution": "node",
     "lib": ["dom", "esnext"],
     "strict": true,
-    "noEmit": true,
     "isolatedModules": true,
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "noUnusedLocals": false,
-    "allowJs": true
+    "allowJs": true,
+    "paths": {
+      "@guythomas.me/*": ["packages/*"]
+    }
+  }
 }

@@ -23,12 +23,7 @@ module.exports = {
       resolve: "gatsby-plugin-root-import",
       // TODO: This config is shared in storybook config. Can I share this config?
       options: {
-        "~actions": path.join(__dirname, "src/actions"),
-        "~components": path.join(__dirname, "src/components"),
-        "~context": path.join(__dirname, "src/context"),
         "~templates": path.join(__dirname, "src/templates"),
-        "~styles": path.join(__dirname, "src/styles"),
-        "~types": path.join(__dirname, "src/types"),
       },
     },
     {
@@ -42,35 +37,35 @@ module.exports = {
     {
       resolve: `gatsby-source-filesystem`,
       options: {
-        path: `${__dirname}/content/blog`,
+        path: path.resolve(__dirname, '../', 'content/src/blog'),
         name: `blog`,
       },
     },
     {
       resolve: `gatsby-source-filesystem`,
       options: {
-        path: `${__dirname}/content/notes`,
+        path: path.resolve(__dirname, '../', 'content/src/notes'),
         name: `notes`,
       },
     },
     {
       resolve: `gatsby-source-filesystem`,
       options: {
-        path: `${__dirname}/content/the-frontend-interview`,
+        path: path.resolve(__dirname, '../', 'content/src/the-frontend-interview'),
         name: `the-frontend-interview`,
       },
     },
     {
       resolve: `gatsby-source-filesystem`,
       options: {
-        path: `${__dirname}/content/assets`,
+        path: path.resolve(__dirname, '../', 'content/src/assets'),
         name: `assets`,
       },
     },
     {
       resolve: `gatsby-source-filesystem`,
       options: {
-        path: `${__dirname}/content/resume`,
+        path: path.resolve(__dirname, '../', 'content/src/resume'),
         name: `resume`,
       },
     },
@@ -103,7 +98,7 @@ module.exports = {
           {
             resolve: "@guyathomas/gatsby-remark-embedded-codesandbox",
             options: {
-              directory: `${__dirname}/content/the-frontend-interview/codesandbox/`,
+              directory: path.resolve(__dirname, '../', 'content/src/the-frontend-interview/codesandbox/'),
             },
           },
         ],
@@ -112,18 +107,6 @@ module.exports = {
 
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
-    {
-      resolve: `gatsby-plugin-manifest`,
-      options: {
-        name: `Guy Thomas`,
-        short_name: `Guy`,
-        start_url: `/`,
-        background_color: `#ffffff`,
-        theme_color: `#F8BB10`,
-        display: `minimal-ui`,
-        icon: `content/assets/favicon.png`,
-      },
-    },
     `gatsby-plugin-react-helmet`,
     {
       resolve: `gatsby-plugin-typography`,

@@ -1,7 +1,7 @@
 import React from "react"
-import { Link } from "@guythomas.me/common/components/Link"
+import { Link } from "~components/Link"
 import styled from "@emotion/styled"
-import { BREAKPOINTS } from "@guythomas.me/common/styles"
+import { BREAKPOINTS } from "~styles"
 
 interface SummaryItemProps {
   time: string

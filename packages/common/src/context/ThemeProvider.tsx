@@ -1,5 +1,5 @@
 import React from "react"
-import { COLOR_PALETTE } from "@guythomas.me/common/styles"
+import { COLOR_PALETTE } from "~styles"
 
 interface ThemeProviderProps {
   children: React.ReactNode
