@@ -34,15 +34,18 @@ experience:
     company: IBM
     title: Software Engineer
 education:
-  - company: Covered App
+  - company: !markdown |
+      [thelastresume.com](https://thelastresume.com)
     title: React / Typescript / GraphQL / Postgres
     details: !markdown |
-      * Database Driven Design - changing fields in the database will create new GraphQL resolvers / queries / mutations and then create Typescript powered client code.
-      * This means that a schema change will trigger a build error for the client. Pretty cool eh?
-      * The client is statically built with NextJS and distributed with serverless systems.
-  - company: guythomas.me
+      * Create an online resume that is statically built, SEO optimized and printable
+  - company: !markdown |
+      [guythomas.me](https://guythomas.me)
     title: React / Typescript / Gatsby / Netlify
     details: !markdown |
-        * `/blog` - a statically built blog from `.md` files
-        * `/resume` - a resume that supports editing by anyone and will persist in their localStorage. Resume content ( like this sentence ) is defined in a `.yml` file.
-  
+      * `/blog` - a statically built blog from `.md` files
+      * `/resume` - resume content ( like this sentence ) is defined in a `.yml` file
+  - company: Covered App - WIP
+    title: React / Typescript / GraphQL / Postgres
+    details: !markdown |
+      * CMS specifically for the window furnishing industry
