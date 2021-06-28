@@ -71,7 +71,7 @@
     "gatsby-transformer-sharp": "^3.0.0",
     "gatsby-transformer-yaml-full": "^0.4.0",
     "gatsby-yaml-full-markdown": "^0.3.6",
-    "prismjs": "^1.23.0",
+    "prismjs": "^1.24.0",
     "puppeteer": "^8.0.0",
     "react": "^17.0.1",
     "react-contenteditable": "^3.3.5",
