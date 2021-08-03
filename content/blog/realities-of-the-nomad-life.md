@@ -7,7 +7,7 @@ description: "Lessons learned from living in 9 cities over the past 12 months"
 ![Overlooking Seattle](https://images.unsplash.com/photo-1524681900586-cc3f422de659?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80)
 
 ## First up, it's really, really cool
-And others will think it's cool too. Because it is.
+People think it's fun and filled with adventure - because it is. But I want to share some sides the are less talked about.
 
 You'll be living in places that people vacation to, moving depending on the weather and staying in places you've always dreamed to visit. I lived on the beach in Hawaii, a cabin in Lake Tahoe, a farmhouse in butt-fuck nowhere Vermont and a high rise in New York City. You won't be bound by leases or a community. But like everything, it comes at a cost. The fact that you don't get to be bound by leases or a sense of community.
 

@@ -16,6 +16,7 @@ interface AppProps {
 const ContentBackground = styled.div`
   position: relative;
   transition: background-color 1s;
+  padding-bottom: 2rem;
   background-color: ${() => COLOR_PALETTE.backgroundPrimary.color};
   /* TODO: Just hard code header height for now. Calculate properly later */
   min-height: calc(100vh - 67px);
