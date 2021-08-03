@@ -50,6 +50,13 @@ const timelineItems: TimelineItemProps[] = [
   {
     icon: <AccountBalance />,
     time: "2013",
+    title: "Start",
+    subtitle: "Economics / Finance",
+    iconColor: "warning",
+  },
+  {
+    icon: <AccountBalance />,
+    time: "2013",
     title: "Graduate",
     subtitle: "Economics / Finance",
     iconColor: "warning",
