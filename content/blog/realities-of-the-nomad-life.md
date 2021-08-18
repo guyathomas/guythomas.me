@@ -9,7 +9,7 @@ description: "Lessons learned from living in 9 cities over the past 12 months"
 ## First up, it's really, really cool
 People think it's fun and filled with adventure - because it is. But I want to share some sides the are less talked about.
 
-You'll be living in places that people vacation to, moving depending on the weather and staying in places you've always dreamed to visit. I lived on the beach in Hawaii, a cabin in Lake Tahoe, a farmhouse in butt-fuck nowhere Vermont and a high rise in New York City. You won't be bound by leases or a community. But like everything, it comes at a cost. The fact that you don't get to be bound by leases or a sense of community.
+You'll be living in places that people vacation to, moving depending on the weather and staying in places you've always dreamed to visit. I lived on the beach in Hawaii, a cabin in Lake Tahoe, a farmhouse in butt-fuck nowhere Vermont and a high rise in New York City. You won’t be bound by leases or locations. But like everything, nomadic life comes at a cost. You often sacrifice community for freedom, depth for exploration.
 
 I've always had a strong desire to live like this, and given my chance, I'd still do it again. However, there are some things that I'd like to have known going into it. 😬 There are no solutions for these problems because they are just tradeoffs to live the lifestyle.
 
