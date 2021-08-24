@@ -1,7 +1,7 @@
 import React from "react"
 import { Link } from "~components/Link"
 import styled from "@emotion/styled"
-import { BREAKPOINTS } from "~styles"
+import { BREAKPOINTS, COLOR_PALETTE } from "~styles"
 
 interface SummaryItemProps {
   time: string
@@ -25,16 +25,27 @@ const Snippet = styled.div`
   margin: auto;
 `
 
+const CategoryTag = styled.span`
+  margin-left: 1rem;
+  padding: 0.2em;
+  border-radius: 2rem;
+  background: ${() => COLOR_PALETTE.backgroundTertiary.color};
+  color: ${() => COLOR_PALETTE.secondary.color};
+  font-style: italic;
+`
+
 export const SummaryItem: React.FC<SummaryItemProps> = ({
   time,
   title,
   body,
   link,
+  category,
 }) => {
   return (
     <Snippet key={link}>
       <div>
         <Time>{time}</Time>
+        {category && <CategoryTag>{category}</CategoryTag>}
         <Title>
           <Link to={link}>{title}</Link>
         </Title>

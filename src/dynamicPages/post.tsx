@@ -18,6 +18,11 @@ const Article = styled.article`
   & > * {
     grid-column: 2;
   }
+  @media (max-width: ${BREAKPOINTS.md}px) {
+    & > .full-bleed + * {
+      padding: 1rem;
+    }
+  }
   & > .full-bleed + * {
     grid-column: 1/4;
   }

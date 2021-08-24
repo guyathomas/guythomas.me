@@ -16,6 +16,7 @@ export const SummaryList: React.FC<SummaryListProps> = ({ posts }) => {
           link={`/${fields?.sourceInstanceName || ""}${fields?.slug || ""}`}
           body={frontmatter?.description || excerpt || ""}
           time={frontmatter?.date}
+          category={fields?.sourceInstanceName}
         />
       ))}
     </>
