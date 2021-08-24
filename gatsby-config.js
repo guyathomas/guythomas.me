@@ -56,8 +56,8 @@ module.exports = {
     {
       resolve: `gatsby-source-filesystem`,
       options: {
-        path: `${__dirname}/content/the-frontend-interview`,
-        name: `the-frontend-interview`,
+        path: `${__dirname}/content/frontend-interviews`,
+        name: `frontend-interviews`,
       },
     },
     {
@@ -103,7 +103,7 @@ module.exports = {
           {
             resolve: "@guyathomas/gatsby-remark-embedded-codesandbox",
             options: {
-              directory: `${__dirname}/content/the-frontend-interview/codesandbox/`,
+              directory: `${__dirname}/content/frontend-interviews/codesandbox/`,
             },
           },
         ],

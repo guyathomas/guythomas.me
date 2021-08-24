@@ -12,7 +12,6 @@ interface AppLink {
 const LINKS: AppLink[] = [
   { label: "Blog", path: "/blog" },
   { label: "Resume", path: "/resume" },
-  { label: "The Frontend Interview", path: "/the-frontend-interview" },
 ]
 
 interface LinksProps {
