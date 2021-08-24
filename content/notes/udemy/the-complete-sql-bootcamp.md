@@ -1,4 +1,8 @@
-# SQL
+---
+title: Complete SQL Bootcamp
+date: "2020-03-12T20:39:13.695Z"
+description: "Notes from https://www.udemy.com/course/the-complete-sql-bootcamp/"
+---
 
 `Between` Syntax
 

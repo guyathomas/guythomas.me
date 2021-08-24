@@ -2,7 +2,6 @@
 title: Bash, Vim & Regex
 date: "2020-03-12T20:39:13.695Z"
 description: "Notes from https://frontendmasters.com/courses/bash-vim-regex/"
-tags: ["notes"]
 ---
 
 # Bash / Vim / Regex
