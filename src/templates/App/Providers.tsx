@@ -1,9 +1,11 @@
 import React from "react"
 import { PageSizeProvider } from "~context/PageSize"
 import { GlobalStyles } from "./GlobalStyles"
-import { ThemeProvider } from "~context/ThemeProvider"
+import { StyledEngineProvider } from '@mui/material/styles';
+import { ThemeProvider } from "~context/ThemeProvider";
 import dayjs from "dayjs"
 import relativeTime from "dayjs/plugin/relativeTime"
+
 
 dayjs.extend(relativeTime)
 
@@ -14,10 +16,12 @@ interface ProvidersProps {
 export const Providers: React.FC<ProvidersProps> = ({ children }) => {
   return (
     <PageSizeProvider>
-      <ThemeProvider>
-        <GlobalStyles />
-        {children}
-      </ThemeProvider>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider>
+          <GlobalStyles />
+          {children}
+        </ThemeProvider>
+      </StyledEngineProvider>
     </PageSizeProvider>
-  )
+  );
 }
