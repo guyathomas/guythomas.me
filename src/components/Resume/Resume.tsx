@@ -154,10 +154,10 @@ const Resume: React.FC<{
           <SectionContentInner>
             {resumeData.experience?.map((item, index) => (
               <Timeline
-                company={item?.company || ""}
-                title={item?.title || ""}
-                date={item?.date || ""}
-                details={item?.details || ""}
+                company={item?.company ?? undefined}
+                title={item?.title ?? undefined}
+                date={item?.date ?? undefined}
+                details={item?.details ?? undefined}
                 key={index}
               />))}
           </SectionContentInner>
@@ -166,11 +166,10 @@ const Resume: React.FC<{
         <EducationSection>
           <SectionContentInner>
             {resumeData.education?.map((item, index) => <Timeline
+              company={item?.company}
+              title={item?.title}
+              details={item?.details}
               key={index}
-              company={item?.company || ""}
-              title={item?.title || ""}
-              date={item?.date || ""}
-              details={item?.details || ""}
             />)}
           </SectionContentInner>
         </EducationSection>

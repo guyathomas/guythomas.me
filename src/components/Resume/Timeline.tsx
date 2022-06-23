@@ -1,24 +1,13 @@
 import React from "react"
-import ContentEditable from "react-contenteditable"
-
-import {
-  ResumeYamlExperience,
-  ResumeYamlEducation,
-} from "~types/gatsby-graphql"
 
 import styled from "@emotion/styled"
 import { DESKTOP } from "./constants"
-import { SectionButton } from "./styles"
 
 interface TimelineProps {
+  title?: string
   date?: string
   company?: string
-  title?: string
   details?: string
-  className?: string
-  contentEditable?: boolean
-  onRemove?: () => void
-  onChange?: (fieldValue: TimelineFieldNames, value: string) => void
 }
 
 const TimelineOuter = styled.div`
@@ -34,18 +23,14 @@ const TimelineOuter = styled.div`
 const TimelineTitles = styled.div``
 const TimelineDetails = styled.div``
 
-// eslint-disable-next-line
-// @ts-ignore
-const TimelineCompany = styled(ContentEditable)`
+const TimelineCompany = styled.h3`
   margin: 1rem 0 1rem;
   @media print {
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
   }
 `
-// eslint-disable-next-line
-// @ts-ignore
-const TimelineTitle = styled(ContentEditable)`
+const TimelineTitle = styled.h4`
   margin: 0;
   font-size: 0.8rem;
   margin: 1rem 0 1rem;
@@ -55,9 +40,7 @@ const TimelineTitle = styled(ContentEditable)`
   }
 `
 
-// eslint-disable-next-line
-// @ts-ignore
-const TimelineDate = styled(ContentEditable)`
+const TimelineDate = styled.h3`
   opacity: 0.6;
   font-size: 0.7rem;
   margin: 1rem 0 1rem;
@@ -67,9 +50,7 @@ const TimelineDate = styled(ContentEditable)`
   }
 `
 
-// eslint-disable-next-line
-// @ts-ignore
-const TimelineDetailsContent = styled(ContentEditable)`
+const TimelineDetailsContent = styled.div`
   & li {
     @media only print {
       font-size: 85%;
@@ -88,78 +69,21 @@ const TimelineDetailsContent = styled(ContentEditable)`
   }
 `
 
-const RemoveSection = styled(SectionButton)`
-  position: absolute;
-  right: 14px;
-  top: 30px;
-  @media ${DESKTOP} {
-    right: -50px;
-    top: 20px;
-  }
-`
-
-type TimelineFieldNames = keyof ResumeYamlEducation | keyof ResumeYamlExperience
-
 const Timeline: React.FC<TimelineProps> = ({
-  date = "",
-  company = "",
-  title = "",
-  details = "",
-  className = "",
-  contentEditable = false,
-  onRemove,
-  onChange,
+  date,
+  company,
+  title,
+  details,
 }) => {
   return (
-    <TimelineOuter className={className}>
-      {contentEditable && (
-        <RemoveSection onClick={onRemove} actionType="negative">
-          -
-        </RemoveSection>
-      )}
+    <TimelineOuter>
       <TimelineTitles>
-        <TimelineCompany
-          html={company}
-          disabled={!contentEditable}
-          onChange={(event) => {
-            if (onChange) {
-              onChange("company", event.target.value)
-            }
-          }}
-          tagName="h3"
-        />
-        <TimelineDate
-          html={date}
-          disabled={!contentEditable}
-          onChange={(event) => {
-            if (onChange) {
-              onChange("date", event.target.value)
-            }
-          }}
-          tagName="h3"
-        />
-        <TimelineTitle
-          html={title}
-          disabled={!contentEditable}
-          onChange={(event) => {
-            if (onChange) {
-              onChange("title", event.target.value)
-            }
-          }}
-          tagName="h4"
-        />
+        {company && <TimelineCompany dangerouslySetInnerHTML={{ __html: company }} />}
+        {date && <TimelineDate>{date}</TimelineDate>}
+        {title && <TimelineTitle>{title}</TimelineTitle>}
       </TimelineTitles>
       <TimelineDetails>
-        <TimelineDetailsContent
-          html={details}
-          disabled={!contentEditable}
-          onChange={(event) => {
-            if (onChange) {
-              onChange(`details`, event.target.value)
-            }
-          }}
-          tagName="div"
-        />
+        {details && <TimelineDetailsContent dangerouslySetInnerHTML={{ __html: details }} />}
       </TimelineDetails>
     </TimelineOuter>
   )

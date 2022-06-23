@@ -18,7 +18,6 @@ experience:
     details: !markdown |
       * Leading the Growth team responsible for external communications and leveraging coupons in App.
   - date: 10th May, 2021 – 15th June, 2022
-    company: Instacart
     title: Senior Software Engineer II
     details: !markdown |
       * Team lead for a home banner that increased the usage of our coupons by 200%.
@@ -38,8 +37,6 @@ experience:
   - date: 7th July, 2014 – 3rd June, 2016
     company: IBM
     title: Software Engineer
-    details: !markdown |
-      * Created a system to allow marketers to select customer attributes on the fly for marketing campaigns.
 education:
   - company: !markdown |
       [guythomas.me](https://guythomas.me)
