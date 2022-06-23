@@ -8,7 +8,7 @@ A pre-configured blog and resume featuring dark mode
 
 ## Resume
 
-A resume that can be configured with a simple `YAML` file. A PDF version is downloadable ( which is conveniently the same output as printing the page with no boarders on A4 ). This resume in editable inline in the web page.
+A resume that can be configured with a simple `YAML` file. A PDF version is downloadable ( which is conveniently the same output as printing the page with no boarders on A4 ).
 ![image](./docs/resume.gif)
 
 ## Stack
@@ -35,23 +35,9 @@ A resume that can be configured with a simple `YAML` file. A PDF version is down
 
 - [This Blog](https://joshwcomeau.com/gatsby/) has some great ideas
   - Table of contents on the right for desktop
-  - Add event listener for Dark Mode changes
-    - Abstract changes into plugin?
-  - Embedded JSX editor
 - Resume
-  - Form state does not reset upon clicking the reset button in the banner
-  - Add / remove contact information
-  - Fix styles for printed content ( currently breaks when the content is changed dramatically )
+  - Include bookList
 
 ### Arch
 
-- Stop using JS to get width. Results in page load flickering depending on page width
-
-### Resume
-
-- Make it easier to add / remove Timeline Item fields and Contact Detail fields
-- Allow saving of the changes to local storage
-- Allow changing of the padding prefix
-- Performance
-  - Stop bundling Auth0
-  - Load fonts async ( currently blocking )
+- Enable better SSR for desktop width applications

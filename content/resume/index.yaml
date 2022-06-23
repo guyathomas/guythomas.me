@@ -37,7 +37,7 @@ experience:
   - date: 7th July, 2014 – 3rd June, 2016
     company: IBM
     title: Software Engineer
-education:
+projects:
   - company: !markdown |
       [guythomas.me](https://guythomas.me)
     title: React / Typescript / Gatsby / Netlify
@@ -48,7 +48,10 @@ education:
     title: React / Typescript / GraphQL / Postgres
     details: !markdown |
       * Create an online resume that is statically built, SEO optimized and printable
-  - company: Covered App
-    title: React / Typescript / GraphQL / Postgres
-    details: !markdown |
-      * CMS specifically for the window furnishing industry
+bookList:
+  - title: How I Built This
+    link: https://www.goodreads.com/book/show/48930275-how-i-built-this
+  - title: The Cold Start Problem
+    link: https://www.goodreads.com/book/show/55338968-the-cold-start-problem
+  - title: "An Elegant Puzzle: Systems of Engineering Management"
+    link: https://www.goodreads.com/en/book/show/45303387-an-elegant-puzzle
