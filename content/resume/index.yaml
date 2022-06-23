@@ -2,7 +2,7 @@ version: 1
 firstName: Guy
 lastName: Thomas
 avatar: https://res.cloudinary.com/dqvlfpaev/image/upload/c_scale,w_400/v1580691840/avatar_sz1jui.jpg
-tagline: Full Stack Developer & Front-end Expert
+tagline: Engineering Leader & Entrepreneur
 contactDetails:
   - - Email
     - !markdown "[guythomas721@gmail.com](mailto:guythomas721@gmail.com)"
@@ -10,42 +10,48 @@ contactDetails:
     - San Francisco
   - - Web
     - !markdown "[guythomas.me](https://guythomas.me)"
-intro: I love empowering peers to be more productive, reducing development times and increasing the reliability of applications at scale. I work across the stack, and specialize in anything frontend.
+intro: I'm passionate about leveling teams up to build complex applications that scale.
 experience:
-  - date: 10th May, 2021 – Present
+  - date: 15th June, 2022 – Present
+    company: Instacart
+    title: Engineering Manager
+    details: !markdown |
+      * Leading the Growth team responsible for external communications and leveraging coupons in App.
+  - date: 10th May, 2021 – 15th June, 2022
     company: Instacart
     title: Senior Software Engineer II
     details: !markdown |
-      * Saved $6m annual overspend by implementing spend limits on coupon campaigns
+      * Team lead for a home banner that increased the usage of our coupons by 200%.
+      * Team lead for the "Deals Tab" which surfaces Instacarts top deals to millions of users every day.
   - date: 15th April, 2019 – 26th May, 2021
     company: Lyft
     title: Senior Software Engineer
     details: !markdown |
-      * Team lead for an Insurance Marketplace for drivers to purchase policies. From MVP to multi-carrier support across Android, iOS and Web. Built using React 16.8+ (hooks), Typescript, NextJS & Python
-      * Led an E2E testing initiative across all of Lyft allowing recording and replaying of HTTP responses with Cypress
-      * Enabled a 3x increase in productivity by leading the adoption for our entire org from a cloud based development workflow to a local workflow
+      * Team lead for a cross platform Insurance Marketplace.
+      * Led a company wide testing initiative to speed up tests in CI by 90%.
   - date: 26th June, 2017 – 31st January, 2019
     company: Reflektive
     title: Software Engineer
     details: !markdown |
-      * Team lead for our core 'Reviews' product. Drove a rebuild of the entire product from Backbone to React & Redux
-      * Cut development build times by 50% and reduced application load times over HTTP2 by implementing Webpack best practices
+      * Built the frontend for our core 'Reviews' product.
+      * Cut development build times by 50% by optimizing webpack pipelines.
   - date: 7th July, 2014 – 3rd June, 2016
     company: IBM
     title: Software Engineer
-education:
-  - company: !markdown |
-      [thelastresume.com](https://thelastresume.com)
-    title: React / Typescript / GraphQL / Postgres
     details: !markdown |
-      * Create an online resume that is statically built, SEO optimized and printable
+      * Created a system to allow marketers to select customer attributes on the fly for marketing campaigns.
+education:
   - company: !markdown |
       [guythomas.me](https://guythomas.me)
     title: React / Typescript / Gatsby / Netlify
     details: !markdown |
       * `/blog` - a statically built blog from `.md` files
       * `/resume` - resume content ( like this sentence ) is defined in a `.yml` file
-  - company: Covered App - WIP
+  - company: The Last Resume
+    title: React / Typescript / GraphQL / Postgres
+    details: !markdown |
+      * Create an online resume that is statically built, SEO optimized and printable
+  - company: Covered App
     title: React / Typescript / GraphQL / Postgres
     details: !markdown |
       * CMS specifically for the window furnishing industry

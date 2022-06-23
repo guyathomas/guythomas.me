@@ -702,9 +702,9 @@ export type ResumeYaml = Node & {
 };
 
 export type ResumeYamlExperience = {
-  date?: Maybe<Scalars['String']>;
   company?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
+  date?: Maybe<Scalars['String']>;
   details?: Maybe<Scalars['String']>;
 };
 
@@ -1250,9 +1250,9 @@ export type ResumeYamlExperienceFilterListInput = {
 };
 
 export type ResumeYamlExperienceFilterInput = {
-  date?: InputMaybe<StringQueryOperatorInput>;
   company?: InputMaybe<StringQueryOperatorInput>;
   title?: InputMaybe<StringQueryOperatorInput>;
+  date?: InputMaybe<StringQueryOperatorInput>;
   details?: InputMaybe<StringQueryOperatorInput>;
 };
 
@@ -1665,9 +1665,9 @@ export type FileFieldsEnum =
   | 'childrenResumeYaml___contactDetails'
   | 'childrenResumeYaml___intro'
   | 'childrenResumeYaml___experience'
-  | 'childrenResumeYaml___experience___date'
   | 'childrenResumeYaml___experience___company'
   | 'childrenResumeYaml___experience___title'
+  | 'childrenResumeYaml___experience___date'
   | 'childrenResumeYaml___experience___details'
   | 'childrenResumeYaml___education'
   | 'childrenResumeYaml___education___company'
@@ -1719,9 +1719,9 @@ export type FileFieldsEnum =
   | 'childResumeYaml___contactDetails'
   | 'childResumeYaml___intro'
   | 'childResumeYaml___experience'
-  | 'childResumeYaml___experience___date'
   | 'childResumeYaml___experience___company'
   | 'childResumeYaml___experience___title'
+  | 'childResumeYaml___experience___date'
   | 'childResumeYaml___experience___details'
   | 'childResumeYaml___education'
   | 'childResumeYaml___education___company'
@@ -3769,9 +3769,9 @@ export type ResumeYamlFieldsEnum =
   | 'contactDetails'
   | 'intro'
   | 'experience'
-  | 'experience___date'
   | 'experience___company'
   | 'experience___title'
+  | 'experience___date'
   | 'experience___details'
   | 'education'
   | 'education___company'
