@@ -44,7 +44,6 @@
     "@react-hook/resize-observer": "^1.2.5",
     "@rebass/forms": "^4.0.6",
     "dayjs": "^1.11.3",
-    "formik": "^2.2.9",
     "gatsby": "^4.17.0",
     "gatsby-image": "^2.10.0",
     "gatsby-plugin-alias-imports": "^1.0.5",
@@ -85,8 +84,7 @@
     "typeface-open-sans": "1.1.13",
     "typeface-work-sans": "1.1.13",
     "typography": "^0.16.21",
-    "typography-breakpoint-constants": "^0.16.19",
-    "use-persisted-state": "^0.3.3"
+    "typography-breakpoint-constants": "^0.16.19"
   },
   "devDependencies": {
     "@babel/core": "^7.18.5",
