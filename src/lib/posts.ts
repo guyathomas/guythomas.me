@@ -1,69 +1,74 @@
-import fs from 'fs'
-import path from 'path'
-import matter from 'gray-matter'
-import { remark } from 'remark'
-import html from 'remark-html'
+import fs from "fs";
+import path from "path";
+import matter from "gray-matter";
+import { remark } from "remark";
+import remarkHtml from "remark-html";
+import transformCodeSandbox from "./transformCodesandbox";
 
-const postsDirectory = path.join(process.cwd(), 'posts')
+const blogDirectory = path.join(process.cwd(), "content/blog");
+const ignoredFilesSet = new Set([
+  "node_modules",
+  "yarn.lock",
+  "package-lock.json",
+]);
 
-export function getSortedPostsData() {
-  // Get file names under /posts
-  const fileNames = fs.readdirSync(postsDirectory)
-  const allPostsData = fileNames.map(fileName => {
-    // Remove ".md" from file name to get id
-    const id = fileName.replace(/\.md$/, '')
+const getAbsoluteFilepaths = (dirPath) =>
+  fs.readdirSync(dirPath).reduce((acc, file) => {
+    if (ignoredFilesSet.has(file)) return acc;
+    const relativePath = dirPath + "/" + file;
+    const isDirectory = fs.statSync(relativePath).isDirectory();
+    const additions = isDirectory
+      ? getAbsoluteFilepaths(relativePath)
+      : [relativePath];
+    return [...acc, ...additions];
+  }, []);
 
-    // Read markdown file as string
-    const fullPath = path.join(postsDirectory, fileName)
-    const fileContents = fs.readFileSync(fullPath, 'utf8')
+const postPathRegex = new RegExp(`${blogDirectory}(.*)\.md`);
 
-    // Use gray-matter to parse the post metadata section
-    const matterResult = matter(fileContents)
+const getPostPathFromAbsoluteFile = (absolutePath: string) =>
+  absolutePath.match(postPathRegex)[1];
 
-    // Combine the data with the id
-    return {
-      id,
-      ...(matterResult.data as { date: string; title: string })
-    }
-  })
-  // Sort posts by date
-  return allPostsData.sort((a, b) => {
-    if (a.date < b.date) {
-      return 1
-    } else {
-      return -1
-    }
-  })
-}
+export const getSortedPostsData = () =>
+  getAbsoluteFilepaths(blogDirectory)
+    .map((fileName) => {
+      const postPath = getPostPathFromAbsoluteFile(fileName);
+      const fileContents = fs.readFileSync(fileName, "utf8");
+      const matterResult = matter(fileContents);
+      return {
+        id: postPath,
+        ...(matterResult.data as { date: string; title: string }),
+      };
+    })
+    .sort((a, b) => (a.date < b.date ? 1 : -1));
 
-export function getAllPostIds() {
-  const fileNames = fs.readdirSync(postsDirectory)
-  return fileNames.map(fileName => {
-    return {
+export const getAllPostIds = () =>
+  getAbsoluteFilepaths(blogDirectory)
+    .map(getPostPathFromAbsoluteFile)
+    .map((id) => ({
       params: {
-        id: fileName.replace(/\.md$/, '')
-      }
-    }
-  })
-}
+        id: id.split("/").filter(Boolean),
+      },
+    }));
 
 export async function getPostData(id: string) {
-  const fullPath = path.join(postsDirectory, `${id}.md`)
-  const fileContents = fs.readFileSync(fullPath, 'utf8')
+  const fullPath = path.join(blogDirectory, `${id}.md`);
+  const fileContents = fs.readFileSync(fullPath, "utf8");
 
   // Use gray-matter to parse the post metadata section
-  const matterResult = matter(fileContents)
+  const matterResult = matter(fileContents);
 
   // Use remark to convert markdown into HTML string
   const processedContent = await remark()
-    .use(html)
-    .process(matterResult.content)
-  const contentHtml = processedContent.toString()
+    .use(remarkHtml, { sanitize: false })
+    .use(transformCodeSandbox)
+    .process(matterResult.content);
+
+  const contentHtml = processedContent.toString();
 
   // Combine the data with the id and contentHtml
   return {
     id,
     contentHtml,
-    ...(matterResult.data as { date: string; title: string })
-  }
+    ...(matterResult.data as { date: string; title: string }),
+  };
 }
