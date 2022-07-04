@@ -35,19 +35,20 @@ const ignoredFilesSet = new Set([
   "yarn.lock",
 ]);
 
-const getAllFiles = (directory) =>
+const getAllProjectFiles = (directory) =>
   fs.readdirSync(directory).reduce((acc, file) => {
+    if (ignoredFilesSet.has(file)) return acc;
     const relativePath = directory + "/" + file;
     const isDirectory = fs.statSync(relativePath).isDirectory();
-    const additions = isDirectory ? getAllFiles(relativePath) : [relativePath];
+    const additions = isDirectory
+      ? getAllProjectFiles(relativePath)
+      : [relativePath];
     return [...acc, ...additions];
   }, []);
 
 const getFilesList = (directory) => {
   let packageJsonFound = false;
-  const folderFiles = getAllFiles(directory).filter(
-    (file) => !ignoredFilesSet.has(file)
-  );
+  const folderFiles = getAllProjectFiles(directory);
   const basePathRE = new RegExp(`^${directory}/`);
   const sandboxFiles = folderFiles
     .map((file) => file.replace(basePathRE, ""))
