@@ -5,32 +5,30 @@ import Date from "../../components/date";
 import utilStyles from "../../styles/utils.module.css";
 import { GetStaticProps, GetStaticPaths } from "next";
 
-export default function Post({
-  postData,
-}: {
+interface PostProps {
   postData: {
     title: string;
     date: string;
     contentHtml: string;
   };
-}) {
-  return (
-    <Layout>
-      <Head>
-        <title>{postData.title}</title>
-      </Head>
-      <article>
-        <h1 className={utilStyles.headingXl}>{postData.title}</h1>
-        {postData.date && (
-          <div className={utilStyles.lightText}>
-            <Date dateString={postData.date} />
-          </div>
-        )}
-        <div dangerouslySetInnerHTML={{ __html: postData.contentHtml }} />
-      </article>
-    </Layout>
-  );
 }
+
+const Post: React.FC<PostProps> = ({ postData }) => (
+  <Layout>
+    <Head>
+      <title className="text-3xl font-bold underline">{postData.title}</title>
+    </Head>
+    <article>
+      <h1 className={utilStyles.headingXl}>{postData.title}</h1>
+      {postData.date && (
+        <div className={utilStyles.lightText}>
+          <Date dateString={postData.date} />
+        </div>
+      )}
+      <div dangerouslySetInnerHTML={{ __html: postData.contentHtml }} />
+    </article>
+  </Layout>
+);
 
 export const getStaticPaths: GetStaticPaths = async () => ({
   paths: getAllPostIds(),
@@ -47,3 +45,5 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     },
   };
 };
+
+export default Post;
