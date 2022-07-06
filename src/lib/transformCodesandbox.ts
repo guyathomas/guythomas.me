@@ -13,7 +13,7 @@ const CODESANDBOX_ROOT_DIRECTORY = path.join(
   "content/codesandbox/"
 );
 const getIframeHtml = (url) =>
-  `<iframe src="${url}" class="-mx-container w-screen h-52" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>`;
+  `<iframe src="${url}" class="bx-custom-full-vw h-56" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>`;
 
 const getPackageJsonFile = (fileList) =>
   fileList.find((file) => file.includes("package.json"));
