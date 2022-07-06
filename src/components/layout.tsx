@@ -13,7 +13,7 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = ({ children, home }) => (
-  <div className="container max-w-prose">
+  <div className="container">
     <Head>
       <link rel="icon" href="/favicon.ico" />
       <meta
