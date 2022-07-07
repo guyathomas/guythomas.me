@@ -28,6 +28,13 @@ const postPathRegex = new RegExp(`${blogDirectory}(.*)\.md`);
 const getPostPathFromAbsoluteFile = (absolutePath: string) =>
   absolutePath.match(postPathRegex)[1];
 
+interface MatterResult {
+  date: string;
+  title: string;
+  draft?: boolean;
+  description?: string;
+}
+
 export const getSortedPostsData = () =>
   getAbsoluteFilepaths(blogDirectory)
     .map((fileName) => {
@@ -36,9 +43,10 @@ export const getSortedPostsData = () =>
       const matterResult = matter(fileContents);
       return {
         id: postPath,
-        ...(matterResult.data as { date: string; title: string }),
+        ...(matterResult.data as MatterResult),
       };
     })
+    .filter((postMeta) => !postMeta.draft)
     .sort((a, b) => (a.date < b.date ? 1 : -1));
 
 export const getAllPostIds = () =>

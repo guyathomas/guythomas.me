@@ -1,7 +1,7 @@
 ---
 title: Realities of the nomad life
 date: "2021-08-03T20:39:13.695Z"
-published: true
+draft: false
 description: "Lessons learned from living in 9 cities over the past 12 months"
 ---
 ![Overlooking Seattle](https://images.unsplash.com/photo-1524681900586-cc3f422de659?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80)

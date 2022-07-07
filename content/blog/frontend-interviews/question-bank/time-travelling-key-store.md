@@ -1,7 +1,7 @@
 ---
 title: Time Travelling Key Store
 date: "2021-02-01T00:00:00.000Z"
-published: true
+draft: false
 description: Create a data structure that supports a changing value over time
 category: build-a-component
 ---

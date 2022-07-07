@@ -1,7 +1,7 @@
 ---
 title: A common pattern to System Design interviews
 date: "2021-02-01T00:00:00.000Z"
-published: false
+draft: true
 description: "A step by step process to approaching system design interviews"
 ---
 

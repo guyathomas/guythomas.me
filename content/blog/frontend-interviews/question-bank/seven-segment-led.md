@@ -1,7 +1,7 @@
 ---
 title: Seven Segment LED
 date: "2021-02-01T00:00:00.000Z"
-published: true
+draft: false
 description: Create a real-time 7 segment LED
 category: build-a-component
 ---
