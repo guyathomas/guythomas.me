@@ -11,5 +11,9 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-container-bleed")],
+  plugins: [
+    require("tailwindcss-container-bleed")({
+      currentScreenVar: "--current-screen-prowse",
+    }),
+  ],
 };

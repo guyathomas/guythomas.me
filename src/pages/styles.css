@@ -2,10 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer utilities {
-  .bx-custom-full-vw {
-    width: 100vw;
-    margin-left: calc((100vw - 100%) / -2);
-    margin-right: calc((100vw - 100%) / -2);
-  }
+:root {
+  --current-screen-prowse: calc(min(100%, 65ch) + var(--container-padding) * 2);
 }
