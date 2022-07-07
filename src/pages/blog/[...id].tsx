@@ -2,7 +2,6 @@ import Layout from "../../components/layout";
 import { getAllPostIds, getPostData } from "../../lib/posts";
 import Head from "next/head";
 import Date from "../../components/date";
-import utilStyles from "../../styles/utils.module.css";
 import { GetStaticProps, GetStaticPaths } from "next";
 
 interface PostProps {
@@ -15,18 +14,20 @@ interface PostProps {
 
 const Post: React.FC<PostProps> = ({ postData }) => (
   <Layout>
-    <Head>
-      <title className="text-3xl font-bold underline">{postData.title}</title>
-    </Head>
-    <article>
-      <h1 className={utilStyles.headingXl}>{postData.title}</h1>
-      {postData.date && (
-        <div className={utilStyles.lightText}>
-          <Date dateString={postData.date} />
-        </div>
-      )}
-      <div dangerouslySetInnerHTML={{ __html: postData.contentHtml }} />
-    </article>
+    <div className="prose prose-slate">
+      <Head>
+        <title>{postData.title}</title>
+      </Head>
+      <article>
+        <h1>{postData.title}</h1>
+        {postData.date && (
+          <div>
+            <Date dateString={postData.date} />
+          </div>
+        )}
+        <div dangerouslySetInnerHTML={{ __html: postData.contentHtml }} />
+      </article>
+    </div>
   </Layout>
 );
 
