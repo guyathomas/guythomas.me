@@ -5,6 +5,9 @@
   "workspaces": [
     "packages/*"
   ],
+  "scripts": {
+    "dev": "yarn workspaces foreach -ipv run dev"
+  },
   "devDependencies": {
     "typescript": "^4.7.4"
   },
