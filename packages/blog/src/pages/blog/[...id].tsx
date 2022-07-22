@@ -1,8 +1,7 @@
-import Layout from "../../components/layout";
-import { getAllPostIds, getPostData } from "../../lib/posts";
 import Head from "next/head";
-import Date from "../../components/date";
 import { GetStaticProps, GetStaticPaths } from "next";
+import Layout from "~/components/Layout";
+import { getAllPostIds, getPostData } from "~/lib/posts";
 
 interface PostProps {
   postData: {
@@ -20,11 +19,7 @@ const Post: React.FC<PostProps> = ({ postData }) => (
       </Head>
       <article>
         <h1>{postData.title}</h1>
-        {postData.date && (
-          <div>
-            <Date dateString={postData.date} />
-          </div>
-        )}
+        {postData.date && <div>{postData.date}</div>}
         <div dangerouslySetInnerHTML={{ __html: postData.contentHtml }} />
       </article>
     </div>
