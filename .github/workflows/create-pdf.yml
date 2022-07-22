@@ -13,10 +13,10 @@ jobs:
         with:
           node-version: "18"
       - run: yarn --frozen-lockfile
-      - run: yarn build
-      - run: yarn start &>/dev/null &
-      - run: PORT=3000 yarn generate-resume
+      - run: yarn workspace blog run build
+      - run: yarn workspace blog run start &>/dev/null &
+      - run: PORT=3000 yarn workspace blog run generate-resume
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: github-action/create-resume-pdf
-          file_pattern: packages/resume/public/resume/**.pdf
+          file_pattern: packages/blog/public/resume/**.pdf
