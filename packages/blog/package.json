@@ -2,7 +2,7 @@
   "private": true,
   "name": "blog",
   "scripts": {
-    "build": "next build",
+    "build": "next build && next export",
     "dev": "next dev",
     "start": "next start",
     "generate-resume": "node ./print-pdf.js"
