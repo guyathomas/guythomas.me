@@ -8,7 +8,7 @@ import Layout from "~/components/Layout";
 import DeviceDetector from "device-detector-js";
 import { DeviceType } from "device-detector-js/dist/typings/device";
 
-import "./styles.css";
+import "../styles.css";
 
 interface GlobalAppProps {
   device: DeviceContextResult;
