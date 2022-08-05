@@ -42,27 +42,6 @@ module.exports = {
     {
       resolve: `gatsby-source-filesystem`,
       options: {
-        path: `${__dirname}/content/blog`,
-        name: `blog`,
-      },
-    },
-    {
-      resolve: `gatsby-source-filesystem`,
-      options: {
-        path: `${__dirname}/content/notes`,
-        name: `notes`,
-      },
-    },
-    {
-      resolve: `gatsby-source-filesystem`,
-      options: {
-        path: `${__dirname}/content/frontend-interviews`,
-        name: `frontend-interviews`,
-      },
-    },
-    {
-      resolve: `gatsby-source-filesystem`,
-      options: {
         path: `${__dirname}/content/assets`,
         name: `assets`,
       },
@@ -100,12 +79,6 @@ module.exports = {
           `gatsby-remark-prismjs`,
           `gatsby-remark-copy-linked-files`,
           `gatsby-remark-smartypants`,
-          {
-            resolve: "@guyathomas/gatsby-remark-embedded-codesandbox",
-            options: {
-              directory: `${__dirname}/content/frontend-interviews/codesandbox/`,
-            },
-          },
         ],
       },
     },

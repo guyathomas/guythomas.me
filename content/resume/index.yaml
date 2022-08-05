@@ -16,11 +16,11 @@ experience:
     company: Instacart
     title: Engineering Manager
     details: !markdown |
-      * Leading the Growth team responsible for external communications and leveraging coupons in App.
+      * Our team is responsible for all enabling marketing & messaging in our core marketplace app as well as seperate enterprise apps with partners.
   - date: 10th May, 2021 – 15th June, 2022
     title: Senior Software Engineer II
     details: !markdown |
-      * Team lead for a home banner that increased the usage of our coupons by 200%.
+      * Team lead for a messaging system used to orcherstrate placement priorities of different content in modals & banners across the app.
       * Team lead for the "Deals Tab" which surfaces Instacarts top deals to millions of users every day.
   - date: 15th April, 2019 – 26th May, 2021
     company: Lyft
@@ -37,17 +37,21 @@ experience:
   - date: 7th July, 2014 – 3rd June, 2016
     company: IBM
     title: Software Engineer
-projects:
+education:
   - company: !markdown |
       [guythomas.me](https://guythomas.me)
-    title: React / Typescript / Gatsby / Netlify
+    title: React / Typescript / NextJS / TailwindCSS
     details: !markdown |
-      * `/blog` - a statically built blog from `.md` files
-      * `/resume` - resume content ( like this sentence ) is defined in a `.yml` file
-  - company: The Last Resume
-    title: React / Typescript / GraphQL / Postgres
+      * guythomas.me` - Statically built blog from `.md` files and server side rendered
+  - company: !markdown |
+      [resume.guythomas.me](https://resume.guythomas.me)
+    title: React / Typescript / Gatsby / Emotion
     details: !markdown |
-      * Create an online resume that is statically built, SEO optimized and printable
+      * resume content ( like this sentence ) is defined in a `.yml` file
+  - company: Blindii
+    title: React / Typescript / PostgreSQL / GraphQL
+    details: !markdown |
+      * Blind & Curtain industry specific e-commerce platform
 bookList:
   - title: How I Built This
     link: https://www.goodreads.com/book/show/48930275-how-i-built-this

@@ -1,11 +1,11 @@
 {
-  "name": "guythomas.me",
-  "version": "0.2.0",
   "private": true,
+  "name": "resume",
   "description": "My personal blog and portfolio site",
   "keywords": [
     "gatsby"
   ],
+  "packageManager": "yarn@3.2.1",
   "homepage": "https://github.com/guyathomas/guythomas.me",
   "bugs": {
     "url": "https://github.com/guyathomas/guythomas.me"
@@ -20,15 +20,14 @@
   "scripts": {
     "build": "gatsby build",
     "clean": "gatsby clean",
-    "develop": "gatsby develop",
+    "dev": "gatsby develop",
+    "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1",
     "generate-resume": "ts-node ./print-pdf.js",
     "develop-network": "gatsby develop -H 0.0.0.0 -p 8000",
     "format": "prettier --write \"**/*.{js,jsx,json,md}\"",
     "lint": "eslint . --ext ts --ext tsx",
     "lint:fix": "yarn lint --fix",
-    "serve": "gatsby serve",
-    "start": "npm run develop",
-    "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1",
+    "start": "gatsby serve",
     "type-check": "tsc",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
