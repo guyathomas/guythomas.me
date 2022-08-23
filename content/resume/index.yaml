@@ -42,7 +42,7 @@ education:
       [guythomas.me](https://guythomas.me)
     title: React / Typescript / NextJS / TailwindCSS
     details: !markdown |
-      * guythomas.me` - Statically built blog from `.md` files and server side rendered
+      * guythomas.me - Statically built blog from `.md` files and server side rendered
   - company: !markdown |
       [resume.guythomas.me](https://resume.guythomas.me)
     title: React / Typescript / Gatsby / Emotion
