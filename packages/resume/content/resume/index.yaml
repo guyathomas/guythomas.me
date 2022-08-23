@@ -1,0 +1,61 @@
+version: 1
+firstName: Guy
+lastName: Thomas
+avatar: https://res.cloudinary.com/dqvlfpaev/image/upload/c_scale,w_400/v1580691840/avatar_sz1jui.jpg
+tagline: Engineering Leader & Entrepreneur
+contactDetails:
+  - - Email
+    - !markdown "[guythomas721@gmail.com](mailto:guythomas721@gmail.com)"
+  - - Location
+    - San Francisco
+  - - Web
+    - !markdown "[guythomas.me](https://guythomas.me)"
+intro: I'm passionate about leveling teams up to build complex applications that scale.
+experience:
+  - date: 15th June, 2022 – Present
+    company: Instacart
+    title: Engineering Manager
+    details: !markdown |
+      * Our team is responsible for all enabling marketing & messaging in our core marketplace app as well as seperate enterprise apps with partners.
+  - date: 10th May, 2021 – 15th June, 2022
+    title: Senior Software Engineer II
+    details: !markdown |
+      * Team lead for a messaging system used to orcherstrate placement priorities of different content in modals & banners across the app.
+      * Team lead for the "Deals Tab" which surfaces Instacarts top deals to millions of users every day.
+  - date: 15th April, 2019 – 26th May, 2021
+    company: Lyft
+    title: Senior Software Engineer
+    details: !markdown |
+      * Team lead for a cross platform Insurance Marketplace.
+      * Led a company wide testing initiative to speed up tests in CI by 90%.
+  - date: 26th June, 2017 – 31st January, 2019
+    company: Reflektive
+    title: Software Engineer
+    details: !markdown |
+      * Built the frontend for our core 'Reviews' product.
+      * Cut development build times by 50% by optimizing webpack pipelines.
+  - date: 7th July, 2014 – 3rd June, 2016
+    company: IBM
+    title: Software Engineer
+education:
+  - company: !markdown |
+      [guythomas.me](https://guythomas.me)
+    title: React / Typescript / NextJS / TailwindCSS
+    details: !markdown |
+      * guythomas.me - Statically built blog from `.md` files and server side rendered
+  - company: !markdown |
+      [resume.guythomas.me](https://resume.guythomas.me)
+    title: React / Typescript / Gatsby / Emotion
+    details: !markdown |
+      * resume content ( like this sentence ) is defined in a `.yml` file
+  - company: Blindii
+    title: React / Typescript / PostgreSQL / GraphQL
+    details: !markdown |
+      * Blind & Curtain industry specific e-commerce platform
+bookList:
+  - title: How I Built This
+    link: https://www.goodreads.com/book/show/48930275-how-i-built-this
+  - title: The Cold Start Problem
+    link: https://www.goodreads.com/book/show/55338968-the-cold-start-problem
+  - title: "An Elegant Puzzle: Systems of Engineering Management"
+    link: https://www.goodreads.com/en/book/show/45303387-an-elegant-puzzle

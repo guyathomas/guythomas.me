@@ -1,0 +1,33 @@
+/*
+Custom Styles
+*/
+
+.gatsby-highlight-code-line {
+  background-color: #393d42;
+  border-left: 0.25em solid #7ec699;
+  margin-left: -0.9rem; /* Default margin is strangely off */
+}
+
+.gatsby-highlight {
+  background-color: #2d2d2d;
+}
+
+.gatsby-highlight pre[class*="language-"] {
+  background-color: transparent;
+}
+
+.gatsby-highlight {
+  border-radius: 0;
+}
+
+@media (prefers-color-scheme: light) {
+  .header-anchor {
+    fill: var(--theme-primary, rgba(12, 11, 49, 1));
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .header-anchor {
+    fill: var(--theme-primary, rgba(255, 255, 255, 1));
+  }
+}
