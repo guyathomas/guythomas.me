@@ -41,7 +41,6 @@ const getDevice = (context: GetServerSidePropsContext): DeviceContextResult => {
     isMobile: mobileDeviceTypes.has(device.type),
   };
 };
-
 export const getServerSideProps: GetServerSideProps<GlobalAppProps> = async (
   context
 ) => ({
