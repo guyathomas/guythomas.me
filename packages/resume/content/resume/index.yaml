@@ -2,7 +2,7 @@ version: 1
 firstName: Guy
 lastName: Thomas
 avatar: https://res.cloudinary.com/dqvlfpaev/image/upload/c_scale,w_400/v1580691840/avatar_sz1jui.jpg
-tagline: Engineering Leader & Entrepreneur
+tagline: Engineer, Leader & Entrepreneur
 contactDetails:
   - - Email
     - !markdown "[guythomas721@gmail.com](mailto:guythomas721@gmail.com)"
@@ -10,18 +10,18 @@ contactDetails:
     - San Francisco
   - - Web
     - !markdown "[guythomas.me](https://guythomas.me)"
-intro: I'm passionate about leveling teams up to build complex applications that scale.
+intro: I'm passionate solving hard problems, with talented people to deliver simple solutions.
 experience:
   - date: 15th June, 2022 – Present
     company: Instacart
     title: Engineering Manager
     details: !markdown |
-      * Our team is responsible for all enabling marketing & messaging in our core marketplace app as well as seperate enterprise apps with partners.
+      * Led a team that enables multi channel marketing & messaging for Instacart App. The combined projects continue to provide 10's of millions of customer touchpoints daily.
   - date: 10th May, 2021 – 15th June, 2022
     title: Senior Software Engineer II
     details: !markdown |
       * Team lead for a messaging system used to orcherstrate placement priorities of different content in modals & banners across the app.
-      * Team lead for the "Deals Tab" which surfaces Instacarts top deals to millions of users every day.
+      * Team lead for "Deals" which surfaces Instacarts top deals to millions of users every day across multiple different channels.
   - date: 15th April, 2019 – 26th May, 2021
     company: Lyft
     title: Senior Software Engineer

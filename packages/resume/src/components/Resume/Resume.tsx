@@ -101,7 +101,7 @@ const Resume: React.FC<{
                       style={{ cursor: "pointer" }}
                       target="_blank"
                       rel="noreferrer"
-                      href="https://github.com/guyathomas/guythomas.me"
+                      href="https://github.com/guyathomas/new.guythomas.me"
                     >
                       <GithubIcon />
                     </a>
