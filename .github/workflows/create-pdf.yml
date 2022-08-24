@@ -11,11 +11,11 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: "18"
-      - run: yarn --frozen-lockfile
-      - run: yarn workspace blog run build
-      - run: yarn workspace blog run start &>/dev/null &
-      - run: PORT=3000 yarn workspace blog run generate-resume
+      - run: yarn --immutable
+      - run: yarn workspace resume run build
+      - run: yarn workspace resume run start &>/dev/null &
+      - run: PORT=9000 yarn workspace resume run generate-resume
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: github-action/create-resume-pdf
-          file_pattern: packages/blog/public/resume/**.pdf
+          file_pattern: packages/resume/public/resume/**.pdf
