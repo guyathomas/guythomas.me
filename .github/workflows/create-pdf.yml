@@ -11,7 +11,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: "18"
-      - run: yarn --immutable
+      - run: yarn workspace resume install --immutable
       - run: yarn workspace resume run build
       - run: yarn workspace resume run start &>/dev/null &
       - run: PORT=9000 yarn workspace resume run generate-resume
