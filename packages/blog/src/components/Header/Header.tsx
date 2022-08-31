@@ -9,17 +9,13 @@ interface Link {
   path: string;
 }
 
-const links: Link[] = [
-  { name: "Home", path: "/" },
-  { name: "Resume", path: "/resume" },
-  { name: "Blog", path: "/blog" },
-];
+const links: Link[] = [{ name: "Home", path: "/" }];
 
 const Header: React.FC<React.PropsWithChildren> = () => {
-  const [isExpanded, setIsExpanded] = React.useState(true);
+  const [isExpanded, setIsExpanded] = React.useState(false);
 
   return (
-    <div className={cx(styles.header)}>
+    <div className={cx(styles.header, "bg-blue-300")}>
       <div className={styles.headerLinks}>
         <h3 className={styles.siteTitle}>Guy</h3>
         <div

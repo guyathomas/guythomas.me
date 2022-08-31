@@ -7,8 +7,6 @@ tags:
   - remote work
 ---
 
-![Overlooking Seattle](https://images.unsplash.com/photo-1524681900586-cc3f422de659?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80)
-
 ## First up, it's really, really cool
 
 People think it's fun and filled with adventure - because it is. But I want to share some sides the are less talked about.

@@ -10,6 +10,7 @@
   "dependencies": {
     "classnames": "^2.3.1",
     "critters": "^0.0.16",
+    "dayjs": "^1.11.5",
     "device-detector-js": "^3.0.3",
     "next": "latest",
     "normalize-path": "^3.0.0",

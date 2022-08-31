@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { GetStaticProps, GetStaticPaths } from "next";
+import dayjs from "dayjs";
 import { getAllPostIds, getPostData, FullPost } from "~/lib/posts";
-
 interface PostProps {
   postData: FullPost;
 }
@@ -12,11 +12,18 @@ const Post: React.FC<PostProps> = ({ postData }) => (
       <title>{postData.title}</title>
     </Head>
     <article>
-      <div>
-        <h1>{postData.title}</h1>
-        {postData.date && <div>{postData.date}</div>}
+      <div className="bx-container bg-blue-300 pt-16 pb-4 md:pt-32 md:pb-8 ">
+        <div className="p-4 md:p-0">
+          <h1>{postData.title}</h1>
+          {postData.date && (
+            <div>{dayjs(postData.date).format("MMMM D, YYYY")}</div>
+          )}
+        </div>
       </div>
-      <div dangerouslySetInnerHTML={{ __html: postData.contentHtml }} />
+      <div
+        className="p-4 md:p-0"
+        dangerouslySetInnerHTML={{ __html: postData.contentHtml }}
+      />
     </article>
   </div>
 );
