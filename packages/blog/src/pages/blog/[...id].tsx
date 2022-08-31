@@ -1,29 +1,24 @@
 import Head from "next/head";
 import { GetStaticProps, GetStaticPaths } from "next";
-import Layout from "~/components/Layout";
-import { getAllPostIds, getPostData } from "~/lib/posts";
+import { getAllPostIds, getPostData, FullPost } from "~/lib/posts";
 
 interface PostProps {
-  postData: {
-    title: string;
-    date: string;
-    contentHtml: string;
-  };
+  postData: FullPost;
 }
 
 const Post: React.FC<PostProps> = ({ postData }) => (
-  <Layout>
-    <div className="prose prose-slate">
-      <Head>
-        <title>{postData.title}</title>
-      </Head>
-      <article>
+  <div className="prose prose-slate m-auto">
+    <Head>
+      <title>{postData.title}</title>
+    </Head>
+    <article>
+      <div>
         <h1>{postData.title}</h1>
         {postData.date && <div>{postData.date}</div>}
-        <div dangerouslySetInnerHTML={{ __html: postData.contentHtml }} />
-      </article>
-    </div>
-  </Layout>
+      </div>
+      <div dangerouslySetInnerHTML={{ __html: postData.contentHtml }} />
+    </article>
+  </div>
 );
 
 export const getStaticPaths: GetStaticPaths = async () => ({

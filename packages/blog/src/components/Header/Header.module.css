@@ -1,0 +1,88 @@
+.header {
+  display: flex;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 768px) {
+  .header {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+.siteTitle {
+  margin-right: 2rem;
+}
+
+.headerLinks {
+  display: flex;
+  align-items: center;
+  margin-left: 1rem;
+}
+
+@media (max-width: 768px) {
+  .linkContainer {
+    opacity: 0;
+    visibility: hidden;
+    transition: visibility 0.3s linear, opacity 0.3s linear;
+    z-index: 1;
+    flex-direction: column;
+    position: absolute;
+    backdrop-filter: blur(8px);
+    width: 100vw;
+    height: 100vh;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .linkContainerMobileExpanded {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+.navigationLinks {
+  display: flex;
+}
+
+@media (max-width: 768px) {
+  .navigationLinks {
+    padding-top: 10rem;
+    flex-direction: column;
+    width: 75%;
+    position: absolute;
+    bottom: 100px;
+    left: 0;
+    top: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .navLink {
+    transform: translateX(-50%);
+    transition: transform 350ms ease;
+    transition-delay: calc(var(--animation-order) * 100ms);
+  }
+}
+
+@media (max-width: 768px) {
+  .navLinkExpanded {
+    transform: translateX(1rem);
+  }
+}
+
+@media (min-width: 768px) {
+  .menuButton {
+    display: none;
+  }
+}
+
+.menuButton {
+  z-index: 2;
+  margin-left: auto;
+}

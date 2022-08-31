@@ -1,5 +1,5 @@
 import React from "react";
-import Sidebar from "~/components/Sidebar";
+import Header from "~/components/Header";
 import { SidebarContextProvider } from "~/context/SidebarContext";
 
 interface LayoutProps {}
@@ -8,7 +8,7 @@ const Layout: React.FC<React.PropsWithChildren<LayoutProps>> = ({
   children,
 }) => (
   <SidebarContextProvider>
-    <Sidebar />
+    <Header />
     {children}
   </SidebarContextProvider>
 );

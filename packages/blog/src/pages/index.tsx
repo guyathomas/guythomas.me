@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { GetStaticProps } from "next";
-import Layout from "~/components/Layout";
 import { getSortedPostsData } from "~/lib/posts";
+import PostSummary from "~/components/PostSummary";
 
 const POST_COUNT = 5;
 interface HomeProps {
@@ -9,26 +9,28 @@ interface HomeProps {
     date: string;
     title: string;
     id: string;
+    description: string;
+    subtitle?: string;
   }[];
 }
-const Home: React.FC<HomeProps> = ({ allPostsData, ...props }) => {
+const Home: React.FC<HomeProps> = ({ allPostsData }) => {
   return (
-    <Layout>
-      <section className="bg-black">
-        <h2>Blog</h2>
-        <ul>
-          {allPostsData.map(({ id, date, title }) => (
-            <li key={id}>
-              <Link href={`/blog${id}`}>
-                <a>{title}</a>
-              </Link>
-              <br />
-              {date && <small>{date}</small>}
-            </li>
-          ))}
-        </ul>
-      </section>
-    </Layout>
+    <section>
+      <h2>Posts</h2>
+      <ul>
+        {allPostsData.map(({ id, date, title, description, subtitle }) => (
+          <li key={id}>
+            <PostSummary
+              target={id}
+              title={title}
+              description={description}
+              subtitle={subtitle}
+              date={date}
+            />
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 };
 

@@ -28,14 +28,20 @@ const postPathRegex = new RegExp(`${blogDirectory}(.*)\.md`);
 const getPostPathFromAbsoluteFile = (absolutePath: string) =>
   absolutePath.match(postPathRegex)[1];
 
-interface MatterResult {
+interface PostField {
   date: string;
   title: string;
-  draft?: boolean;
   description?: string;
+  draft?: boolean;
+  tags?: string[];
 }
+export type PostMeta = PostField & { id: string };
 
-export const getSortedPostsData = () =>
+type ContentHTML = string;
+
+export type FullPost = PostMeta & { contentHtml: ContentHTML };
+
+export const getSortedPostsData = (): PostMeta[] =>
   getAbsoluteFilepaths(blogDirectory)
     .map((fileName) => {
       const postPath = getPostPathFromAbsoluteFile(fileName);
@@ -43,7 +49,7 @@ export const getSortedPostsData = () =>
       const matterResult = matter(fileContents);
       return {
         id: postPath,
-        ...(matterResult.data as MatterResult),
+        ...(matterResult.data as PostField),
       };
     })
     .filter((postMeta) => !postMeta.draft)
@@ -58,7 +64,7 @@ export const getAllPostIds = () =>
       },
     }));
 
-export async function getPostData(id: string) {
+export async function getPostData(id: string): Promise<FullPost> {
   const fullPath = path.join(blogDirectory, `${id}.md`);
   const fileContents = fs.readFileSync(fullPath, "utf8");
 
@@ -77,6 +83,6 @@ export async function getPostData(id: string) {
   return {
     id,
     contentHtml,
-    ...(matterResult.data as { date: string; title: string }),
+    ...(matterResult.data as PostField),
   };
 }
