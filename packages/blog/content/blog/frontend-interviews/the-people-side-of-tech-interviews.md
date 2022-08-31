@@ -3,6 +3,8 @@ title: Behind the decision making in a tech interview
 date: "2021-01-21T00:00:00.000Z"
 draft: true
 description: "In depth walk-through of the incentives of stakeholders and hidden decisions in a tech interview process"
+tags:
+  - interview
 ---
 
 # [DRAFT] The _people_ side of tech interviews

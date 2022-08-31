@@ -3,7 +3,8 @@ title: Phone Input
 date: "2021-02-01T00:00:00.000Z"
 draft: false
 description: Create a phone input that will format a number US phone number formatting
-category: build-a-component
+tags:
+  - interview
 ---
 
 ## Prompt
