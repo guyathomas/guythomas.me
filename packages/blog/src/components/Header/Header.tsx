@@ -9,7 +9,12 @@ interface Link {
   path: string;
 }
 
-const links: Link[] = [];
+const links: Link[] = [
+  {
+    name: "Resume",
+    path: "https://resume.guythomas.me",
+  },
+];
 
 const Header: React.FC<React.PropsWithChildren> = () => {
   const [isExpanded, setIsExpanded] = React.useState(false);
