@@ -24,6 +24,10 @@ function getFrequencyMap<T>(input: T[]) {
 
 const MAX_VISIBLE_TAGS = 10;
 
+const SectionTitle: React.FC<React.PropsWithChildren> = ({ children }) => (
+  <h3 className="text-rose-600 uppercase font-normal">{children}</h3>
+);
+
 const Home: React.FC<HomeProps> = ({ allPostsData }) => {
   const [tagFilters, setTagFilters] = React.useState<Set<string>>(
     new Set<string>([])
@@ -46,60 +50,56 @@ const Home: React.FC<HomeProps> = ({ allPostsData }) => {
   }, [allPostsData, tagFilters]);
 
   return (
-    <section className="prose m-auto">
-      <div className={cx("bx-container", "font-normal", styles.layout)}>
-        <div>
-          <h3 className="text-rose-600 uppercase font-normal">
-            Recently Published
-          </h3>
-
-          <ul className="pl-0">
-            {filteredPostData.map(({ id, date, title, description }) => (
-              <li key={id} className="list-none pl-0">
-                <PostSummary
-                  id={id}
-                  title={title}
-                  description={description}
-                  date={date}
-                />
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div>
-          <h3 className="text-rose-600 uppercase font-normal">Tags</h3>
-          <div className="pl-0 flex">
-            {tagsByFrequency.map((tag) => (
-              <button
-                key={tag}
-                className={cx(
-                  tagFilters.has(tag) ? "bg-cyan-500" : "bg-cyan-800",
-                  "pl-2",
-                  "pr-2",
-                  "text-white",
-                  "list-none",
-                  "pl-0",
-                  "p-1",
-                  "rounded-md",
-                  "leading-5",
-                  "mr-2",
-                  "flex-shrink-0"
-                )}
-                onClick={() => {
-                  const clonedFilters = Array.from(tagFilters);
-                  const newTagArray = tagFilters.has(tag)
-                    ? clonedFilters.filter((existingTag) => existingTag !== tag)
-                    : [...clonedFilters, tag];
-                  setTagFilters(new Set(newTagArray));
-                }}
-              >
-                {tag}
-              </button>
-            ))}
-          </div>
+    <div className={cx("font-normal", "prose", "m-auto", styles.layout)}>
+      <div className={cx("p-4", styles.recentPosts)}>
+        <SectionTitle>Recent Posts</SectionTitle>
+        <ul className="pl-0">
+          {filteredPostData.map(({ id, date, title, description }) => (
+            <li key={id} className="list-none pl-0">
+              <PostSummary
+                id={id}
+                title={title}
+                description={description}
+                date={date}
+              />
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className={cx("p-4", styles.tags)}>
+        <SectionTitle>Tags</SectionTitle>
+        <div className="pl-0 flex flex-wrap">
+          {tagsByFrequency.map((tag) => (
+            <button
+              key={tag}
+              className={cx(
+                tagFilters.has(tag) ? "bg-cyan-500" : "bg-cyan-800",
+                "pl-2",
+                "pr-2",
+                "text-white",
+                "list-none",
+                "pl-0",
+                "p-1",
+                "rounded-md",
+                "leading-5",
+                "mr-2",
+                "flex-shrink-0",
+                "mb-2"
+              )}
+              onClick={() => {
+                const clonedFilters = Array.from(tagFilters);
+                const newTagArray = tagFilters.has(tag)
+                  ? clonedFilters.filter((existingTag) => existingTag !== tag)
+                  : [...clonedFilters, tag];
+                setTagFilters(new Set(newTagArray));
+              }}
+            >
+              {tag}
+            </button>
+          ))}
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 

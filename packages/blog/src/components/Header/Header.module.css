@@ -89,6 +89,7 @@
 
 .headerContent {
   margin: auto;
-  max-width: 65ch;
-  width: 65ch;
+  max-width: 1100px;
+  width: 100%;
+  display: flex;
 }

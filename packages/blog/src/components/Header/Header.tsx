@@ -21,7 +21,7 @@ const Header: React.FC<React.PropsWithChildren> = () => {
 
   return (
     <div className={cx(styles.header, "bg-blue-300", "p-4")}>
-      <div className={styles.headerContent}>
+      <div className={cx(styles.headerContent)}>
         <div className={styles.headerLinks}>
           <Link href="/">
             <a>
