@@ -86,3 +86,9 @@
   z-index: 2;
   margin-left: auto;
 }
+
+.headerContent {
+  margin: auto;
+  max-width: 65ch;
+  width: 65ch;
+}

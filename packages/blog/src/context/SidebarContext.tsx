@@ -13,7 +13,7 @@ const sidebarContextInitialValue: SidebarContextValue = {
 export const SidebarContext = React.createContext<SidebarContextValue>(
   sidebarContextInitialValue
 );
-
+// TODO: Maybe remove this, may not need a provider.
 export const SidebarContextProvider: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
