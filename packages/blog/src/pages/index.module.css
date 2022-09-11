@@ -1,0 +1,10 @@
+.layout {
+  display: grid;
+  grid-template-columns: 65ch 1fr;
+}
+
+@media (max-width: 768px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
