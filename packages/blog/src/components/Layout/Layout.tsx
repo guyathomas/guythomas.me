@@ -8,7 +8,7 @@ const Layout: React.FC<React.PropsWithChildren<LayoutProps>> = ({
   children,
 }) => (
   <SidebarContextProvider>
-    <div className="bg-blue-50 min-h-screen">
+    <div className="bg-white min-h-screen">
       <Header />
       {children}
     </div>
