@@ -1,5 +1,4 @@
 import React from "react";
-import Link from "next/link";
 import cx from "classnames";
 import { GetStaticProps } from "next";
 import { getSortedPostsData, PostMeta } from "~/lib/posts";
@@ -105,7 +104,9 @@ const Home: React.FC<HomeProps> = ({ allPostsData }) => {
 
 export const getStaticProps: GetStaticProps = async () => ({
   props: {
-    allPostsData: getSortedPostsData().slice(0, POST_COUNT),
+    allPostsData: getSortedPostsData()
+      .filter((post) => !post.tags.includes("notes"))
+      .slice(0, POST_COUNT),
   },
 });
 
