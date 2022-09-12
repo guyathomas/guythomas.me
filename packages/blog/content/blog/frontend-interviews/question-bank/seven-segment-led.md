@@ -13,7 +13,7 @@ A seven-segment display is a form of electronic display device for displaying de
 
 Make a digital clock that represents current time in a UI similar to this image.
 
-![Seven Segment](http://sc04.alicdn.com/kf/HTB1g.KSA7SWBuNjSszdq6zeSpXaS.jpg)
+![Seven Segment](/images/interview-question-seven-segment-led.gif)
 
 ## Solution / Demo
 
