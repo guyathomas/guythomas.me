@@ -5,7 +5,8 @@
     "build": "next build && next export",
     "dev": "next dev",
     "start": "next start",
-    "generate-resume": "node ./print-pdf.js"
+    "generate-resume": "node ./print-pdf.js",
+    "extract-snippets": "node --loader ts-node/esm src/lib/writeSnippets.mjs"
   },
   "dependencies": {
     "classnames": "^2.3.1",
