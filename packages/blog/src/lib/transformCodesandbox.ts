@@ -12,8 +12,10 @@ const CODESANDBOX_ROOT_DIRECTORY = path.join(
   process.cwd(),
   "content/codesandbox/"
 );
+export const iframeClass = "-mx-container h-96 w-screen";
+
 const getIframeHtml = (url) =>
-  `<iframe src="${url}" class="-mx-container w-screen h-56" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>`;
+  `<iframe src="${url}" class="${iframeClass}" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>`;
 
 const getPackageJsonFile = (fileList) =>
   fileList.find((file) => file.includes("package.json"));
