@@ -7,13 +7,11 @@ tags:
   - remote work
 ---
 
-## First up, it's really, really cool
+The ability to work remotely empowered people to finally live where they wanted, rather than being bound by commute times into the office. As soon as this became a reality for me - I decided to take advantage of what it would bring.
+
+As a digital nomad you'll be living in places that people vacation to, moving depending on the weather and staying in places you've always dreamed to visit. I lived on the beach in Hawaii, a cabin in Lake Tahoe, a farmhouse in the middle of Vermont and a warehouse loft in New York City. You won’t be bound by leases or locations. But like everything, nomadic life comes at a cost. You sacrifice community for freedom and exploration.
 
 People think it's fun and filled with adventure - because it is. But I want to share some sides the are less talked about.
-
-You'll be living in places that people vacation to, moving depending on the weather and staying in places you've always dreamed to visit. I lived on the beach in Hawaii, a cabin in Lake Tahoe, a farmhouse in butt-fuck nowhere Vermont and a high rise in New York City. You won’t be bound by leases or locations. But like everything, nomadic life comes at a cost. You sacrifice community for freedom and exploration.
-
-I've always had a strong desire to live like this, and given my chance, I'd still do it again. However, there are some things that I'd like to have known going into it. 😬 There are no solutions for these problems because they are just tradeoffs to live the lifestyle.
 
 ## Your hobbies will take a hit
 

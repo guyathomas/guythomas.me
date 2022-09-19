@@ -1,0 +1,76 @@
+---
+title: Realestate learning path
+date: "2021-08-03T20:39:13.695Z"
+draft: true
+description: "A comprehensive learning path for getting into realestate"
+tags:
+  - realestate
+---
+
+The amount of information on the internet can be overwhelming and disorienting. This is a learning path that you can follow to build up both the business knowledge and realestate knowledge you'll need for a succesful investing career.
+
+## Foundations
+
+We'll start off by building the mindset that will be needed to be succesful in a realestate career. It may be tempting to jump straight into realestate books but be cautioned - doing so will be of little value until you build the foundations.
+
+This phase is focused on building the right circle After all 2-4 weeks of reading is nothing compared to the rest of your investing career.
+
+### People
+
+- [ ] Identify some friends involved in realestate
+- [ ] Twitter
+  - [ ] David Greene
+- [ ] Instagram
+- [ ] Blog
+
+### Books
+
+- [ ] [Rich Dad Poor Dad](https://www.amazon.com/Rich-Dad-Poor-Teach-Middle/dp/1612680194) - [My Notes](./notes/rich-dad-poor-dad)
+- [ ] [The Richest Man in Babylon](https://www.amazon.com/Richest-Man-Babylon-Original-1926/dp/1508524351)
+
+### Podcasts
+
+- [ ] Bigger Pockets
+- [ ] On The Wire
+
+### Worksheet
+
+- [ ] What strengths, skills or relationships or circumstances do I posess that give me an unfair advantage?
+- [ ] What is important to me and what is my end objective to get out of realestate investing?
+
+## Breadth
+
+In this section our focus is going to be to learn a little about a lot about realestate investing. What are the different types of investing? What are the roles involved in a typical realestate transaction and what do they do?
+
+### Books
+
+- [ ] [How to Invest in Real Estate: The Ultimate Beginner's Guide to Getting Started](https://www.amazon.com/How-Invest-Real-Estate-Beginners/dp/099758470X)
+
+### Finding an area to invest in
+
+Although a lot of investors suggest investing in your backyard ( or near your backyard ) - for some people it may suit to invest out of state. This process can be followed to find a region out of state to invest in.
+
+1. Find 2-3 places with net migration. [Harvard Joint Center for Housing Studies](https://www.jchs.harvard.edu/blog/domestic-migration-drove-state-and-local-population-change-2021)
+2. Once you've found those, start looking into the main industries that drive growth there. If more than 20% of the local economy is centered around 1 company or 1 industry you may want to consider other alternatives.
+3. Do not pick a market because it’s cheap. Usually it’s cheap for a reason. The grass is greenest over the septic tank (best returns are in the mid range)
+4. Start evalutating a lot of deals. Approach it with the mentality that you are aiming to learn - if you make an offer that's a bonus. There will be hundreds that you evaluate for every offer that you make. In the beginning while you are learning it's okay to spend an hour per deal - but eventually you'll want to get this down to 10-20 mins for the initial screen.
+5. Buy a plane ticket and go to your market to get a feeling for it
+6. Consider how are you going to manage them. How are you going to get a loan for them. Look for professionals who themselves invest in real estate. Ask the broker for 2 lenders. Ask the lenders for 2 property managers. Do this with the key contacts in the deal and then narrow your lender and property manager down to 2-3. After you've done this - take them out to dinner and then pick one.
+7. a) Tip: Starting smalll and self managing is a great way to learn collecting rent, handling maintenance, setting preventative maintenance, etc...
+8. If you decide not to go ahead with an offer - never ghost the broker. Always be transparent about why you rejected it. They may be able to propose alternatives that match your criteria.
+
+### Listing & Opportunity Identification
+
+When looking in the MLS, don't just look for deals, but identify the people who are listing them. Start learning who the big players are and establish relationships with them. Pro tip: sign up for the inishgts from the brokerages that will be emailed straight to your inbox.
+
+- Commercial MLS
+  - [Crexi](https://www.crexi.com/)
+  - [Loopnet](https://www.loopnet.com/)
+- Residential ML
+  - [Zillow](https://www.zillow.com/)
+- Brokerages
+  - Cushman and Wakefield - [Insights](https://cloud.comm.cushmanwakefield.com/Local_US_Market_Insights_Subscription_Form)
+  - CBRE - [Insights](https://www.cbre.com/insights#overview)
+  - Marcus and Millichap - [Insights](https://www.marcusmillichap.com/research)
+
+### Mailing Lists

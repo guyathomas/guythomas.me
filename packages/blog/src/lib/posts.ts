@@ -3,6 +3,8 @@ import path from "path";
 import matter from "gray-matter";
 import { remark } from "remark";
 import remarkHtml from "remark-html";
+import remarkGfm from "remark-gfm";
+
 import transformCodeSandbox from "./transformCodesandbox";
 
 const blogDirectory = path.join(process.cwd(), "content/blog");
@@ -73,6 +75,7 @@ export async function getPostData(id: string): Promise<FullPost> {
 
   // Use remark to convert markdown into HTML string
   const processedContent = await remark()
+    .use(remarkGfm)
     .use(remarkHtml, { sanitize: false })
     .use(transformCodeSandbox)
     .process(matterResult.content);
