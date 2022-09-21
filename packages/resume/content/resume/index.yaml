@@ -10,7 +10,7 @@ contactDetails:
     - San Francisco
   - - Web
     - !markdown "[guythomas.me](https://guythomas.me)"
-intro: I'm passionate solving hard problems, with talented people to deliver simple solutions.
+intro: I'm passionate about solving hard problems with talented people.
 experience:
   - date: 15th June, 2022 – Present
     company: Instacart
@@ -18,10 +18,10 @@ experience:
     details: !markdown |
       * Led a team that enables multi channel marketing & messaging for Instacart App. The combined projects continue to provide 10's of millions of customer touchpoints daily.
   - date: 10th May, 2021 – 15th June, 2022
-    title: Senior Software Engineer II
+    title: Tech Lead
     details: !markdown |
-      * Team lead for a messaging system used to orcherstrate placement priorities of different content in modals & banners across the app.
-      * Team lead for "Deals" which surfaces Instacarts top deals to millions of users every day across multiple different channels.
+      * Led projects that created additional marketing channels such as generic modals and banners across web, iOS and Android.
+      * Led the "Deals" tab which surfaces Instacarts top deals to millions of users every day.
   - date: 15th April, 2019 – 26th May, 2021
     company: Lyft
     title: Senior Software Engineer
