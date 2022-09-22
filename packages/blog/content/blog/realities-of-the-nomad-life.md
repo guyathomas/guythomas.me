@@ -28,6 +28,7 @@ Some of the things I couldn't live without:
 - Hoodie - Regardless of weather trains, offices and planes always seem to be cold
 - Eye mask - You're going to be spending some time on couches and there's often no curtains in these rooms
 - Noise-cancelling headphones - This will make sleeping on planes easier, and getting to sleep in foreign places more relaxing
+- Kindle - This will be your portable university, entertainment center and sleeping aid.
 
 ## "Happiness is only real when shared" - Christopher McCandless
 
