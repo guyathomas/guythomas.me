@@ -65,7 +65,7 @@
     "gatsby-remark-responsive-iframe": "^5.17.0",
     "gatsby-remark-smartypants": "^5.17.0",
     "gatsby-source-filesystem": "^4.17.0",
-    "gatsby-transformer-remark": "^5.17.0",
+    "gatsby-transformer-remark": "^5.25.1",
     "gatsby-transformer-sharp": "^4.17.0",
     "gatsby-transformer-yaml-full": "^4.0.5",
     "gatsby-yaml-full-markdown": "^4.1.1",
