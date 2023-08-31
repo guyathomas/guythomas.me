@@ -15,7 +15,7 @@ module.exports = {
     {
       resolve: `gatsby-plugin-graphql-codegen`,
       options: {
-        fileName: `./src/types/gatsby-graphql.ts`,
+        fileName: `./types/gatsby-graphql.ts`,
       },
     },
     `gatsby-plugin-typescript`,
@@ -28,7 +28,7 @@ module.exports = {
         "~context": path.join(__dirname, "src/context"),
         "~templates": path.join(__dirname, "src/templates"),
         "~styles": path.join(__dirname, "src/styles"),
-        "~types": path.join(__dirname, "src/types"),
+        "~types": path.join(__dirname, "types"),
       },
     },
     {
