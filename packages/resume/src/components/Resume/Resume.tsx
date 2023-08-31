@@ -5,11 +5,7 @@ import { ResumeQuery } from "~types/gatsby-graphql"
 import { Tooltip } from "~components/Tooltip"
 import styled from "@emotion/styled"
 import Timeline from "./Timeline"
-import {
-  DownloadIcon,
-  GithubIcon,
-  InteractiveSvgStyles,
-} from "./svgs"
+import { DownloadIcon, GithubIcon, InteractiveSvgStyles } from "./svgs"
 import {
   PageContainer,
   ProfileContainer,
@@ -66,26 +62,13 @@ const Resume: React.FC<{
           <Bio>
             <Titles>
               <Names>
-                <FirstName
-                >
-                  {resumeData.firstName}
-                </FirstName>
-                <LastName
-                >
-                  {resumeData.lastName}
-                </LastName>
+                <FirstName>{resumeData.firstName}</FirstName>
+                <LastName>{resumeData.lastName}</LastName>
               </Names>
               <DescriptionRow>
-                <Description
-                >
-                  {resumeData.tagline}
-                </Description>
+                <Description>{resumeData.tagline}</Description>
                 <ResumeActionContainer>
-                  <Tooltip
-                    tooltip={
-                      "Download PDF"
-                    }
-                  >
+                  <Tooltip tooltip={"Download PDF"}>
                     <a
                       style={{ cursor: "pointer" }}
                       target="_blank"
@@ -107,8 +90,7 @@ const Resume: React.FC<{
                     </a>
                   </Tooltip>
                   <Tooltip
-                    tooltip={`Toggle ${isDarkMode ? "light" : "dark"
-                      } mode`}
+                    tooltip={`Toggle ${isDarkMode ? "light" : "dark"} mode`}
                   >
                     <DarkModeToggleAction />
                   </Tooltip>
@@ -116,38 +98,30 @@ const Resume: React.FC<{
               </DescriptionRow>
             </Titles>
             <Contacts>
-              {resumeData.contactDetails?.map(
-                (contactDetail, index) => {
-                  // Wow, TS really wants me to be safe here
-                  const definitelyContactDetail = contactDetail || []
-                  const stringTitle = String(
-                    definitelyContactDetail[0]
-                  )
-                  const stringDetail = String(
-                    definitelyContactDetail[1]
-                  )
-                  if (!stringDetail) return null
-                  return (
-                    <ContactWrapper key={stringTitle}>
-                      <ContactTitle>{stringTitle}</ContactTitle>
-                      <span
-                        dangerouslySetInnerHTML={{
-                          __html: stringDetail,
-                        }}
-                      />
-                    </ContactWrapper>
-                  )
-                }
-              )}
+              {resumeData.contact?.map((contactDetail) => {
+                // Wow, TS really wants me to be safe here
+                const stringTitle = contactDetail?.title
+                const stringDetail = contactDetail?.value?.html
+                if (!stringDetail) return null
+                return (
+                  <ContactWrapper key={stringTitle}>
+                    <ContactTitle>{stringTitle}</ContactTitle>
+                    <span
+                      dangerouslySetInnerHTML={{
+                        __html: stringDetail,
+                      }}
+                    />
+                  </ContactWrapper>
+                )
+              })}
             </Contacts>
           </Bio>
         </BioWrapper>
         <IntroTitle>Intro</IntroTitle>
         <IntroContent>
           <SectionContentInner
-          >
-            {resumeData.intro}
-          </SectionContentInner>
+            dangerouslySetInnerHTML={{ __html: resumeData.intro?.html! }}
+          />
         </IntroContent>
         <ExperienceTitle>Experience</ExperienceTitle>
         <ExperienceSection>
@@ -157,24 +131,27 @@ const Resume: React.FC<{
                 company={item?.company ?? undefined}
                 title={item?.title ?? undefined}
                 date={item?.date ?? undefined}
-                details={item?.details ?? undefined}
+                details={item?.details?.html ?? undefined}
                 key={index}
-              />))}
+              />
+            ))}
           </SectionContentInner>
         </ExperienceSection>
         <EducationTitle>Projects</EducationTitle>
         <EducationSection>
           <SectionContentInner>
-            {resumeData.education?.map((item, index) => <Timeline
-              company={item?.company}
-              title={item?.title}
-              details={item?.details}
-              key={index}
-            />)}
+            {resumeData.education?.map((item, index) => (
+              <Timeline
+                company={item?.title?.html ?? undefined}
+                title={item?.subtitle ?? undefined}
+                details={item?.details?.html ?? undefined}
+                key={index}
+              />
+            ))}
           </SectionContentInner>
         </EducationSection>
       </PageContainer>
-    </Background >
+    </Background>
   )
 }
 

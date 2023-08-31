@@ -78,12 +78,18 @@ const Timeline: React.FC<TimelineProps> = ({
   return (
     <TimelineOuter>
       <TimelineTitles>
-        {company && <TimelineCompany dangerouslySetInnerHTML={{ __html: company }} />}
+        {company && (
+          <TimelineCompany dangerouslySetInnerHTML={{ __html: company }} />
+        )}
         {date && <TimelineDate>{date}</TimelineDate>}
-        {title && <TimelineTitle>{title}</TimelineTitle>}
+        {title && <TimelineTitle dangerouslySetInnerHTML={{ __html: title }} />}
       </TimelineTitles>
       <TimelineDetails>
-        {details && <TimelineDetailsContent dangerouslySetInnerHTML={{ __html: details }} />}
+        {details && (
+          <TimelineDetailsContent
+            dangerouslySetInnerHTML={{ __html: details }}
+          />
+        )}
       </TimelineDetails>
     </TimelineOuter>
   )

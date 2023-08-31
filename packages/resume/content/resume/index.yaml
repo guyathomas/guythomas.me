@@ -3,25 +3,30 @@ firstName: Guy
 lastName: Thomas
 avatar: https://res.cloudinary.com/dqvlfpaev/image/upload/c_scale,w_400/v1580691840/avatar_sz1jui.jpg
 tagline: Engineer, Leader & Entrepreneur
-contactDetails:
-  - - Email
-    - !markdown "[guythomas721@gmail.com](mailto:guythomas721@gmail.com)"
-  - - Location
-    - San Francisco
-  - - Web
-    - !markdown "[guythomas.me](https://guythomas.me)"
-intro: I'm passionate about solving hard problems with talented people.
+contact:
+  - title: Email
+    value: !markdown "[guythomas721@gmail.com](mailto:guythomas721@gmail.com)"
+  - title: Location
+    value: !markdown "San Francisco"
+  - title: Web
+    value: !markdown "[guythomas.me](https://guythomas.me)"
+    # -
+  # - - Location
+  #   - San Francisco
+  # - - Web
+  #   - !markdown
+intro: !markdown I'm passionate about solving hard problems with talented people.
 experience:
   - date: 15th June, 2022 – Present
     company: Instacart
     title: Engineering Manager
     details: !markdown |
-      * Led a team that enables multi channel marketing & messaging for Instacart App. The combined projects continue to provide 10's of millions of customer touchpoints daily.
+      * Led a team that enables multi channel marketing & messaging for Instacart App.
   - date: 10th May, 2021 – 15th June, 2022
-    title: Tech Lead
+    title: Senior Software Engineer II
     details: !markdown |
+      * Led a workstream to that surfaced information on our incentives offerings.
       * Led projects that created additional marketing channels such as generic modals and banners across web, iOS and Android.
-      * Led the "Deals" product which surfaces Instacarts top deals to millions of users every day.
   - date: 15th April, 2019 – 26th May, 2021
     company: Lyft
     title: Senior Software Engineer
@@ -38,13 +43,12 @@ experience:
     company: IBM
     title: Software Engineer
 education:
-  - company: !markdown |
-      [guythomas.me](https://guythomas.me)
-    title: React / Typescript / Gatsby / Emotion
+  - title: !markdown "[guythomas.me](https://guythomas.me)"
+    subtitle: React / Typescript / Gatsby / Emotion
     details: !markdown |
       * resume content ( like this sentence ) is defined in a `.yml` file
-  - company: Blindii
-    title: React / Typescript / PostgreSQL / GraphQL
+  - title: !markdown "Blindii"
+    subtitle: React / Typescript / PostgreSQL / GraphQL
     details: !markdown |
       * Blind & Curtain industry specific e-commerce platform
 bookList:

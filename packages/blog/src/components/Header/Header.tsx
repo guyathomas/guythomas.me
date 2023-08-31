@@ -24,15 +24,12 @@ const Header: React.FC<React.PropsWithChildren> = () => {
       <div className={cx(styles.headerContent)}>
         <div className={styles.headerLinks}>
           <Link href="/">
-            <a>
-              <h3 className={styles.siteTitle}>Guy</h3>
-            </a>
+            <h3 className={styles.siteTitle}>Guy</h3>
           </Link>
-
           <div
             className={cx(
               styles.linkContainer,
-              isExpanded && styles.linkContainerMobileExpanded
+              isExpanded && styles.linkContainerMobileExpanded,
             )}
           >
             <ul className={styles.navigationLinks}>
@@ -41,12 +38,13 @@ const Header: React.FC<React.PropsWithChildren> = () => {
                   className={cx(
                     "p-2",
                     styles.navLink,
-                    isExpanded && styles.navLinkExpanded
+                    isExpanded && styles.navLinkExpanded,
                   )}
                   style={{ "--animation-order": i } as any}
+                  key={`${name}:${path}`}
                 >
                   <Link key={name} href={path}>
-                    <a>{name}</a>
+                    {name}
                   </Link>
                 </li>
               ))}

@@ -35,7 +35,15 @@ module.exports = {
       resolve: "gatsby-transformer-yaml-full",
       options: {
         plugins: [
-          "gatsby-yaml-full-markdown", // Enable !markdown tags
+          {
+            resolve: "gatsby-yaml-full-markdown", // Enable !markdown tags
+            options: {
+              /* gatsby-yaml-full-markdown options here */
+              remarkHtml: {
+                sanitize: false,
+              },
+            },
+          },
         ],
       },
     },

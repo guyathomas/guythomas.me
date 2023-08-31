@@ -8,6 +8,7 @@ interface SummaryItemProps {
   title: string
   link: string
   body: string
+  category: string
 }
 
 const Title = styled.h3`

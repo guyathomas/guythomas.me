@@ -8,22 +8,32 @@ export const pageQuery = graphql`
         id
         version
         tagline
-        intro
-        contactDetails
+        contact {
+          title
+          value {
+            html
+          }
+        }
+        intro {
+          __typename
+          html
+        }
         experience {
+          title
           date
           company
-          title
-          details
+          details {
+            html
+          }
         }
         education {
-          company
-          title
-          details
-        }
-        bookList {
-          title
-          link
+          title {
+            html
+          }
+          subtitle
+          details {
+            html
+          }
         }
         avatar
         firstName

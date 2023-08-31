@@ -9,9 +9,9 @@
     "dev": "yarn workspaces foreach -ipv run dev"
   },
   "devDependencies": {
-    "typescript": "^4.7.4"
+    "typescript": "^5.2.2"
   },
   "dependencies": {
-    "@svgr/webpack": "^6.2.1"
+    "@svgr/webpack": "^8.1.0"
   }
 }
