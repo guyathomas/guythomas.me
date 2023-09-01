@@ -43,11 +43,13 @@ education:
   - title: !markdown "[guythomas.me](https://guythomas.me)"
     subtitle: React / Typescript / Gatsby / Emotion
     details: !markdown |
-      * resume content ( like this sentence ) is defined in a `.yml` file
+      * A monorepo using Gatsby for my resume, and NextJS for my Blog.
+      * Deployed on Vercel and mainly serves a playground to test new tech.
   - title: !markdown "Blindii"
     subtitle: React / Typescript / PostgreSQL
     details: !markdown |
-      * Blind & Curtain industry specific e-commerce platform
+      * An e-commerce platform specific to Blinds & Curtains.
+      * Extends a framework called [MedusaJS](https://medusajs.com/)
 skills: !markdown |
   I live and breathe these technologies, but I'm familiar with many more.
   * React
