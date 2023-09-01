@@ -3,7 +3,9 @@ const puppeteer = require("puppeteer")
 const colorSchemes = ["dark", "light"]
 
 ;(async () => {
-  const browser = await puppeteer.launch()
+  const browser = await puppeteer.launch({
+    headless: "new",
+  })
   const page = await browser.newPage()
 
   await colorSchemes.reduce(async (lastResult, color) => {
