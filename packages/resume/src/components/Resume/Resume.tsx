@@ -20,6 +20,9 @@ import {
   FirstName,
   LastName,
   EducationSection,
+  CompactBody,
+  SkillsSection,
+  SkillsTitle,
   BioWrapper,
   IntroContent,
   ExperienceSection,
@@ -151,6 +154,20 @@ const Resume: React.FC<{
             ))}
           </SectionContentInner>
         </EducationSection>
+        {resumeData.skills?.html && (
+          <>
+            <SkillsTitle>Skills</SkillsTitle>
+            <SkillsSection>
+              <SectionContentInner>
+                <CompactBody
+                  dangerouslySetInnerHTML={{
+                    __html: resumeData.skills?.html,
+                  }}
+                />
+              </SectionContentInner>
+            </SkillsSection>
+          </>
+        )}
       </PageContainer>
     </Background>
   )

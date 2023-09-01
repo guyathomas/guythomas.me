@@ -46,6 +46,13 @@ const SectionTitle = styled.div`
   }
 `
 
+export const SkillsTitle = styled(SectionTitle)`
+  @media only print {
+    grid-area: skills-title;
+    align-self: end;
+  }
+`
+
 export const PageContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr;
@@ -56,12 +63,36 @@ export const PageContainer = styled.div`
     grid-template-columns: 1fr 2fr;
   }
   @media only print {
+    align-items: start;
     grid-template-columns: repeat(12, 1fr);
     grid-template-areas:
       "profile profile profile profile bio bio bio bio bio bio bio bio"
       "intro-content intro-content intro-content intro-content intro-content intro-content intro-content intro-content intro-content intro-content intro-content intro-content"
       "experience-title experience-title experience-title experience-title experience-title experience-title experience-title experience-title education-title education-title education-title education-title"
-      "experience-content experience-content experience-content experience-content experience-content experience-content experience-content experience-content education-content education-content education-content education-content";
+      "experience-content experience-content experience-content experience-content experience-content experience-content experience-content experience-content education-content education-content education-content education-content"
+      "experience-content experience-content experience-content experience-content experience-content experience-content experience-content experience-content skills-title skills-title skills-title skills-title"
+      "experience-content experience-content experience-content experience-content experience-content experience-content experience-content experience-content skills-content skills-content skills-content skills-content";
+  }
+`
+
+export const CompactBody = styled.div`
+  @media only print {
+    font-size: 85%;
+  }
+  & li {
+    @media only print {
+      margin-bottom: 0.5rem;
+    }
+  }
+  & ul {
+    margin-left: 0;
+    margin-top: 1rem;
+    padding-left: 0.5rem;
+    list-style-position: outside;
+    @media only print {
+      margin-bottom: 0;
+      margin-top: 0.5rem;
+    }
   }
 `
 
@@ -179,6 +210,12 @@ export const LastName = styled(FirstName)`
 export const EducationSection = styled(SectionContent)`
   @media only print {
     grid-area: education-content;
+  }
+`
+
+export const SkillsSection = styled(SectionContent)`
+  @media only print {
+    grid-area: skills-content;
   }
 `
 export const BioWrapper = styled(SectionContent)`
