@@ -30,6 +30,7 @@ import {
   Names,
   ResumeActionContainer,
   Background,
+  ContactValue,
 } from "./styles"
 import { DarkModeToggle } from "~components/DarkModeToggle"
 import { ThemeContext } from "~context/ThemeProvider"
@@ -106,7 +107,7 @@ const Resume: React.FC<{
                 return (
                   <ContactWrapper key={stringTitle}>
                     <ContactTitle>{stringTitle}</ContactTitle>
-                    <span
+                    <ContactValue
                       dangerouslySetInnerHTML={{
                         __html: stringDetail,
                       }}

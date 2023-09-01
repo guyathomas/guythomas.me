@@ -150,8 +150,16 @@ export const Contacts = styled.div`
 export const ContactWrapper = styled.div``
 export const ContactTitle = styled.h4`
   @media print {
-    margin-top: 2rem;
+    margin-top: 1.5rem;
     margin-bottom: 1rem;
+  }
+`
+
+export const ContactValue = styled.span`
+  @media print {
+    p {
+      margin-bottom: 0;
+    }
   }
 `
 
@@ -179,13 +187,16 @@ export const BioWrapper = styled(SectionContent)`
   }
   @media only print {
     grid-area: bio;
-    padding-top: 0.5rem;
+    padding-top: 1rem;
   }
 `
 export const IntroContent = styled(SectionContent)`
   @media only print {
     grid-area: intro-content;
-    padding-top: 1rem;
+    margin-top: 1rem;
+  }
+  p {
+    margin-bottom: 0;
   }
 `
 export const ExperienceSection = styled(SectionContent)`
