@@ -36,7 +36,7 @@ module.exports = {
           ["~components", "./src/components"],
           ["~context", "./src/context"],
           ["~templates", "./src/templates"],
-          ["~types", "./src/types"],
+          ["~types", "./types"],
         ],
         extensions: [".ts", ".tsx", ".js", ".jsx"],
       },

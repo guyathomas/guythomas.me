@@ -15,11 +15,11 @@
       "~actions": ["actions"],
       "~components/*": ["components/*"],
       "~context/*": ["context/*"],
-      "~types/*": ["types/*"],
+      "~types/*": ["../types/*"],
       "~templates": ["templates"],
       "~styles": ["styles"]
     }
   },
   "exclude": ["node_modules", "public", ".cache"],
-  "include": ["src", "node_modules/@types/puppeteer/index.d.ts"]
+  "include": ["src", "node_modules/@types/puppeteer/index.d.ts", "types/gatsby-graphql.ts"]
 }

@@ -54,7 +54,7 @@ module.exports = {
       "~components": path.join(__dirname, "../src/components"),
       "~templates": path.join(__dirname, "../src/templates"),
       "~styles": path.join(__dirname, "../src/styles"),
-      "~types": path.join(__dirname, "../src/types"),
+      "~types": path.join(__dirname, "../types"),
     }
 
     return config

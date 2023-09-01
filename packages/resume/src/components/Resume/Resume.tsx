@@ -98,10 +98,10 @@ const Resume: React.FC<{
               </DescriptionRow>
             </Titles>
             <Contacts>
-              {resumeData.contact?.map((contactDetail) => {
+              {resumeData.contact?.map((contact) => {
                 // Wow, TS really wants me to be safe here
-                const stringTitle = contactDetail?.title
-                const stringDetail = contactDetail?.value?.html
+                const stringTitle = contact?.title
+                const stringDetail = contact?.value?.html
                 if (!stringDetail) return null
                 return (
                   <ContactWrapper key={stringTitle}>
