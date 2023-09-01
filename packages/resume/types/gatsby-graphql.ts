@@ -671,6 +671,7 @@ export type ResumeYaml = Node & {
   intro?: Maybe<ResumeYamlIntro>;
   experience?: Maybe<Array<Maybe<ResumeYamlExperience>>>;
   education?: Maybe<Array<Maybe<ResumeYamlEducation>>>;
+  skills?: Maybe<ResumeYamlSkills>;
   bookList?: Maybe<Array<Maybe<ResumeYamlBookList>>>;
 };
 
@@ -713,6 +714,11 @@ export type ResumeYamlEducationTitle = {
 };
 
 export type ResumeYamlEducationDetails = {
+  html?: Maybe<Scalars['String']>;
+  plain?: Maybe<Scalars['String']>;
+};
+
+export type ResumeYamlSkills = {
   html?: Maybe<Scalars['String']>;
   plain?: Maybe<Scalars['String']>;
 };
@@ -1019,6 +1025,7 @@ export type QueryResumeYamlArgs = {
   intro?: InputMaybe<ResumeYamlIntroFilterInput>;
   experience?: InputMaybe<ResumeYamlExperienceFilterListInput>;
   education?: InputMaybe<ResumeYamlEducationFilterListInput>;
+  skills?: InputMaybe<ResumeYamlSkillsFilterInput>;
   bookList?: InputMaybe<ResumeYamlBookListFilterListInput>;
 };
 
@@ -1186,6 +1193,7 @@ export type ResumeYamlFilterInput = {
   intro?: InputMaybe<ResumeYamlIntroFilterInput>;
   experience?: InputMaybe<ResumeYamlExperienceFilterListInput>;
   education?: InputMaybe<ResumeYamlEducationFilterListInput>;
+  skills?: InputMaybe<ResumeYamlSkillsFilterInput>;
   bookList?: InputMaybe<ResumeYamlBookListFilterListInput>;
 };
 
@@ -1240,6 +1248,11 @@ export type ResumeYamlEducationTitleFilterInput = {
 };
 
 export type ResumeYamlEducationDetailsFilterInput = {
+  html?: InputMaybe<StringQueryOperatorInput>;
+  plain?: InputMaybe<StringQueryOperatorInput>;
+};
+
+export type ResumeYamlSkillsFilterInput = {
   html?: InputMaybe<StringQueryOperatorInput>;
   plain?: InputMaybe<StringQueryOperatorInput>;
 };
@@ -1444,6 +1457,7 @@ export type ResumeYamlFieldSelector = {
   intro?: InputMaybe<ResumeYamlIntroFieldSelector>;
   experience?: InputMaybe<ResumeYamlExperienceFieldSelector>;
   education?: InputMaybe<ResumeYamlEducationFieldSelector>;
+  skills?: InputMaybe<ResumeYamlSkillsFieldSelector>;
   bookList?: InputMaybe<ResumeYamlBookListFieldSelector>;
 };
 
@@ -1486,6 +1500,11 @@ export type ResumeYamlEducationTitleFieldSelector = {
 };
 
 export type ResumeYamlEducationDetailsFieldSelector = {
+  html?: InputMaybe<FieldSelectorEnum>;
+  plain?: InputMaybe<FieldSelectorEnum>;
+};
+
+export type ResumeYamlSkillsFieldSelector = {
   html?: InputMaybe<FieldSelectorEnum>;
   plain?: InputMaybe<FieldSelectorEnum>;
 };
@@ -1718,6 +1737,7 @@ export type ResumeYamlSortInput = {
   intro?: InputMaybe<ResumeYamlIntroSortInput>;
   experience?: InputMaybe<ResumeYamlExperienceSortInput>;
   education?: InputMaybe<ResumeYamlEducationSortInput>;
+  skills?: InputMaybe<ResumeYamlSkillsSortInput>;
   bookList?: InputMaybe<ResumeYamlBookListSortInput>;
 };
 
@@ -1760,6 +1780,11 @@ export type ResumeYamlEducationTitleSortInput = {
 };
 
 export type ResumeYamlEducationDetailsSortInput = {
+  html?: InputMaybe<SortOrderEnum>;
+  plain?: InputMaybe<SortOrderEnum>;
+};
+
+export type ResumeYamlSkillsSortInput = {
   html?: InputMaybe<SortOrderEnum>;
   plain?: InputMaybe<SortOrderEnum>;
 };
@@ -2999,4 +3024,4 @@ export type SeoQuery = { site?: { siteMetadata?: { title?: string | null, descri
 export type ResumeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ResumeQuery = { allResumeYaml: { nodes: Array<{ id: string, version?: number | null, tagline?: string | null, avatar?: string | null, firstName?: string | null, lastName?: string | null, contact?: Array<{ title?: string | null, value?: { html?: string | null } | null } | null> | null, intro?: { __typename: 'ResumeYamlIntro', html?: string | null } | null, experience?: Array<{ title?: string | null, date?: string | null, company?: string | null, details?: { html?: string | null } | null } | null> | null, education?: Array<{ subtitle?: string | null, title?: { html?: string | null } | null, details?: { html?: string | null } | null } | null> | null }> } };
+export type ResumeQuery = { allResumeYaml: { nodes: Array<{ id: string, version?: number | null, tagline?: string | null, avatar?: string | null, firstName?: string | null, lastName?: string | null, contact?: Array<{ title?: string | null, value?: { html?: string | null } | null } | null> | null, intro?: { __typename: 'ResumeYamlIntro', html?: string | null } | null, experience?: Array<{ title?: string | null, date?: string | null, company?: string | null, details?: { html?: string | null } | null } | null> | null, education?: Array<{ subtitle?: string | null, title?: { html?: string | null } | null, details?: { html?: string | null } | null } | null> | null, skills?: { html?: string | null } | null }> } };

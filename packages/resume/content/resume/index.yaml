@@ -48,6 +48,11 @@ education:
     subtitle: React / Typescript / PostgreSQL
     details: !markdown |
       * Blind & Curtain industry specific e-commerce platform
+skills: !markdown |
+  I live and breathe these technologies, but I'm familiar with many more
+  * React
+  * Typescript
+  * HTML / CSS
 bookList:
   - title: How I Built This
     link: https://www.goodreads.com/book/show/48930275-how-i-built-this

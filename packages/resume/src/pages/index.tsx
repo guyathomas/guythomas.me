@@ -35,6 +35,9 @@ export const pageQuery = graphql`
             html
           }
         }
+        skills {
+          html
+        }
         avatar
         firstName
         lastName
