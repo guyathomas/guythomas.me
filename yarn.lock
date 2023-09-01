@@ -14187,6 +14187,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"guythomas.me@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "guythomas.me@workspace:."
+  dependencies:
+    "@svgr/webpack": ^8.1.0
+    typescript: ^5.2.2
+  languageName: unknown
+  linkType: soft
+
 "gzip-size@npm:^6.0.0":
   version: 6.0.0
   resolution: "gzip-size@npm:6.0.0"
@@ -19021,15 +19030,6 @@ __metadata:
   checksum: c65cb8d3f7ea5669edddb3217e4c96910a60d0d9a4b52d9847ff6b28b2d0277cd8464eee0ef85133cdee32605c57940cacdd04a9a019079b091b6bba4cb0ec22
   languageName: node
   linkType: hard
-
-"new.guythomas.me@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "new.guythomas.me@workspace:."
-  dependencies:
-    "@svgr/webpack": ^8.1.0
-    typescript: ^5.2.2
-  languageName: unknown
-  linkType: soft
 
 "next-tick@npm:1, next-tick@npm:^1.1.0":
   version: 1.1.0
