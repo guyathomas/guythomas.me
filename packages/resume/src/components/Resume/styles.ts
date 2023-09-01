@@ -150,7 +150,7 @@ export const Contacts = styled.div`
 export const ContactWrapper = styled.div``
 export const ContactTitle = styled.h4`
   @media print {
-    margin-top: 1.5rem;
+    margin-top: 1rem;
     margin-bottom: 1rem;
   }
 `
@@ -225,6 +225,7 @@ export const Bio = styled(SectionContentInner)`
   }
   @media print {
     grid-area: bio;
+    padding-bottom: 0;
   }
 `
 

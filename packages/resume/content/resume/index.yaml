@@ -2,7 +2,7 @@ version: 1
 firstName: Guy
 lastName: Thomas
 avatar: https://res.cloudinary.com/dqvlfpaev/image/upload/c_scale,w_400/v1580691840/avatar_sz1jui.jpg
-tagline: Engineer, Leader & Entrepreneur
+tagline: Software Engineer & Leader
 contact:
   - title: Email
     value: !markdown "[guythomas721@gmail.com](mailto:guythomas721@gmail.com)"
@@ -10,45 +10,42 @@ contact:
     value: !markdown "San Francisco"
   - title: Web
     value: !markdown "[guythomas.me](https://guythomas.me)"
-    # -
-  # - - Location
-  #   - San Francisco
-  # - - Web
-  #   - !markdown
-intro: !markdown I'm passionate about solving hard problems with talented people.
+intro: !markdown I'm a Technical leader with passion for solving complex engineering problems, leading high performing teams & consistently seeking new avenues of growth.
 experience:
   - date: 15th June, 2022 – Present
     company: Instacart
     title: Engineering Manager
     details: !markdown |
-      * Led a team that enables multi channel marketing & messaging for Instacart App.
+      * Led a Growth team that enabled multi-channel marketing & messaging.
+      * Created tooling and UI components that teams used to launch hundreds of campaigns with no code.
   - date: 10th May, 2021 – 15th June, 2022
     title: Senior Software Engineer II
     details: !markdown |
-      * Led a workstream to that surfaced information on our incentives offerings.
-      * Led projects that created additional marketing channels such as generic modals and banners across web, iOS and Android.
+      * Lead Engineer building company-wide UI frameworks resulting in a 10% increase in coupon redemption and significant boost in ad revenue.
   - date: 15th April, 2019 – 26th May, 2021
     company: Lyft
     title: Senior Software Engineer
     details: !markdown |
-      * Team lead for a cross platform Insurance Marketplace.
-      * Led a company wide testing initiative to speed up tests in CI by 90%.
+      * Lead engineer building a cross-platform Insurance Marketplace.
+      * Led a company wide initiative to speed up E2E tests in CI by 90%.
   - date: 26th June, 2017 – 31st January, 2019
     company: Reflektive
     title: Software Engineer
     details: !markdown |
-      * Built the frontend for our core 'Reviews' product.
+      * Developed multiple client features, enhancing the peer review product.
       * Cut development build times by 50% by optimizing webpack pipelines.
   - date: 7th July, 2014 – 3rd June, 2016
     company: IBM
     title: Software Engineer
+    details: !markdown |
+      * Developed automated marketing triggers to personalize offers
 education:
   - title: !markdown "[guythomas.me](https://guythomas.me)"
     subtitle: React / Typescript / Gatsby / Emotion
     details: !markdown |
       * resume content ( like this sentence ) is defined in a `.yml` file
   - title: !markdown "Blindii"
-    subtitle: React / Typescript / PostgreSQL / GraphQL
+    subtitle: React / Typescript / PostgreSQL
     details: !markdown |
       * Blind & Curtain industry specific e-commerce platform
 bookList:
