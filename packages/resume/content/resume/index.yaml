@@ -38,7 +38,7 @@ experience:
     company: IBM
     title: Software Engineer
     details: !markdown |
-      * Developed automated marketing triggers to personalize offers
+      * Rapidly developed "micro-sites" with jQuery for bids & pitches
 education:
   - title: !markdown "[guythomas.me](https://guythomas.me)"
     subtitle: React / Typescript / Gatsby / Emotion
