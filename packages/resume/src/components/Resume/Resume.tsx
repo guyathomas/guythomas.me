@@ -129,7 +129,7 @@ const Resume: React.FC<{
         </IntroContent>
         <ExperienceTitle>Experience</ExperienceTitle>
         <ExperienceSection>
-          <SectionContentInner style={{ paddingBottom: 0 }}>
+          <SectionContentInner>
             {resumeData.experience?.map((item, index) => (
               <Timeline
                 company={item?.company ?? undefined}

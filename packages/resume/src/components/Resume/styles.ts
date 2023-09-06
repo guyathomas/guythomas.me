@@ -239,6 +239,9 @@ export const IntroContent = styled(SectionContent)`
 export const ExperienceSection = styled(SectionContent)`
   @media only print {
     grid-area: experience-content;
+    div {
+      padding-bottom: 0;
+    }
   }
 `
 
