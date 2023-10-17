@@ -10,7 +10,7 @@ contact:
     value: !markdown "San Francisco"
   - title: Web
     value: !markdown "[guythomas.me](https://guythomas.me)"
-intro: !markdown I'm a Technical leader with passion for solving complex engineering problems, leading high performing teams & consistently seeking new avenues of growth.
+intro: !markdown I'm a technical leader with passion for solving complex engineering problems, leading high performing teams & consistently seeking new avenues of growth.
 experience:
   - date: 15th June, 2022 – Present
     company: Instacart
