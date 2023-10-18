@@ -5,56 +5,55 @@ avatar: https://res.cloudinary.com/dqvlfpaev/image/upload/c_scale,w_400/v1580691
 tagline: Software Engineer & Leader
 contact:
   - title: Email
-    value: !markdown "[guythomas721@gmail.com](mailto:guythomas721@gmail.com)"
+    value: !markdown "[guythomas.me@gmail.com](mailto:guythomas.me@gmail.com)"
   - title: Location
     value: !markdown "San Francisco"
   - title: Web
     value: !markdown "[guythomas.me](https://guythomas.me)"
-intro: !markdown I'm a technical leader with passion for solving complex engineering problems, leading high performing teams & consistently seeking new avenues of growth.
+intro: !markdown I'm a technical leader with a passion for solving complex engineering problems, leading high performing teams & consistently seeking new avenues of growth.
 experience:
   - date: 15th June, 2022 – Present
     company: Instacart
     title: Engineering Manager
     details: !markdown |
-      * Led a Growth team that enabled multi-channel marketing & messaging.
-      * Created tooling and UI components that teams used to launch hundreds of campaigns with no code.
+      * Led a team of 9 engineers to build multi-channel marketing & messaging delivering increases in conversion rates & creating new revenue streams.
+      * The team created tooling and UI components that internal and external customers used to create thousands of campaigns with no code.
   - date: 10th May, 2021 – 15th June, 2022
     title: Senior Software Engineer II
     details: !markdown |
-      * Lead Engineer building company-wide UI frameworks resulting in a 10% increase in coupon redemption and significant boost in ad revenue.
+      * Led a project of 5 engineers to build full-stack frameworks to promote usage and awareness of different incentives.
   - date: 15th April, 2019 – 26th May, 2021
     company: Lyft
     title: Senior Software Engineer
     details: !markdown |
-      * Lead engineer building a cross-platform Insurance Marketplace.
-      * Led a company wide initiative to speed up E2E tests in CI by 90%.
+      * Led projects with 4 engineers build complex form flows with X-state. These flows built around the complexity in gathering details for insurance quotes.
+      * Improved the speed of tests in CI by 95% by building Cypress plugins to cache and replay responses.
   - date: 26th June, 2017 – 31st January, 2019
     company: Reflektive
     title: Software Engineer
     details: !markdown |
-      * Developed multiple client features, enhancing the peer review product.
+      * Built complex form flows with React & Redux for our core products.
       * Cut development build times by 50% by optimizing webpack pipelines.
   - date: 7th July, 2014 – 3rd June, 2016
     company: IBM
     title: Software Engineer
     details: !markdown |
-      * Rapidly developed "micro-sites" with jQuery for bids & pitches
+      * Rapidly developed "micro-sites" with jQuery for bids & pitches.
 education:
   - title: !markdown "[guythomas.me](https://guythomas.me)"
-    subtitle: React / Typescript / Gatsby / Emotion
+    subtitle: React / Typescript / Gatsby
     details: !markdown |
-      * A monorepo using Gatsby for my resume, and NextJS for my Blog.
-      * Deployed on Vercel and mainly serves a playground to test new tech.
+      * A monorepo using Gatsby for my resume and NextJS for my Blog.
+      * Deployed on Vercel and serves a playground to test new tech.
   - title: !markdown "Blindii"
-    subtitle: React / Typescript / PostgreSQL
+    subtitle: React / Typescript / NextJS / PostgreSQL
     details: !markdown |
-      * An e-commerce platform specific to Blinds & Curtains.
-      * Extends a framework called [MedusaJS](https://medusajs.com/)
+      * An e-commerce platform that is custom to the sale of Curtains & Blinds.
+      * It extends a framework called [MedusaJS](https://medusajs.com/) to provide checkout and order management.
 skills: !markdown |
-  I live and breathe these technologies, but I'm familiar with many more.
-  * React
-  * Typescript
-  * HTML / CSS
+  **Languages:** HTML, CSS, JavaScript, TypeScript, GraphQL
+
+  **Technologies:** React, Next.js, Tailwind, Styled Components, Jest, Cypress, Webpack
 bookList:
   - title: How I Built This
     link: https://www.goodreads.com/book/show/48930275-how-i-built-this

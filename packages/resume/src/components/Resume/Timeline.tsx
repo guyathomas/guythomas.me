@@ -29,6 +29,9 @@ const TimelineCompany = styled.h3`
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
   }
+  p {
+    margin-bottom: 0;
+  }
 `
 const TimelineTitle = styled.h4`
   margin: 0;
@@ -37,6 +40,7 @@ const TimelineTitle = styled.h4`
   @media print {
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
+    display: inline;
   }
 `
 
@@ -47,6 +51,8 @@ const TimelineDate = styled.h3`
   @media print {
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
+    display: inline;
+    margin-left: 1rem;
   }
 `
 
@@ -81,8 +87,8 @@ const Timeline: React.FC<TimelineProps> = ({
         {company && (
           <TimelineCompany dangerouslySetInnerHTML={{ __html: company }} />
         )}
-        {date && <TimelineDate>{date}</TimelineDate>}
         {title && <TimelineTitle dangerouslySetInnerHTML={{ __html: title }} />}
+        {date && <TimelineDate>{date}</TimelineDate>}
       </TimelineTitles>
       <TimelineDetails>
         {details && (
