@@ -7,7 +7,7 @@ contact:
   - title: Email
     value: !markdown "[guythomas.me@gmail.com](mailto:guythomas.me@gmail.com)"
   - title: Location
-    value: !markdown "San Francisco"
+    value: !markdown "New York"
   - title: Web
     value: !markdown "[guythomas.me](https://guythomas.me)"
 intro: !markdown I'm a technical leader with a passion for solving complex engineering problems, leading high performing teams & consistently seeking new avenues of growth.
