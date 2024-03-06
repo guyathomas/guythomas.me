@@ -10,24 +10,24 @@ contact:
     value: !markdown "New York"
   - title: Web
     value: !markdown "[guythomas.me](https://guythomas.me)"
-intro: !markdown I'm a technical leader with a passion for solving complex engineering problems, leading high performing teams & consistently seeking new avenues of growth.
+intro: !markdown I'm a [hands-on](https://newsletter.pragmaticengineer.com/p/staying-hands-on) technical leader with a passion for solving complex engineering problems, leading high performing teams & consistently seeking new avenues of growth.
 experience:
-  - date: 15th June, 2022 – Present
+  - date: 2nd January, 2022 – 16th February, 2024
     company: Instacart
     title: Engineering Manager
     details: !markdown |
-      * Led a team of 9 engineers to build multi-channel marketing & messaging delivering increases in conversion rates & creating new revenue streams.
-      * The team created tooling and UI components that internal and external customers used to create thousands of campaigns with no code.
-  - date: 10th May, 2021 – 15th June, 2022
+      * Led a team of 9 engineers within the growth team to develop multi-channel, self-serve in-app messaging components..
+      * These components ( i.e. modals, banners, and eyebrow banners ) powered 1,000+ experiments and contributed to a growth of over 10,000 monthly active users (MAUs).
+  - date: 10th May, 2021 – 2nd January, 2022
     title: Senior Software Engineer II
     details: !markdown |
-      * Led a project of 5 engineers to build full-stack frameworks to promote usage and awareness of different incentives.
+      * Led a team of 5 engineers to build a full-stack framework that promoted the awareness of different promotions.
   - date: 15th April, 2019 – 26th May, 2021
     company: Lyft
     title: Senior Software Engineer
     details: !markdown |
-      * Led projects with 4 engineers build complex form flows with X-state. These flows built around the complexity in gathering details for insurance quotes.
-      * Improved the speed of tests in CI by 95% by building Cypress plugins to cache and replay responses.
+      * Led 4 engineers to build complex insurance form flows with X-state to improve adjuster processing times.
+      * Built Cypress plugins to cache and replay E2E responses, resulting in an 95% reduction in CI E2E test duration.
   - date: 26th June, 2017 – 31st January, 2019
     company: Reflektive
     title: Software Engineer

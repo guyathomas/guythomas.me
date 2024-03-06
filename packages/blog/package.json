@@ -1,6 +1,8 @@
 {
   "private": true,
   "name": "blog",
+  "packageManager": "yarn@1.22.21",
+  "version": "1.0.0",
   "scripts": {
     "build": "next build && next export",
     "dev": "next dev",
@@ -36,6 +38,5 @@
     "unist-builder": "^4.0.0",
     "unist-util-map": "^4.0.0",
     "unist-util-visit": "^5.0.0"
-  },
-  "packageManager": "yarn@3.2.1"
+  }
 }

@@ -1,6 +1,7 @@
 {
   "name": "guythomas.me",
-  "packageManager": "yarn@3.2.1",
+  "packageManager": "yarn@1.22.21",
+  "version": "1.0.0",
   "private": true,
   "workspaces": [
     "packages/*"
