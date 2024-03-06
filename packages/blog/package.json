@@ -4,7 +4,7 @@
   "packageManager": "yarn@1.22.21",
   "version": "1.0.0",
   "scripts": {
-    "build": "next build && next export",
+    "build": "next build",
     "dev": "next dev",
     "start": "next start",
     "generate-resume": "node ./print-pdf.js",
