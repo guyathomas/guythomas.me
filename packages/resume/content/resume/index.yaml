@@ -27,7 +27,7 @@ experience:
     title: Senior Software Engineer
     details: !markdown |
       * Led 4 engineers to build complex insurance form flows with X-state to improve adjuster processing times.
-      * Built Cypress plugins to cache and replay E2E responses, resulting in an 95% reduction in CI E2E test duration.
+      * Built Cypress plugins to cache and replay E2E responses, resulting in a 95% reduction in CI E2E test duration.
   - date: 26th June, 2017 – 31st January, 2019
     company: Reflektive
     title: Software Engineer
