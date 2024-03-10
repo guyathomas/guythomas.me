@@ -23,7 +23,7 @@
     "clean": "gatsby clean",
     "dev": "gatsby develop",
     "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1",
-    "generate-resume": "ts-node ./generate-resume.js",
+    "print": "ts-node ./generate-resume.ts",
     "develop-network": "gatsby develop -H 0.0.0.0 -p 8000",
     "format": "prettier --write \"**/*.{js,jsx,json,md}\"",
     "lint": "eslint . --ext ts --ext tsx",
