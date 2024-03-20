@@ -15,7 +15,7 @@ jobs:
       - run: yarn workspace resume run build
       - run: yarn workspace resume run start &>/dev/null &
       - run: PORT=9000 yarn workspace resume run print
-      - uses: stefanzweifel/git-auto-commit-action@v4
+      - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: github-action/create-resume-pdf
           file_pattern: packages/resume/public/resume/**.pdf
