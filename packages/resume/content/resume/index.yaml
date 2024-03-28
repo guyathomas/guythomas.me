@@ -16,8 +16,8 @@ experience:
     company: Instacart
     title: Engineering Manager
     details: !markdown |
-      * Led a team of 9 engineers within the growth team to develop multi-channel, self-serve in-app messaging components..
-      * These components ( i.e. modals, banners, and eyebrow banners ) powered 1,000+ experiments and contributed to a growth of over 10,000 monthly active users (MAUs).
+      * Led a team of 9 engineers within the growth team to develop multi-channel, self-serve in-app messaging components.
+      * These components ( modals, banners, tooltips, etc.. ) powered 1,000+ experiments and contributed to a growth of over 10,000 monthly active users.
   - date: 10th May, 2021 – 2nd January, 2022
     title: Senior Software Engineer II
     details: !markdown |
@@ -49,7 +49,7 @@ education:
     subtitle: React / Typescript / NextJS / PostgreSQL
     details: !markdown |
       * An e-commerce platform that is custom to the sale of Curtains & Blinds.
-      * It extends a framework called [MedusaJS](https://medusajs.com/) to provide checkout and order management.
+      * It extends the [MedusaJS](https://medusajs.com/) framework to provide checkout and order management.
 skills: !markdown |
   **Languages:** HTML, CSS, JavaScript, TypeScript, GraphQL
 
