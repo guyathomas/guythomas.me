@@ -1,7 +1,7 @@
 ---
 title: Analogue Clock
 date: "2021-02-01T00:00:00.000Z"
-draft: false
+draft: true
 description: Create a real-time analogue clock
 tags:
   - interview

@@ -1,7 +1,7 @@
 ---
 title: Realities of the nomad life
 date: "2021-08-03T20:39:13.695Z"
-draft: false
+draft: true
 description: "Working remotely has some huge obvious advantages but in this post we explore the more hidden realities of not being bound to one location."
 tags:
   - remote work
