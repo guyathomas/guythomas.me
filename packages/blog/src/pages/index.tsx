@@ -53,6 +53,7 @@ const Home: React.FC<HomeProps> = ({ allPostsData }) => {
       <div className={cx("p-4", styles.recentPosts)}>
         <SectionTitle>Recent Posts</SectionTitle>
         <ul className="pl-0">
+          <div>🚧 I'm pivoting the content of this blog, and I've archived all previous posts. Stay tuned for updates! 🚧</div>
           {filteredPostData.map(({ id, date, title, description }) => (
             <li key={id} className="list-none pl-0">
               <PostSummary
