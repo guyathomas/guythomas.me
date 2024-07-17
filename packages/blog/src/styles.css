@@ -1,7 +1,0 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-:root {
-  --current-screen-prowse: calc(min(100%, 65ch) + var(--container-padding) * 2);
-}
