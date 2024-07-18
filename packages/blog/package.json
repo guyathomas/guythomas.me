@@ -1,6 +1,7 @@
 {
-  "name": "tailwindui-template",
-  "version": "0.1.0",
+  "name": "blog",
+  "version": "1.0.0",
+  "packageManager": "yarn@1.22.21",
   "private": true,
   "scripts": {
     "dev": "next dev",

@@ -3,7 +3,7 @@
   "name": "resume",
   "packageManager": "yarn@1.22.21",
   "version": "1.0.0",
-  "description": "My personal blog and portfolio site",
+  "description": "My resume",
   "keywords": [
     "gatsby"
   ],
