@@ -33,10 +33,7 @@ A resume that can be configured with a simple `YAML` file. A PDF version is down
 
 ## TODO:
 
-- [This Blog](https://joshwcomeau.com/gatsby/) has some great ideas
-  - Table of contents on the right for desktop
-- Resume
-  - Include bookList
+- [ ] Migrate to Remix.run + TailwindCSS
 
 ### Arch
 
