@@ -8,6 +8,8 @@ contact:
     value: !markdown "[guythomas.me@gmail.com](mailto:guythomas.me@gmail.com)"
   - title: Location
     value: !markdown "New York"
+  - title: Phone
+    value: !markdown "[415 200 8333](tel:+1-555-555-5555)"
   - title: Web
     value: !markdown "[guythomas.me](https://guythomas.me)"
 intro: !markdown I'm a [hands-on](https://newsletter.pragmaticengineer.com/p/staying-hands-on) technical leader with a passion for solving complex engineering problems, leading high performing teams & consistently seeking new avenues of growth.
