@@ -190,6 +190,7 @@ export const ContactValue = styled.span`
   @media print {
     p {
       margin-bottom: 0;
+      font-size: 0.8rem;
     }
   }
 `
