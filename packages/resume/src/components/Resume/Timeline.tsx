@@ -1,7 +1,9 @@
 import React from "react"
-
+import dayjs from "dayjs"
+import customParseFormat from "dayjs/plugin/customParseFormat"
 import styled from "@emotion/styled"
 import { DESKTOP } from "./constants"
+
 
 interface TimelineProps {
   title?: string
@@ -9,6 +11,8 @@ interface TimelineProps {
   company?: string
   details?: string
 }
+
+dayjs.extend(customParseFormat)
 
 const TimelineOuter = styled.div`
   position: relative;
@@ -75,12 +79,22 @@ const TimelineDetailsContent = styled.div`
   }
 `
 
+const getDateText = (date: string) => {
+  const parsedDate = dayjs(date, 'Do MMMM, YYYY')
+  if (parsedDate.isValid()) {
+    return parsedDate.format('MMM YYYY')
+  }
+  return date
+}
+
 const Timeline: React.FC<TimelineProps> = ({
   date,
   company,
   title,
   details,
 }) => {
+  const [start, end] = (date || "").split(" – ")
+
   return (
     <TimelineOuter>
       <TimelineTitles>
@@ -88,7 +102,9 @@ const Timeline: React.FC<TimelineProps> = ({
           <TimelineCompany dangerouslySetInnerHTML={{ __html: company }} />
         )}
         {title && <TimelineTitle dangerouslySetInnerHTML={{ __html: title }} />}
-        {date && <TimelineDate>{date}</TimelineDate>}
+        <TimelineDate>
+          {`${getDateText(start)} - ${getDateText(end)}`}
+        </TimelineDate>
       </TimelineTitles>
       <TimelineDetails>
         {details && (

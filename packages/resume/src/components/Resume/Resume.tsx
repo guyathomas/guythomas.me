@@ -121,12 +121,12 @@ const Resume: React.FC<{
             </Contacts>
           </Bio>
         </BioWrapper>
-        <IntroTitle>Intro</IntroTitle>
+        {/* <IntroTitle>Intro</IntroTitle>
         <IntroContent>
           <SectionContentInner
             dangerouslySetInnerHTML={{ __html: resumeData.intro?.html! }}
           />
-        </IntroContent>
+        </IntroContent> */}
         <ExperienceTitle>Experience</ExperienceTitle>
         <ExperienceSection>
           <SectionContentInner>
