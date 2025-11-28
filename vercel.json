@@ -1,0 +1,5 @@
+{
+  "installCommand": "node .yarn/releases/yarn-4.7.0.cjs install",
+  "buildCommand": "node .yarn/releases/yarn-4.7.0.cjs build",
+  "outputDirectory": "dist"
+}
