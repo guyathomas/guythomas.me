@@ -47,13 +47,6 @@ const resume = yaml.load(resumeFile) as any;
           website={resume.header.website}
         />
 
-        <!-- Professional Summary -->
-        <ResumeSection title="Professional Summary" className="mt-8">
-          <p class="text-gray-600 print:text-gray-600 leading-relaxed">
-            {resume.summary}
-          </p>
-        </ResumeSection>
-
         <!-- Experience -->
         <ResumeSection title="Experience" className="mt-8">
           <div class="space-y-6">
@@ -106,14 +99,29 @@ const resume = yaml.load(resumeFile) as any;
 
   printBtn?.addEventListener('click', () => {
     printBtn.setAttribute('disabled', 'true');
-    resumeContainer?.style.setProperty('transform', 'translateY(-120%)');
 
+    // Phase 1: Lift off the surface
+    resumeContainer?.style.setProperty('transition', 'transform 0.3s ease-out, box-shadow 0.3s ease-out');
+    resumeContainer?.style.setProperty('transform', 'scale(1.02) translateY(-10px)');
+    resumeContainer?.style.setProperty('box-shadow', '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 40px 60px -15px rgba(0, 0, 0, 0.15)');
+
+    // Phase 2: Slide upwards
     setTimeout(() => {
+      resumeContainer?.style.setProperty('transition', 'transform 0.5s ease-in');
+      resumeContainer?.style.setProperty('transform', 'scale(1.02) translateY(-120%)');
+    }, 300);
+
+    // Reset and print
+    setTimeout(() => {
+      resumeContainer?.style.setProperty('transition', 'none');
       resumeContainer?.style.setProperty('transform', 'translateY(0)');
-      printBtn.removeAttribute('disabled');
+      resumeContainer?.style.setProperty('box-shadow', '');
+
       requestAnimationFrame(() => {
+        resumeContainer?.style.setProperty('transition', 'transform 0.5s ease-out, box-shadow 0.3s ease-out');
+        printBtn.removeAttribute('disabled');
         window.print();
       });
-    }, 500);
+    }, 800);
   });
 </script>
