@@ -10,6 +10,8 @@
 
 # production
 /build
+/dist
+/.astro
 
 # misc
 .DS_Store
@@ -28,3 +30,9 @@ yarn-error.log*
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+.pnp.cjs
+.pnp.loader.mjs
+
+# local tool configs
+.claude/
+.playwright-mcp/
