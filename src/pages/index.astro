@@ -62,31 +62,33 @@ const resume = yaml.load(resumeFile) as any;
           </div>
         </ResumeSection>
 
-        <!-- Projects -->
-        <ResumeSection title="Projects" className="mt-8">
-          <div class="space-y-4">
-            {resume.projects.map((project: any) => (
-              <EducationItem
-                name={project.name}
-                url={project.url}
-                technologies={project.technologies}
-                description={project.description}
-              />
-            ))}
-          </div>
-        </ResumeSection>
+        {resume.projects && (
+          <ResumeSection title="Projects" className="mt-8">
+            <div class="space-y-4">
+              {resume.projects.map((project: any) => (
+                <EducationItem
+                  name={project.name}
+                  url={project.url}
+                  technologies={project.technologies}
+                  description={project.description}
+                />
+              ))}
+            </div>
+          </ResumeSection>
+        )}
 
-        <!-- Skills -->
-        <ResumeSection title="Skills" className="mt-8">
-          <div class="text-gray-600 leading-relaxed">
-            <p class="mb-3">
-              <span class="text-gray-900">Languages:</span> {resume.skills.languages}
-            </p>
-            <p>
-              <span class="text-gray-900">Technologies:</span> {resume.skills.technologies}
-            </p>
-          </div>
-        </ResumeSection>
+        {resume.skills && (
+          <ResumeSection title="Skills" className="mt-8">
+            <div class="text-gray-600 leading-relaxed">
+              <p class="mb-3">
+                <span class="text-gray-900">Languages:</span> {resume.skills.languages}
+              </p>
+              <p>
+                <span class="text-gray-900">Technologies:</span> {resume.skills.technologies}
+              </p>
+            </div>
+          </ResumeSection>
+        )}
       </div>
     </div>
   </div>
