@@ -1,0 +1,119 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ResumeHeader from '../components/ResumeHeader.astro';
+import ResumeSection from '../components/ResumeSection.astro';
+import ExperienceItem from '../components/ExperienceItem.astro';
+import EducationItem from '../components/EducationItem.astro';
+import yaml from 'js-yaml';
+import fs from 'node:fs';
+import path from 'node:path';
+
+// Load YAML at build time
+const resumePath = path.join(process.cwd(), 'src/data/resume.yaml');
+const resumeFile = fs.readFileSync(resumePath, 'utf8');
+const resume = yaml.load(resumeFile) as any;
+---
+
+<Layout title={`${resume.header.name} - Resume`}>
+  <div class="min-h-screen bg-gradient-to-br from-gray-100 via-gray-50 to-slate-100 print:bg-white overflow-hidden">
+    <!-- Print Button -->
+    <div class="print:hidden fixed top-6 right-6 z-10">
+      <button
+        id="print-btn"
+        class="flex items-center gap-2 bg-white text-gray-900 px-5 py-2.5 rounded-full border border-gray-900 hover:bg-gray-900 hover:text-white transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 6 2 18 2 18 9"></polyline>
+          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+          <rect width="12" height="8" x="6" y="14"></rect>
+        </svg>
+        Print / Save as PDF
+      </button>
+    </div>
+
+    <!-- Resume Container -->
+    <div
+      id="resume-container"
+      class="max-w-[8.5in] mx-auto bg-white shadow-2xl print:shadow-none print:bg-white print:my-0 transition-transform duration-500 ease-out"
+    >
+      <div class="px-12 pt-8 pb-12 print:p-12">
+        <!-- Header -->
+        <ResumeHeader
+          name={resume.header.name}
+          title={resume.header.title}
+          email={resume.header.email}
+          phone={resume.header.phone}
+          location={resume.header.location}
+          website={resume.header.website}
+        />
+
+        <!-- Professional Summary -->
+        <ResumeSection title="Professional Summary" className="mt-8">
+          <p class="text-gray-600 print:text-gray-600 leading-relaxed">
+            {resume.summary}
+          </p>
+        </ResumeSection>
+
+        <!-- Experience -->
+        <ResumeSection title="Experience" className="mt-8">
+          <div class="space-y-6">
+            {resume.experience.map((job: any) => (
+              <ExperienceItem
+                title={job.title}
+                company={job.company}
+                location={job.location}
+                date={job.date}
+                achievements={job.achievements}
+              />
+            ))}
+          </div>
+        </ResumeSection>
+
+        <!-- Projects -->
+        <ResumeSection title="Projects" className="mt-8">
+          <div class="space-y-4">
+            {resume.projects.map((project: any) => (
+              <EducationItem
+                name={project.name}
+                url={project.url}
+                technologies={project.technologies}
+                description={project.description}
+              />
+            ))}
+          </div>
+        </ResumeSection>
+
+        <!-- Skills -->
+        <ResumeSection title="Skills" className="mt-8">
+          <div class="text-gray-600 leading-relaxed">
+            <p class="mb-3">
+              <span class="text-gray-900">Languages:</span> {resume.skills.languages}
+            </p>
+            <p>
+              <span class="text-gray-900">Technologies:</span> {resume.skills.technologies}
+            </p>
+          </div>
+        </ResumeSection>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+
+<script>
+  const printBtn = document.getElementById('print-btn');
+  const resumeContainer = document.getElementById('resume-container');
+
+  printBtn?.addEventListener('click', () => {
+    printBtn.setAttribute('disabled', 'true');
+    resumeContainer?.style.setProperty('transform', 'translateY(-120%)');
+
+    setTimeout(() => {
+      resumeContainer?.style.setProperty('transform', 'translateY(0)');
+      printBtn.removeAttribute('disabled');
+      requestAnimationFrame(() => {
+        window.print();
+      });
+    }, 500);
+  });
+</script>

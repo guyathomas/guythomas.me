@@ -1,1 +1,0 @@
-export { regenerateStyles } from "./typography"

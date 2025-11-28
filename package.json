@@ -1,18 +1,24 @@
 {
-  "name": "guythomas.me",
-  "packageManager": "yarn@1.22.21",
-  "version": "1.0.0",
+  "name": "guythomas-resume",
+  "version": "0.1.0",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
-  "scripts": {
-    "dev": "yarn workspaces foreach -ipv run dev"
+  "type": "module",
+  "engines": {
+    "node": ">=24"
   },
-  "devDependencies": {
-    "typescript": "^5.2.2"
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
   },
   "dependencies": {
-    "@svgr/webpack": "^8.1.0"
-  }
+    "@astrojs/tailwind": "^6.0.2",
+    "astro": "^5.16.2",
+    "js-yaml": "^4.1.1"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "tailwindcss": "^3.4.0"
+  },
+  "packageManager": "yarn@4.12.0"
 }
