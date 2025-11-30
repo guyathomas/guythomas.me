@@ -12,20 +12,18 @@ experience:
     location: San Francisco, CA
     date: Oct 2024 - Present
     achievements:
-      - Led core product squad growing BI penetration 200% YOY through strategic feature development
-      - Innovated AI text aggregation functions and 3 features with patents pending
-      - Managed cross-functional collaboration between product, design, and engineering teams
-      - Mentored engineering team while maintaining hands-on technical contributions
+      - Led 2 teams, totalling 10 engineers to build a variety of 0-1 and legacy products
+      - One of the a 0-1 products created a brand new revenue stream, bringing in $1m yearly in revenue + contract impact
+      - Doubled ARR of a new product workstream YoY from $5m > $20m ARR
+      - Two patents pending for novel ways for exploring data in pivot tables & query changes
 
   - title: Engineering Manager
     company: Instacart
     location: San Francisco, CA
     date: Jan 2022 - Feb 2024
     achievements:
-      - Led team of 9 engineers building messaging components that powered 1,000+ experiments and 10,000+ MAU
-      - Architected scalable messaging infrastructure supporting A/B testing framework across product teams
-      - Established engineering best practices that improved team velocity by 30%
-      - Collaborated with data science and product teams to optimize experiment design
+      - Led team of 9 engineers building a full-stack content & targeting system that powered 1,000+ experiments and 10,000+ MAU
+      - Architected scalable infrastructure supporting A/B testing framework across product teams
 
   - title: Senior Software Engineer II
     company: Instacart
@@ -33,9 +31,6 @@ experience:
     date: May 2021 - Jan 2022
     achievements:
       - Led team of 5 engineers building full-stack framework for promotional awareness
-      - Implemented React/TypeScript frontend with Python backend for promotional campaigns
-      - Reduced promotional content management time by 60% through self-service tooling
-      - Conducted technical design reviews and mentored junior engineers
 
   - title: Senior Software Engineer
     company: Lyft
@@ -43,9 +38,6 @@ experience:
     date: Apr 2019 - May 2021
     achievements:
       - Led team of 4 building insurance adjustment flows with React/TypeScript/Python processing 10,000+ claims annually
-      - Improved E2E test speed by 75% through custom Cypress plugins for API response caching
-      - Architected scalable microservices infrastructure for complex insurance workflows
-      - Collaborated with legal and operations teams ensuring compliance across multiple states
 
   - title: Software Engineer
     company: Reflektive
@@ -53,16 +45,10 @@ experience:
     date: Jun 2017 - Jan 2019
     achievements:
       - Built complex form flows with React & Redux for performance management products
-      - Implemented validation patterns reducing form abandonment by 40%
-      - Developed reusable component library used across 5+ product teams
-      - Contributed to code reviews and technical documentation for frontend architecture
 
   - title: Software Engineer
     company: IBM
     location: New York, NY
     date: Jul 2014 - Jun 2016
     achievements:
-      - Rapidly developed 20+ client-facing micro-sites with jQuery for bids & pitches
-      - Collaborated with design and sales teams delivering custom web experiences under tight deadlines
-      - Implemented front-end build processes using Gulp and Webpack
-      - Contributed to internal UI toolkit standardizing components across consulting projects
+      - Developed 20+ client-facing micro-sites with jQuery for rapid pitches and proposals

@@ -15,7 +15,7 @@ const resume = yaml.load(resumeFile) as any;
 ---
 
 <Layout title={`${resume.header.name} - Resume`}>
-  <div class="min-h-screen bg-gradient-to-br from-gray-100 via-gray-50 to-slate-100 dark:from-neutral-900 dark:via-neutral-900 dark:to-neutral-950 print:bg-white overflow-hidden transition-colors">
+  <div class="min-h-screen bg-gradient-to-br print:bg-none from-gray-100 via-gray-50 to-slate-100 dark:from-neutral-900 dark:via-neutral-900 dark:to-neutral-950 print:bg-white overflow-hidden transition-colors">
     <!-- Control Buttons -->
     <div class="print:hidden fixed top-4 right-4 sm:top-6 sm:right-6 z-10 flex gap-2 sm:gap-3">
       <!-- Theme Toggle -->
@@ -60,7 +60,7 @@ const resume = yaml.load(resumeFile) as any;
       id="resume-container"
       class="max-w-full md:max-w-[8.5in] mx-auto bg-white dark:bg-neutral-800 shadow-2xl print:shadow-none print:bg-white print:my-0 transition-all duration-500 ease-out dark:shadow-neutral-950/50"
     >
-      <div class="px-6 pt-6 pb-8 sm:px-8 md:px-12 md:pt-8 md:pb-12 print:p-12">
+      <div class="px-6 pt-6 pb-8 sm:px-8 md:px-12 md:pt-8 md:pb-12 print:px-12 print:pt-8 print:pb-8">
         <!-- Header -->
         <ResumeHeader
           name={resume.header.name}
@@ -72,8 +72,8 @@ const resume = yaml.load(resumeFile) as any;
         />
 
         <!-- Experience -->
-        <ResumeSection title="Experience" className="mt-8">
-          <div class="space-y-6">
+        <ResumeSection title="Experience" className="mt-8 print:mt-6">
+          <div class="space-y-6 print:space-y-4">
             {resume.experience.map((job: any) => (
               <ExperienceItem
                 title={job.title}
