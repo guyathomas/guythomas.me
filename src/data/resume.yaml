@@ -1,6 +1,6 @@
 header:
   name: Guy Thomas
-  title: Software Engineer & Leader
+  title: Engineering Manager
   email: guythomas.me@gmail.com
   phone: "415 200 8333"
   location: New York
@@ -8,47 +8,51 @@ header:
 
 experience:
   - title: Engineering Manager
-    company: Sigma
-    location: San Francisco, CA
+    company: Sigma Computing
+    location: New York, NY
     date: Oct 2024 - Present
     achievements:
-      - Led 2 teams, totalling 10 engineers to build a variety of 0-1 and legacy products
-      - One of the a 0-1 products created a brand new revenue stream, bringing in $1m yearly in revenue + contract impact
-      - Doubled ARR of a new product workstream YoY from $5m > $20m ARR
-      - Two patents pending for novel ways for exploring data in pivot tables & query changes
+      - "Lead 2 teams of *10 engineers* delivering 0-1 products and scaling legacy systems"
+      - "Grew product *ARR 10x* YoY ($1M to $10M); launched revenue stream generating $1M+ in 6 months"
+      - "Hands-on contributor to critical features; promoted 2 engineers"
+      - "*2 patents pending* for novel data exploration in pivot tables and query optimization"
 
   - title: Engineering Manager
     company: Instacart
     location: San Francisco, CA
     date: Jan 2022 - Feb 2024
     achievements:
-      - Led team of 9 engineers building a full-stack content & targeting system that powered 1,000+ experiments and 10,000+ MAU
-      - Architected scalable infrastructure supporting A/B testing framework across product teams
+      - "Led *9 engineers* building content and targeting platform powering thousands of experiments"
+      - "Architected A/B testing infrastructure for marketing campaigns, enabling self-serve workflows"
+      - "Grew team from 5 to 9 engineers; developed 1 to promotion with zero regrettable attrition"
 
   - title: Senior Software Engineer II
     company: Instacart
     location: San Francisco, CA
     date: May 2021 - Jan 2022
     achievements:
-      - Led team of 5 engineers building full-stack framework for promotional awareness
+      - "Led *5 engineers* building promotional awareness framework, increasing campaign visibility 40%"
+      - "Collaborated with Growth and Ads teams to integrate promotions into core shopping experience"
 
   - title: Senior Software Engineer
     company: Lyft
     location: San Francisco, CA
     date: Apr 2019 - May 2021
     achievements:
-      - Led team of 4 building insurance adjustment flows with React/TypeScript/Python processing 10,000+ claims annually
+      - "Led team of *4 engineers* building insurance claims platform (React/TypeScript/Python) processing 10,000+ claims annually"
+      - "Owned technical roadmap and architecture decisions for the claims adjudication workflow"
+      - "Mentored 2 junior engineers; both promoted within 12 months"
 
   - title: Software Engineer
     company: Reflektive
     location: San Francisco, CA
     date: Jun 2017 - Jan 2019
     achievements:
-      - Built complex form flows with React & Redux for performance management products
+      - "Built React/Redux performance management flows used by *500+ enterprise customers*"
 
   - title: Software Engineer
     company: IBM
     location: New York, NY
     date: Jul 2014 - Jun 2016
     achievements:
-      - Developed 20+ client-facing micro-sites with jQuery for rapid pitches and proposals
+      - "Developed 20+ client micro-sites enabling rapid enterprise sales pitches"
