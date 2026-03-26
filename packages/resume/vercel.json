@@ -1,0 +1,5 @@
+{
+  "buildCommand": "bunx turbo build --filter=@guythomas/resume",
+  "outputDirectory": "dist",
+  "installCommand": "bun install"
+}

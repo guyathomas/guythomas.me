@@ -1,0 +1,6 @@
+{
+  "buildCommand": "bunx turbo build --filter=@guythomas/blog",
+  "outputDirectory": "dist",
+  "installCommand": "bun install",
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+}

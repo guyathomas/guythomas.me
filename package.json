@@ -1,24 +1,16 @@
 {
-  "name": "guythomas-resume",
-  "version": "0.1.0",
+  "name": "guythomas-monorepo",
   "private": true,
   "type": "module",
-  "engines": {
-    "node": ">=24"
-  },
+  "workspaces": ["packages/*"],
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview"
-  },
-  "dependencies": {
-    "@astrojs/tailwind": "^6.0.2",
-    "astro": "^5.16.2",
-    "js-yaml": "^4.1.1"
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "test": "turbo test"
   },
   "devDependencies": {
-    "@types/js-yaml": "^4.0.9",
-    "tailwindcss": "^3.4.0"
+    "turbo": "^2",
+    "typescript": "^5.8"
   },
-  "packageManager": "yarn@4.7.0"
+  "packageManager": "bun@1.2.0"
 }
