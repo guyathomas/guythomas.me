@@ -5,6 +5,7 @@ header:
   phone: "415 200 8333"
   location: New York
   website: guythomas.me
+  photo: /images/resume-photo.jpg
 
 experience:
   - title: Engineering Manager
