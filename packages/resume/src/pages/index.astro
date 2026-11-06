@@ -1,180 +1,53 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import ResumeHeader from '../components/ResumeHeader.astro';
-import ResumeSection from '../components/ResumeSection.astro';
-import ExperienceItem from '../components/ExperienceItem.astro';
-import EducationItem from '../components/EducationItem.astro';
-import yaml from 'js-yaml';
-import fs from 'node:fs';
-import path from 'node:path';
-
-// Load YAML at build time
-const resumePath = path.join(process.cwd(), 'src/data/resume.yaml');
-const resumeFile = fs.readFileSync(resumePath, 'utf8');
-const resume = yaml.load(resumeFile) as any;
+const reasons = [
+  "Her kindness makes every room warmer.",
+  "She's brilliant, curious, and endlessly thoughtful.",
+  "Her laugh is the best sound in the world.",
+  "She makes hard days easier and good days better.",
+  "She's generous with her time, her heart, and her ideas.",
+  "She's beautiful, inside and out.",
+];
 ---
 
-<Layout title={`${resume.header.name} - Resume`}>
-  <div class="min-h-screen bg-gradient-to-br print:bg-none from-gray-100 via-gray-50 to-slate-100 dark:from-neutral-900 dark:via-neutral-900 dark:to-neutral-950 print:bg-white overflow-hidden transition-colors">
-    <!-- Control Buttons -->
-    <div class="print:hidden fixed top-4 right-4 sm:top-6 sm:right-6 z-10 flex gap-2 sm:gap-3">
-      <!-- Theme Toggle -->
-      <button
-        id="theme-btn"
-        class="flex items-center justify-center w-11 h-11 bg-white dark:bg-neutral-800 text-gray-900 dark:text-neutral-200 rounded-full border border-gray-900 dark:border-neutral-600 hover:bg-gray-900 hover:text-white dark:hover:bg-neutral-700 dark:hover:text-neutral-100 transition-all shadow-lg"
-        aria-label="Toggle theme"
-      >
-        <!-- Sun icon (shown in dark mode) -->
-        <svg class="hidden dark:block w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="5"></circle>
-          <line x1="12" y1="1" x2="12" y2="3"></line>
-          <line x1="12" y1="21" x2="12" y2="23"></line>
-          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-          <line x1="1" y1="12" x2="3" y2="12"></line>
-          <line x1="21" y1="12" x2="23" y2="12"></line>
-          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-        </svg>
-        <!-- Moon icon (shown in light mode) -->
-        <svg class="block dark:hidden w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-        </svg>
-      </button>
-      <!-- Print Button -->
-      <button
-        id="print-btn"
-        class="hidden sm:flex items-center gap-2 bg-white dark:bg-neutral-800 text-gray-900 dark:text-neutral-200 px-5 py-2.5 rounded-full border border-gray-900 dark:border-neutral-600 hover:bg-gray-900 hover:text-white dark:hover:bg-neutral-700 dark:hover:text-neutral-100 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="6 9 6 2 18 2 18 9"></polyline>
-          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
-          <rect width="12" height="8" x="6" y="14"></rect>
-        </svg>
-        Print / Save as PDF
-      </button>
-    </div>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Arsh Is Wonderful</title>
+    <meta name="description" content="A website dedicated to Arsh, the most wonderful person I know." />
+  </head>
+  <body>
+    <main class="praise">
+      <p class="eyebrow">A website dedicated to</p>
+      <h1>Arsh</h1>
+      <p class="lede">The most wonderful person I know.</p>
+      <ul>
+        {reasons.map((reason) => <li>{reason}</li>)}
+      </ul>
+      <p class="signoff">Arsh, you are amazing. <span aria-hidden="true">♥</span></p>
+    </main>
+  </body>
+</html>
 
-    <!-- Resume Container -->
-    <div
-      id="resume-container"
-      class="max-w-full md:max-w-[8.5in] mx-auto bg-white dark:bg-neutral-800 shadow-2xl print:shadow-none print:bg-white print:my-0 transition-all duration-500 ease-out dark:shadow-neutral-950/50"
-    >
-      <div class="px-6 pt-6 pb-8 sm:px-8 md:px-12 md:pt-8 md:pb-12 print:px-12 print:pt-8 print:pb-8">
-        <!-- Header -->
-        <ResumeHeader
-          name={resume.header.name}
-          title={resume.header.title}
-          email={resume.header.email}
-          phone={resume.header.phone}
-          location={resume.header.location}
-          website={resume.header.website}
-        />
-
-        <!-- Experience -->
-        <ResumeSection title="Experience" className="mt-8 print:mt-6">
-          <div class="space-y-6 print:space-y-4">
-            {resume.experience.map((job: any) => (
-              <ExperienceItem
-                title={job.title}
-                company={job.company}
-                location={job.location}
-                date={job.date}
-                achievements={job.achievements}
-              />
-            ))}
-          </div>
-        </ResumeSection>
-
-        {resume.projects && (
-          <ResumeSection title="Projects" className="mt-8">
-            <div class="space-y-4">
-              {resume.projects.map((project: any) => (
-                <EducationItem
-                  name={project.name}
-                  url={project.url}
-                  technologies={project.technologies}
-                  description={project.description}
-                />
-              ))}
-            </div>
-          </ResumeSection>
-        )}
-
-        {resume.skills && (
-          <ResumeSection title="Skills" className="mt-8">
-            <div class="text-gray-600 dark:text-neutral-300 print:text-gray-600 leading-relaxed">
-              <p class="mb-3">
-                <span class="text-gray-900 dark:text-neutral-100 print:text-gray-900">Languages:</span> {resume.skills.languages}
-              </p>
-              <p>
-                <span class="text-gray-900 dark:text-neutral-100 print:text-gray-900">Technologies:</span> {resume.skills.technologies}
-              </p>
-            </div>
-          </ResumeSection>
-        )}
-      </div>
-    </div>
-  </div>
-</Layout>
-
-
-<script>
-  // Theme toggle
-  const themeBtn = document.getElementById('theme-btn');
-
-  themeBtn?.addEventListener('click', () => {
-    const isDark = document.documentElement.classList.toggle('dark');
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-  });
-
-  // Listen for system preference changes
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-    // Only apply if user hasn't set a preference
-    if (!localStorage.getItem('theme')) {
-      document.documentElement.classList.toggle('dark', e.matches);
-    }
-  });
-
-  // Print functionality
-  const printBtn = document.getElementById('print-btn');
-  const resumeContainer = document.getElementById('resume-container');
-
-  printBtn?.addEventListener('click', () => {
-    printBtn.setAttribute('disabled', 'true');
-
-    // Phase 1: Lift off the surface
-    resumeContainer?.style.setProperty('transition', 'transform 0.3s ease-out, box-shadow 0.3s ease-out');
-    resumeContainer?.style.setProperty('transform', 'scale(1.02) translateY(-10px)');
-    resumeContainer?.style.setProperty('box-shadow', '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 40px 60px -15px rgba(0, 0, 0, 0.15)');
-
-    // Phase 2: Slide upwards
-    setTimeout(() => {
-      resumeContainer?.style.setProperty('transition', 'transform 0.5s ease-in');
-      resumeContainer?.style.setProperty('transform', 'scale(1.02) translateY(-120%)');
-    }, 300);
-
-    // Reset and print
-    setTimeout(() => {
-      resumeContainer?.style.setProperty('transition', 'none');
-      resumeContainer?.style.setProperty('transform', 'translateY(0)');
-      resumeContainer?.style.setProperty('box-shadow', '');
-
-      requestAnimationFrame(() => {
-        resumeContainer?.style.setProperty('transition', 'transform 0.5s ease-out, box-shadow 0.3s ease-out');
-        printBtn.removeAttribute('disabled');
-
-        // Force light mode for printing
-        const wasDark = document.documentElement.classList.contains('dark');
-        document.documentElement.classList.remove('dark');
-
-        window.print();
-
-        // Restore dark mode if it was active
-        if (wasDark) {
-          document.documentElement.classList.add('dark');
-        }
-      });
-    }, 800);
-  });
-</script>
+<style is:global>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    font-family: Georgia, "Times New Roman", serif;
+    line-height: 1.6;
+    color: #3a1f2b;
+    background: #fff5f7;
+  }
+  body {
+    min-height: 100vh;
+    background: linear-gradient(160deg, #fff5f7 0%, #ffe3ea 100%);
+  }
+  .praise { max-width: 40rem; margin: 0 auto; padding: 4rem 1rem; text-align: center; }
+  .eyebrow { text-transform: uppercase; letter-spacing: 0.15em; font-size: 0.85rem; color: #a0526d; }
+  .praise h1 { font-size: clamp(3.5rem, 15vw, 6rem); line-height: 1.1; color: #c2185b; margin: 0.5rem 0; }
+  .lede { font-size: 1.35rem; font-style: italic; margin-bottom: 2.5rem; }
+  .praise ul { list-style: none; display: grid; gap: 1rem; text-align: left; }
+  .praise li { background: #ffffffcc; border-radius: 0.75rem; padding: 1rem 1.25rem; box-shadow: 0 2px 8px #c2185b1a; }
+  .praise li::before { content: "♥"; color: #c2185b; margin-right: 0.75rem; }
+  .signoff { margin-top: 3rem; font-size: 1.25rem; color: #c2185b; }
+</style>
