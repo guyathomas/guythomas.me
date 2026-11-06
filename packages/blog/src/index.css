@@ -7,37 +7,66 @@
 }
 
 :root {
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: Georgia, "Times New Roman", serif;
   line-height: 1.6;
-  color: #1a1a1a;
-  background: #fafafa;
+  color: #3a1f2b;
+  background: #fff5f7;
 }
 
-.layout {
-  max-width: 48rem;
+body {
+  min-height: 100vh;
+  background: linear-gradient(160deg, #fff5f7 0%, #ffe3ea 100%);
+}
+
+.praise {
+  max-width: 40rem;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: 4rem 1rem;
+  text-align: center;
 }
 
-header nav {
-  display: flex;
-  gap: 1.5rem;
-  margin-bottom: 3rem;
-  border-bottom: 1px solid #e5e5e5;
-  padding-bottom: 1rem;
-}
-
-header nav a {
-  text-decoration: none;
-  color: #666;
-  font-weight: 500;
-}
-
-header nav a.active {
-  color: #1a1a1a;
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 0.85rem;
+  color: #a0526d;
 }
 
 h1 {
-  font-size: 2rem;
-  margin-bottom: 1rem;
+  font-size: clamp(3.5rem, 15vw, 6rem);
+  line-height: 1.1;
+  color: #c2185b;
+  margin: 0.5rem 0;
+}
+
+.lede {
+  font-size: 1.35rem;
+  font-style: italic;
+  margin-bottom: 2.5rem;
+}
+
+.praise ul {
+  list-style: none;
+  display: grid;
+  gap: 1rem;
+  text-align: left;
+}
+
+.praise li {
+  background: #ffffffcc;
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 2px 8px #c2185b1a;
+}
+
+.praise li::before {
+  content: "♥";
+  color: #c2185b;
+  margin-right: 0.75rem;
+}
+
+.signoff {
+  margin-top: 3rem;
+  font-size: 1.25rem;
+  color: #c2185b;
 }
