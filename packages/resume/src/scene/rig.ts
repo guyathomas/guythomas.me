@@ -1,0 +1,206 @@
+import * as THREE from 'three';
+import { HDRLoader } from 'three/examples/jsm/loaders/HDRLoader.js';
+import type { LightState } from '../light/state';
+
+/** The pattern the window throws: panes of light crossed by glazing bars, with a plant at one side. */
+function windowCookie(): THREE.CanvasTexture {
+  const size = 1024;
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = size;
+  const ctx = canvas.getContext('2d')!;
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, size, size);
+
+  const bar = (x: number, y: number, w: number, h: number, soft: number) => {
+    const steps = 14;
+    for (let i = 0; i < steps; i++) {
+      const grow = (soft * i) / steps;
+      ctx.fillStyle = `rgba(0,0,0,${0.16})`;
+      ctx.fillRect(x - grow, y - grow, w + grow * 2, h + grow * 2);
+    }
+  };
+  // Outer frame, so the pool of sun has an edge.
+  bar(0, 0, size, 60, 26);
+  bar(0, size - 60, size, 60, 26);
+  bar(0, 0, 60, size, 26);
+  bar(size - 60, 0, 60, size, 26);
+  // Glazing bars.
+  bar(size * 0.36, 0, 20, size, 12);
+  bar(size * 0.68, 0, 20, size, 12);
+  bar(0, size * 0.47, size, 24, 12);
+
+  // A pot plant on the sill: soft leaf shadows in one corner.
+  let seed = 11;
+  const random = () => {
+    seed = (seed * 16807) % 2147483647;
+    return seed / 2147483647;
+  };
+  for (let i = 0; i < 46; i++) {
+    const x = size * (0.7 + random() * 0.3);
+    const y = size * (0.5 + random() * 0.46);
+    const length = 40 + random() * 90;
+    const angle = -1.2 + random() * 1.6;
+    for (let s = 0; s < 6; s++) {
+      ctx.fillStyle = 'rgba(0,0,0,0.11)';
+      ctx.beginPath();
+      ctx.ellipse(x, y, length + s * 3, length * 0.26 + s * 3, angle, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  return texture;
+}
+
+const LAMP_COLOUR = new THREE.Color('#fff0dd');
+/** Where the lamp head sits relative to the spot it lights. */
+const LAMP_OFFSET = new THREE.Vector3(-0.25, 0.16, -0.2);
+const RAKE_OFFSET = new THREE.Vector3(-0.36, 0.055, -0.04);
+
+/**
+ * The lights: the sun through the window, the sky filling the room, the soft
+ * glow of the window itself, and one desk lamp.
+ */
+export class LightRig {
+  readonly sun = new THREE.SpotLight('#ffffff', 0, 0, 0.21, 0.35, 0);
+  readonly windowGlow = new THREE.DirectionalLight('#ffffff', 0);
+  readonly sky = new THREE.HemisphereLight('#ffffff', '#3a2a1c', 0);
+  readonly lamp = new THREE.SpotLight(LAMP_COLOUR, 0, 2.6, 0.85, 1, 2);
+  /** The desk point the lamp is aimed at. */
+  readonly lampAim = new THREE.Vector3(0, 0, 0);
+  /** A small offset added to the aim, used for the pointer's nudge. */
+  readonly lampNudge = new THREE.Vector2();
+  lampOn = false;
+  exposure = 1;
+  /** 0 is the lamp's normal height; 1 drops it almost to the desk, off to one side, to rake the light. */
+  rake = 0;
+
+  private readonly current = { sun: 0, sky: 0, lamp: 0, night: 0 };
+  private target: LightState | null = null;
+  private readonly sunDirection = new THREE.Vector3(0.3, 0.6, -0.7).normalize();
+  private readonly sunColour = new THREE.Color();
+  private readonly skyColour = new THREE.Color();
+
+  constructor(private readonly scene: THREE.Scene, private readonly renderer: THREE.WebGLRenderer) {
+    this.sun.map = windowCookie();
+    this.sun.castShadow = true;
+    this.sun.shadow.mapSize.set(2048, 2048);
+    this.sun.shadow.camera.near = 1.4;
+    this.sun.shadow.camera.far = 4.2;
+    this.sun.shadow.bias = -0.00012;
+    this.sun.shadow.normalBias = 0.0006;
+    this.sun.shadow.radius = 1.4;
+
+    this.windowGlow.position.set(-0.25, 1.1, -1.25);
+    this.windowGlow.castShadow = true;
+    this.windowGlow.shadow.mapSize.set(1024, 1024);
+    const glowCamera = this.windowGlow.shadow.camera;
+    glowCamera.left = glowCamera.bottom = -0.75;
+    glowCamera.right = glowCamera.top = 0.75;
+    glowCamera.near = 0.6;
+    glowCamera.far = 3;
+    this.windowGlow.shadow.bias = -0.0004;
+    this.windowGlow.shadow.normalBias = 0.0012;
+    this.windowGlow.shadow.radius = 7;
+
+    this.lamp.castShadow = true;
+    this.lamp.shadow.mapSize.set(2048, 2048);
+    this.lamp.shadow.camera.near = 0.06;
+    this.lamp.shadow.camera.far = 1.6;
+    this.lamp.shadow.bias = -0.00012;
+    this.lamp.shadow.normalBias = 0.0003;
+    this.lamp.shadow.radius = 3.2;
+
+    scene.add(this.sun, this.sun.target, this.windowGlow, this.windowGlow.target, this.sky, this.lamp, this.lamp.target);
+    this.place();
+  }
+
+  /** Loads the room's reflections. Brass and glass look dead without them. */
+  loadEnvironment(onChange: () => void): void {
+    new HDRLoader().load('/assets/workshop-1k.hdr', (hdr) => {
+      const pmrem = new THREE.PMREMGenerator(this.renderer);
+      this.scene.environment = pmrem.fromEquirectangular(hdr).texture;
+      // Turn the room so its windows are behind the top of the picture.
+      this.scene.environmentRotation.set(0, 2.05, 0);
+      hdr.dispose();
+      pmrem.dispose();
+      this.apply();
+      onChange();
+    });
+  }
+
+  setState(state: LightState, immediate: boolean): void {
+    this.target = state;
+    if (immediate) {
+      this.current.sun = state.sunStrength;
+      this.current.sky = state.skyStrength;
+      this.current.night = state.night;
+      this.current.lamp = this.lampLevel();
+      this.sunDirection.set(...state.sunDirection);
+      this.sunColour.setRGB(...state.sunColor);
+      this.skyColour.setRGB(...state.skyColor);
+      this.apply();
+    }
+  }
+
+  /** The lamp is a dim reading light by day and the key light at night. */
+  private lampLevel(): number {
+    if (!this.lampOn) return 0;
+    return 0.3 + 0.7 * (this.target?.night ?? 0);
+  }
+
+  /** Eases toward the target state like a dimmer. Returns true while still moving. */
+  step(dt: number): boolean {
+    const state = this.target;
+    if (!state) return false;
+    const k = 1 - Math.exp(-dt * 3.2);
+    const before = this.current.sun + this.current.sky + this.current.lamp + this.current.night;
+    this.current.sun += (state.sunStrength - this.current.sun) * k;
+    this.current.sky += (state.skyStrength - this.current.sky) * k;
+    this.current.night += (state.night - this.current.night) * k;
+    this.current.lamp += (this.lampLevel() - this.current.lamp) * k;
+    const direction = new THREE.Vector3(...state.sunDirection);
+    const turn = this.sunDirection.angleTo(direction);
+    this.sunDirection.lerp(direction, k).normalize();
+    this.sunColour.lerp(new THREE.Color().setRGB(...state.sunColor), k);
+    this.skyColour.lerp(new THREE.Color().setRGB(...state.skyColor), k);
+    this.apply();
+    const after = this.current.sun + this.current.sky + this.current.lamp + this.current.night;
+    return Math.abs(after - before) > 0.0004 || turn > 0.0008;
+  }
+
+  /** Positions the lamp and its target. Call after moving the aim. */
+  place(): void {
+    const aimX = this.lampAim.x + this.lampNudge.x;
+    const aimZ = this.lampAim.z + this.lampNudge.y;
+    this.lamp.target.position.set(aimX, 0, aimZ);
+    const offset = LAMP_OFFSET.clone().lerp(RAKE_OFFSET, this.rake);
+    this.lamp.position.set(this.lampAim.x + offset.x + this.lampNudge.x * 0.5, offset.y, this.lampAim.z + offset.z + this.lampNudge.y * 0.5);
+  }
+
+  private apply(): void {
+    const { sun, sky, lamp, night } = this.current;
+    this.sun.position.copy(this.sunDirection).multiplyScalar(2.9);
+    this.sun.target.position.set(0, 0, 0.02);
+    this.sun.color.copy(this.sunColour);
+    this.sun.intensity = 3.3 * sun;
+    this.sun.visible = sun > 0.002;
+
+    this.windowGlow.color.copy(this.skyColour);
+    // At night a little moonlight still comes through the window, cool against the lamp.
+    this.windowGlow.intensity = 1.7 * sky * (1 - 0.4 * sun) + 0.05 * night;
+    if (night > 0.5) this.windowGlow.color.setRGB(0.45, 0.58, 1.0);
+    this.windowGlow.visible = true;
+
+    this.sky.color.copy(this.skyColour);
+    this.sky.intensity = 1.25 * sky + 0.014;
+    this.scene.environmentIntensity = 0.42 * sky + 0.05 * night + 0.02;
+
+    this.lamp.intensity = 1.9 * lamp;
+    this.lamp.visible = lamp > 0.002;
+
+    // A camera would open up at night, but not all the way: night should read as night.
+    this.exposure = 0.92 + 0.3 * night * (1 - 0.6 * sky) - 0.16 * sun;
+    this.renderer.toneMappingExposure = this.exposure;
+  }
+}

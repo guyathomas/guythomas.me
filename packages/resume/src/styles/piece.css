@@ -1,0 +1,178 @@
+@import './sheet.css';
+
+html {
+  background: #5d4631;
+}
+body {
+  margin: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+  /* Stand-in for the desk until the scene is ready. */
+  background: radial-gradient(120% 90% at 30% 10%, #8a6a48 0%, #6a4f36 45%, #4a3625 100%) fixed;
+}
+
+#gl {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  touch-action: pan-y;
+  cursor: default;
+}
+.live #gl {
+  opacity: 1;
+}
+
+/* The DOM sheet is the instant first paint, the layout the rasteriser reads,
+   and afterwards the hidden semantic copy. It scrolls natively; the camera
+   follows the scroll. */
+#stage {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding: 9vh 0 16vh;
+  pointer-events: none;
+}
+#stage .sheet {
+  zoom: var(--s, 1);
+  box-shadow:
+    0 1px 1px rgb(20 12 4 / 0.5),
+    6px 14px 30px -8px rgb(20 12 4 / 0.55);
+  transition: opacity 0.5s ease;
+}
+.live #stage .sheet {
+  opacity: 0;
+}
+#back-copy {
+  position: absolute;
+  left: -200vw;
+  top: 0;
+}
+#back-copy .sheet {
+  zoom: var(--s, 1);
+}
+.desk-view {
+  overflow: hidden;
+}
+
+/* Quiet controls */
+#ui {
+  position: fixed;
+  left: 22px;
+  bottom: 18px;
+  right: 22px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 22px;
+  font-family: 'EBG SC', Georgia, serif;
+  font-size: 13.5px;
+  letter-spacing: 0.14em;
+  color: rgb(246 236 214 / 0.62);
+  text-shadow: 0 1px 2px rgb(0 0 0 / 0.55);
+  opacity: 0;
+  transition: opacity 0.8s ease 0.4s;
+  pointer-events: none;
+}
+.live #ui {
+  opacity: 1;
+}
+#ui > * {
+  pointer-events: auto;
+}
+#ui button,
+#ui a {
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  text-shadow: inherit;
+  background: none;
+  border: 0;
+  padding: 6px 0;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+#ui button:hover,
+#ui a:hover,
+#ui button:focus-visible,
+#ui a:focus-visible {
+  color: rgb(255 248 230 / 0.98);
+  outline: none;
+}
+#ui button[aria-checked='true'],
+#ui button[aria-pressed='true'] {
+  color: rgb(255 248 230 / 0.98);
+  box-shadow: 0 1px 0 rgb(255 248 230 / 0.6);
+}
+#ui .modes {
+  display: flex;
+  gap: 12px;
+}
+#ui .spacer {
+  flex: 1;
+}
+
+#hint {
+  position: fixed;
+  left: 22px;
+  top: 16px;
+  margin: 0;
+  font-family: 'EBG Italic', Georgia, serif;
+  font-size: 16px;
+  color: rgb(246 236 214 / 0.72);
+  text-shadow: 0 1px 2px rgb(0 0 0 / 0.55);
+  opacity: 0;
+  transition: opacity 1.2s ease;
+  pointer-events: none;
+}
+.live #hint {
+  opacity: 1;
+  transition-delay: 0.9s;
+}
+.live #hint.done {
+  opacity: 0;
+  transition-delay: 0s;
+}
+
+.grip {
+  position: fixed;
+  width: 64px;
+  height: 64px;
+  margin: -32px 0 0 -32px;
+  touch-action: none;
+  display: none;
+}
+.touch .grip {
+  display: block;
+}
+
+@media (max-width: 699px) {
+  #ui {
+    left: 12px;
+    right: 12px;
+    bottom: 8px;
+    font-size: 12px;
+    gap: 0 14px;
+  }
+  #hint {
+    left: 12px;
+    top: 8px;
+    font-size: 14px;
+  }
+  #stage {
+    padding: 44px 0 110px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #gl,
+  #stage .sheet,
+  #ui,
+  #hint {
+    transition-duration: 0.01s;
+  }
+}
