@@ -95,4 +95,31 @@ describe('SheetHandling', () => {
     expect(sheet.curl).toBeNull();
     expect(handling.phase).toBe('rest');
   });
+
+  it('turns a long narrow slip over on a pull of half its width', () => {
+    const material = new THREE.MeshBasicMaterial();
+    const sheet = new SheetBody(0.098, 0.5, 0.0009, material, material, material);
+    const handling = new SheetHandling(sheet, { moved: () => {}, slide: () => {}, flick: () => {}, slap: () => {} }, false);
+    const [x, z] = sheet.cornerWorld(1);
+    handling.beginCurl(1);
+    handling.moveCurl(x - 0.035, z + 0.035);
+    run(handling, 0.5);
+    expect(handling.phase).toBe('curl');
+    handling.endCurl();
+    run(handling, 3);
+    expect(handling.frontUp).toBe(false);
+    expect(sheet.pose.cx).toBeCloseTo(0, 6);
+  });
+
+  it('lands the right way up even when a corner is pulled mostly down the sheet', () => {
+    const { sheet, handling } = make();
+    const [x, z] = sheet.cornerWorld(1);
+    handling.beginCurl(1);
+    handling.moveCurl(x - 0.05, z + 0.16);
+    run(handling, 4);
+    expect(handling.frontUp).toBe(false);
+    // The top edge is still the top edge: only left and right have changed places.
+    expect(sheet.pose.d).toBeCloseTo(1, 6);
+    expect(sheet.pose.a).toBeCloseTo(-1, 6);
+  });
 });

@@ -2,7 +2,7 @@
 // usage: node tools/shot.mjs <path?query> <out.png> [--size 1920x1080] [--dpr 1]
 //        [--clip x,y,w,h] [--wait ms] [--steps '<json>'] [--mobile]
 // steps: [{"move":[x,y]},{"down":1},{"up":1},{"drag":[[x,y],[x,y]],"ms":600},
-//         {"key":"f"},{"dbl":[x,y]},{"scroll":400},{"wait":300},{"shot":"file.png"},{"eval":"js"}]
+//         {"key":"f"},{"dbl":[x,y]},{"touch":[[x,y],[x,y]],"ms":400},{"tap":[x,y]},{"scroll":400},{"wait":300},{"shot":"file.png"},{"eval":"js"}]
 import { chromium } from 'playwright-core';
 
 const args = process.argv.slice(2);
@@ -65,6 +65,22 @@ for (const step of steps) {
   if (step.wheel) await page.mouse.wheel(0, step.wheel);
   if (step.click) await page.mouse.click(step.click[0], step.click[1]);
   if (step.dbl) await page.mouse.dblclick(step.dbl[0], step.dbl[1]);
+  if (step.touch) {
+    // A finger dragged through the given points (needs --mobile).
+    const cdp = await context.newCDPSession(page);
+    const pts = step.touch;
+    const at = (p) => [{ x: p[0], y: p[1] }];
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: at(pts[0]) });
+    for (let i = 1; i < pts.length; i++) {
+      for (let k = 1; k <= 10; k++) {
+        const p = [pts[i - 1][0] + ((pts[i][0] - pts[i - 1][0]) * k) / 10, pts[i - 1][1] + ((pts[i][1] - pts[i - 1][1]) * k) / 10];
+        await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: at(p) });
+        await page.waitForTimeout((step.ms ?? 400) / (10 * (pts.length - 1)));
+      }
+    }
+    if (!step.hold) await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+  }
+  if (step.tap) await page.touchscreen.tap(step.tap[0], step.tap[1]);
   if (step.eval) console.log('eval:', JSON.stringify(await page.evaluate(step.eval)));
   if (step.wait) await page.waitForTimeout(step.wait);
   if (step.shot) await page.screenshot({ path: step.shot, clip: clipOf(step.clip) });

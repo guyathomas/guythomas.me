@@ -28,6 +28,8 @@ export function printSheet(renderer: THREE.WebGLRenderer, front: HTMLElement, ba
   const anisotropy = renderer.capabilities.getMaxAnisotropy();
   // Phones get a narrower slip, so fewer texels still resolve the type.
   const frontRaster = rasterizeSheet(front, Math.min(narrow ? 1536 : 4096, limit), Math.min(8192, limit));
+  // Both faces are the same piece of paper: the back is as tall as the front turned out.
+  back.style.minHeight = `${frontRaster.sheetHeight}px`;
   const backRaster = rasterizeSheet(back, Math.min(narrow ? 1024 : 2048, limit), Math.min(4096, limit));
 
   const size = new THREE.Vector2(frontRaster.sheetWidth * METRES_PER_SHEET_PX, frontRaster.sheetHeight * METRES_PER_SHEET_PX);

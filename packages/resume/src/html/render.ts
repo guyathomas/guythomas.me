@@ -49,7 +49,13 @@ export function renderFront(resume: Resume): string {
   </article>`;
 }
 
-/** The back of the sheet. Nothing is printed on it; what happens there is drawn in pencil. */
+/**
+ * The back of the sheet. On a desk nothing is printed on it; what happens
+ * there is drawn in pencil. Where the window has no room for the pencil, as
+ * on a phone, it carries a note instead (shown by the stylesheet).
+ */
 export function renderBack(): string {
-  return '<article class="sheet sheet-back" id="sheet-back" aria-hidden="true"></article>';
+  return `<article class="sheet sheet-back" id="sheet-back" aria-hidden="true">
+    <p class="back-note"><span class="ornament" data-ink="2">❧</span>There is a game on this side, played with a pencil. It wants a bigger desk than this one.</p>
+  </article>`;
 }

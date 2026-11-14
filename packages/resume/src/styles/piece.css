@@ -128,16 +128,42 @@ body {
   display: block;
 }
 
-@media (max-width: 699px) {
+/* Where the sheet is as wide as the window it runs under the controls, so they sit on a strip of shadow of their own. */
+@media (max-width: 1099px) {
   #ui {
-    left: 12px;
-    right: 12px;
-    bottom: 8px;
-    font-size: 12px;
-    gap: 0 14px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 26px 14px calc(8px + env(safe-area-inset-bottom));
+    gap: 0 18px;
+    justify-content: center;
+    color: rgb(246 236 214 / 0.86);
+    background: linear-gradient(to top, rgb(28 19 12 / 0.94) 0%, rgb(28 19 12 / 0.86) 58%, rgb(28 19 12 / 0) 100%);
+  }
+  #ui button,
+  #ui a {
+    padding: 9px 0;
+  }
+  #ui .spacer {
+    display: none;
   }
   #stage {
-    padding: 44px 0 110px;
+    padding-bottom: 130px;
+  }
+}
+
+/* A phone: no desk to stand back from, and no objects to make a sound. */
+@media (max-width: 699px) {
+  #ui {
+    font-size: 12px;
+    gap: 0 16px;
+  }
+  #btn-view,
+  #btn-sound {
+    display: none;
+  }
+  #stage {
+    padding-top: 44px;
   }
 }
 

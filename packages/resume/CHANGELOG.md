@@ -14,6 +14,7 @@ Complete rewrite as "Living paper": the resume as a letterpress sheet on a desk.
 - A marble run on the back of the sheet, drawn in pencil: draw ramps, let the marble go, collect all three stars in one run. Eight pages, each scored in stars (out of three) and points (out of 100) by how little line it took.
 - An eraser on the desk: pick it up and rub with its end to take out the pencil under it. The pencil's rubber end does the same (`E`, or the right mouse button).
 - No hint text: a pencilled "PTO" at the foot of the sheet and a draught that lifts its corner once say that it turns over.
+- Phones and narrow windows: the controls sit on their own strip, clear of the text, with larger touch targets; the back carries a note in place of the game; a corner needs a shorter pull to turn the slip over.
 - A Print control; `Cmd/Ctrl+P` prints the plain copy rather than the scene.
 - Lighting modes: day, night, and auto, which follows the viewer's real sun.
 - `/api/geo`, returning a coarse location from Vercel's request headers for auto lighting.

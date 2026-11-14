@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { CornerDraught } from './app/ear';
-import { arrangeDesk } from './app/layout';
+import { arrangeDesk, hasDeskRoom } from './app/layout';
 import { Lighting } from './app/lighting';
 import { isFrozen, parseParams } from './app/params';
 import { createPlay } from './app/play';
@@ -20,7 +20,7 @@ import { createKit, createPencil } from './scene/props';
 import { LightRig } from './scene/rig';
 import { Stage } from './scene/stage';
 import { createStamp } from './scene/stamp';
-import { frameReading } from './scene/view';
+import { frameReading, METRES_PER_SHEET_PX } from './scene/view';
 import { fontsReady } from './typeset/raster';
 import { Controls } from './ui/controls';
 
@@ -41,6 +41,15 @@ async function start(): Promise<void> {
   const frozen = isFrozen(params);
   const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const narrow = document.documentElement.classList.contains('narrow');
+
+  // Is there desk beside the sheet for the pencil and the rest? If not, the back carries a note in place of the game.
+  const deskRoom = (): boolean => {
+    const shown = frontEl.getBoundingClientRect().width;
+    const sheetWidth = (narrow ? 372 : 816) * METRES_PER_SHEET_PX;
+    return hasDeskRoom(sheetWidth, (window.innerWidth / 2) * (sheetWidth / shown));
+  };
+  const roomy = deskRoom();
+  document.documentElement.classList.toggle('no-desk', !roomy);
 
   await fontsReady();
   const stage = new Stage(canvas);
@@ -179,6 +188,7 @@ async function start(): Promise<void> {
     layers: pencil,
     voices,
     wake,
+    game: roomy,
     firstPage: Math.floor((params.page ?? 1) - 1),
     // The last page passed: the proof is stamped, without sending it to the printer.
     finished: () => {
@@ -300,7 +310,8 @@ async function start(): Promise<void> {
 
   window.addEventListener('scroll', () => stage.invalidate(), { passive: true });
   window.addEventListener('resize', () => {
-    if (window.__sizeSheet() !== narrow) {
+    // The sheet is printed for the room it has; a different room wants a fresh one.
+    if (window.__sizeSheet() !== narrow || deskRoom() !== roomy) {
       location.reload();
       return;
     }
