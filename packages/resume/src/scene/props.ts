@@ -1,0 +1,151 @@
+import * as THREE from 'three';
+
+export interface Prop {
+  name: 'weight' | 'loupe' | 'pencil';
+  group: THREE.Group;
+  /** Reach of the object on the desk, for picking. */
+  radius: number;
+  /** Offset of the pick centre from the group origin, in the group's own axes. */
+  pickOffset: number;
+  blob: THREE.Mesh;
+  blobSize: [number, number];
+}
+
+/** Fine turning marks for lathed metal: stripes that run round the part. */
+function turnedTexture(): THREE.CanvasTexture {
+  const canvas = document.createElement('canvas');
+  canvas.width = 4;
+  canvas.height = 512;
+  const ctx = canvas.getContext('2d')!;
+  let seed = 5;
+  const random = () => {
+    seed = (seed * 48271) % 2147483647;
+    return seed / 2147483647;
+  };
+  for (let y = 0; y < 512; y++) {
+    const tone = 150 + random() * 80 + (random() > 0.97 ? -70 : 0);
+    ctx.fillStyle = `rgb(${tone},${tone},${tone})`;
+    ctx.fillRect(0, y, 4, 1);
+  }
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(1, 3);
+  return texture;
+}
+
+function softBlob(): THREE.CanvasTexture {
+  const size = 128;
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = size;
+  const ctx = canvas.getContext('2d')!;
+  const shade = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
+  shade.addColorStop(0, 'rgba(0,0,0,1)');
+  shade.addColorStop(0.55, 'rgba(0,0,0,0.75)');
+  shade.addColorStop(0.8, 'rgba(0,0,0,0.25)');
+  shade.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = shade;
+  ctx.fillRect(0, 0, size, size);
+  return new THREE.CanvasTexture(canvas);
+}
+
+export interface PropKit {
+  brass: THREE.MeshStandardMaterial;
+  blobTexture: THREE.Texture;
+}
+
+export function createKit(): PropKit {
+  const turned = turnedTexture();
+  const brass = new THREE.MeshStandardMaterial({
+    color: '#c79f55',
+    metalness: 1,
+    roughness: 0.34,
+    roughnessMap: turned,
+    bumpMap: turned,
+    bumpScale: 0.35,
+  });
+  return { brass, blobTexture: softBlob() };
+}
+
+function blob(kit: PropKit, width: number, depth: number, opacity: number): THREE.Mesh {
+  const mesh = new THREE.Mesh(
+    new THREE.PlaneGeometry(1, 1),
+    new THREE.MeshBasicMaterial({ map: kit.blobTexture, color: 0x000000, transparent: true, opacity, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -3, polygonOffsetUnits: -3 }),
+  );
+  mesh.rotation.x = -Math.PI / 2;
+  mesh.scale.set(width, depth, 1);
+  mesh.renderOrder = 2;
+  return mesh;
+}
+
+function shadowed<T extends THREE.Object3D>(object: T): T {
+  object.traverse((child) => {
+    if ((child as THREE.Mesh).isMesh) {
+      child.castShadow = true;
+      child.receiveShadow = true;
+    }
+  });
+  return object;
+}
+
+/** A turned brass paperweight with a knob, heavy enough to hold a corner flat. */
+export function createWeight(kit: PropKit): Prop {
+  const profile = [
+    [0, 0],
+    [0.0218, 0],
+    [0.0232, 0.0012],
+    [0.0232, 0.0092],
+    [0.0222, 0.0108],
+    [0.0196, 0.0114],
+    [0.0188, 0.0128],
+    [0.0124, 0.0142],
+    [0.0068, 0.0146],
+    [0.0058, 0.0158],
+    [0.0056, 0.0206],
+    [0.0074, 0.0226],
+    [0.0082, 0.0256],
+    [0.0066, 0.0288],
+    [0.003, 0.0304],
+    [0, 0.0306],
+  ].map(([r, y]) => new THREE.Vector2(r, y));
+  const group = new THREE.Group();
+  group.add(new THREE.Mesh(new THREE.LatheGeometry(profile, 72), kit.brass));
+  shadowed(group);
+  return { name: 'weight', group, radius: 0.0235, pickOffset: 0, blob: blob(kit, 0.066, 0.066, 0.62), blobSize: [0.066, 0.066] };
+}
+
+/** A used drawing pencil: hexagonal, dark green lacquer, sharpened by knife. */
+export function createPencil(kit: PropKit): Prop {
+  const length = 0.128;
+  const radius = 0.0037;
+  const lacquer = new THREE.MeshStandardMaterial({ color: '#1d3b2c', roughness: 0.32, metalness: 0 });
+  const wood = new THREE.MeshStandardMaterial({ color: '#d7b27f', roughness: 0.85 });
+  const graphite = new THREE.MeshStandardMaterial({ color: '#2a2a2d', roughness: 0.42, metalness: 0.35 });
+  const group = new THREE.Group();
+  const inner = new THREE.Group();
+
+  const body = new THREE.Mesh(new THREE.CylinderGeometry(radius, radius, length, 6), lacquer);
+  const cone = new THREE.Mesh(new THREE.CylinderGeometry(0.0011, radius * 0.96, 0.016, 18), wood);
+  cone.position.y = length / 2 + 0.008;
+  const tip = new THREE.Mesh(new THREE.CylinderGeometry(0.00015, 0.0011, 0.0046, 12), graphite);
+  tip.position.y = length / 2 + 0.016 + 0.0023;
+  const cap = new THREE.Mesh(new THREE.CylinderGeometry(radius * 0.99, radius * 0.99, 0.0004, 6), wood);
+  cap.position.y = -length / 2 - 0.0002;
+  inner.add(body, cone, tip, cap);
+  // Lay it down on one flat of the hexagon.
+  inner.rotation.set(0, Math.PI / 6, Math.PI / 2);
+  inner.position.y = radius * Math.cos(Math.PI / 6);
+  group.add(inner);
+  shadowed(group);
+  return { name: 'pencil', group, radius: 0.012, pickOffset: 0, blob: blob(kit, 0.15, 0.014, 0.5), blobSize: [0.15, 0.014] };
+}
+
+/** Places a prop on the desk and keeps its contact shadow under it. */
+export function placeProp(prop: Prop, x: number, z: number, angle: number, lift = 0): void {
+  prop.group.position.set(x, lift, z);
+  prop.group.rotation.y = angle;
+  prop.blob.position.set(x, 0.0013, z);
+  prop.blob.rotation.z = angle;
+  const spread = 1 + lift * 28;
+  prop.blob.scale.set(prop.blobSize[0] * spread, prop.blobSize[1] * spread, 1);
+  (prop.blob.material as THREE.MeshBasicMaterial).opacity = 0.6 / (1 + lift * 90);
+}
