@@ -4,13 +4,13 @@ import { isFrozen, parseParams } from './params';
 describe('parseParams', () => {
   it('is empty for no query', () => {
     const params = parseParams('');
-    expect(params).toEqual({ view: null, mode: null, sun: null, latitude: null, longitude: null, time: null, light: null, fps: false });
+    expect(params).toEqual({ view: null, mode: null, sun: null, latitude: null, longitude: null, time: null, light: null, page: null, fps: false });
     expect(isFrozen(params)).toBe(false);
   });
 
   it('reads a full freeze state', () => {
-    const params = parseParams('?view=mid-flip&mode=auto&sun=6.5&lat=51.5&lon=-0.1&t=3&light=0.2,-0.3&fps');
-    expect(params).toEqual({ view: 'mid-flip', mode: 'auto', sun: 6.5, latitude: 51.5, longitude: -0.1, time: 3, light: [0.2, -0.3], fps: true });
+    const params = parseParams('?view=mid-flip&mode=auto&sun=6.5&lat=51.5&lon=-0.1&t=3&light=0.2,-0.3&page=5&fps');
+    expect(params).toEqual({ view: 'mid-flip', mode: 'auto', sun: 6.5, latitude: 51.5, longitude: -0.1, time: 3, light: [0.2, -0.3], page: 5, fps: true });
     expect(isFrozen(params)).toBe(true);
   });
 
