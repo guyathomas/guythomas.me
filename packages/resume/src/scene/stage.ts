@@ -115,10 +115,6 @@ export class Stage {
     this.wake();
   }
 
-  removeTicker(ticker: Ticker): void {
-    this.tickers.delete(ticker);
-  }
-
   private wake(): void {
     if (this.running) return;
     this.running = true;

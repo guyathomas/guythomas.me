@@ -1,6 +1,6 @@
 import type { SheetBody } from '../sheet/body';
 import { curlFromDrag, pastCrease, type Curl } from '../sheet/curl';
-import { frontUp, lerpPose, movePose, poseFromAngle, reflectPose, toLocal, toWorld, type Pose } from '../sheet/pose';
+import { frontUp, lerpPose, movePose, reflectPose, toLocal, toWorld, type Pose } from '../sheet/pose';
 import { glideStep, slideStep, type Glide } from '../sheet/slide';
 
 type Phase = 'rest' | 'slide' | 'glide' | 'curl' | 'return' | 'turning' | 'dropping' | 'squaring';
@@ -158,7 +158,7 @@ export class SheetHandling {
   // Scripted moves
 
   /** Turns the sheet over as a hand would, then squares it up. */
-  turnOver(then?: () => void): void {
+  turnOver(): void {
     if (this.phase !== 'rest') return;
     // Take the corner nearest the bottom right of the picture.
     let corner = 0;
@@ -173,10 +173,7 @@ export class SheetHandling {
     this.beginCurl(corner);
     const reach = this.sheet.width * 2.3;
     this.scripted = { from: [...this.anchor], to: [this.anchor[0] - reach, this.anchor[1] - this.sheet.height * 0.22], time: 0, duration: 1.15 };
-    this.afterTurn = () => {
-      this.squareUp();
-      then?.();
-    };
+    this.afterTurn = () => this.squareUp();
     if (this.instant) {
       this.sheet.curl = null;
       this.setPose({ ...this.homeFor(!this.frontUp) });
@@ -184,7 +181,6 @@ export class SheetHandling {
       this.scripted = null;
       this.afterTurn = null;
       this.sheet.update();
-      then?.();
     }
   }
 
@@ -207,7 +203,10 @@ export class SheetHandling {
       this.sheet.drop = 0;
       this.phase = 'rest';
     }
-    if (this.phase === 'slide' || this.phase === 'glide') this.phase = 'rest';
+    if (this.phase === 'slide' || this.phase === 'glide' || this.phase === 'squaring') this.phase = 'rest';
+    this.scripted = null;
+    this.afterTurn = null;
+    this.sheet.update();
     if (this.frontUp) this.squareUp();
     else this.turnOver();
   }
@@ -332,9 +331,4 @@ export class SheetHandling {
       }
     }
   }
-}
-
-/** A square pose at a desk position: front up, or turned over. */
-export function restPose(cx: number, cz: number): Pose {
-  return poseFromAngle(cx, cz, 0);
 }

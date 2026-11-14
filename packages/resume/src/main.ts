@@ -187,12 +187,15 @@ async function start(): Promise<void> {
   const down = new THREE.Vector3(0, -1, 0);
   const aim = new THREE.Vector3();
   let arranged = false;
+  let placed = false;
   stage.beforeRender = () => {
     const framing = frameReading(frontEl.getBoundingClientRect(), sheetWidthPx, window.innerWidth, window.innerHeight);
     if (!arranged) {
       arranged = true;
-      arrangeDesk(objects, sheet, window.innerWidth / 2 / framing.pxPerMetre);
-      applyView();
+      // Objects are laid out once; a resize only decides whether there is room to show them.
+      arrangeDesk(objects, sheet, window.innerWidth / 2 / framing.pxPerMetre, !placed);
+      if (!placed) applyView();
+      placed = true;
     }
     sheetCentre.set(handling.home.cx, 0, handling.home.cz);
     cameraRig.apply(framing, window.innerHeight, sheetCentre, sheet.height);

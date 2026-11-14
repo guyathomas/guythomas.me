@@ -88,8 +88,8 @@ export function createLoupe(kit: PropKit, blobFor: (w: number, d: number, o: num
     part.castShadow = true;
     part.receiveShadow = true;
   }
-  // Layer 1 keeps the loupe out of its own magnified view.
-  group.traverse((child) => child.layers.set(1));
+  // The glass is kept out of its own magnified view. The ring and handle lie
+  // outside that view anyway, and must stay on the default layer to cast shadows.
   glass.traverse((child) => child.layers.set(1));
 
   // The loupe's own contact shadow must not darken what is seen through it.

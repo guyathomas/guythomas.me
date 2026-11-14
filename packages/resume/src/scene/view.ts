@@ -1,5 +1,3 @@
-import * as THREE from 'three';
-
 /** Physical size of one sheet px: 816 px is 8.5 inches. */
 export const METRES_PER_SHEET_PX = 0.2159 / 816;
 
@@ -26,10 +24,3 @@ export function frameReading(sheetRect: DOMRect, sheetWidthPx: number, viewportW
 }
 
 export const READING_FOV = 13;
-
-export function placeReadingCamera(camera: THREE.PerspectiveCamera, framing: Framing, viewportHeight: number, out: { position: THREE.Vector3; target: THREE.Vector3 }): void {
-  const visible = viewportHeight / framing.pxPerMetre;
-  const distance = visible / 2 / Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
-  out.position.set(framing.x, distance, framing.z);
-  out.target.set(framing.x, 0, framing.z);
-}

@@ -26,7 +26,7 @@ export class Controls {
     this.sound.addEventListener('click', handlers.sound);
 
     window.addEventListener('keydown', (event) => {
-      if (event.metaKey || event.ctrlKey || event.altKey) return;
+      if (event.metaKey || event.ctrlKey || event.altKey || event.repeat) return;
       const target = event.target as HTMLElement | null;
       if (target && /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName)) return;
       switch (event.key.toLowerCase()) {

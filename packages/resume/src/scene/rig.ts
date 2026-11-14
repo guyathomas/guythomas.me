@@ -54,7 +54,7 @@ function windowCookie(): THREE.CanvasTexture {
 
 const LAMP_COLOUR = new THREE.Color('#fff0dd');
 /** Where the lamp head sits relative to the spot it lights. */
-export const LAMP_OFFSET = new THREE.Vector3(-0.25, 0.16, -0.2);
+const LAMP_OFFSET = new THREE.Vector3(-0.25, 0.16, -0.2);
 const RAKE_OFFSET = new THREE.Vector3(-0.36, 0.055, -0.04);
 
 /**

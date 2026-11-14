@@ -303,11 +303,4 @@ export class SheetBody {
       if (geometry.attributes.normal) geometry.attributes.normal.needsUpdate = true;
     }
   }
-
-  /** Highest point of the sheet above the desk, metres. */
-  maxHeight(): number {
-    let top = 0;
-    for (let k = 1; k < this.mid.length; k += 3) top = Math.max(top, this.mid[k]);
-    return top;
-  }
 }

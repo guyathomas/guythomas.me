@@ -26,12 +26,12 @@ function resumeHtml(): Plugin {
         const boot = readFileSync(bootPath, 'utf8');
         const plainBoot = boot.replace('Math.min(Math.max(w * 0.62, 760), 1000, w - 32)', 'Math.min(816, w - 32)');
         return html
-          .replaceAll('%NAME%', escapeHtml(resume.header.name))
-          .replaceAll('%TITLE%', escapeHtml(resume.header.title))
-          .replace('/*boot-scale*/', boot)
-          .replace('/*boot-scale-plain*/', plainBoot)
-          .replace('<!--sheet-front-->', renderFront(resume))
-          .replace('<!--sheet-back-->', renderBack(resume));
+          .replaceAll('%NAME%', () => escapeHtml(resume.header.name))
+          .replaceAll('%TITLE%', () => escapeHtml(resume.header.title))
+          .replace('/*boot-scale*/', () => boot)
+          .replace('/*boot-scale-plain*/', () => plainBoot)
+          .replace('<!--sheet-front-->', () => renderFront(resume))
+          .replace('<!--sheet-back-->', () => renderBack(resume));
       },
     },
   };

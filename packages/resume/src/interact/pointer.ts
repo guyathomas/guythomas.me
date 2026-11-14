@@ -39,6 +39,8 @@ export class Pointer {
   private downAt: [number, number] = [0, 0];
   private travelled = 0;
   private lastMove = 0;
+  /** The mouse or pen pointer whose press began on the canvas, if any. */
+  private pressed: number | null = null;
   private readonly grips: Array<{ element: HTMLElement; place: () => THREE.Vector3 | null; begin: (x: number, z: number) => void }> = [];
 
   constructor(private readonly deps: PointerDeps) {
@@ -189,6 +191,7 @@ export class Pointer {
       this.travelled = 0;
       return;
     }
+    this.pressed = event.pointerId;
     this.deps.canvas.setPointerCapture(event.pointerId);
     this.begin(event.clientX, event.clientY);
   };
@@ -207,12 +210,16 @@ export class Pointer {
       if (this.travelled < 8) this.tap(event.clientX, event.clientY);
       return;
     }
+    if (this.pressed !== event.pointerId) return;
+    this.pressed = null;
     if (this.deps.canvas.hasPointerCapture(event.pointerId)) this.deps.canvas.releasePointerCapture(event.pointerId);
     this.end(event.clientX, event.clientY, false);
   };
 
   private onCancel = (event: PointerEvent): void => {
-    if (event.pointerType !== 'touch') this.end(event.clientX, event.clientY, true);
+    if (event.pointerType === 'touch' || this.pressed !== event.pointerId) return;
+    this.pressed = null;
+    this.end(event.clientX, event.clientY, true);
   };
 
   private tap(clientX: number, clientY: number): void {
