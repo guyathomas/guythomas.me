@@ -4,9 +4,9 @@ import type { Prop } from '../scene/props';
 import { SheetBody } from '../sheet/body';
 import { SheetHandling } from './handling';
 import { DeskObjects } from './objects';
-import { pageAt, PencilTool } from './pencil';
+import { ERASER, pageAt, PencilTool, type ToolKind } from './pencil';
 
-function make() {
+function make(kind?: ToolKind) {
   const material = new THREE.MeshBasicMaterial();
   const sheet = new SheetBody(0.2, 0.3, 0.0009, material, material, material);
   const handling = new SheetHandling(sheet, { moved: () => {}, slide: () => {}, flick: () => {}, slap: () => {} }, false);
@@ -34,7 +34,7 @@ function make() {
     rub: (at) => rubs.push([at.x, at.y]),
     rest: () => {},
     poke: () => false,
-  });
+  }, kind);
   return { sheet, handling, objects, item, tool, drawn, strokes, rubs, lead };
 }
 
@@ -124,5 +124,22 @@ describe('PencilTool', () => {
     tool.lift();
     tool.turn();
     expect(tool.rubbing).toBe(false);
+  });
+
+  it('as an eraser, only ever rubs, and cannot be turned to draw', () => {
+    const { tool, drawn, rubs, item } = make(ERASER);
+    tool.take(0, 0);
+    expect(tool.rubbing).toBe(true);
+    expect(item.hand?.flipped).toBe(false);
+    tool.turn();
+    expect(tool.rubbing).toBe(true);
+    tool.press(0, 0);
+    tool.drag(0.01, 0, 0.016);
+    tool.lift();
+    expect(rubs).toHaveLength(2);
+    expect(drawn).toHaveLength(0);
+    expect(tool.active).toBe(true);
+    expect(tool.press(0.3, 0)).toBe(false);
+    expect(item.held).toBe(false);
   });
 });

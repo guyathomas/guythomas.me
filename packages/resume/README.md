@@ -36,7 +36,7 @@ Edit `src/data/resume.yaml` and rebuild. Both pages and the printed sheet are ge
 | Double-click the sheet | Turns it over |
 | Drag the loupe, stamp, pencil | Move them. The loupe magnifies. Let go while moving and they slide on, bump each other, and the pencil rolls |
 | Click the pencil, or carry it onto the sheet | It stays in the hand. Press on the paper to draw; click off the sheet or press `Esc` to put it down |
-| Drag the eraser across the sheet | Rubs out the pencil under it, leaving the rest of each line |
+| Click the eraser, or carry it onto the sheet | It stays in the hand, held on its end. Press on the paper and rub to take out the pencil under it; click off the sheet or press `Esc` to put it down |
 | `E`, or hold the right mouse button | With the pencil in hand: turns it to the rubber end, a finer eraser |
 | Set the stamp down on the sheet | Leaves an "OK to print" mark and opens the print dialog for the plain copy |
 | Click the email or website | Opens it |

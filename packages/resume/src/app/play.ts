@@ -3,7 +3,7 @@ import { LEVELS } from '../game/levels';
 import { MarbleRun } from '../game/run';
 import type { SheetHandling } from '../interact/handling';
 import type { DeskObjects, Item } from '../interact/objects';
-import { PENCIL_HALF, PencilTool, type PagePoint } from '../interact/pencil';
+import { ERASER, PENCIL_HALF, PencilTool, type PagePoint } from '../interact/pencil';
 import type { SheetBody } from '../sheet/body';
 import type { GraphiteLayer } from '../sheet/graphite';
 import { Marks } from './marks';
@@ -13,6 +13,7 @@ export interface PlayDeps {
   handling: SheetHandling;
   objects: DeskObjects;
   pencilItem: Item;
+  eraserItem: Item;
   layers: { front: GraphiteLayer; back: GraphiteLayer };
   voices: Voices;
   wake(): void;
@@ -24,7 +25,7 @@ export interface PlayDeps {
 
 /** Reach of the pencil's rubber end, and of the block eraser, metres. */
 const RUBBER = 0.0032;
-const BLOCK = 0.009;
+const BLOCK = 0.0065;
 
 /** Pencil and paper: drawing on either face, and the marble run on the back. */
 export function createPlay(deps: PlayDeps) {
@@ -89,13 +90,25 @@ export function createPlay(deps: PlayDeps) {
     poke,
   });
 
-  return {
-    tool,
-    /** The block eraser, dragged over the page. */
-    eraser: {
-      rub: (at: PagePoint, speed: number) => rub(at, speed, BLOCK),
+  const eraser = new PencilTool(
+    deps.eraserItem,
+    deps.objects,
+    sheet,
+    handling,
+    {
+      allow: () => false,
+      drawn: () => {},
+      stroke: () => {},
+      rub: (at, speed) => rub(at, speed, BLOCK),
       rest: () => voices.scratch(0),
+      poke: () => false,
     },
+    ERASER,
+  );
+
+  return {
+    /** The things that are used in the hand. */
+    tools: { pencil: tool, eraser },
     poke,
     launch,
     /** Advances the game. The marble only runs while its page is face up and lying still. */
@@ -107,6 +120,7 @@ export function createPlay(deps: PlayDeps) {
     /** Rubs out every pencil mark and goes back to the first page. */
     reset(): void {
       tool.drop();
+      eraser.drop();
       marks.front.clear();
       marks.back.clear();
       run.reset();
