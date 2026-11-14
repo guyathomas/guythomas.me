@@ -32,7 +32,7 @@ Edit `src/data/resume.yaml` and rebuild. Both pages and the printed sheet are ge
 | Move the pointer | The lamp leans toward it; the impression catches the light |
 | Drag the bare desk | Move the lamp's light |
 | Drag the sheet | Slide and turn it |
-| Drag a corner | Curl it. Carry it a third of the way, or flick it, and the sheet turns over where it lies |
+| Drag a corner | Curl it. Carry it a third of the way, or flick it, and the sheet turns over where it lies, always side over side so the other face is the right way up. On a long phone slip a pull of under half its width is enough |
 | Double-click the sheet | Turns it over. A pencilled "PTO" at the foot of the front, and a draught that lifts the corner once after loading, are the only hints |
 | Drag the loupe, stamp, pencil | Move them. The loupe magnifies. Let go while moving and they slide on, bump each other, and the pencil rolls |
 | Click the pencil, or carry it onto the sheet | It stays in the hand. Press on the paper to draw; click off the sheet or press `Esc` to put it down |
@@ -61,7 +61,7 @@ The limits were set by playing. `src/game/best.ts` records the shortest dependab
 - `src/sheet/graphite.ts` keeps a pencil map for each face, which the paper shader reads. The viewer's lines stay; the game's own drawing is redone each frame.
 - `src/interact/pencil.ts` is the pencil in the hand.
 
-Phones show no desk objects, so there is no pencil and no game there.
+Where the window has no desk beside the sheet (a phone, a tablet held upright) there are no objects, so no pencil and no game: the back carries a printed note saying so instead.
 
 ## Freeze states
 

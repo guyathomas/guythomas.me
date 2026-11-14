@@ -6,9 +6,17 @@ import type { SheetBody } from '../sheet/body';
  * On a phone there is no desk to either side, so only the sheet is shown.
  * Returns true if the objects were given their places.
  */
+/** Least bare desk beside the sheet, in metres, for the objects to be set out on it. */
+const ROOM = 0.045;
+
+/** True when the window shows enough desk beside the sheet for the loose objects. */
+export function hasDeskRoom(sheetWidth: number, halfWidth: number): boolean {
+  return halfWidth - sheetWidth / 2 > ROOM;
+}
+
 export function arrangeDesk(objects: DeskObjects, sheet: SheetBody, halfWidth: number, rehome: boolean): boolean {
   const margin = halfWidth - sheet.width / 2;
-  const roomy = margin > 0.045;
+  const roomy = hasDeskRoom(sheet.width, halfWidth);
   const left = -sheet.width / 2;
   const right = sheet.width / 2;
   const top = -sheet.height / 2;

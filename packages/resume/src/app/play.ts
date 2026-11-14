@@ -18,6 +18,8 @@ export interface PlayDeps {
   layers: { front: GraphiteLayer; back: GraphiteLayer };
   voices: Voices;
   wake(): void;
+  /** False where there is no pencil to play with, as on a phone: the back stays as printed. */
+  game: boolean;
   /** Page of the run to open on, counting from 0. */
   firstPage: number;
   /** Every page of the run has been passed. */
@@ -56,6 +58,7 @@ export function createPlay(deps: PlayDeps) {
   };
   /** Pencils in the lines a page opens with. They are ordinary lines: they can be rubbed out. */
   function open(): void {
+    if (!deps.game) return;
     for (const points of run.starter()) marks.back.put(points, 0.8);
     run.setLines(marks.back.lines.map((mark) => mark.points), PENCIL_HALF);
     layers.back.sketch(run.sketch());
@@ -70,7 +73,7 @@ export function createPlay(deps: PlayDeps) {
   note();
 
   const launch = (): boolean => {
-    if (handling.frontUp || handling.busy || run.phase !== 'ready') return false;
+    if (!deps.game || handling.frontUp || handling.busy || run.phase !== 'ready') return false;
     run.release();
     deps.wake();
     return true;
@@ -129,7 +132,7 @@ export function createPlay(deps: PlayDeps) {
     launch,
     /** Advances the game. The marble only runs while its page is face up and lying still. */
     step(dt: number): boolean {
-      if (handling.frontUp || handling.busy || !run.step(dt)) return false;
+      if (!deps.game || handling.frontUp || handling.busy || !run.step(dt)) return false;
       layers.back.sketch(run.sketch());
       return true;
     },

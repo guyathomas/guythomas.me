@@ -127,8 +127,14 @@ export class SheetHandling {
     const curl = this.sheet.curl;
     const covered = curl ? this.covered(curl) : 0;
     // Let go a fifth of the way over, or flick it, and the sheet goes the rest of the way.
-    if (curl && (covered > 0.18 || (covered > 0.06 && this.handFlow > 0.5))) this.beginTurn(curl, 0.45 + 0.4 * (1 - covered));
+    // A long slip is never a fifth covered by a thumb's reach, so a fair pull across its width counts too.
+    if (curl && (covered > 0.18 || this.pulled() > 0.4 * this.sheet.width || (covered > 0.06 && this.handFlow > 0.5))) this.beginTurn(curl, 0.45 + 0.4 * (1 - covered));
     else this.phase = 'return';
+  }
+
+  /** How far the corner has been carried from where it lay, metres. */
+  private pulled(): number {
+    return Math.hypot(this.pull[0] - this.anchor[0], this.pull[1] - this.anchor[1]);
   }
 
   /** Half the sheet's extent along a desk direction. */
@@ -153,23 +159,18 @@ export class SheetHandling {
   }
 
   /**
-   * Turns the sheet over where it lies. The crease swings square to the
+   * Turns the sheet over where it lies. The crease swings upright on the
    * sheet and sweeps across it while the sheet shifts the other way, so it
-   * lands on the footprint it left.
+   * lands on the footprint it left, the right way up.
    */
   private beginTurn(curl: Curl, duration: number): void {
     const pose = this.sheet.pose;
-    let sx = 0;
-    let sz = 0;
-    let best = -1;
-    for (const [x, z] of [[pose.a, pose.c], [pose.b, pose.d]]) {
-      const length = Math.hypot(x, z);
-      const along = (curl.nx * x + curl.nz * z) / length;
-      if (Math.abs(along) <= best) continue;
-      best = Math.abs(along);
-      sx = (Math.sign(along) * x) / length;
-      sz = (Math.sign(along) * z) / length;
-    }
+    // Always side over side, like a page, whichever way the corner was pulled:
+    // turned end over end, the other face would lie upside down.
+    const across = Math.hypot(pose.a, pose.c);
+    const way = curl.nx * pose.a + curl.nz * pose.c >= 0 ? 1 : -1;
+    const sx = (way * pose.a) / across;
+    const sz = (way * pose.c) / across;
     const angle = Math.atan2(curl.nz, curl.nx);
     const swing = Math.atan2(sz, sx) - angle;
     const reach = this.extent(sx, sz);
@@ -304,7 +305,7 @@ export class SheetHandling {
         }
         this.lastHand = [...this.hand];
         // Carried a third of the way, the sheet is going over whether or not it is let go.
-        const going = curl !== null && this.covered(curl) >= 1 / 3;
+        const going = curl !== null && (this.covered(curl) >= 1 / 3 || this.pulled() > 0.75 * sheet.width);
         if (going) this.beginTurn(curl, 0.6);
         sheet.update();
         return gap > 0.0002 || going;
