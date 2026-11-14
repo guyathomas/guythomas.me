@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='3' fill='%23f3eee3'/%3E%3Ctext x='16' y='23' text-anchor='middle' font-family='Georgia,serif' font-size='20' fill='%23211d19'%3EG%3C/text%3E%3C/svg%3E" />
+    <title>%NAME% · %TITLE%</title>
+    <meta name="description" content="%NAME%, %TITLE%. A letterpress resume you can pick up." />
+    <meta name="theme-color" content="#4a3625" />
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="/src/fonts/ebg-text.woff2" />
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="/src/fonts/ebg-italic.woff2" />
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="/src/fonts/ebg-sc.woff2" />
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="/src/fonts/ebg-medium.woff2" />
+    <script>
+      /*boot-scale*/
+    </script>
+    <link rel="stylesheet" href="/src/styles/piece.css" />
+  </head>
+  <body>
+    <canvas id="gl" aria-hidden="true"></canvas>
+    <main id="stage">
+      <!--sheet-front-->
+    </main>
+    <div id="back-copy">
+      <!--sheet-back-->
+    </div>
+    <p id="hint">Move the light. Lift a corner.</p>
+    <nav id="ui" aria-label="Scene controls">
+      <div class="modes" role="radiogroup" aria-label="Lighting">
+        <button type="button" role="radio" data-mode="auto" aria-checked="true">Auto</button>
+        <button type="button" role="radio" data-mode="day" aria-checked="false">Day</button>
+        <button type="button" role="radio" data-mode="night" aria-checked="false">Night</button>
+      </div>
+      <button type="button" id="btn-view" aria-pressed="false">Desk</button>
+      <button type="button" id="btn-flip">Turn over</button>
+      <button type="button" id="btn-reset">Reset</button>
+      <span class="spacer"></span>
+      <button type="button" id="btn-sound" aria-pressed="false">Enable sound</button>
+      <a href="/plain/">Plain copy</a>
+    </nav>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

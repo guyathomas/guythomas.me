@@ -1,20 +1,26 @@
 {
   "name": "@guythomas/resume",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview"
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
-    "@astrojs/tailwind": "^6.0.2",
-    "astro": "^5.16.2",
-    "js-yaml": "^4.1.1"
+    "three": "^0.180.0"
   },
   "devDependencies": {
     "@types/js-yaml": "^4.0.9",
-    "tailwindcss": "^3.4.0"
+    "@types/node": "^22.0.0",
+    "@types/three": "^0.180.0",
+    "js-yaml": "^4.1.1",
+    "playwright-core": "^1.50.0",
+    "typescript": "^5.8.0",
+    "vite": "^6.3.0",
+    "vitest": "^3.1.0"
   }
 }
