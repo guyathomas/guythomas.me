@@ -36,6 +36,7 @@ Edit `src/data/resume.yaml` and rebuild. Both pages and the printed sheet are ge
 | Double-click the sheet | Turns it over |
 | Drag the loupe, stamp, pencil | Move them. The loupe magnifies. Let go while moving and they slide on, bump each other, and the pencil rolls |
 | Click the pencil, or carry it onto the sheet | It stays in the hand. Press on the paper to draw; click off the sheet or press `Esc` to put it down |
+| `E`, or hold the right mouse button | With the pencil in hand: turns it to the rubber end, which rubs out whole lines |
 | Set the stamp down on the sheet | Leaves an "OK to print" mark and opens the print dialog for the plain copy |
 | Click the email or website | Opens it |
 | `F` / `R` / `D` / `L` | Turn over / reset / desk view / lamp switch |
@@ -44,7 +45,14 @@ Edit `src/data/resume.yaml` and rebuild. Both pages and the printed sheet are ge
 
 ## The back
 
-Nothing is printed on the back. It carries a marble run, drawn in pencil and left for the viewer to find: a marble on a shelf and three stars. Lines drawn on the page are ramps. Let the marble go and it rolls down the page; collect all three stars and the page is rubbed clean for the next layout. Reset rubs out every pencil mark and returns to the first page.
+Nothing is printed on the back. It carries a marble run, drawn in pencil and left for the viewer to find: a marble on a shelf, three stars, and on the first page the start of a line to carry on. Lines drawn on the page are ramps. Let the marble go and it rolls down the page.
+
+- **To pass a page,** all three stars must be collected in one run. A marble that rolls off the page or comes to rest goes back to its shelf and the stars come back.
+- **Lead is limited.** The bar in the head margin shows how much line the pencil has left for the page; rubbing a line out gives its lead back.
+- **There are eight pages,** from one ramp to walls, posts and a cup that must be entered last. The tally in the head margin counts them. Passing the last stamps the sheet.
+- **Reset** rubs out every pencil mark and returns to the first page.
+
+`src/game/levels.test.ts` plays a scripted solution to every page, so each is known to be passable within its lead.
 
 - `src/game` holds the rules: `marble.ts` (the marble against drawn lines), `run.ts` (shelf, stars, pages), `levels.ts`, `sketch.ts` (the hand-drawn shapes).
 - `src/sheet/graphite.ts` keeps a pencil map for each face, which the paper shader reads. The viewer's lines stay; the game's own drawing is redone each frame.
@@ -64,6 +72,7 @@ For review and screenshots. Combine freely.
 | `lat`, `lon` | Viewer position for auto mode |
 | `light` | Lamp position, `x,y` each from -1 to 1 |
 | `t` | Freeze the clock at this many seconds |
+| `page` | Page of the marble run to open on, `1` to `8` |
 | `fps` | Render continuously and record the frame rate in `window.__stats` |
 
 `tools/shot.mjs` drives Chrome on the real GPU with scripted input and takes screenshots.

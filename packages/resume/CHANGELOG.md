@@ -11,7 +11,8 @@ Complete rewrite as "Living paper": the resume as a letterpress sheet on a desk.
 - A desk with a working loupe, a pencil and a printer's stamp, all movable. Thrown, they slide to a stop and knock into each other, and the pencil rolls.
 - The stamp: set it down on the sheet to leave an "OK to print" mark and print the plain copy. Reset lifts the marks.
 - The pencil draws: pick it up and press on the paper, front or back. Reset rubs it out.
-- A marble run on the back of the sheet, drawn in pencil: draw ramps, let the marble go, collect the stars.
+- A marble run on the back of the sheet, drawn in pencil: draw ramps, let the marble go, collect all three stars in one run. Eight pages, each with a limited amount of pencil lead.
+- The pencil's rubber end rubs lines out (`E`, or the right mouse button).
 - A Print control; `Cmd/Ctrl+P` prints the plain copy rather than the scene.
 - Lighting modes: day, night, and auto, which follows the viewer's real sun.
 - `/api/geo`, returning a coarse location from Vercel's request headers for auto lighting.

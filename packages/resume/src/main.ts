@@ -94,7 +94,7 @@ async function start(): Promise<void> {
   const loupe = createLoupe(kit, blobFor);
   objects.add(createStamp(kit), [-0.012, 0.012]);
   objects.add(loupe, [0, 0.13]);
-  const pencilItem = objects.add(createPencil(kit), [-0.064, 0.085]);
+  const pencilItem = objects.add(createPencil(kit), [-0.077, 0.085]);
   for (const item of objects.items) scene.add(item.prop.group, item.prop.blob);
   scene.add(loupe.group.userData.glass as THREE.Object3D);
 
@@ -124,6 +124,7 @@ async function start(): Promise<void> {
     print: printPlain,
     cancel: () => pointer.putDownPencil(),
     launch: () => play.launch(),
+    erase: () => void pointer.turnPencil(),
     reset: () => {
       handling.reset();
       cancelStampRun();
@@ -164,7 +165,21 @@ async function start(): Promise<void> {
   );
 
   // Pencil and paper: drawing, and the marble run on the back.
-  const play = createPlay({ sheet, handling, objects, pencilItem, layers: pencil, voices, wake });
+  const play = createPlay({
+    sheet,
+    handling,
+    objects,
+    pencilItem,
+    layers: pencil,
+    voices,
+    wake,
+    firstPage: Math.floor((params.page ?? 1) - 1),
+    // The last page passed: the proof is stamped, without sending it to the printer.
+    finished: () => {
+      const { cx, cz } = sheet.pose;
+      if (stamping.press(cx, cz + sheet.height * 0.2, 0.1)) voices.stamp();
+    },
+  });
 
   // One ticker drives everything that moves, and stops when nothing does.
   const sheetCentre = new THREE.Vector3();

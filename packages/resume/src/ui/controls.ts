@@ -8,6 +8,8 @@ export interface ControlHandlers {
   print(): void;
   /** Escape: returns true if something was put away. */
   cancel(): boolean;
+  /** E: turns the pencil in the hand end for end. */
+  erase(): void;
   /** Space: returns true if it was used. */
   launch(): boolean;
   sound(): void;
@@ -56,6 +58,9 @@ export class Controls {
           break;
         case 'escape':
           if (!handlers.cancel() && this.view.getAttribute('aria-pressed') === 'true') handlers.desk();
+          break;
+        case 'e':
+          handlers.erase();
           break;
         case ' ':
           if (!handlers.launch()) return;

@@ -13,7 +13,7 @@ export interface Item extends Body {
   /** A move the object makes by itself, such as going back to its place. */
   flight: { fromX: number; fromZ: number; fromAngle: number; time: number } | null;
   /** Set while the object is being used in the hand: where its working end is, and whether it touches the desk. */
-  hand: { x: number; z: number; touching: boolean } | null;
+  hand: { x: number; z: number; touching: boolean; flipped: boolean } | null;
 }
 
 const HELD_LIFT = 0.007;
@@ -72,7 +72,7 @@ export class DeskObjects {
 
   private place(item: Item): void {
     if (item.hand && item.prop.hold) {
-      item.prop.hold(item.hand.x, item.hand.z, item.hand.touching);
+      item.prop.hold(item.hand.x, item.hand.z, item.hand.touching, item.hand.flipped);
       return;
     }
     placeProp(item.prop, item.x, item.z, item.angle, item.lift);
@@ -141,12 +141,12 @@ export class DeskObjects {
   }
 
   /** Takes an object into the hand to use it, with its working end at a desk point. */
-  hold(item: Item, x: number, z: number, touching: boolean): void {
+  hold(item: Item, x: number, z: number, touching: boolean, flipped = false): void {
     if (this.grabbed === item) this.grabbed = null;
     item.held = true;
     item.flight = null;
     this.still(item);
-    item.hand = { x, z, touching };
+    item.hand = { x, z, touching, flipped };
     this.place(item);
   }
 

@@ -37,7 +37,7 @@ describe('MarbleRun', () => {
     const slope = (0.14 * H) / (0.2 * W);
     const drop = (0.0042 + 0.0003) * Math.hypot(1, slope);
     const at = (x: number) => 0.36 * H + (x - 0.42 * W) * slope + drop;
-    run.addLine([0.1 * W, at(0.1 * W), 0.95 * W, at(0.95 * W)], 0.0003);
+    run.setLines([[0.1 * W, at(0.1 * W), 0.95 * W, at(0.95 * W)]], 0.0003);
     run.release();
     play(run, 6);
     expect(events.filter((event) => event === 'star').length).toBe(3);
@@ -50,5 +50,44 @@ describe('MarbleRun', () => {
   it('draws the marble, the shelf and the stars while waiting', () => {
     const { run } = make();
     expect(run.sketch().length).toBeGreaterThanOrEqual(5);
+  });
+
+  it('wants all three stars in one run', () => {
+    const { run, events } = make();
+    // A ramp that stops after the first star: the marble takes one and falls off.
+    const slope = (0.14 * H) / (0.2 * W);
+    const drop = (0.0042 + 0.0003) * Math.hypot(1, slope);
+    const at = (x: number) => 0.36 * H + (x - 0.42 * W) * slope + drop;
+    run.setLines([[0.1 * W, at(0.1 * W), 0.5 * W, at(0.5 * W)]], 0.0003);
+    run.release();
+    play(run, 5);
+    expect(events.filter((event) => event === 'star').length).toBeGreaterThanOrEqual(1);
+    expect(events).toContain('lost');
+    expect(events).not.toContain('won');
+    run.release();
+    play(run, 5);
+    expect(events.filter((event) => event === 'star').length).toBeGreaterThanOrEqual(2);
+    expect(run.level).toBe(0);
+  });
+
+  it('has only so much lead, and gets it back when a line is rubbed out', () => {
+    const { run } = make();
+    const full = run.lead;
+    run.spend(0.1);
+    expect(run.lead).toBeCloseTo(full - 0.1, 9);
+    run.setLines([[0, 0.2, 0.15, 0.2]], 0.0003);
+    expect(run.lead).toBeCloseTo(full - 0.15, 9);
+    run.setLines([[0, 0.2, 0.15, 0.2], [0, 0.25, 0.2, 0.25]], 0.0003);
+    expect(run.lead).toBe(0);
+    run.setLines([], 0.0003);
+    expect(run.lead).toBeCloseTo(full, 9);
+  });
+
+  it('starts the first page with a line already drawn', () => {
+    const { run } = make();
+    run.release();
+    play(run, 0.8);
+    // The marble has been turned aside by the starter line instead of dropping straight down.
+    expect(run.marble.x).toBeGreaterThan(0.2 * W + 0.004);
   });
 });

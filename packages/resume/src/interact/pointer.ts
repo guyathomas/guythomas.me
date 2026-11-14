@@ -45,6 +45,8 @@ export class Pointer {
   private lastMove = 0;
   /** The mouse or pen pointer whose press began on the canvas, if any. */
   private pressed: number | null = null;
+  /** True while the rubber is down only because the other mouse button is held. */
+  private borrowed = false;
   private readonly grips: Array<{ element: HTMLElement; place: () => THREE.Vector3 | null; begin: (x: number, z: number) => void }> = [];
 
   constructor(private readonly deps: PointerDeps) {
@@ -58,6 +60,9 @@ export class Pointer {
       if (!this.drag) this.deps.cameraRig.sway.set(0, 0);
     });
     canvas.addEventListener('dblclick', this.onDouble);
+    canvas.addEventListener('contextmenu', (event) => {
+      if (this.deps.pencil.active) event.preventDefault();
+    });
     if (window.matchMedia('(pointer: coarse)').matches) this.buildGrips();
   }
 
@@ -220,6 +225,7 @@ export class Pointer {
 
   /** Abandons a press in progress, so that its release does nothing. */
   private cancelPress(): void {
+    this.borrowed = false;
     if (this.pressed === null) return;
     if (this.deps.canvas.hasPointerCapture(this.pressed)) this.deps.canvas.releasePointerCapture(this.pressed);
     this.pressed = null;
@@ -247,19 +253,35 @@ export class Pointer {
     this.setTool(false);
   }
 
-  private onDown = (event: PointerEvent): void => {
-    if (event.button !== 0) return;
-    this.deps.used();
+  /** Turns the pencil in the hand end for end. Returns true if there was one to turn. */
+  turnPencil(): boolean {
     const { pencil } = this.deps;
+    if (!pencil.active) return false;
+    pencil.turn();
+    this.deps.wake();
+    return true;
+  }
+
+  private onDown = (event: PointerEvent): void => {
+    const { pencil } = this.deps;
+    // With the pencil in hand, the other mouse button rubs out for as long as it is held.
+    const other = pencil.active && event.button === 2 && !this.drag;
+    if (event.button !== 0 && !other) return;
+    this.deps.used();
     if (pencil.active) {
       const point = this.deskPoint(event.clientX, event.clientY);
       if (!point || this.drag) return;
+      if (other) {
+        this.borrowed = !pencil.rubbing;
+        pencil.turn(true);
+      }
       this.lastMove = performance.now();
       if (pencil.press(point.x, point.z)) {
         this.pressed = event.pointerId;
         this.deps.canvas.setPointerCapture(event.pointerId);
         this.drag = 'draw';
       } else {
+        this.borrowed = false;
         this.setTool(false);
       }
       this.deps.wake();
@@ -303,6 +325,8 @@ export class Pointer {
     this.drag = null;
     if (this.deps.canvas.hasPointerCapture(event.pointerId)) this.deps.canvas.releasePointerCapture(event.pointerId);
     this.deps.pencil.lift();
+    if (this.borrowed) this.deps.pencil.turn(false);
+    this.borrowed = false;
     this.deps.wake();
     return true;
   }

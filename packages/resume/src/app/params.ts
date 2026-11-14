@@ -13,6 +13,8 @@ export interface Params {
   time: number | null;
   /** Lamp position over the desk, each axis from -1 to 1. */
   light: [number, number] | null;
+  /** Page of the marble run to open on, counting from 1. */
+  page: number | null;
   /** Render continuously and record the frame rate. */
   fps: boolean;
 }
@@ -40,6 +42,7 @@ export function parseParams(search: string): Params {
     longitude: number(query.get('lon'), -180, 180),
     time: number(query.get('t'), 0, 1e6),
     light: light && light.length === 2 && light.every(Number.isFinite) ? [Math.min(1, Math.max(-1, light[0])), Math.min(1, Math.max(-1, light[1]))] : null,
+    page: number(query.get('page'), 1, 99),
     fps: query.has('fps'),
   };
 }

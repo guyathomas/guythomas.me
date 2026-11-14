@@ -2,7 +2,7 @@ import { LEVELS, type Level } from './levels';
 import { Marble, type Segment } from './marble';
 import { burst, dashes, ring, star, type Sketch } from './sketch';
 
-export type RunEvent = 'release' | 'knock' | 'star' | 'lost' | 'won' | 'next';
+export type RunEvent = 'release' | 'knock' | 'star' | 'lost' | 'won' | 'next' | 'finished';
 
 interface Star {
   x: number;
@@ -20,16 +20,18 @@ const WIN_TIME = 1.7;
 /**
  * The game on the back of the sheet. A marble waits on a shelf; lines drawn
  * on the page become ramps; let it go and it rolls down the page collecting
- * stars. All coordinates are page metres, x across and y down.
+ * stars. All three must be collected in one run, with only so much pencil
+ * lead to draw with. All coordinates are page metres, x across and y down.
  */
 export class MarbleRun {
-  phase: 'ready' | 'rolling' | 'won' = 'ready';
+  phase: 'ready' | 'rolling' | 'won' | 'done' = 'ready';
   level = 0;
   marble: Marble;
   private stars: Star[] = [];
   private walls: Segment[] = [];
-  /** How many lines the viewer has drawn on this page. */
-  private drawn = 0;
+  /** Length of line the viewer has drawn on this page, metres, and of the line being drawn now. */
+  private used = 0;
+  private drawing = 0;
   /** Everything the marble can strike: the page's own lines, then the viewer's. */
   private solid: Segment[] = [];
   private shelf: Segment;
@@ -37,10 +39,16 @@ export class MarbleRun {
   private clock = 0;
   private wonFor = 0;
 
-  constructor(private readonly width: number, private readonly height: number, private readonly emit: (event: RunEvent, strength: number) => void) {
+  constructor(
+    private readonly width: number,
+    private readonly height: number,
+    private readonly emit: (event: RunEvent, strength: number) => void,
+    /** The page to open on. */
+    first = 0,
+  ) {
     this.marble = new Marble(0, 0);
     this.shelf = { x0: 0, y0: 0, x1: 0, y1: 0, half: LINE };
-    this.load(0);
+    this.load(first);
   }
 
   private get plan(): Level {
@@ -58,7 +66,7 @@ export class MarbleRun {
       }
     }
     this.solid = this.walls.slice();
-    this.drawn = 0;
+    this.used = this.drawing = 0;
     this.toStart();
   }
 
@@ -69,6 +77,18 @@ export class MarbleRun {
     this.shelf = { x0: this.marble.x - SHELF, y0: under, x1: this.marble.x + SHELF, y1: under, half: LINE };
     this.phase = 'ready';
     this.stalled = 0;
+    // Every run starts over: the stars have to be taken in one go.
+    for (const item of this.stars) item.got = false;
+  }
+
+  /** How much line the pencil has left for this page, metres. */
+  get lead(): number {
+    return Math.max(0, this.plan.lead * this.width - this.used - this.drawing);
+  }
+
+  /** Counts line as it is being drawn, before it is handed over with `setLines`. */
+  spend(length: number): void {
+    this.drawing += length;
   }
 
   /** Back to the first page with nothing drawn. */
@@ -76,11 +96,16 @@ export class MarbleRun {
     this.load(0);
   }
 
-  /** A line drawn on the page: a run of x, y pairs. */
-  addLine(points: number[], half: number): void {
-    this.drawn++;
-    for (let i = 2; i < points.length; i += 2) {
-      this.solid.push({ x0: points[i - 2], y0: points[i - 1], x1: points[i], y1: points[i + 1], half });
+  /** Everything the viewer has drawn on the page, each line a run of x, y pairs. */
+  setLines(lines: number[][], half: number): void {
+    this.solid = this.walls.slice();
+    this.used = this.drawing = 0;
+    for (const points of lines) {
+      for (let i = 2; i < points.length; i += 2) {
+        const segment = { x0: points[i - 2], y0: points[i - 1], x1: points[i], y1: points[i + 1], half };
+        this.solid.push(segment);
+        this.used += Math.hypot(segment.x1 - segment.x0, segment.y1 - segment.y0);
+      }
     }
   }
 
@@ -98,7 +123,7 @@ export class MarbleRun {
 
   /** Advances the game. Returns true while the picture is changing. */
   step(elapsed: number): boolean {
-    if (this.phase === 'ready') return false;
+    if (this.phase === 'ready' || this.phase === 'done') return false;
     // After a stall the marble takes up where it was, not a leap further on.
     const dt = Math.min(elapsed, 1 / 30);
     this.clock += dt;
@@ -106,8 +131,13 @@ export class MarbleRun {
     if (this.phase === 'won') {
       this.wonFor += dt;
       if (this.wonFor > WIN_TIME) {
-        this.load(this.level + 1);
-        this.emit('next', 1);
+        if (this.level + 1 < LEVELS.length) {
+          this.load(this.level + 1);
+          this.emit('next', 1);
+        } else {
+          this.phase = 'done';
+          this.emit('finished', 1);
+        }
       }
       return true;
     }
@@ -141,15 +171,35 @@ export class MarbleRun {
     const out: Sketch[] = [];
     const line = (points: number[], tone = 0.8, half = LINE) => out.push({ points, half, tone });
     // Redrawn a little differently a few times a second, like a flip book.
-    const boil = this.phase === 'ready' ? 0 : Math.floor(this.clock / 0.13);
-    const { marble } = this;
+    const boil = this.phase === 'ready' || this.phase === 'done' ? 0 : Math.floor(this.clock / 0.13);
+    const { marble, width, height } = this;
+
+    // In the head margin: a tally of pages reached, and how much lead is left.
+    const top = height * 0.045;
+    const done = this.level + (this.phase === 'done' ? 1 : 0);
+    for (let i = 0; i <= Math.min(done, LEVELS.length - 1); i++) {
+      const x = width * 0.07 + i * 0.0022 + Math.floor(i / 5) * 0.003;
+      if (i % 5 === 4) line([x - 0.0098, top + 0.0038, x - 0.0008, top - 0.0002], 0.6);
+      else line([x, top - 0.0004 * ((i * 7) % 3), x + 0.0004, top + 0.0042], 0.6);
+    }
+    if (this.phase === 'done') {
+      // Every page passed: one large star, and nothing left to do.
+      line(star(width / 2, height * 0.42, width * 0.13, 4.2), 0.85, LINE * 1.4);
+      return out;
+    }
+    const full = 0.03;
+    const right = width * 0.93;
+    const left = (this.lead / (this.plan.lead * width)) * full;
+    line([right - full, top + 0.0002, right - full, top + 0.0034], 0.5);
+    line([right, top + 0.0002, right, top + 0.0034], 0.5);
+    if (left > 0.0003) line([right - left, top + 0.0018, right, top + 0.0018], 0.9, LINE * 2.2);
 
     for (const wall of this.walls) line([wall.x0, wall.y0, wall.x1, wall.y1]);
     if (this.phase === 'ready') {
       const { shelf } = this;
       line([shelf.x0, shelf.y0 - 0.0016, shelf.x0, shelf.y0, shelf.x1, shelf.y1, shelf.x1, shelf.y1 - 0.0016]);
       // Once there is something to roll on, the marble asks to be let go.
-      if (this.drawn > 0) for (const dash of dashes(marble.x, marble.y, marble.radius * 2.1, this.level + 1.5)) line(dash, 0.55);
+      if (this.used > 0) for (const dash of dashes(marble.x, marble.y, marble.radius * 2.1, this.level + 1.5)) line(dash, 0.55);
     }
     this.stars.forEach((item, index) => {
       if (!item.got) line(star(item.x, item.y, STAR_RADIUS, index * 7.3 + boil * 0.61), 0.74);

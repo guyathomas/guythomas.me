@@ -18,7 +18,7 @@ export interface Prop {
   /** Present on round things: turns the object to show it has rolled this far across its axis. */
   roll?(distance: number): void;
   /** Present on things that are used in the hand: holds the object with its working end at a desk point. */
-  hold?(x: number, z: number, touching: boolean): void;
+  hold?(x: number, z: number, touching: boolean, flipped: boolean): void;
 }
 
 /** Fine turning marks for lathed metal: stripes that run round the part. */
@@ -116,9 +116,11 @@ export function createPencil(kit: PropKit): Prop {
   cone.position.y = length / 2 + 0.008;
   const tip = new THREE.Mesh(new THREE.CylinderGeometry(0.00015, 0.0011, 0.0046, 12), graphite);
   tip.position.y = length / 2 + 0.016 + 0.0023;
-  const cap = new THREE.Mesh(new THREE.CylinderGeometry(radius * 0.99, radius * 0.99, 0.0004, 6), wood);
-  cap.position.y = -length / 2 - 0.0002;
-  inner.add(body, cone, tip, cap);
+  const ferrule = new THREE.Mesh(new THREE.CylinderGeometry(radius * 1.02, radius * 1.02, 0.007, 24), kit.brass);
+  ferrule.position.y = -length / 2 - 0.0035;
+  const rubber = new THREE.Mesh(new THREE.CylinderGeometry(radius * 0.92, radius * 0.86, 0.006, 24), new THREE.MeshStandardMaterial({ color: '#c9706a', roughness: 0.95 }));
+  rubber.position.y = -length / 2 - 0.01;
+  inner.add(body, cone, tip, ferrule, rubber);
   // Lay it along the group's x axis, point forward, resting on one flat of the hexagon.
   inner.rotation.z = -Math.PI / 2;
   const shadow = blob(kit, 0.15, 0.014, 0.5);
@@ -133,17 +135,19 @@ export function createPencil(kit: PropKit): Prop {
     radius: 0.012,
     pickOffset: 0,
     blob: shadow,
-    blobSize: [0.15, 0.014],
-    solid: { span: [-0.064, 0.084], radius: 0.004 },
+    blobSize: [0.16, 0.014],
+    solid: { span: [-0.077, 0.084], radius: 0.004 },
     mass: 1,
     roll: (distance) => {
       roller.rotation.x = distance / radius;
     },
-    hold: (x, z, touching) => {
-      // Held as a right hand holds it: point down on the paper, the rest leaning back toward the wrist.
+    hold: (x, z, touching, flipped) => {
+      // Held as a right hand holds it: working end down on the paper, the rest leaning back toward the wrist.
+      // Turned end for end, the rubber is the working end.
       group.rotation.set(0, 0, 0);
-      group.quaternion.setFromEuler(new THREE.Euler(0, HELD_TURN, -HELD_TILT, 'YXZ'));
-      const point = new THREE.Vector3(length / 2 + 0.0206, roller.position.y, 0).applyQuaternion(group.quaternion);
+      group.quaternion.setFromEuler(new THREE.Euler(0, flipped ? HELD_TURN + Math.PI : HELD_TURN, flipped ? HELD_TILT : -HELD_TILT, 'YXZ'));
+      const end = flipped ? -length / 2 - 0.013 : length / 2 + 0.0206;
+      const point = new THREE.Vector3(end, roller.position.y, 0).applyQuaternion(group.quaternion);
       group.position.set(x - point.x, (touching ? 0.0012 : 0.0045) - point.y, z - point.z);
       shadow.visible = false;
     },
