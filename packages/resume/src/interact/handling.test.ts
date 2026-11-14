@@ -85,4 +85,14 @@ describe('SheetHandling', () => {
     expect(handling.phase).toBe('rest');
     expect(handling.frontUp).toBe(false);
   });
+
+  it('resets a sheet that a freeze state left curled', () => {
+    const { sheet, handling } = make();
+    handling.pose('corner-lifted');
+    expect(sheet.curl).not.toBeNull();
+    handling.reset();
+    run(handling, 2);
+    expect(sheet.curl).toBeNull();
+    expect(handling.phase).toBe('rest');
+  });
 });

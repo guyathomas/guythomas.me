@@ -59,7 +59,9 @@ export class Pointer {
     canvas.addEventListener('pointerup', this.onUp);
     canvas.addEventListener('pointercancel', this.onCancel);
     canvas.addEventListener('pointerleave', () => {
-      if (!this.drag) this.deps.cameraRig.sway.set(0, 0);
+      if (this.drag) return;
+      this.deps.cameraRig.sway.set(0, 0);
+      this.deps.wake();
     });
     canvas.addEventListener('dblclick', this.onDouble);
     canvas.addEventListener('contextmenu', (event) => {
@@ -154,7 +156,8 @@ export class Pointer {
     }
     if (drag === 'curl') handling.endCurl();
     if (drag === 'slide') handling.endSlide();
-    if (!cancelled && this.travelled < 5) this.click(clientX, clientY);
+    // A click on an object is not a click on what lies under it.
+    if (drag !== 'object' && !cancelled && this.travelled < 5) this.click(clientX, clientY);
     this.hover(clientX, clientY);
     this.deps.wake();
   }
@@ -282,6 +285,9 @@ export class Pointer {
     const other = pencil.active && event.button === 2 && !this.drag;
     if (event.button !== 0 && !other) return;
     this.deps.used();
+    // Reaching for something else on the desk puts the pencil down first.
+    const reach = pencil.active && !this.drag && event.button === 0 ? this.deskPoint(event.clientX, event.clientY) : null;
+    if (reach && this.deps.objects.pick(reach.x, reach.z)) this.putDownPencil();
     if (pencil.active) {
       const point = this.deskPoint(event.clientX, event.clientY);
       if (!point || this.drag) return;
@@ -315,6 +321,8 @@ export class Pointer {
   private onMove = (event: PointerEvent): void => {
     const { pencil } = this.deps;
     if (pencil.active) {
+      // Only the finger that is drawing moves the line.
+      if (this.drag === 'draw' && event.pointerId !== this.pressed) return;
       const point = this.deskPoint(event.clientX, event.clientY);
       if (!point) return;
       const now = performance.now();
@@ -372,6 +380,8 @@ export class Pointer {
     }
     const point = this.deskPoint(clientX, clientY);
     if (!point) return;
+    const at = pageAt(this.deps.sheet, point.x, point.z);
+    if (at && this.deps.poke(at)) return;
     const { rig } = this.deps;
     rig.lampNudge.set(0, 0);
     rig.lampAim.set(THREE.MathUtils.clamp(point.x, -LIGHT_REACH, LIGHT_REACH), 0, THREE.MathUtils.clamp(point.z, -LIGHT_REACH, LIGHT_REACH));
@@ -417,12 +427,15 @@ export class Pointer {
     element.className = 'grip';
     element.setAttribute('aria-hidden', 'true');
     document.body.appendChild(element);
+    /** The finger that took hold; others are ignored until it lets go. */
+    let owner: number | null = null;
     element.addEventListener('pointerdown', (event) => {
       // One hand at a time: a second finger does not take over, and a hand holding the pencil is busy.
       if (this.drag || this.deps.pencil.active) return;
       const point = this.deskPoint(event.clientX, event.clientY);
       if (!point) return;
       event.preventDefault();
+      owner = event.pointerId;
       element.setPointerCapture(event.pointerId);
       this.deps.used();
       this.downAt = [event.clientX, event.clientY];
@@ -432,9 +445,11 @@ export class Pointer {
       this.deps.wake();
     });
     element.addEventListener('pointermove', (event) => {
-      if (this.drag) this.move(event.clientX, event.clientY);
+      if (this.drag && event.pointerId === owner) this.move(event.clientX, event.clientY);
     });
     const finish = (event: PointerEvent) => {
+      if (event.pointerId !== owner) return;
+      owner = null;
       if (!this.drag) return;
       this.end(event.clientX, event.clientY, true);
     };
@@ -448,7 +463,8 @@ export class Pointer {
     if (this.grips.length === 0 || this.drag) return;
     const projected = new THREE.Vector3();
     for (const grip of this.grips) {
-      const at = grip.place();
+      // With the pencil in hand the whole sheet is for drawing on.
+      const at = this.deps.pencil.active ? null : grip.place();
       if (!at) {
         grip.element.style.display = 'none';
         continue;

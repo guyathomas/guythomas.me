@@ -18,6 +18,10 @@ export interface Item extends Body {
 
 const HELD_LIFT = 0.007;
 const FLIGHT_TIME = 0.5;
+/** Fastest a thing leaves the hand, metres per second. */
+const MAX_THROW = 1.4;
+/** Furthest a sliding thing moves between checks for what is in its way, metres. */
+const STRIDE = 0.003;
 const smooth = (t: number) => t * t * (3 - 2 * t);
 
 /** The loose things on the desk: where they are, picking them up, throwing them, putting them down. */
@@ -131,8 +135,17 @@ export class DeskObjects {
     this.grabbed = null;
     if (!item) return;
     item.held = false;
-    if (idle > 0.07 || this.instant || item.prop.grip) this.still(item);
-    else item.spin = throwSpin(this.offset[0], this.offset[1], item.vx, item.vz);
+    if (idle > 0.07 || this.instant || item.prop.grip) {
+      this.still(item);
+      return;
+    }
+    // A hand only throws so hard.
+    const speed = Math.hypot(item.vx, item.vz);
+    if (speed > MAX_THROW) {
+      item.vx *= MAX_THROW / speed;
+      item.vz *= MAX_THROW / speed;
+    }
+    item.spin = throwSpin(this.offset[0], this.offset[1], item.vx, item.vz);
   }
 
   /** The object in the hand right now, if any. */
@@ -227,14 +240,25 @@ export class DeskObjects {
         if (item.lift === 0 && before > 0) this.setDown(item, true);
         moving = true;
       }
-      if (!item.held && (item.vx !== 0 || item.vz !== 0 || item.spin !== 0)) {
-        coast(item, dt);
-        this.place(item);
-        moving = true;
-      }
+    }
+    // Sliding and bumping go in short strides, so a thrown thing cannot pass through another.
+    const free = this.items.filter((item) => !item.held && !item.flight);
+    const fastest = Math.max(0, ...free.map((item) => Math.hypot(item.vx, item.vz)));
+    const strides = Math.min(12, Math.max(1, Math.ceil((fastest * dt) / STRIDE)));
+    for (let s = 0; s < strides; s++) moving = this.slide(free, dt / strides) || moving;
+    return moving;
+  }
+
+  private slide(free: Item[], dt: number): boolean {
+    let moving = false;
+    for (const item of free) {
+      if (item.vx === 0 && item.vz === 0 && item.spin === 0) continue;
+      coast(item, dt);
+      this.place(item);
+      moving = true;
     }
     // Things on the desk get in each other's way; a thing in the hand is above them.
-    const grounded = this.items.filter((item) => item.prop.group.visible && !item.held && !item.flight && item.lift < 0.003);
+    const grounded = free.filter((item) => item.prop.group.visible && item.lift < 0.003);
     for (let i = 0; i < grounded.length; i++) {
       for (let j = i + 1; j < grounded.length; j++) {
         if (!collide(grounded[i], grounded[j])) continue;

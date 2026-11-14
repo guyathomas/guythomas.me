@@ -143,13 +143,18 @@ export class MarbleRun {
     }
 
     const { marble } = this;
-    const hit = marble.step(dt, this.solid);
-    if (hit > 0.06) this.emit('knock', Math.min(1, hit / 0.5));
-    for (const item of this.stars) {
-      if (item.got || Math.hypot(item.x - marble.x, item.y - marble.y) > marble.radius + STAR_RADIUS) continue;
-      item.got = true;
-      this.emit('star', 1);
+    // Short steps, looking for stars after each, so that a fast marble cannot skip past one.
+    const steps = Math.ceil(dt / (1 / 240));
+    let hit = 0;
+    for (let s = 0; s < steps; s++) {
+      hit = Math.max(hit, marble.step(dt / steps, this.solid));
+      for (const item of this.stars) {
+        if (item.got || Math.hypot(item.x - marble.x, item.y - marble.y) > marble.radius + STAR_RADIUS) continue;
+        item.got = true;
+        this.emit('star', 1);
+      }
     }
+    if (hit > 0.06) this.emit('knock', Math.min(1, hit / 0.5));
     if (this.stars.every((item) => item.got)) {
       this.phase = 'won';
       this.wonFor = 0;

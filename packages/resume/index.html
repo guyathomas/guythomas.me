@@ -39,6 +39,7 @@
       <button type="button" id="btn-print">Print</button>
       <a href="/plain/">Plain copy</a>
     </nav>
-    <script type="module" src="/src/main.ts"></script>
+    <script type="module" src="/src/main.ts" onerror="location.replace('/plain/')"></script>
+    <noscript><meta http-equiv="refresh" content="0; url=/plain/" /></noscript>
   </body>
 </html>

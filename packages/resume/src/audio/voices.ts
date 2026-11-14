@@ -50,8 +50,18 @@ export class Voices {
   slide(speed: number): void {
     if (!this.ctx || !this.slideGain || !this.slideFilter) return;
     const now = this.ctx.currentTime;
-    this.slideGain.gain.setTargetAtTime(Math.min(0.22, speed * 0.55), now, 0.04);
+    this.hiss(Math.min(0.22, speed * 0.55), 0.04);
     this.slideFilter.frequency.setTargetAtTime(1800 + Math.min(2600, speed * 4200), now, 0.06);
+  }
+
+  /** Sets the level of the sliding hiss. It dies away by itself if the hand stops and nothing says so. */
+  private hiss(level: number, ease: number): void {
+    if (!this.ctx || !this.slideGain) return;
+    const now = this.ctx.currentTime;
+    const { gain } = this.slideGain;
+    gain.cancelScheduledValues(now);
+    gain.setTargetAtTime(level, now, ease);
+    gain.setTargetAtTime(0, now + 0.12, 0.05);
   }
 
   private burst(duration: number, type: BiquadFilterType, frequency: number, level: number, q = 0.7): void {
@@ -117,7 +127,7 @@ export class Voices {
   scratch(speed: number): void {
     if (!this.ctx || !this.slideGain || !this.slideFilter) return;
     const now = this.ctx.currentTime;
-    this.slideGain.gain.setTargetAtTime(Math.min(0.09, speed * 0.45), now, 0.02);
+    this.hiss(Math.min(0.09, speed * 0.45), 0.02);
     this.slideFilter.frequency.setTargetAtTime(4200 + Math.min(2400, speed * 9000), now, 0.03);
   }
 

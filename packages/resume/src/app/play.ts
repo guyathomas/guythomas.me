@@ -112,6 +112,11 @@ export function createPlay(deps: PlayDeps) {
       run.reset();
       layers.back.sketch(run.sketch());
     },
+    /** Draws both pencil maps afresh on the next frame. */
+    stale(): void {
+      layers.front.stale();
+      layers.back.stale();
+    },
     render(renderer: Parameters<GraphiteLayer['render']>[0]): void {
       layers.front.render(renderer);
       layers.back.render(renderer);

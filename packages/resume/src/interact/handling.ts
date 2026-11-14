@@ -246,6 +246,9 @@ export class SheetHandling {
       this.phase = 'rest';
     }
     if (this.phase === 'slide' || this.phase === 'glide' || this.phase === 'squaring') this.phase = 'rest';
+    // A freeze state can leave the sheet curled while at rest.
+    this.sheet.curl = null;
+    this.sheet.drop = 0;
     this.turn = null;
     this.afterTurn = null;
     this.sheet.update();

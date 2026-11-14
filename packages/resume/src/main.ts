@@ -241,12 +241,13 @@ async function start(): Promise<void> {
   const aim = new THREE.Vector3();
   let arranged = false;
   let placed = false;
+  let homed = false;
   stage.beforeRender = () => {
     const framing = frameReading(frontEl.getBoundingClientRect(), sheetWidthPx, window.innerWidth, window.innerHeight);
     if (!arranged) {
       arranged = true;
-      // Objects are laid out once; a resize only decides whether there is room to show them.
-      arrangeDesk(objects, sheet, window.innerWidth / 2 / framing.pxPerMetre, !placed);
+      // Objects are laid out once, the first time there is room; after that a resize only shows or hides them.
+      if (arrangeDesk(objects, sheet, window.innerWidth / 2 / framing.pxPerMetre, !homed)) homed = true;
       if (!placed) applyView();
       placed = true;
     }
@@ -300,8 +301,20 @@ async function start(): Promise<void> {
       location.reload();
       return;
     }
+    // A hand full of pencil should not outlast the room for it.
+    pointer.putDownPencil();
     arranged = false;
     stage.resize();
+  });
+  // If the graphics context goes, the plain sheet underneath takes over until it is back.
+  canvas.addEventListener('webglcontextlost', (event) => {
+    event.preventDefault();
+    document.documentElement.classList.remove('live');
+  });
+  canvas.addEventListener('webglcontextrestored', () => {
+    document.documentElement.classList.add('live');
+    play.stale();
+    wake();
   });
   if (!frozen) {
     window.setInterval(() => lighting.refresh(false), 60000);

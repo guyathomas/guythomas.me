@@ -168,6 +168,11 @@ export class GraphiteLayer {
     this.dirty = true;
   }
 
+  /** Marks the map as needing to be drawn again, as after the graphics context has been lost. */
+  stale(): void {
+    this.dirty = true;
+  }
+
   /** Brings the map up to date. Call before the sheet is rendered. */
   render(renderer: THREE.WebGLRenderer): void {
     if (!this.dirty) return;
