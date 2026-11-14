@@ -2,7 +2,7 @@
 // usage: node tools/shot.mjs <path?query> <out.png> [--size 1920x1080] [--dpr 1]
 //        [--clip x,y,w,h] [--wait ms] [--steps '<json>'] [--mobile]
 // steps: [{"move":[x,y]},{"down":1},{"up":1},{"drag":[[x,y],[x,y]],"ms":600},
-//         {"key":"f"},{"scroll":400},{"wait":300},{"shot":"file.png"},{"eval":"js"}]
+//         {"key":"f"},{"dbl":[x,y]},{"scroll":400},{"wait":300},{"shot":"file.png"},{"eval":"js"}]
 import { chromium } from 'playwright-core';
 
 const args = process.argv.slice(2);
@@ -64,6 +64,7 @@ for (const step of steps) {
   if (step.scroll !== undefined) await page.evaluate((y) => window.scrollTo(0, y), step.scroll);
   if (step.wheel) await page.mouse.wheel(0, step.wheel);
   if (step.click) await page.mouse.click(step.click[0], step.click[1]);
+  if (step.dbl) await page.mouse.dblclick(step.dbl[0], step.dbl[1]);
   if (step.eval) console.log('eval:', JSON.stringify(await page.evaluate(step.eval)));
   if (step.wait) await page.waitForTimeout(step.wait);
   if (step.shot) await page.screenshot({ path: step.shot, clip: clipOf(step.clip) });

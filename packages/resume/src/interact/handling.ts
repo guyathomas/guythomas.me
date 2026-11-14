@@ -34,12 +34,15 @@ export class SheetHandling {
   /** Where the hand is, and where the sheet has caught up to. */
   private hand: [number, number] = [0, 0];
   private pull: [number, number] = [0, 0];
-  private turnSpeed = 0;
+  /** The sheet carrying itself over: the roll sweeps across while the sheet stays where it is. */
+  private turn: { from: [number, number]; to: [number, number]; angle: number; swing: number; q0: number; q1: number; time: number; duration: number } | null = null;
+  /** How fast the hand is carrying the corner over, metres per second. */
+  private handFlow = 0;
+  private lastHand: [number, number] = [0, 0];
   private dropSpeed = 0;
   private squareFrom: Pose | null = null;
   private squareTo: Pose | null = null;
   private squareTime = 0;
-  private scripted: { from: [number, number]; to: [number, number]; time: number; duration: number } | null = null;
   private afterTurn: (() => void) | null = null;
 
   constructor(private readonly sheet: SheetBody, private readonly events: HandlingEvents, private readonly instant: boolean) {
@@ -109,7 +112,8 @@ export class SheetHandling {
     this.anchor = this.sheet.cornerWorld(corner);
     this.hand = [...this.anchor];
     this.pull = [...this.anchor];
-    this.scripted = null;
+    this.lastHand = [...this.anchor];
+    this.handFlow = 0;
     this.events.slide(0);
   }
 
@@ -120,14 +124,67 @@ export class SheetHandling {
   endCurl(): void {
     if (this.phase !== 'curl') return;
     const curl = this.sheet.curl;
-    const half = curl ? Math.PI * curl.r * 0.5 : 0;
-    const over = curl ? pastCrease(this.sheet.pose.cx, this.sheet.pose.cz, curl) > half : false;
-    if (over) {
-      this.phase = 'turning';
-      this.turnSpeed = 0.5;
-    } else {
-      this.phase = 'return';
+    const covered = curl ? this.covered(curl) : 0;
+    // Let go a fifth of the way over, or flick it, and the sheet goes the rest of the way.
+    if (curl && (covered > 0.18 || (covered > 0.06 && this.handFlow > 0.5))) this.beginTurn(curl, 0.45 + 0.4 * (1 - covered));
+    else this.phase = 'return';
+  }
+
+  /** Half the sheet's extent along a desk direction. */
+  private extent(nx: number, nz: number): number {
+    const { cx, cz } = this.sheet.pose;
+    let most = 0;
+    for (let i = 0; i < 4; i++) {
+      const [x, z] = this.sheet.cornerWorld(i);
+      most = Math.max(most, (x - cx) * nx + (z - cz) * nz);
     }
+    return most;
+  }
+
+  /** How much of the sheet has been carried past the crease, 0 to 1. */
+  private covered(curl: Curl): number {
+    let deepest = 0;
+    for (let i = 0; i < 4; i++) {
+      const [x, z] = this.sheet.cornerWorld(i);
+      deepest = Math.max(deepest, pastCrease(x, z, curl));
+    }
+    return deepest / (2 * this.extent(curl.nx, curl.nz));
+  }
+
+  /**
+   * Turns the sheet over where it lies. The crease swings square to the
+   * sheet and sweeps across it while the sheet shifts the other way, so it
+   * lands on the footprint it left.
+   */
+  private beginTurn(curl: Curl, duration: number): void {
+    const pose = this.sheet.pose;
+    let sx = 0;
+    let sz = 0;
+    let best = -1;
+    for (const [x, z] of [[pose.a, pose.c], [pose.b, pose.d]]) {
+      const length = Math.hypot(x, z);
+      const along = (curl.nx * x + curl.nz * z) / length;
+      if (Math.abs(along) <= best) continue;
+      best = Math.abs(along);
+      sx = (Math.sign(along) * x) / length;
+      sz = (Math.sign(along) * z) / length;
+    }
+    const angle = Math.atan2(curl.nz, curl.nx);
+    const swing = Math.atan2(sz, sx) - angle;
+    const reach = this.extent(sx, sz);
+    const clear = Math.PI * this.radius + 0.002;
+    const travel = 2 * reach + Math.PI * this.radius + 0.004;
+    this.turn = {
+      from: [pose.cx, pose.cz],
+      to: [pose.cx + sx * travel, pose.cz + sz * travel],
+      angle,
+      swing: Math.atan2(Math.sin(swing), Math.cos(swing)),
+      q0: (curl.mx - pose.cx) * curl.nx + (curl.mz - pose.cz) * curl.nz,
+      q1: -(reach + clear),
+      time: 0,
+      duration,
+    };
+    this.phase = 'turning';
   }
 
   private applyCurl(): Curl | null {
@@ -145,52 +202,28 @@ export class SheetHandling {
     this.phase = 'dropping';
   }
 
-  /** True once every corner has rolled past half a turn: the sheet is fully over. */
-  private fullyOver(curl: Curl): boolean {
-    const half = Math.PI * curl.r;
-    for (let i = 0; i < 4; i++) {
-      const [x, z] = this.sheet.cornerWorld(i);
-      if (pastCrease(x, z, curl) < half) return false;
-    }
-    return true;
-  }
-
   // Scripted moves
 
-  /** Turns the sheet over as a hand would, then squares it up. */
-  turnOver(): void {
+  /** Turns the sheet over where it lies, like a page. `then` runs once it has landed. */
+  turnOver(then?: () => void): void {
     if (this.phase !== 'rest') return;
-    // Take the corner nearest the bottom right of the picture.
-    let corner = 0;
-    let best = -Infinity;
-    for (let i = 0; i < 4; i++) {
-      const [x, z] = this.sheet.cornerWorld(i);
-      if (x + z * 0.6 > best) {
-        best = x + z * 0.6;
-        corner = i;
-      }
-    }
-    this.beginCurl(corner);
-    // Carry it up and to the left, far enough that the last corner clears the roll.
-    const length = Math.hypot(this.sheet.width * 2.3, this.sheet.height * 0.22);
-    const ux = (-this.sheet.width * 2.3) / length;
-    const uz = (-this.sheet.height * 0.22) / length;
-    let furthest = 0;
-    for (let i = 0; i < 4; i++) {
-      const [x, z] = this.sheet.cornerWorld(i);
-      furthest = Math.max(furthest, (x - this.anchor[0]) * ux + (z - this.anchor[1]) * uz);
-    }
-    const reach = 2 * furthest + Math.PI * this.radius + 0.01;
-    this.scripted = { from: [...this.anchor], to: [this.anchor[0] + ux * reach, this.anchor[1] + uz * reach], time: 0, duration: 1.15 };
-    this.afterTurn = () => this.squareUp();
+    const pose = this.sheet.pose;
+    // Lift the edge nearest the right of the picture.
+    const length = Math.hypot(pose.a, pose.c);
+    const side = pose.a + pose.c * 0.3 >= 0 ? 1 : -1;
+    const nx = (side * pose.a) / length;
+    const nz = (side * pose.c) / length;
+    this.events.slide(0);
     if (this.instant) {
       this.sheet.curl = null;
-      this.setPose({ ...this.homeFor(!this.frontUp) });
-      this.phase = 'rest';
-      this.scripted = null;
-      this.afterTurn = null;
+      this.setPose(reflectPose(pose, pose.cx, pose.cz, nx, nz));
       this.sheet.update();
+      then?.();
+      return;
     }
+    const edge = this.extent(nx, nz) + 0.001;
+    this.afterTurn = then ?? null;
+    this.beginTurn({ mx: pose.cx + nx * edge, mz: pose.cz + nz * edge, nx, nz, r: this.radius }, 0.95);
   }
 
   private homeFor(front: boolean): Pose {
@@ -213,11 +246,11 @@ export class SheetHandling {
       this.phase = 'rest';
     }
     if (this.phase === 'slide' || this.phase === 'glide' || this.phase === 'squaring') this.phase = 'rest';
-    this.scripted = null;
+    this.turn = null;
     this.afterTurn = null;
     this.sheet.update();
     if (this.frontUp) this.squareUp();
-    else this.turnOver();
+    else this.turnOver(() => this.squareUp());
   }
 
   /** Pins a static pose for a freeze state. */
@@ -256,24 +289,21 @@ export class SheetHandling {
       }
 
       case 'curl': {
-        if (this.scripted) {
-          const s = this.scripted;
-          s.time += dt;
-          const t = smooth(Math.min(1, s.time / s.duration));
-          this.hand = [s.from[0] + (s.to[0] - s.from[0]) * t, s.from[1] + (s.to[1] - s.from[1]) * t];
-        }
         const k = this.instant ? 1 : 1 - Math.exp(-dt * 22);
         const gap = Math.hypot(this.hand[0] - this.pull[0], this.hand[1] - this.pull[1]);
         this.pull[0] += (this.hand[0] - this.pull[0]) * k;
         this.pull[1] += (this.hand[1] - this.pull[1]) * k;
         const curl = this.applyCurl();
-        sheet.update();
-        if (this.scripted && curl && this.fullyOver(curl)) {
-          this.scripted = null;
-          this.finishTurn(curl);
-          return true;
+        if (curl && dt > 0) {
+          const flow = -((this.hand[0] - this.lastHand[0]) * curl.nx + (this.hand[1] - this.lastHand[1]) * curl.nz) / dt;
+          this.handFlow += (flow - this.handFlow) * 0.35;
         }
-        return gap > 0.0002 || this.scripted !== null;
+        this.lastHand = [...this.hand];
+        // Carried a third of the way, the sheet is going over whether or not it is let go.
+        const going = curl !== null && this.covered(curl) >= 1 / 3;
+        if (going) this.beginTurn(curl, 0.6);
+        sheet.update();
+        return gap > 0.0002 || going;
       }
 
       case 'return': {
@@ -294,17 +324,27 @@ export class SheetHandling {
       }
 
       case 'turning': {
-        // Past the tipping point the sheet carries itself the rest of the way over.
-        const curl = sheet.curl;
-        if (!curl) {
+        const turn = this.turn;
+        if (!turn) {
           this.phase = 'rest';
           return false;
         }
-        this.turnSpeed += dt * 2.6;
-        this.pull[0] -= curl.nx * this.turnSpeed * dt;
-        this.pull[1] -= curl.nz * this.turnSpeed * dt;
-        const next = this.applyCurl();
-        if (next && (this.fullyOver(next) || this.instant)) this.finishTurn(next);
+        turn.time += dt;
+        const t = this.instant ? 1 : Math.min(1, turn.time / turn.duration);
+        const eased = smooth(t);
+        const angle = turn.angle + turn.swing * eased;
+        const nx = Math.cos(angle);
+        const nz = Math.sin(angle);
+        const cx = turn.from[0] + (turn.to[0] - turn.from[0]) * eased;
+        const cz = turn.from[1] + (turn.to[1] - turn.from[1]) * eased;
+        const q = turn.q0 + (turn.q1 - turn.q0) * eased;
+        const curl = { mx: cx + nx * q, mz: cz + nz * q, nx, nz, r: this.radius };
+        sheet.pose = { ...sheet.pose, cx, cz };
+        sheet.curl = curl;
+        if (t >= 1) {
+          this.turn = null;
+          this.finishTurn(curl);
+        }
         sheet.update();
         return true;
       }

@@ -53,6 +53,7 @@ export class Pointer {
     canvas.addEventListener('pointerleave', () => {
       if (!this.drag) this.deps.cameraRig.sway.set(0, 0);
     });
+    canvas.addEventListener('dblclick', this.onDouble);
     if (window.matchMedia('(pointer: coarse)').matches) this.buildGrips();
   }
 
@@ -181,6 +182,16 @@ export class Pointer {
     canvas.style.cursor = cursor;
     this.deps.wake();
   }
+
+  /** A double click on the bare sheet turns it over. */
+  private onDouble = (event: MouseEvent): void => {
+    const point = this.deskPoint(event.clientX, event.clientY);
+    const { objects, sheet, handling } = this.deps;
+    if (!point || objects.pick(point.x, point.z) || this.linkUnder(event.clientX, event.clientY)) return;
+    if (!sheet.hit(point.x, point.z, 0)) return;
+    handling.turnOver();
+    this.deps.wake();
+  };
 
   private onDown = (event: PointerEvent): void => {
     if (event.button !== 0) return;

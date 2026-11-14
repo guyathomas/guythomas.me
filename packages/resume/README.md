@@ -32,7 +32,8 @@ Edit `src/data/resume.yaml` and rebuild. Both pages and the printed sheet are ge
 | Move the pointer | The lamp leans toward it; the impression catches the light |
 | Drag the bare desk | Move the lamp's light |
 | Drag the sheet | Slide and turn it |
-| Drag a corner | Curl it; pull it across to turn the sheet over |
+| Drag a corner | Curl it. Carry it a third of the way, or flick it, and the sheet turns over where it lies |
+| Double-click the sheet | Turns it over |
 | Drag the loupe, stamp, pencil | Move them. The loupe magnifies. Let go while moving and they slide on, bump each other, and the pencil rolls |
 | Set the stamp down on the sheet | Leaves an "OK to print" mark and opens the print dialog for the plain copy |
 | Click the email or website | Opens it |
