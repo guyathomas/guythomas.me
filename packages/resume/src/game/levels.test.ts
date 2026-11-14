@@ -41,7 +41,7 @@ function play(level: number) {
   const events: RunEvent[] = [];
   const run = new MarbleRun(W, H, (event) => events.push(event), level);
   const points = ROUTES[level].map(([x, y]) => [x * W, y * H] as [number, number]);
-  const lines: number[][] = [];
+  const lines: number[][] = run.starter();
   let from = points[0];
   for (let i = 1; i < points.length; i++) {
     const to = points[i];

@@ -24,9 +24,8 @@ export interface PointerDeps {
   /** The viewer has done something; the hint can go. */
   used(): void;
   toggleLamp(): void;
-  pencil: PencilTool;
-  /** The block eraser: told where on the page it is being dragged, and when it stops. */
-  eraser: { rub(at: PagePoint, speed: number): void; rest(): void };
+  /** The things that are picked up and used in the hand. */
+  tools: { pencil: PencilTool; eraser: PencilTool };
   /** A click on the page. Returns true if something there took it. */
   poke(at: PagePoint): boolean;
 }
@@ -65,7 +64,7 @@ export class Pointer {
     });
     canvas.addEventListener('dblclick', this.onDouble);
     canvas.addEventListener('contextmenu', (event) => {
-      if (this.deps.pencil.active) event.preventDefault();
+      if (this.tool.active) event.preventDefault();
     });
     if (window.matchMedia('(pointer: coarse)').matches) this.buildGrips();
   }
@@ -118,7 +117,6 @@ export class Pointer {
     switch (this.drag) {
       case 'object':
         objects.drag(point.x, point.z, dt);
-        this.rubUnder(dt);
         break;
       case 'curl':
         handling.moveCurl(point.x, point.z);
@@ -139,19 +137,20 @@ export class Pointer {
   }
 
   private end(clientX: number, clientY: number, cancelled: boolean): void {
-    const { objects, handling, pencil, sheet } = this.deps;
+    const { objects, handling, sheet, tools } = this.deps;
     const drag = this.drag;
     this.drag = null;
     if (drag === 'object') {
-      // The pencil, clicked or carried onto the paper, stays in the hand to draw with.
-      const point = objects.inHand?.prop.name === 'pencil' ? this.deskPoint(clientX, clientY) : null;
-      if (point && (this.travelled < 5 || pageAt(sheet, point.x, point.z))) {
-        pencil.take(point.x, point.z);
+      // The pencil or the eraser, clicked or carried onto the paper, stays in the hand to be used.
+      const name = objects.inHand?.prop.name;
+      const tool = name === 'pencil' || name === 'eraser' ? tools[name] : null;
+      const point = tool ? this.deskPoint(clientX, clientY) : null;
+      if (tool && point && (this.travelled < 5 || pageAt(sheet, point.x, point.z))) {
+        tool.take(point.x, point.z);
         this.setTool(true);
         this.deps.wake();
         return;
       }
-      if (objects.inHand?.prop.name === 'eraser') this.deps.eraser.rest();
       objects.release((performance.now() - this.lastMove) / 1000);
     }
     if (drag === 'curl') handling.endCurl();
@@ -162,14 +161,10 @@ export class Pointer {
     this.deps.wake();
   }
 
-  /** The eraser rubs out what it is dragged across. */
-  private rubUnder(dt: number): void {
-    const { objects, sheet, handling, eraser } = this.deps;
-    const item = objects.inHand;
-    if (item?.prop.name !== 'eraser') return;
-    const at = handling.busy ? null : pageAt(sheet, item.x, item.z);
-    if (at) eraser.rub(at, Math.hypot(item.vx, item.vz) * (dt > 0 ? 1 : 0));
-    else eraser.rest();
+  /** The thing in the hand, or the pencil when the hand is empty. */
+  private get tool(): PencilTool {
+    const { pencil, eraser } = this.deps.tools;
+    return eraser.active ? eraser : pencil;
   }
 
   /** A press and release without travel: follow a link, or work the lamp's switch. */
@@ -224,7 +219,7 @@ export class Pointer {
 
   /** A double click on the bare sheet turns it over. */
   private onDouble = (event: MouseEvent): void => {
-    if (this.deps.pencil.active) return;
+    if (this.tool.active) return;
     const point = this.deskPoint(event.clientX, event.clientY);
     const { objects, sheet, handling } = this.deps;
     if (!point || objects.pick(point.x, point.z) || this.linkUnder(event.clientX, event.clientY)) return;
@@ -250,7 +245,7 @@ export class Pointer {
 
   /** Lays the pencil down if it is in the hand. Returns true if it was. */
   putDownPencil(): boolean {
-    const { pencil } = this.deps;
+    const pencil = this.tool;
     if (!pencil.active) return false;
     pencil.putDown();
     if (this.drag === 'draw') this.cancelPress();
@@ -262,7 +257,8 @@ export class Pointer {
 
   /** Forgets the pencil without moving it, when the desk is being reset. */
   dropPencil(): void {
-    this.deps.pencil.drop();
+    this.deps.tools.pencil.drop();
+    this.deps.tools.eraser.drop();
     if (this.drag === 'draw') {
       this.cancelPress();
       this.drag = null;
@@ -272,7 +268,7 @@ export class Pointer {
 
   /** Turns the pencil in the hand end for end. Returns true if there was one to turn. */
   turnPencil(): boolean {
-    const { pencil } = this.deps;
+    const pencil = this.tool;
     if (!pencil.active) return false;
     pencil.turn();
     this.deps.wake();
@@ -280,9 +276,9 @@ export class Pointer {
   }
 
   private onDown = (event: PointerEvent): void => {
-    const { pencil } = this.deps;
+    const pencil = this.tool;
     // With the pencil in hand, the other mouse button rubs out for as long as it is held.
-    const other = pencil.active && event.button === 2 && !this.drag;
+    const other = pencil.active && !pencil.rubOnly && event.button === 2 && !this.drag;
     if (event.button !== 0 && !other) return;
     this.deps.used();
     // Reaching for something else on the desk puts the pencil down first.
@@ -319,7 +315,7 @@ export class Pointer {
   };
 
   private onMove = (event: PointerEvent): void => {
-    const { pencil } = this.deps;
+    const pencil = this.tool;
     if (pencil.active) {
       // Only the finger that is drawing moves the line.
       if (this.drag === 'draw' && event.pointerId !== this.pressed) return;
@@ -346,8 +342,8 @@ export class Pointer {
     this.pressed = null;
     this.drag = null;
     if (this.deps.canvas.hasPointerCapture(event.pointerId)) this.deps.canvas.releasePointerCapture(event.pointerId);
-    this.deps.pencil.lift();
-    if (this.borrowed) this.deps.pencil.turn(false);
+    this.tool.lift();
+    if (this.borrowed) this.tool.turn(false);
     this.borrowed = false;
     this.deps.wake();
     return true;
@@ -431,7 +427,7 @@ export class Pointer {
     let owner: number | null = null;
     element.addEventListener('pointerdown', (event) => {
       // One hand at a time: a second finger does not take over, and a hand holding the pencil is busy.
-      if (this.drag || this.deps.pencil.active) return;
+      if (this.drag || this.tool.active) return;
       const point = this.deskPoint(event.clientX, event.clientY);
       if (!point) return;
       event.preventDefault();
@@ -464,7 +460,7 @@ export class Pointer {
     const projected = new THREE.Vector3();
     for (const grip of this.grips) {
       // With the pencil in hand the whole sheet is for drawing on.
-      const at = this.deps.pencil.active ? null : grip.place();
+      const at = this.tool.active ? null : grip.place();
       if (!at) {
         grip.element.style.display = 'none';
         continue;

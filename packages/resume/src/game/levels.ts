@@ -2,8 +2,10 @@
 export interface Level {
   start: [number, number];
   stars: Array<[number, number]>;
-  /** Lines already on the page, each a run of points. */
+  /** Lines printed on the page that cannot be rubbed out, each a run of points. */
   walls: Array<Array<[number, number]>>;
+  /** Pencil lines the page opens with: a start for the viewer to carry on, or rub out. */
+  starter?: Array<Array<[number, number]>>;
   /** How much line the pencil will draw on this page, in page widths. */
   lead: number;
 }
@@ -25,7 +27,8 @@ export const LEVELS: Level[] = [
       [0.62, 0.5],
       [0.82, 0.64],
     ],
-    walls: [
+    walls: [],
+    starter: [
       [
         [0.14, 0.187],
         [0.33, 0.32],
@@ -40,7 +43,8 @@ export const LEVELS: Level[] = [
       [0.2, 0.48],
       [0.6, 0.76],
     ],
-    walls: [
+    walls: [],
+    starter: [
       [
         [0.88, 0.17],
         [0.72, 0.215],

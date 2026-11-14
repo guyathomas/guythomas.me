@@ -36,7 +36,7 @@ Edit `src/data/resume.yaml` and rebuild. Both pages and the printed sheet are ge
 | Double-click the sheet | Turns it over |
 | Drag the loupe, stamp, pencil | Move them. The loupe magnifies. Let go while moving and they slide on, bump each other, and the pencil rolls |
 | Click the pencil, or carry it onto the sheet | It stays in the hand. Press on the paper to draw; click off the sheet or press `Esc` to put it down |
-| Drag the eraser across the sheet | Rubs out the pencil under it, leaving the rest of each line |
+| Click the eraser, or carry it onto the sheet | It stays in the hand, held on its end. Press on the paper and rub to take out the pencil under it; click off the sheet or press `Esc` to put it down |
 | `E`, or hold the right mouse button | With the pencil in hand: turns it to the rubber end, a finer eraser |
 | Set the stamp down on the sheet | Leaves an "OK to print" mark and opens the print dialog for the plain copy |
 | Click the email or website | Opens it |
@@ -46,7 +46,7 @@ Edit `src/data/resume.yaml` and rebuild. Both pages and the printed sheet are ge
 
 ## The back
 
-Nothing is printed on the back. It carries a marble run, drawn in pencil and left for the viewer to find: a marble on a shelf, three stars, and on the first page the start of a line to carry on. Lines drawn on the page are ramps. Let the marble go and it rolls down the page.
+Nothing is printed on the back. It carries a marble run, drawn in pencil and left for the viewer to find: a marble on a shelf, three stars, and on the first two pages the start of a line to carry on (an ordinary pencil line: it can be rubbed out, which gives its lead back). Lines drawn on the page are ramps. Let the marble go and it rolls down the page.
 
 - **To pass a page,** all three stars must be collected in one run. A marble that rolls off the page or comes to rest goes back to its shelf and the stars come back.
 - **Lead is limited.** The bar in the head margin shows how much line the pencil has left for the page; rubbing a line out gives its lead back.

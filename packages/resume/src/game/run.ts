@@ -81,9 +81,26 @@ export class MarbleRun {
     for (const item of this.stars) item.got = false;
   }
 
+  /**
+   * The pencil lines this page opens with, each a run of x, y pairs. They are
+   * the viewer's to keep or rub out, so they are handed back through `setLines`.
+   */
+  starter(): number[][] {
+    return (this.plan.starter ?? []).map((line) => line.flatMap(([x, y]) => [x * this.width, y * this.height]));
+  }
+
+  /** All the line this page allows, metres: the lead it gives plus what it opens with. */
+  private get allowance(): number {
+    let opening = 0;
+    for (const points of this.starter()) {
+      for (let i = 2; i < points.length; i += 2) opening += Math.hypot(points[i] - points[i - 2], points[i + 1] - points[i - 1]);
+    }
+    return this.plan.lead * this.width + opening;
+  }
+
   /** How much line the pencil has left for this page, metres. */
   get lead(): number {
-    return Math.max(0, this.plan.lead * this.width - this.used - this.drawing);
+    return Math.max(0, this.allowance - this.used - this.drawing);
   }
 
   /** Counts line as it is being drawn, before it is handed over with `setLines`. */
@@ -194,7 +211,7 @@ export class MarbleRun {
     }
     const full = 0.03;
     const right = width * 0.93;
-    const left = (this.lead / (this.plan.lead * width)) * full;
+    const left = (this.lead / this.allowance) * full;
     line([right - full, top + 0.0002, right - full, top + 0.0034], 0.5);
     line([right, top + 0.0002, right, top + 0.0034], 0.5);
     if (left > 0.0003) line([right - left, top + 0.0018, right, top + 0.0018], 0.9, LINE * 2.2);

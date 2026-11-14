@@ -27,8 +27,16 @@ export interface PencilEvents {
 /** Half the width of a pencil line, metres. */
 export const PENCIL_HALF = 0.0004;
 const SPACING = 0.00035;
-/** Where the pencil lies when put down, relative to where its point was. */
-const LAID = { x: 0.05, z: 0.069, angle: 2.2 };
+/** What kind of thing is in the hand. */
+export interface ToolKind {
+  /** True for a thing that only rubs out, like the eraser. */
+  rubOnly: boolean;
+  /** Where it lies when put down, relative to where its working end was. */
+  laid: { x: number; z: number; angle: number };
+}
+
+export const PENCIL: ToolKind = { rubOnly: false, laid: { x: 0.05, z: 0.069, angle: 2.2 } };
+export const ERASER: ToolKind = { rubOnly: true, laid: { x: 0.012, z: 0.017, angle: 2.2 } };
 
 /** The page point under a desk point, if the sheet is lying flat there. */
 export function pageAt(sheet: SheetBody, x: number, z: number): PagePoint | null {
@@ -39,8 +47,9 @@ export function pageAt(sheet: SheetBody, x: number, z: number): PagePoint | null
 }
 
 /**
- * The pencil in the hand: it follows the pointer, draws where its point is
- * pressed to the paper, and turned end for end it rubs lines out.
+ * A thing held in the hand and used on the paper. The pencil follows the
+ * pointer, draws where its point is pressed down, and turned end for end it
+ * rubs lines out; the eraser only rubs.
  */
 export class PencilTool {
   active = false;
@@ -56,10 +65,16 @@ export class PencilTool {
     private readonly sheet: SheetBody,
     private readonly handling: SheetHandling,
     private readonly events: PencilEvents,
+    private readonly kind: ToolKind = PENCIL,
   ) {}
 
+  /** True for a tool with only a rubber end. */
+  get rubOnly(): boolean {
+    return this.kind.rubOnly;
+  }
+
   private hold(x: number, z: number, touching: boolean): void {
-    this.objects.hold(this.item, x, z, touching, this.rubbing);
+    this.objects.hold(this.item, x, z, touching, this.rubbing && !this.kind.rubOnly);
   }
 
   private page(x: number, z: number): PagePoint | null {
@@ -68,13 +83,13 @@ export class PencilTool {
 
   take(x: number, z: number): void {
     this.active = true;
-    this.rubbing = false;
+    this.rubbing = this.kind.rubOnly;
     this.hold(x, z, false);
   }
 
   /** Turns the pencil end for end. Not while it is pressed to the paper. */
   turn(rubbing = !this.rubbing): void {
-    if (!this.active || this.stroke || this.rubbed || !this.item.hand) return;
+    if (!this.active || this.kind.rubOnly || this.stroke || this.rubbed || !this.item.hand) return;
     this.rubbing = rubbing;
     this.hold(this.item.hand.x, this.item.hand.z, false);
   }
@@ -158,7 +173,8 @@ export class PencilTool {
     this.lift();
     this.active = false;
     this.rubbing = false;
-    this.objects.layDown(this.item, x + LAID.x, z + LAID.z, LAID.angle);
+    const { laid } = this.kind;
+    this.objects.layDown(this.item, x + laid.x, z + laid.z, laid.angle);
   }
 
   /** Forgets the hand without moving anything, for when the desk is reset around it. */

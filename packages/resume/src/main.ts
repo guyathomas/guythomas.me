@@ -96,7 +96,7 @@ async function start(): Promise<void> {
   objects.add(createStamp(kit), [-0.012, 0.012]);
   objects.add(loupe, [0, 0.13]);
   const pencilItem = objects.add(createPencil(kit), [-0.077, 0.085]);
-  objects.add(createEraser(kit), [-0.012, 0.012]);
+  const eraserItem = objects.add(createEraser(kit), [-0.012, 0.012]);
   for (const item of objects.items) scene.add(item.prop.group, item.prop.blob);
   scene.add(loupe.group.userData.glass as THREE.Object3D);
 
@@ -172,6 +172,7 @@ async function start(): Promise<void> {
     handling,
     objects,
     pencilItem,
+    eraserItem,
     layers: pencil,
     voices,
     wake,
@@ -232,8 +233,7 @@ async function start(): Promise<void> {
       lighting.toggleLamp();
       voices.click();
     },
-    pencil: play.tool,
-    eraser: play.eraser,
+    tools: play.tools,
     poke: play.poke,
   });
 
