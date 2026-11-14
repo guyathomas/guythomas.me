@@ -118,7 +118,7 @@ const NORMAL = /* glsl */ `
   float f0 = texture2D(uFibre, fuv).r;
   slope += uTooth * vec2(texture2D(uFibre, fuv + vec2(fe, 0.0)).r - f0, texture2D(uFibre, fuv + vec2(0.0, fe)).r - f0);
   float g0 = fine.r;
-  slope += 0.35 * uTooth * vec2(
+  slope += 0.14 * uTooth * vec2(
     texture2D(uFibre, fuv * 4.3 + 0.37 + vec2(fe, 0.0)).r - g0,
     texture2D(uFibre, fuv * 4.3 + 0.37 + vec2(0.0, fe)).r - g0
   );
@@ -151,7 +151,7 @@ export function createPaperMaterial(options: PaperOptions): THREE.MeshStandardMa
     uInk2: { value: options.ink2 },
     uDeboss: { value: 0.00046 },
     uMirror: { value: options.mirror ? 1 : 0 },
-    uTooth: { value: 1.15 },
+    uTooth: { value: 0.95 },
     // Blur radii are tuned for a 4096-texel-wide sheet; smaller maps sample finer mips.
     uLod: { value: Math.log2((inkImage.width / options.size.x) / (4096 / 0.2159)) },
     uUnderLod: { value: Math.log2((underImage.width / options.size.x) / (4096 / 0.2159)) },

@@ -195,7 +195,7 @@ export class SheetBody {
     }
     // Paper is never dead flat: the long right edge stands off the desk in a slow wave.
     const edge = Math.max(0, (u - 0.72) / 0.28);
-    lift += this.wave * edge * edge * (0.55 + 0.45 * Math.sin(v * 4.1 + 0.6));
+    lift += this.wave * edge * edge * Math.sin(Math.PI * Math.min(1, Math.max(0, v))) * (0.6 + 0.4 * Math.sin(v * 5.2 + 0.6));
     return lift;
   }
 

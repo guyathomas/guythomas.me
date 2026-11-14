@@ -92,12 +92,16 @@ export function createLoupe(kit: PropKit, blobFor: (w: number, d: number, o: num
   group.traverse((child) => child.layers.set(1));
   glass.traverse((child) => child.layers.set(1));
 
+  // The loupe's own contact shadow must not darken what is seen through it.
+  const shade = blobFor(0.076, 0.076, 0.42);
+  shade.layers.set(1);
+
   const loupe: Loupe = {
     name: 'loupe',
     group,
     radius: 0.034,
     pickOffset: 0,
-    blob: blobFor(0.076, 0.076, 0.42),
+    blob: shade,
     blobSize: [0.076, 0.076],
     renderView(renderer, scene) {
       camera.position.set(group.position.x, 1, group.position.z);
