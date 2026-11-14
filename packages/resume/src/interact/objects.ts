@@ -1,31 +1,52 @@
 import type { SheetBody } from '../sheet/body';
 import { toLocal, toWorld, type Pose } from '../sheet/pose';
 import { placeProp, type Prop } from '../scene/props';
+import { coast, collide, throwSpin, type Body } from './motion';
 
-export interface Item {
+export interface Item extends Body {
   prop: Prop;
-  x: number;
-  z: number;
-  angle: number;
   lift: number;
   held: boolean;
   /** Extent of the object along its own length, for picking: [from, to] in metres. */
-  span: [number, number];
+  reach: [number, number];
   home: { x: number; z: number; angle: number };
+  /** A move the object makes by itself, such as going back to its place. */
+  flight: { fromX: number; fromZ: number; fromAngle: number; time: number } | null;
 }
 
 const HELD_LIFT = 0.007;
+const FLIGHT_TIME = 0.5;
+const smooth = (t: number) => t * t * (3 - 2 * t);
 
-/** The loose things on the desk: where they are, picking them up, putting them down. */
+/** The loose things on the desk: where they are, picking them up, throwing them, putting them down. */
 export class DeskObjects {
   readonly items: Item[] = [];
   private grabbed: Item | null = null;
   private offset: [number, number] = [0, 0];
 
-  constructor(private readonly setDown: (item: Item) => void) {}
+  /** `byHand` is false when the object put itself down. */
+  constructor(private readonly setDown: (item: Item, byHand: boolean) => void, private readonly instant = false) {}
 
-  add(prop: Prop, span: [number, number] = [0, 0]): Item {
-    const item: Item = { prop, x: 0, z: 0, angle: 0, lift: 0, held: false, span, home: { x: 0, z: 0, angle: 0 } };
+  add(prop: Prop, reach: [number, number] = [0, 0]): Item {
+    const item: Item = {
+      prop,
+      x: 0,
+      z: 0,
+      angle: 0,
+      vx: 0,
+      vz: 0,
+      spin: 0,
+      rolled: 0,
+      span: prop.solid.span,
+      radius: prop.solid.radius,
+      mass: prop.mass,
+      rolls: prop.roll !== undefined,
+      lift: 0,
+      held: false,
+      reach,
+      home: { x: 0, z: 0, angle: 0 },
+      flight: null,
+    };
     this.items.push(item);
     return item;
   }
@@ -43,7 +64,16 @@ export class DeskObjects {
     item.x = x;
     item.z = z;
     item.angle = angle;
-    placeProp(item.prop, x, z, angle, item.lift);
+    this.place(item);
+  }
+
+  private place(item: Item): void {
+    placeProp(item.prop, item.x, item.z, item.angle, item.lift);
+    item.prop.roll?.(item.rolled);
+  }
+
+  private still(item: Item): void {
+    item.vx = item.vz = item.spin = 0;
   }
 
   /** The object under a desk point, if any. */
@@ -51,14 +81,14 @@ export class DeskObjects {
     let found: Item | null = null;
     let best = Infinity;
     for (const item of this.items) {
-      if (!item.prop.group.visible) continue;
+      if (!item.prop.group.visible || item.flight) continue;
       const dx = x - item.x;
       const dz = z - item.z;
       const cos = Math.cos(item.angle);
       const sin = Math.sin(item.angle);
       const along = dx * cos - dz * sin;
       const across = dx * sin + dz * cos;
-      const nearest = Math.min(item.span[1], Math.max(item.span[0], along));
+      const nearest = Math.min(item.reach[1], Math.max(item.reach[0], along));
       const distance = Math.hypot(along - nearest, across);
       if (distance < item.prop.radius && distance < best) {
         best = distance;
@@ -71,23 +101,38 @@ export class DeskObjects {
   grab(item: Item, x: number, z: number): void {
     this.grabbed = item;
     item.held = true;
+    item.flight = null;
+    this.still(item);
     this.offset = [item.x - x, item.z - z];
   }
 
-  drag(x: number, z: number): void {
-    if (this.grabbed) this.move(this.grabbed, x + this.offset[0], z + this.offset[1]);
+  /** `dt` is the time since the hand last moved, for the speed it will be thrown at. */
+  drag(x: number, z: number, dt: number): void {
+    const item = this.grabbed;
+    if (!item) return;
+    const nx = x + this.offset[0];
+    const nz = z + this.offset[1];
+    const step = Math.max(dt, 1 / 240);
+    item.vx += ((nx - item.x) / step - item.vx) * 0.4;
+    item.vz += ((nz - item.z) / step - item.vz) * 0.4;
+    this.move(item, nx, nz);
   }
 
-  release(): void {
-    if (this.grabbed) this.grabbed.held = false;
+  /** `idle` is how long the hand had been still: a thing set down is not thrown. */
+  release(idle: number): void {
+    const item = this.grabbed;
     this.grabbed = null;
+    if (!item) return;
+    item.held = false;
+    if (idle > 0.07 || this.instant || item.prop.grip) this.still(item);
+    else item.spin = throwSpin(this.offset[0], this.offset[1], item.vx, item.vz);
   }
 
   /** Things resting on the sheet ride along when it slides. */
   carry(sheet: SheetBody, from: Pose, to: Pose): void {
     const turned = Math.atan2(to.c, to.a) - Math.atan2(from.c, from.a);
     for (const item of this.items) {
-      if (item.held || !item.prop.group.visible) continue;
+      if (item.held || item.flight || !item.prop.group.visible) continue;
       const [lx, lz] = toLocal(from, item.x, item.z);
       if (Math.abs(lx) > sheet.width / 2 || Math.abs(lz) > sheet.height / 2) continue;
       const [x, z] = toWorld(to, lx, lz);
@@ -95,22 +140,76 @@ export class DeskObjects {
     }
   }
 
-  home(): void {
-    for (const item of this.items) this.move(item, item.home.x, item.home.z, item.home.angle);
+  /** Picks the object up and puts it back in its place. */
+  sendHome(item: Item): void {
+    if (item.held) return;
+    this.still(item);
+    if (this.instant) {
+      this.move(item, item.home.x, item.home.z, item.home.angle);
+      return;
+    }
+    item.flight = { fromX: item.x, fromZ: item.z, fromAngle: item.angle, time: 0 };
   }
 
-  /** Eases held things up and released things down. Returns true while anything moves. */
+  home(): void {
+    this.grabbed = null;
+    for (const item of this.items) {
+      this.still(item);
+      item.flight = null;
+      item.held = false;
+      item.rolled = 0;
+      item.lift = 0;
+      this.move(item, item.home.x, item.home.z, item.home.angle);
+    }
+  }
+
+  private fly(item: Item, dt: number): void {
+    const flight = item.flight!;
+    flight.time += dt;
+    const t = smooth(Math.min(1, flight.time / FLIGHT_TIME));
+    item.lift = Math.sin(Math.PI * t) * 0.014;
+    this.move(item, flight.fromX + (item.home.x - flight.fromX) * t, flight.fromZ + (item.home.z - flight.fromZ) * t, flight.fromAngle + (item.home.angle - flight.fromAngle) * t);
+    if (t >= 1) {
+      item.flight = null;
+      item.lift = 0;
+      this.place(item);
+      this.setDown(item, false);
+    }
+  }
+
+  /** Advances everything in motion. Returns true while anything moves. */
   step(dt: number): boolean {
     let moving = false;
     for (const item of this.items) {
+      if (item.flight) {
+        this.fly(item, dt);
+        moving = true;
+        continue;
+      }
       const goal = item.held ? HELD_LIFT : 0;
-      if (item.lift === goal) continue;
-      const before = item.lift;
-      const rate = item.held ? 0.07 : 0.11;
-      item.lift = goal > item.lift ? Math.min(goal, item.lift + rate * dt) : Math.max(goal, item.lift - rate * dt);
-      placeProp(item.prop, item.x, item.z, item.angle, item.lift);
-      if (item.lift === 0 && before > 0) this.setDown(item);
-      moving = true;
+      if (item.lift !== goal) {
+        const before = item.lift;
+        const rate = item.held ? 0.07 : 0.11;
+        item.lift = goal > item.lift ? Math.min(goal, item.lift + rate * dt) : Math.max(goal, item.lift - rate * dt);
+        this.place(item);
+        if (item.lift === 0 && before > 0) this.setDown(item, true);
+        moving = true;
+      }
+      if (!item.held && (item.vx !== 0 || item.vz !== 0 || item.spin !== 0)) {
+        coast(item, dt);
+        this.place(item);
+        moving = true;
+      }
+    }
+    // Things on the desk get in each other's way; a thing in the hand is above them.
+    const grounded = this.items.filter((item) => item.prop.group.visible && !item.held && !item.flight && item.lift < 0.003);
+    for (let i = 0; i < grounded.length; i++) {
+      for (let j = i + 1; j < grounded.length; j++) {
+        if (!collide(grounded[i], grounded[j])) continue;
+        this.place(grounded[i]);
+        this.place(grounded[j]);
+        moving = true;
+      }
     }
     return moving;
   }

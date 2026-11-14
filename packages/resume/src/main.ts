@@ -3,6 +3,8 @@ import { arrangeDesk } from './app/layout';
 import { Lighting } from './app/lighting';
 import { isFrozen, parseParams } from './app/params';
 import { printSheet } from './app/print';
+import { printPlain } from './app/printing';
+import { Stamping } from './app/stamping';
 import { Voices } from './audio/voices';
 import { SheetHandling } from './interact/handling';
 import { DeskObjects } from './interact/objects';
@@ -11,9 +13,10 @@ import { CameraRig } from './scene/camera';
 import { createDesk } from './scene/desk';
 import { createLampHead } from './scene/lamp';
 import { createLoupe } from './scene/loupe';
-import { createKit, createPencil, createWeight } from './scene/props';
+import { createKit, createPencil } from './scene/props';
 import { LightRig } from './scene/rig';
 import { Stage } from './scene/stage';
+import { createStamp } from './scene/stamp';
 import { frameReading } from './scene/view';
 import { fontsReady } from './typeset/raster';
 import { Controls } from './ui/controls';
@@ -45,7 +48,8 @@ async function start(): Promise<void> {
   camera.layers.enable(1);
 
   // The sheet.
-  const { sheet, frontLinks, sheetWidthPx } = printSheet(renderer, frontEl, backEl, narrow);
+  const { sheet, frontLinks, sheetWidthPx, inks } = printSheet(renderer, frontEl, backEl, narrow);
+  const stamping = new Stamping(sheet, inks);
   scene.add(sheet.group);
 
   // The desk and the things on it.
@@ -53,7 +57,29 @@ async function start(): Promise<void> {
   scene.add(desk.mesh);
   const voices = new Voices();
   const kit = createKit();
-  const objects = new DeskObjects((item) => (item.prop.name === 'weight' ? voices.clink() : voices.tap()));
+  // What follows a stamp: it goes back to its place, then the printer opens.
+  let stampRun: number[] = [];
+  const cancelStampRun = () => {
+    stampRun.forEach((id) => window.clearTimeout(id));
+    stampRun = [];
+  };
+  const objects = new DeskObjects((item, byHand) => {
+    // The stamp set down on the sheet passes it for press: a mark, then the printer.
+    if (item.prop.name === 'stamp' && byHand && !handling.busy && stamping.press(item.x, item.z, item.angle)) {
+      voices.stamp();
+      cancelStampRun();
+      stampRun = [
+        window.setTimeout(() => {
+          objects.sendHome(item);
+          wake();
+        }, 320),
+        window.setTimeout(printPlain, 1150),
+      ];
+    } else {
+      voices.tap();
+    }
+    stage.invalidate();
+  }, still);
   const blobFor = (w: number, d: number, o: number) => {
     const mesh = new THREE.Mesh(
       new THREE.PlaneGeometry(1, 1),
@@ -65,7 +91,7 @@ async function start(): Promise<void> {
     return mesh;
   };
   const loupe = createLoupe(kit, blobFor);
-  objects.add(createWeight(kit));
+  objects.add(createStamp(kit), [-0.012, 0.012]);
   objects.add(loupe, [0, 0.13]);
   objects.add(createPencil(kit), [-0.064, 0.085]);
   for (const item of objects.items) scene.add(item.prop.group, item.prop.blob);
@@ -94,8 +120,11 @@ async function start(): Promise<void> {
       handling.turnOver();
       wake();
     },
+    print: printPlain,
     reset: () => {
       handling.reset();
+      cancelStampRun();
+      stamping.clear();
       objects.home();
       rig.lampAim.set(-0.02, 0, -sheet.height * 0.2);
       rig.lampNudge.set(0, 0);
@@ -144,16 +173,11 @@ async function start(): Promise<void> {
     stage.invalidate();
   }
 
-  // The paper's own curl: a corner rises unless the weight is sitting on it.
+  // The paper's own curl: its corners stand a little off the desk.
   function settleCorners(dt: number): boolean {
-    const weight = objects.find('weight');
     let changed = false;
     for (let i = 0; i < 4; i++) {
-      let goal = narrow ? FREE_CORNER_LIFT[i] * 0.5 : FREE_CORNER_LIFT[i];
-      if (weight && weight.prop.group.visible && weight.lift < 0.002) {
-        const [x, z] = sheet.cornerWorld(i);
-        if (Math.hypot(weight.x - x, weight.z - z) < 0.04) goal = 0;
-      }
+      const goal = narrow ? FREE_CORNER_LIFT[i] * 0.5 : FREE_CORNER_LIFT[i];
       const now = sheet.cornerLift[i];
       if (Math.abs(goal - now) < 0.00002) continue;
       sheet.cornerLift[i] = still ? goal : now + (goal - now) * (1 - Math.exp(-dt * 5));

@@ -10,6 +10,8 @@ export interface Printed {
   frontLinks: LinkRegion[];
   /** Width of the laid-out sheet in sheet px. */
   sheetWidthPx: number;
+  /** The ink maps, kept so that marks can be added after printing. */
+  inks: { front: THREE.DataTexture; back: THREE.DataTexture };
 }
 
 const PAPER = '#f3eee3';
@@ -43,5 +45,5 @@ export function printSheet(renderer: THREE.WebGLRenderer, front: HTMLElement, ba
     createPaperMaterial({ ink: backInk, under: frontInk, mirror: true, ...shared }),
     new THREE.MeshStandardMaterial({ color: '#e6dcc7', roughness: 1, flatShading: true, side: THREE.DoubleSide }),
   );
-  return { sheet, frontLinks: frontRaster.links, sheetWidthPx: frontRaster.sheetWidth };
+  return { sheet, frontLinks: frontRaster.links, sheetWidthPx: frontRaster.sheetWidth, inks: { front: frontInk, back: backInk } };
 }

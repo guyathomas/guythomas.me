@@ -5,6 +5,7 @@ export interface ControlHandlers {
   desk(): void;
   flip(): void;
   reset(): void;
+  print(): void;
   sound(): void;
   lamp(): void;
 }
@@ -23,9 +24,16 @@ export class Controls {
     this.view.addEventListener('click', handlers.desk);
     document.getElementById('btn-flip')?.addEventListener('click', handlers.flip);
     document.getElementById('btn-reset')?.addEventListener('click', handlers.reset);
+    document.getElementById('btn-print')?.addEventListener('click', handlers.print);
     this.sound.addEventListener('click', handlers.sound);
 
     window.addEventListener('keydown', (event) => {
+      // The browser's own print would print the picture of the desk; print the sheet instead.
+      if ((event.metaKey || event.ctrlKey) && !event.altKey && !event.shiftKey && event.key.toLowerCase() === 'p') {
+        event.preventDefault();
+        handlers.print();
+        return;
+      }
       if (event.metaKey || event.ctrlKey || event.altKey || event.repeat) return;
       const target = event.target as HTMLElement | null;
       if (target && /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName)) return;

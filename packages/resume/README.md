@@ -33,9 +33,11 @@ Edit `src/data/resume.yaml` and rebuild. Both pages and the printed sheet are ge
 | Drag the bare desk | Move the lamp's light |
 | Drag the sheet | Slide and turn it |
 | Drag a corner | Curl it; pull it across to turn the sheet over |
-| Drag the loupe, weight, pencil | Move them. The loupe magnifies. Take the weight off and the corner rises |
+| Drag the loupe, stamp, pencil | Move them. The loupe magnifies. Let go while moving and they slide on, bump each other, and the pencil rolls |
+| Set the stamp down on the sheet | Leaves an "OK to print" mark and opens the print dialog for the plain copy |
 | Click the email or website | Opens it |
 | `F` / `R` / `D` / `L` | Turn over / reset / desk view / lamp switch |
+| `Cmd/Ctrl+P`, or Print | Prints the plain copy, not the picture of the desk |
 
 ## Freeze states
 
@@ -62,6 +64,6 @@ Auto lighting needs a rough position. It starts from the browser's time zone (a 
 - **No Blender bake.** The handover recommended baking the desk's light. Everything on the desk can be moved and the sun moves in auto mode, so a bake would be wrong as soon as anything was touched. The scene is lit live with shadow maps, contact shadows and an HDRI instead.
 - **No type sorts on the desk.** They read as dark sticks at this scale. Fewer, better objects.
 - **Sliding does not nudge objects.** The sheet passes under things rather than pushing them; things resting on it ride along.
-- **Touch is simpler.** Corners, the loupe and the weight can be dragged; a tap moves the light; swipes scroll. The sheet cannot be slid by touch.
+- **Touch is simpler.** Corners, the loupe and the stamp can be dragged; a tap moves the light; swipes scroll. The sheet cannot be slid by touch.
 
 Assets and licences are listed in `ATTRIBUTIONS.md`.

@@ -103,7 +103,7 @@ export class Pointer {
     if (this.travelled > 4) this.deps.used();
     switch (this.drag) {
       case 'object':
-        objects.drag(point.x, point.z);
+        objects.drag(point.x, point.z, dt);
         break;
       case 'curl':
         handling.moveCurl(point.x, point.z);
@@ -127,7 +127,7 @@ export class Pointer {
     const { objects, handling } = this.deps;
     const drag = this.drag;
     this.drag = null;
-    if (drag === 'object') objects.release();
+    if (drag === 'object') objects.release((performance.now() - this.lastMove) / 1000);
     if (drag === 'curl') handling.endCurl();
     if (drag === 'slide') handling.endSlide();
     if (!cancelled && this.travelled < 5) this.click(clientX, clientY);
@@ -257,9 +257,9 @@ export class Pointer {
       );
     }
     for (const item of objects.items) {
-      if (item.prop.name !== 'weight' && item.prop.name !== 'loupe') continue;
+      if (item.prop.name !== 'stamp' && item.prop.name !== 'loupe') continue;
       this.addGrip(
-        () => (item.prop.group.visible ? new THREE.Vector3(item.x, 0, item.z) : null),
+        () => (item.prop.group.visible && !item.flight ? new THREE.Vector3(item.x, 0, item.z) : null),
         (x, z) => this.grabItem(item, x, z),
       );
     }
@@ -276,6 +276,8 @@ export class Pointer {
     element.setAttribute('aria-hidden', 'true');
     document.body.appendChild(element);
     element.addEventListener('pointerdown', (event) => {
+      // One hand at a time: a second finger does not take over.
+      if (this.drag) return;
       const point = this.deskPoint(event.clientX, event.clientY);
       if (!point) return;
       event.preventDefault();

@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 export interface Prop {
-  name: 'weight' | 'loupe' | 'pencil';
+  name: 'stamp' | 'loupe' | 'pencil';
   group: THREE.Group;
   /** Reach of the object on the desk, for picking. */
   radius: number;
@@ -9,6 +9,14 @@ export interface Prop {
   pickOffset: number;
   blob: THREE.Mesh;
   blobSize: [number, number];
+  /** The part that other things bump into: a capsule along the object's length. */
+  solid: { span: [number, number]; radius: number };
+  /** Relative weight, for what gives way in a collision. */
+  mass: number;
+  /** Stays where it is put rather than sliding on when thrown. */
+  grip?: boolean;
+  /** Present on round things: turns the object to show it has rolled this far across its axis. */
+  roll?(distance: number): void;
 }
 
 /** Fine turning marks for lathed metal: stripes that run round the part. */
@@ -66,7 +74,7 @@ export function createKit(): PropKit {
   return { brass, blobTexture: softBlob() };
 }
 
-function blob(kit: PropKit, width: number, depth: number, opacity: number): THREE.Mesh {
+export function blob(kit: PropKit, width: number, depth: number, opacity: number): THREE.Mesh {
   const mesh = new THREE.Mesh(
     new THREE.PlaneGeometry(1, 1),
     new THREE.MeshBasicMaterial({ map: kit.blobTexture, color: 0x000000, transparent: true, opacity, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -3, polygonOffsetUnits: -3 }),
@@ -77,7 +85,7 @@ function blob(kit: PropKit, width: number, depth: number, opacity: number): THRE
   return mesh;
 }
 
-function shadowed<T extends THREE.Object3D>(object: T): T {
+export function shadowed<T extends THREE.Object3D>(object: T): T {
   object.traverse((child) => {
     if ((child as THREE.Mesh).isMesh) {
       child.castShadow = true;
@@ -85,32 +93,6 @@ function shadowed<T extends THREE.Object3D>(object: T): T {
     }
   });
   return object;
-}
-
-/** A turned brass paperweight with a knob, heavy enough to hold a corner flat. */
-export function createWeight(kit: PropKit): Prop {
-  const profile = [
-    [0, 0],
-    [0.0218, 0],
-    [0.0232, 0.0012],
-    [0.0232, 0.0092],
-    [0.0222, 0.0108],
-    [0.0196, 0.0114],
-    [0.0188, 0.0128],
-    [0.0124, 0.0142],
-    [0.0068, 0.0146],
-    [0.0058, 0.0158],
-    [0.0056, 0.0206],
-    [0.0074, 0.0226],
-    [0.0082, 0.0256],
-    [0.0066, 0.0288],
-    [0.003, 0.0304],
-    [0, 0.0306],
-  ].map(([r, y]) => new THREE.Vector2(r, y));
-  const group = new THREE.Group();
-  group.add(new THREE.Mesh(new THREE.LatheGeometry(profile, 72), kit.brass));
-  shadowed(group);
-  return { name: 'weight', group, radius: 0.0235, pickOffset: 0, blob: blob(kit, 0.066, 0.066, 0.62), blobSize: [0.066, 0.066] };
 }
 
 /** A used drawing pencil: hexagonal, dark green lacquer, sharpened by knife. */
@@ -131,12 +113,26 @@ export function createPencil(kit: PropKit): Prop {
   const cap = new THREE.Mesh(new THREE.CylinderGeometry(radius * 0.99, radius * 0.99, 0.0004, 6), wood);
   cap.position.y = -length / 2 - 0.0002;
   inner.add(body, cone, tip, cap);
-  // Lay it down on one flat of the hexagon.
-  inner.rotation.set(0, Math.PI / 6, Math.PI / 2);
-  inner.position.y = radius * Math.cos(Math.PI / 6);
-  group.add(inner);
+  // Lay it along the group's x axis, point forward, resting on one flat of the hexagon.
+  inner.rotation.z = -Math.PI / 2;
+  const roller = new THREE.Group();
+  roller.position.y = radius * Math.cos(Math.PI / 6);
+  roller.add(inner);
+  group.add(roller);
   shadowed(group);
-  return { name: 'pencil', group, radius: 0.012, pickOffset: 0, blob: blob(kit, 0.15, 0.014, 0.5), blobSize: [0.15, 0.014] };
+  return {
+    name: 'pencil',
+    group,
+    radius: 0.012,
+    pickOffset: 0,
+    blob: blob(kit, 0.15, 0.014, 0.5),
+    blobSize: [0.15, 0.014],
+    solid: { span: [-0.064, 0.084], radius: 0.004 },
+    mass: 1,
+    roll: (distance) => {
+      roller.rotation.x = distance / radius;
+    },
+  };
 }
 
 /** Places a prop on the desk and keeps its contact shadow under it. */

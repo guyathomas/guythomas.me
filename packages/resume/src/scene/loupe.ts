@@ -103,6 +103,8 @@ export function createLoupe(kit: PropKit, blobFor: (w: number, d: number, o: num
     pickOffset: 0,
     blob: shade,
     blobSize: [0.076, 0.076],
+    solid: { span: [0, 0], radius: 0.034 },
+    mass: 4,
     renderView(renderer, scene) {
       camera.position.set(group.position.x, 1, group.position.z);
       camera.lookAt(group.position.x, 0, group.position.z);

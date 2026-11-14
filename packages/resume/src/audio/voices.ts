@@ -107,16 +107,10 @@ export class Voices {
     setTimeout(() => this.burst(0.014, 'bandpass', 2300, 0.3, 2.5), 34);
   }
 
-  /** Brass set down on wood. */
-  clink(): void {
-    this.tone(150, 70, 0.07, 0.3);
-    for (const [frequency, level, duration] of [
-      [1410, 0.05, 0.5],
-      [2870, 0.035, 0.36],
-      [4630, 0.02, 0.22],
-    ]) {
-      this.tone(frequency, frequency * 0.998, duration, level);
-    }
+  /** The stamp coming down on paper. */
+  stamp(): void {
+    this.tone(104, 46, 0.13, 0.42);
+    this.burst(0.06, 'lowpass', 620, 0.36);
   }
 
   /** Something light set down. */
