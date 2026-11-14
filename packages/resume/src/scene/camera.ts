@@ -42,9 +42,9 @@ export class CameraRig {
     const readZ = framing.z;
 
     // Desk view: far enough back to hold the whole sheet with room around it.
-    const span = Math.max(sheetHeight * 1.12, 0.36) / Math.min(1, camera.aspect / 1.2);
+    const span = Math.max(sheetHeight * 1.26, 0.38) / Math.min(1, camera.aspect / 1.2);
     const deskDistance = span / 2 / Math.tan(THREE.MathUtils.degToRad(DESK_FOV / 2));
-    const deskTarget = new THREE.Vector3(sheetCentre.x - 0.035, 0, sheetCentre.z - 0.015);
+    const deskTarget = new THREE.Vector3(sheetCentre.x - 0.06, 0, sheetCentre.z - 0.045);
     const deskPosition = new THREE.Vector3(deskTarget.x + deskDistance * 0.1, deskDistance * 0.82, deskTarget.z + deskDistance * 0.56);
 
     this.position.set(readX + this.swayNow.x * 0.012 * (1 - t), distance, readZ + this.swayNow.y * 0.012 * (1 - t)).lerp(deskPosition, t);
