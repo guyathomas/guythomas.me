@@ -2,7 +2,9 @@
   "name": "guythomas-monorepo",
   "private": true,
   "type": "module",
-  "workspaces": ["packages/*"],
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "dev": "turbo dev",
     "build": "turbo build",
@@ -11,6 +13,5 @@
   "devDependencies": {
     "turbo": "^2",
     "typescript": "^5.8"
-  },
-  "packageManager": "bun@1.2.0"
+  }
 }
