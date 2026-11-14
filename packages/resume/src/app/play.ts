@@ -87,8 +87,8 @@ export function createPlay(deps: PlayDeps) {
   };
 
   const tool = new PencilTool(deps.pencilItem, deps.objects, sheet, handling, {
-    // The front takes any amount of scribbling; the game's page has only so much lead.
-    allow: (front, length) => front || ((run.phase === 'ready' || run.phase === 'rolling') && run.lead > length),
+    // The front takes scribbling at any time; the game's page only while a page is in play.
+    allow: (front) => front || run.phase === 'ready' || run.phase === 'rolling',
     drawn: (front, x0, y0, x1, y1, tone, speed) => {
       (front ? layers.front : layers.back).draw(x0, y0, x1, y1, PENCIL_HALF, tone);
       voices.scratch(speed);

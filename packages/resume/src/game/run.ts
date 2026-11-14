@@ -1,6 +1,6 @@
 import { LEVELS, type Level } from './levels';
 import { Marble, type Segment } from './marble';
-import { burst, dashes, ring, star, type Sketch } from './sketch';
+import { burst, dashes, numerals, ring, star, type Sketch } from './sketch';
 
 export type RunEvent = 'release' | 'knock' | 'star' | 'lost' | 'won' | 'next' | 'finished';
 
@@ -16,12 +16,15 @@ const LINE = 0.00036;
 const STAR_RADIUS = 0.006;
 const SHELF = 0.009;
 const WIN_TIME = 1.7;
+/** How much line, as a multiple of par, still earns three points, and two. */
+const THREE = 1.08;
+const TWO = 1.5;
 
 /**
  * The game on the back of the sheet. A marble waits on a shelf; lines drawn
  * on the page become ramps; let it go and it rolls down the page collecting
- * stars. All three must be collected in one run, with only so much pencil
- * lead to draw with. All coordinates are page metres, x across and y down.
+ * stars. All three must be collected in one run, and the less line it took
+ * the better the page scores. All coordinates are page metres, x across and y down.
  */
 export class MarbleRun {
   phase: 'ready' | 'rolling' | 'won' | 'done' = 'ready';
@@ -38,6 +41,8 @@ export class MarbleRun {
   private stalled = 0;
   private clock = 0;
   private wonFor = 0;
+  /** What each page passed so far scored. */
+  private scores: number[] = [];
 
   constructor(
     private readonly width: number,
@@ -58,6 +63,7 @@ export class MarbleRun {
   private load(level: number): void {
     this.level = level;
     const { width, height, plan } = this;
+    if (level === 0) this.scores = [];
     this.stars = plan.stars.map(([x, y]) => ({ x: x * width, y: y * height, got: false, since: 0 }));
     this.walls = [];
     for (const wall of plan.walls) {
@@ -89,18 +95,20 @@ export class MarbleRun {
     return (this.plan.starter ?? []).map((line) => line.flatMap(([x, y]) => [x * this.width, y * this.height]));
   }
 
-  /** All the line this page allows, metres: the lead it gives plus what it opens with. */
-  private get allowance(): number {
-    let opening = 0;
-    for (const points of this.starter()) {
-      for (let i = 2; i < points.length; i += 2) opening += Math.hypot(points[i] - points[i - 2], points[i + 1] - points[i - 1]);
-    }
-    return this.plan.lead * this.width + opening;
+  /** How much line is on the page, metres, counting the line being drawn now. */
+  get drawn(): number {
+    return this.used + this.drawing;
   }
 
-  /** How much line the pencil has left for this page, metres. */
-  get lead(): number {
-    return Math.max(0, this.allowance - this.used - this.drawing);
+  /** What the page would score if it were passed now: three for a tidy solution, down to one. */
+  get rating(): number {
+    const par = this.plan.par * this.width;
+    return this.drawn <= par * THREE ? 3 : this.drawn <= par * TWO ? 2 : 1;
+  }
+
+  /** Points won so far, out of three a page. */
+  get score(): number {
+    return this.scores.reduce((sum, value) => sum + value, 0);
   }
 
   /** Counts line as it is being drawn, before it is handed over with `setLines`. */
@@ -175,6 +183,7 @@ export class MarbleRun {
     if (this.stars.every((item) => item.got)) {
       this.phase = 'won';
       this.wonFor = 0;
+      this.scores[this.level] = this.rating;
       this.emit('won', 1);
       return true;
     }
@@ -196,7 +205,7 @@ export class MarbleRun {
     const boil = this.phase === 'ready' || this.phase === 'done' ? 0 : Math.floor(this.clock / 0.13);
     const { marble, width, height } = this;
 
-    // In the head margin: a tally of pages reached, and how much lead is left.
+    // In the head margin: a tally of pages reached, the score, and how much has been drawn.
     const top = height * 0.045;
     const done = this.level + (this.phase === 'done' ? 1 : 0);
     for (let i = 0; i <= Math.min(done, LEVELS.length - 1); i++) {
@@ -204,17 +213,36 @@ export class MarbleRun {
       if (i % 5 === 4) line([x - 0.0098, top + 0.0038, x - 0.0008, top - 0.0002], 0.6);
       else line([x, top - 0.0004 * ((i * 7) % 3), x + 0.0004, top + 0.0042], 0.6);
     }
+    const fine = LINE * 0.7;
     if (this.phase === 'done') {
-      // Every page passed: one large star, and nothing left to do.
-      line(star(width / 2, height * 0.42, width * 0.13, 4.2), 0.85, LINE * 1.4);
+      // Every page passed: one large star, and the score out of all there was to win.
+      line(star(width / 2, height * 0.4, width * 0.13, 4.2), 0.85, LINE * 1.4);
+      const total = `${this.score}/${LEVELS.length * 3}`;
+      const size = width * 0.05;
+      for (const numeral of numerals(total, width / 2 - total.length * 0.41 * size, height * 0.52, size, 3.3)) line(numeral, 0.85);
       return out;
     }
-    const full = 0.03;
-    const right = width * 0.93;
-    const left = (this.lead / this.allowance) * full;
-    line([right - full, top + 0.0002, right - full, top + 0.0034], 0.5);
-    line([right, top + 0.0002, right, top + 0.0034], 0.5);
-    if (left > 0.0003) line([right - left, top + 0.0018, right, top + 0.0018], 0.9, LINE * 2.2);
+    if (this.scores.length > 0) {
+      line(star(width / 2 - 0.006, top + 0.0019, 0.0021, 6.4), 0.7, fine);
+      for (const numeral of numerals(String(this.score), width / 2 - 0.002, top - 0.0002, 0.0042, 1.7)) line(numeral, 0.75, fine);
+    }
+    // The bar grows with every line drawn. Short of the first notch the page scores three, then two, then one.
+    const full = 0.032;
+    const left = width * 0.93 - full;
+    const scale = full / (this.plan.par * width * 2);
+    const notches = [THREE, TWO].map((multiple) => left + this.plan.par * width * multiple * scale);
+    line([left, top + 0.0002, left, top + 0.0036], 0.5, fine);
+    for (const notch of notches) line([notch, top + 0.0006, notch, top + 0.0032], 0.5, fine);
+    [3, 2, 1].forEach((points, band) => {
+      const from = band === 0 ? left : notches[band - 1];
+      const to = band === 2 ? left + full : notches[band];
+      for (let i = 0; i < points; i++) {
+        const x = (from + to) / 2 + (i - (points - 1) / 2) * 0.0026;
+        line(star(x, top - 0.0022, 0.0011, band * 3 + i), this.rating === points ? 0.75 : 0.35, fine * 0.8);
+      }
+    });
+    const reach = Math.min(full, this.drawn * scale);
+    if (reach > 0.0003) line([left, top + 0.0019, left + reach, top + 0.0019], 0.9, LINE * 2.2);
 
     for (const wall of this.walls) line([wall.x0, wall.y0, wall.x1, wall.y1]);
     if (this.phase === 'ready') {

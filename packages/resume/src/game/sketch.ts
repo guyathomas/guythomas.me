@@ -49,6 +49,36 @@ export function star(x: number, y: number, radius: number, seed: number): number
   return points;
 }
 
+/** Numerals and a stroke, as a hand writes them: each a run of points in a unit box, y down. */
+const NUMERALS: Record<string, number[]> = {
+  '0': [0.3, 0, 0.06, 0.22, 0.06, 0.78, 0.3, 1, 0.55, 0.78, 0.55, 0.22, 0.3, 0, 0.22, 0.04],
+  '1': [0.1, 0.25, 0.35, 0, 0.35, 1],
+  '2': [0.05, 0.2, 0.3, 0, 0.55, 0.2, 0.5, 0.45, 0.05, 1, 0.6, 1],
+  '3': [0.05, 0.1, 0.35, 0, 0.55, 0.2, 0.3, 0.48, 0.58, 0.72, 0.35, 1, 0.05, 0.9],
+  '4': [0.45, 1, 0.45, 0, 0.02, 0.68, 0.62, 0.68],
+  '5': [0.55, 0, 0.12, 0, 0.08, 0.42, 0.38, 0.38, 0.58, 0.62, 0.4, 1, 0.05, 0.92],
+  '6': [0.5, 0.02, 0.2, 0.3, 0.06, 0.7, 0.3, 1, 0.55, 0.75, 0.35, 0.5, 0.1, 0.62],
+  '7': [0.03, 0, 0.6, 0, 0.25, 1],
+  '8': [0.3, 0.48, 0.08, 0.25, 0.3, 0, 0.52, 0.25, 0.3, 0.48, 0.04, 0.75, 0.3, 1, 0.57, 0.75, 0.3, 0.48],
+  '9': [0.55, 0.38, 0.3, 0.5, 0.06, 0.28, 0.3, 0, 0.55, 0.25, 0.5, 0.7, 0.2, 1],
+  '/': [0.55, -0.05, 0.05, 1.05],
+};
+
+/** A number written by hand, starting at (x, y) with numerals `size` tall. Unknown characters leave a space. */
+export function numerals(text: string, x: number, y: number, size: number, seed: number): number[][] {
+  const lines: number[][] = [];
+  Array.from(text).forEach((character, index) => {
+    const shape = NUMERALS[character];
+    if (!shape) return;
+    const points: number[] = [];
+    for (let i = 0; i < shape.length; i += 2) {
+      points.push(x + (index * 0.82 + shape[i] + 0.04 * wobble(seed + index, i)) * size, y + (shape[i + 1] + 0.04 * wobble(seed + index + 0.5, i)) * size);
+    }
+    lines.push(points);
+  });
+  return lines;
+}
+
 /** Short strokes flying outward from a point. `spread` runs from 0 to 1. */
 export function burst(x: number, y: number, radius: number, spread: number, seed: number, rays = 7): number[][] {
   const lines: number[][] = [];

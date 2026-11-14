@@ -95,7 +95,7 @@ describe('PencilTool', () => {
     expect(item.hand).toBeNull();
   });
 
-  it('stops drawing when the lead runs out', () => {
+  it('stops drawing when the page will take no more', () => {
     const { tool, drawn, strokes, lead } = make();
     tool.take(0, 0);
     tool.press(0, 0);

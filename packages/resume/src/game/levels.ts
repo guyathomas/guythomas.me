@@ -6,8 +6,8 @@ export interface Level {
   walls: Array<Array<[number, number]>>;
   /** Pencil lines the page opens with: a start for the viewer to carry on, or rub out. */
   starter?: Array<Array<[number, number]>>;
-  /** How much line the pencil will draw on this page, in page widths. */
-  lead: number;
+  /** How much line a tidy solution needs, in page widths, counting any the page opens with. Scores are set against it. */
+  par: number;
 }
 
 type Points = Array<[number, number]>;
@@ -34,7 +34,7 @@ export const LEVELS: Level[] = [
         [0.33, 0.32],
       ],
     ],
-    lead: 1.4,
+    par: 0.95,
   },
   {
     start: [0.8, 0.12],
@@ -50,7 +50,7 @@ export const LEVELS: Level[] = [
         [0.72, 0.215],
       ],
     ],
-    lead: 2.2,
+    par: 1.68,
   },
   {
     start: [0.5, 0.12],
@@ -66,7 +66,7 @@ export const LEVELS: Level[] = [
         [0.6, 0.25],
       ],
     ],
-    lead: 2.7,
+    par: 2.0,
   },
   {
     start: [0.16, 0.12],
@@ -85,7 +85,7 @@ export const LEVELS: Level[] = [
         [0.5, 0.92],
       ],
     ],
-    lead: 3.6,
+    par: 2.8,
   },
   {
     start: [0.5, 0.1],
@@ -104,7 +104,7 @@ export const LEVELS: Level[] = [
         [0.94, 0.42],
       ],
     ],
-    lead: 2.2,
+    par: 1.66,
   },
   {
     start: [0.12, 0.1],
@@ -114,7 +114,7 @@ export const LEVELS: Level[] = [
       [0.86, 0.76],
     ],
     walls: [],
-    lead: 3.6,
+    par: 2.92,
   },
   {
     start: [0.14, 0.1],
@@ -124,7 +124,7 @@ export const LEVELS: Level[] = [
       [0.5, 0.7],
     ],
     walls: [cup(0.5, 0.7, 0.055, 0.045)],
-    lead: 1.9,
+    par: 1.5,
   },
   {
     start: [0.86, 0.1],
@@ -144,6 +144,6 @@ export const LEVELS: Level[] = [
       ],
       cup(0.24, 0.84, 0.065, 0.04),
     ],
-    lead: 3.0,
+    par: 2.45,
   },
 ];

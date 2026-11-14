@@ -70,27 +70,42 @@ describe('MarbleRun', () => {
     expect(run.level).toBe(0);
   });
 
-  it('has only so much lead, and gets it back when a line is rubbed out', () => {
+  it('scores a page by how little was drawn, and rubbing out counts', () => {
     const { run } = make();
-    const full = run.lead;
-    run.spend(0.1);
-    expect(run.lead).toBeCloseTo(full - 0.1, 9);
-    run.setLines([[0, 0.2, 0.15, 0.2]], 0.0003);
-    expect(run.lead).toBeCloseTo(full - 0.15, 9);
-    run.setLines([[0, 0.2, 0.15, 0.2], [0, 0.25, 0.2, 0.25], [0, 0.26, 0.2, 0.26]], 0.0003);
-    expect(run.lead).toBe(0);
-    run.setLines([], 0.0003);
-    expect(run.lead).toBeCloseTo(full, 9);
+    expect(run.rating).toBe(3);
+    run.spend(0.05);
+    expect(run.drawn).toBeCloseTo(0.05, 9);
+    run.setLines([[0, 0.2, 0.2, 0.2], [0, 0.25, 0.05, 0.25]], 0.0003);
+    expect(run.rating).toBe(2);
+    run.setLines([[0, 0.2, 0.2, 0.2], [0, 0.25, 0.2, 0.25], [0, 0.26, 0.2, 0.26]], 0.0003);
+    expect(run.rating).toBe(1);
+    run.setLines([[0, 0.2, 0.1, 0.2]], 0.0003);
+    expect(run.rating).toBe(3);
+  });
+
+  it('adds up the score as pages are passed', () => {
+    const { run } = make();
+    expect(run.score).toBe(0);
+    const slope = (0.14 * H) / (0.2 * W);
+    const drop = (0.0042 + 0.0003) * Math.hypot(1, slope);
+    const at = (x: number) => 0.36 * H + (x - 0.42 * W) * slope + drop;
+    run.setLines([[0.1 * W, at(0.1 * W), 0.95 * W, at(0.95 * W)]], 0.0003);
+    const rating = run.rating;
+    run.release();
+    play(run, 6);
+    expect(run.level).toBe(1);
+    expect(run.score).toBe(rating);
+    run.reset();
+    expect(run.score).toBe(0);
   });
 
   it('opens the first page with a line that is the viewer\'s to keep or rub out', () => {
     const { run } = make();
     const starter = run.starter();
     expect(starter).toHaveLength(1);
-    const full = run.lead;
     run.setLines(starter, 0.0003);
-    // Keeping it costs exactly the extra lead the page allows for it.
-    expect(run.lead).toBeLessThan(full);
+    // It counts as line on the page like any other.
+    expect(run.drawn).toBeGreaterThan(0.05);
     run.release();
     play(run, 0.8);
     expect(run.marble.x).toBeGreaterThan(0.2 * W + 0.004);

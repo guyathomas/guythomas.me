@@ -61,10 +61,10 @@ function play(level: number) {
   }
   for (const extra of EXTRAS[level] ?? []) lines.push(extra.map((value, k) => value * (k % 2 ? H : W)));
   run.setLines(lines, 0.0004);
-  const lead = run.lead;
+  const rating = run.rating;
   run.release();
   for (let i = 0; i < 60 * 20 && run.phase !== 'ready' && run.phase !== 'done' && run.level === level; i++) run.step(1 / 60);
-  return { run, events, lead };
+  return { run, events, rating };
 }
 
 describe('levels', () => {
@@ -82,8 +82,8 @@ describe('levels', () => {
 
   LEVELS.forEach((_, index) => {
     it(`page ${index + 1} can be passed`, () => {
-      const { run, events, lead } = play(index);
-      expect(lead, 'the route fits in the lead allowed').toBeGreaterThan(0);
+      const { run, events, rating } = play(index);
+      expect(rating, 'the scripted route is tidy enough for full marks').toBe(3);
       expect(events.filter((event) => event === 'star'), 'stars collected').toHaveLength(3);
       if (index === LEVELS.length - 1) expect(run.phase).toBe('done');
       else expect(run.level).toBe(index + 1);

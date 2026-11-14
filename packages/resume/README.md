@@ -46,14 +46,14 @@ Edit `src/data/resume.yaml` and rebuild. Both pages and the printed sheet are ge
 
 ## The back
 
-Nothing is printed on the back. It carries a marble run, drawn in pencil and left for the viewer to find: a marble on a shelf, three stars, and on the first two pages the start of a line to carry on (an ordinary pencil line: it can be rubbed out, which gives its lead back). Lines drawn on the page are ramps. Let the marble go and it rolls down the page.
+Nothing is printed on the back. It carries a marble run, drawn in pencil and left for the viewer to find: a marble on a shelf, three stars, and on the first two pages the start of a line to carry on (an ordinary pencil line: it can be rubbed out). Lines drawn on the page are ramps. Let the marble go and it rolls down the page.
 
 - **To pass a page,** all three stars must be collected in one run. A marble that rolls off the page or comes to rest goes back to its shelf and the stars come back.
-- **Lead is limited.** The bar in the head margin shows how much line the pencil has left for the page; rubbing a line out gives its lead back.
+- **The less you draw, the better the score.** A page scores three, two or one. The bar in the head margin grows with every line and shows which it would score now; rubbing a line out shortens it. The running score is written beside it, and the total out of 24 at the end.
 - **There are eight pages,** from one ramp to walls, posts and a cup that must be entered last. The tally in the head margin counts them. Passing the last stamps the sheet.
 - **Reset** rubs out every pencil mark and returns to the first page.
 
-`src/game/levels.test.ts` plays a scripted solution to every page, so each is known to be passable within its lead.
+`src/game/levels.test.ts` plays a scripted solution to every page, so each is known to be passable, and sets each page's par from what that solution draws.
 
 - `src/game` holds the rules: `marble.ts` (the marble against drawn lines), `run.ts` (shelf, stars, pages), `levels.ts`, `sketch.ts` (the hand-drawn shapes).
 - `src/sheet/graphite.ts` keeps a pencil map for each face, which the paper shader reads. The viewer's lines stay; the game's own drawing is redone each frame.
