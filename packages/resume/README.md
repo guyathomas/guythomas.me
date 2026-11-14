@@ -35,10 +35,22 @@ Edit `src/data/resume.yaml` and rebuild. Both pages and the printed sheet are ge
 | Drag a corner | Curl it. Carry it a third of the way, or flick it, and the sheet turns over where it lies |
 | Double-click the sheet | Turns it over |
 | Drag the loupe, stamp, pencil | Move them. The loupe magnifies. Let go while moving and they slide on, bump each other, and the pencil rolls |
+| Click the pencil, or carry it onto the sheet | It stays in the hand. Press on the paper to draw; click off the sheet or press `Esc` to put it down |
 | Set the stamp down on the sheet | Leaves an "OK to print" mark and opens the print dialog for the plain copy |
 | Click the email or website | Opens it |
 | `F` / `R` / `D` / `L` | Turn over / reset / desk view / lamp switch |
+| `Space`, or click the marble | On the back: lets the marble go |
 | `Cmd/Ctrl+P`, or Print | Prints the plain copy, not the picture of the desk |
+
+## The back
+
+Nothing is printed on the back. It carries a marble run, drawn in pencil and left for the viewer to find: a marble on a shelf and three stars. Lines drawn on the page are ramps. Let the marble go and it rolls down the page; collect all three stars and the page is rubbed clean for the next layout. Reset rubs out every pencil mark and returns to the first page.
+
+- `src/game` holds the rules: `marble.ts` (the marble against drawn lines), `run.ts` (shelf, stars, pages), `levels.ts`, `sketch.ts` (the hand-drawn shapes).
+- `src/sheet/graphite.ts` keeps a pencil map for each face, which the paper shader reads. The viewer's lines stay; the game's own drawing is redone each frame.
+- `src/interact/pencil.ts` is the pencil in the hand.
+
+Phones show no desk objects, so there is no pencil and no game there.
 
 ## Freeze states
 

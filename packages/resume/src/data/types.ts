@@ -15,13 +15,7 @@ export interface Role {
   achievements: string[];
 }
 
-export interface Back {
-  about: string;
-  colophon: string;
-}
-
 export interface Resume {
   header: Header;
   experience: Role[];
-  back?: Back;
 }

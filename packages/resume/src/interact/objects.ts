@@ -12,6 +12,8 @@ export interface Item extends Body {
   home: { x: number; z: number; angle: number };
   /** A move the object makes by itself, such as going back to its place. */
   flight: { fromX: number; fromZ: number; fromAngle: number; time: number } | null;
+  /** Set while the object is being used in the hand: where its working end is, and whether it touches the desk. */
+  hand: { x: number; z: number; touching: boolean } | null;
 }
 
 const HELD_LIFT = 0.007;
@@ -46,6 +48,7 @@ export class DeskObjects {
       reach,
       home: { x: 0, z: 0, angle: 0 },
       flight: null,
+      hand: null,
     };
     this.items.push(item);
     return item;
@@ -68,6 +71,10 @@ export class DeskObjects {
   }
 
   private place(item: Item): void {
+    if (item.hand && item.prop.hold) {
+      item.prop.hold(item.hand.x, item.hand.z, item.hand.touching);
+      return;
+    }
     placeProp(item.prop, item.x, item.z, item.angle, item.lift);
     item.prop.roll?.(item.rolled);
   }
@@ -81,7 +88,7 @@ export class DeskObjects {
     let found: Item | null = null;
     let best = Infinity;
     for (const item of this.items) {
-      if (!item.prop.group.visible || item.flight) continue;
+      if (!item.prop.group.visible || item.flight || item.hand) continue;
       const dx = x - item.x;
       const dz = z - item.z;
       const cos = Math.cos(item.angle);
@@ -128,6 +135,29 @@ export class DeskObjects {
     else item.spin = throwSpin(this.offset[0], this.offset[1], item.vx, item.vz);
   }
 
+  /** The object in the hand right now, if any. */
+  get inHand(): Item | null {
+    return this.grabbed;
+  }
+
+  /** Takes an object into the hand to use it, with its working end at a desk point. */
+  hold(item: Item, x: number, z: number, touching: boolean): void {
+    if (this.grabbed === item) this.grabbed = null;
+    item.held = true;
+    item.flight = null;
+    this.still(item);
+    item.hand = { x, z, touching };
+    this.place(item);
+  }
+
+  /** Lays an object that was in use down on the desk. */
+  layDown(item: Item, x: number, z: number, angle: number): void {
+    item.hand = null;
+    item.held = false;
+    item.lift = 0.008;
+    this.move(item, x, z, angle);
+  }
+
   /** Things resting on the sheet ride along when it slides. */
   carry(sheet: SheetBody, from: Pose, to: Pose): void {
     const turned = Math.atan2(to.c, to.a) - Math.atan2(from.c, from.a);
@@ -157,6 +187,7 @@ export class DeskObjects {
       this.still(item);
       item.flight = null;
       item.held = false;
+      item.hand = null;
       item.rolled = 0;
       item.lift = 0;
       this.move(item, item.home.x, item.home.z, item.home.angle);
@@ -186,6 +217,7 @@ export class DeskObjects {
         moving = true;
         continue;
       }
+      if (item.hand) continue;
       const goal = item.held ? HELD_LIFT : 0;
       if (item.lift !== goal) {
         const before = item.lift;

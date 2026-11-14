@@ -164,36 +164,6 @@
   font-style: normal;
 }
 
-/* Back */
-.sheet-back {
-  display: flex;
-  flex-direction: column;
-  padding: 150px 190px 120px;
-  font-size: 14.2px;
-  line-height: 21px;
-}
-.sheet-back .about p {
-  margin-top: 16px;
-  text-align: justify;
-  hyphens: none;
-}
-.sheet-back .colophon {
-  margin-top: auto;
-  text-align: center;
-  font-size: 12.6px;
-  line-height: 18.5px;
-  padding: 0 40px;
-}
-.sheet-back .colophon-title {
-  font-family: 'EBG SC', serif;
-  letter-spacing: 0.2em;
-  margin: 0 -0.2em 6px 0;
-  font-size: 12px;
-}
-.sheet-back .colophon p:last-child {
-  font-family: 'EBG Italic', serif;
-}
-
 /* Narrow slip, used on phones so the type stays at reading size */
 .narrow .sheet {
   width: 372px;
@@ -220,11 +190,4 @@
 }
 .narrow .sheet .job {
   margin-top: 18px;
-}
-.narrow .sheet-back {
-  padding: 60px 30px 56px;
-  min-height: 620px;
-}
-.narrow .sheet-back .colophon {
-  padding: 0 8px;
 }

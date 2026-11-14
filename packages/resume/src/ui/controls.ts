@@ -6,6 +6,10 @@ export interface ControlHandlers {
   flip(): void;
   reset(): void;
   print(): void;
+  /** Escape: returns true if something was put away. */
+  cancel(): boolean;
+  /** Space: returns true if it was used. */
+  launch(): boolean;
   sound(): void;
   lamp(): void;
 }
@@ -51,7 +55,11 @@ export class Controls {
           handlers.lamp();
           break;
         case 'escape':
-          if (this.view.getAttribute('aria-pressed') === 'true') handlers.desk();
+          if (!handlers.cancel() && this.view.getAttribute('aria-pressed') === 'true') handlers.desk();
+          break;
+        case ' ':
+          if (!handlers.launch()) return;
+          event.preventDefault();
           break;
         default:
           return;

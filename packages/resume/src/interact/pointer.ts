@@ -5,8 +5,9 @@ import type { SheetBody } from '../sheet/body';
 import { linkAt, type LinkRegion } from '../typeset/raster';
 import type { SheetHandling } from './handling';
 import type { DeskObjects, Item } from './objects';
+import { pageAt, type PagePoint, type PencilTool } from './pencil';
 
-type Drag = 'slide' | 'curl' | 'object' | 'light' | null;
+type Drag = 'slide' | 'curl' | 'object' | 'light' | 'draw' | null;
 
 export interface PointerDeps {
   canvas: HTMLCanvasElement;
@@ -23,6 +24,9 @@ export interface PointerDeps {
   /** The viewer has done something; the hint can go. */
   used(): void;
   toggleLamp(): void;
+  pencil: PencilTool;
+  /** A click on the page. Returns true if something there took it. */
+  poke(at: PagePoint): boolean;
 }
 
 const CORNER_REACH = 0.021;
@@ -125,10 +129,20 @@ export class Pointer {
   }
 
   private end(clientX: number, clientY: number, cancelled: boolean): void {
-    const { objects, handling } = this.deps;
+    const { objects, handling, pencil, sheet } = this.deps;
     const drag = this.drag;
     this.drag = null;
-    if (drag === 'object') objects.release((performance.now() - this.lastMove) / 1000);
+    if (drag === 'object') {
+      // The pencil, clicked or carried onto the paper, stays in the hand to draw with.
+      const point = objects.inHand?.prop.name === 'pencil' ? this.deskPoint(clientX, clientY) : null;
+      if (point && (this.travelled < 5 || pageAt(sheet, point.x, point.z))) {
+        pencil.take(point.x, point.z);
+        this.setTool(true);
+        this.deps.wake();
+        return;
+      }
+      objects.release((performance.now() - this.lastMove) / 1000);
+    }
     if (drag === 'curl') handling.endCurl();
     if (drag === 'slide') handling.endSlide();
     if (!cancelled && this.travelled < 5) this.click(clientX, clientY);
@@ -139,6 +153,9 @@ export class Pointer {
   /** A press and release without travel: follow a link, or work the lamp's switch. */
   private click(clientX: number, clientY: number): void {
     const { sheet, lampHead, cameraRig } = this.deps;
+    const point = this.deskPoint(clientX, clientY);
+    const at = point ? pageAt(sheet, point.x, point.z) : null;
+    if (at && this.deps.poke(at)) return;
     if (cameraRig.blend > 0.5) {
       this.ndc.set((clientX / window.innerWidth) * 2 - 1, -(clientY / window.innerHeight) * 2 + 1);
       this.ray.setFromCamera(this.ndc, this.deps.camera);
@@ -185,6 +202,7 @@ export class Pointer {
 
   /** A double click on the bare sheet turns it over. */
   private onDouble = (event: MouseEvent): void => {
+    if (this.deps.pencil.active) return;
     const point = this.deskPoint(event.clientX, event.clientY);
     const { objects, sheet, handling } = this.deps;
     if (!point || objects.pick(point.x, point.z) || this.linkUnder(event.clientX, event.clientY)) return;
@@ -193,9 +211,60 @@ export class Pointer {
     this.deps.wake();
   };
 
+  private setTool(on: boolean): void {
+    const { canvas } = this.deps;
+    canvas.style.cursor = on ? 'none' : 'default';
+    // With the pencil in hand a finger draws rather than scrolls.
+    canvas.style.touchAction = on ? 'none' : '';
+  }
+
+  /** Abandons a press in progress, so that its release does nothing. */
+  private cancelPress(): void {
+    if (this.pressed === null) return;
+    if (this.deps.canvas.hasPointerCapture(this.pressed)) this.deps.canvas.releasePointerCapture(this.pressed);
+    this.pressed = null;
+  }
+
+  /** Lays the pencil down if it is in the hand. Returns true if it was. */
+  putDownPencil(): boolean {
+    const { pencil } = this.deps;
+    if (!pencil.active) return false;
+    pencil.putDown();
+    if (this.drag === 'draw') this.cancelPress();
+    this.drag = null;
+    this.setTool(false);
+    this.deps.wake();
+    return true;
+  }
+
+  /** Forgets the pencil without moving it, when the desk is being reset. */
+  dropPencil(): void {
+    this.deps.pencil.drop();
+    if (this.drag === 'draw') {
+      this.cancelPress();
+      this.drag = null;
+    }
+    this.setTool(false);
+  }
+
   private onDown = (event: PointerEvent): void => {
     if (event.button !== 0) return;
     this.deps.used();
+    const { pencil } = this.deps;
+    if (pencil.active) {
+      const point = this.deskPoint(event.clientX, event.clientY);
+      if (!point || this.drag) return;
+      this.lastMove = performance.now();
+      if (pencil.press(point.x, point.z)) {
+        this.pressed = event.pointerId;
+        this.deps.canvas.setPointerCapture(event.pointerId);
+        this.drag = 'draw';
+      } else {
+        this.setTool(false);
+      }
+      this.deps.wake();
+      return;
+    }
     if (event.pointerType === 'touch') {
       // Touch on the open desk is left to scrolling; a tap moves the light.
       this.downAt = [event.clientX, event.clientY];
@@ -208,6 +277,17 @@ export class Pointer {
   };
 
   private onMove = (event: PointerEvent): void => {
+    const { pencil } = this.deps;
+    if (pencil.active) {
+      const point = this.deskPoint(event.clientX, event.clientY);
+      if (!point) return;
+      const now = performance.now();
+      if (this.drag === 'draw') pencil.drag(point.x, point.z, (now - this.lastMove) / 1000);
+      else if (event.pointerType !== 'touch') pencil.hover(point.x, point.z);
+      this.lastMove = now;
+      this.deps.wake();
+      return;
+    }
     if (event.pointerType === 'touch') {
       this.travelled = Math.max(this.travelled, Math.hypot(event.clientX - this.downAt[0], event.clientY - this.downAt[1]));
       return;
@@ -216,7 +296,19 @@ export class Pointer {
     else this.hover(event.clientX, event.clientY);
   };
 
+  private endStroke(event: PointerEvent): boolean {
+    if (this.drag !== 'draw') return false;
+    if (this.pressed !== event.pointerId) return true;
+    this.pressed = null;
+    this.drag = null;
+    if (this.deps.canvas.hasPointerCapture(event.pointerId)) this.deps.canvas.releasePointerCapture(event.pointerId);
+    this.deps.pencil.lift();
+    this.deps.wake();
+    return true;
+  }
+
   private onUp = (event: PointerEvent): void => {
+    if (this.endStroke(event)) return;
     if (event.pointerType === 'touch') {
       if (this.travelled < 8) this.tap(event.clientX, event.clientY);
       return;
@@ -228,6 +320,7 @@ export class Pointer {
   };
 
   private onCancel = (event: PointerEvent): void => {
+    if (this.endStroke(event)) return;
     if (event.pointerType === 'touch' || this.pressed !== event.pointerId) return;
     this.pressed = null;
     this.end(event.clientX, event.clientY, true);
@@ -268,9 +361,9 @@ export class Pointer {
       );
     }
     for (const item of objects.items) {
-      if (item.prop.name !== 'stamp' && item.prop.name !== 'loupe') continue;
+      // Phones show no objects; on a tablet a tap on the pencil picks it up.
       this.addGrip(
-        () => (item.prop.group.visible && !item.flight ? new THREE.Vector3(item.x, 0, item.z) : null),
+        () => (item.prop.group.visible && !item.flight && !item.hand ? new THREE.Vector3(item.x, 0, item.z) : null),
         (x, z) => this.grabItem(item, x, z),
       );
     }
@@ -287,8 +380,8 @@ export class Pointer {
     element.setAttribute('aria-hidden', 'true');
     document.body.appendChild(element);
     element.addEventListener('pointerdown', (event) => {
-      // One hand at a time: a second finger does not take over.
-      if (this.drag) return;
+      // One hand at a time: a second finger does not take over, and a hand holding the pencil is busy.
+      if (this.drag || this.deps.pencil.active) return;
       const point = this.deskPoint(event.clientX, event.clientY);
       if (!point) return;
       event.preventDefault();
@@ -305,7 +398,6 @@ export class Pointer {
     });
     const finish = (event: PointerEvent) => {
       if (!this.drag) return;
-      this.travelled = 99;
       this.end(event.clientX, event.clientY, true);
     };
     element.addEventListener('pointerup', finish);

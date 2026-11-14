@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { arrangeDesk } from './app/layout';
 import { Lighting } from './app/lighting';
 import { isFrozen, parseParams } from './app/params';
+import { createPlay } from './app/play';
 import { printSheet } from './app/print';
 import { printPlain } from './app/printing';
 import { Stamping } from './app/stamping';
@@ -48,7 +49,7 @@ async function start(): Promise<void> {
   camera.layers.enable(1);
 
   // The sheet.
-  const { sheet, frontLinks, sheetWidthPx, inks } = printSheet(renderer, frontEl, backEl, narrow);
+  const { sheet, frontLinks, sheetWidthPx, inks, pencil } = printSheet(renderer, frontEl, backEl, narrow);
   const stamping = new Stamping(sheet, inks);
   scene.add(sheet.group);
 
@@ -93,7 +94,7 @@ async function start(): Promise<void> {
   const loupe = createLoupe(kit, blobFor);
   objects.add(createStamp(kit), [-0.012, 0.012]);
   objects.add(loupe, [0, 0.13]);
-  objects.add(createPencil(kit), [-0.064, 0.085]);
+  const pencilItem = objects.add(createPencil(kit), [-0.064, 0.085]);
   for (const item of objects.items) scene.add(item.prop.group, item.prop.blob);
   scene.add(loupe.group.userData.glass as THREE.Object3D);
 
@@ -121,10 +122,14 @@ async function start(): Promise<void> {
       wake();
     },
     print: printPlain,
+    cancel: () => pointer.putDownPencil(),
+    launch: () => play.launch(),
     reset: () => {
       handling.reset();
       cancelStampRun();
       stamping.clear();
+      pointer.dropPencil();
+      play.reset();
       objects.home();
       rig.lampAim.set(-0.02, 0, -sheet.height * 0.2);
       rig.lampNudge.set(0, 0);
@@ -158,6 +163,9 @@ async function start(): Promise<void> {
     still,
   );
 
+  // Pencil and paper: drawing, and the marble run on the back.
+  const play = createPlay({ sheet, handling, objects, pencilItem, layers: pencil, voices, wake });
+
   // One ticker drives everything that moves, and stops when nothing does.
   const sheetCentre = new THREE.Vector3();
   const tick = (dt: number): boolean => {
@@ -166,6 +174,7 @@ async function start(): Promise<void> {
     moving = rig.step(dt) || moving;
     moving = cameraRig.step(dt) || moving;
     moving = settleCorners(dt) || moving;
+    moving = play.step(dt) || moving;
     return moving;
   };
   function wake(): void {
@@ -206,6 +215,8 @@ async function start(): Promise<void> {
       lighting.toggleLamp();
       voices.click();
     },
+    pencil: play.tool,
+    poke: play.poke,
   });
 
   const down = new THREE.Vector3(0, -1, 0);
@@ -230,6 +241,7 @@ async function start(): Promise<void> {
     lampHead.group.quaternion.setFromUnitVectors(down, aim);
     lampHead.bulb.emissiveIntensity = rig.lamp.intensity * 2.4;
 
+    play.render(renderer);
     loupe.sync();
     if (loupe.group.visible) loupe.renderView(renderer, scene);
     pointer.syncGrips();

@@ -17,6 +17,8 @@ export interface Prop {
   grip?: boolean;
   /** Present on round things: turns the object to show it has rolled this far across its axis. */
   roll?(distance: number): void;
+  /** Present on things that are used in the hand: holds the object with its working end at a desk point. */
+  hold?(x: number, z: number, touching: boolean): void;
 }
 
 /** Fine turning marks for lathed metal: stripes that run round the part. */
@@ -95,6 +97,10 @@ export function shadowed<T extends THREE.Object3D>(object: T): T {
   return object;
 }
 
+/** How the pencil sits in the hand: turned to point up and to the left, and tipped onto its point. */
+const HELD_TURN = 2.2;
+const HELD_TILT = 0.62;
+
 /** A used drawing pencil: hexagonal, dark green lacquer, sharpened by knife. */
 export function createPencil(kit: PropKit): Prop {
   const length = 0.128;
@@ -115,6 +121,7 @@ export function createPencil(kit: PropKit): Prop {
   inner.add(body, cone, tip, cap);
   // Lay it along the group's x axis, point forward, resting on one flat of the hexagon.
   inner.rotation.z = -Math.PI / 2;
+  const shadow = blob(kit, 0.15, 0.014, 0.5);
   const roller = new THREE.Group();
   roller.position.y = radius * Math.cos(Math.PI / 6);
   roller.add(inner);
@@ -125,12 +132,20 @@ export function createPencil(kit: PropKit): Prop {
     group,
     radius: 0.012,
     pickOffset: 0,
-    blob: blob(kit, 0.15, 0.014, 0.5),
+    blob: shadow,
     blobSize: [0.15, 0.014],
     solid: { span: [-0.064, 0.084], radius: 0.004 },
     mass: 1,
     roll: (distance) => {
       roller.rotation.x = distance / radius;
+    },
+    hold: (x, z, touching) => {
+      // Held as a right hand holds it: point down on the paper, the rest leaning back toward the wrist.
+      group.rotation.set(0, 0, 0);
+      group.quaternion.setFromEuler(new THREE.Euler(0, HELD_TURN, -HELD_TILT, 'YXZ'));
+      const point = new THREE.Vector3(length / 2 + 0.0206, roller.position.y, 0).applyQuaternion(group.quaternion);
+      group.position.set(x - point.x, (touching ? 0.0012 : 0.0045) - point.y, z - point.z);
+      shadow.visible = false;
     },
   };
 }
@@ -138,7 +153,8 @@ export function createPencil(kit: PropKit): Prop {
 /** Places a prop on the desk and keeps its contact shadow under it. */
 export function placeProp(prop: Prop, x: number, z: number, angle: number, lift = 0): void {
   prop.group.position.set(x, lift, z);
-  prop.group.rotation.y = angle;
+  prop.group.rotation.set(0, angle, 0);
+  prop.blob.visible = prop.group.visible;
   prop.blob.position.set(x, 0.0013, z);
   prop.blob.rotation.z = angle;
   const spread = 1 + lift * 28;

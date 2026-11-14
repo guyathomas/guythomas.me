@@ -58,12 +58,7 @@ describe('renderFront', () => {
 });
 
 describe('renderBack', () => {
-  it('is empty without back copy', () => {
-    expect(renderBack({ ...resume, back: undefined })).toBe('');
-  });
-  it('prints the about text and colophon', () => {
-    const html = renderBack({ ...resume, back: { about: 'About me.', colophon: 'Set in type.' } });
-    expect(html).toContain('About me.');
-    expect(html).toContain('Set in type.');
+  it('is a blank sheet', () => {
+    expect(renderBack()).toMatch(/^<article class="sheet sheet-back" id="sheet-back"[^>]*><\/article>$/);
   });
 });

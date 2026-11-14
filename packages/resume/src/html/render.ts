@@ -49,18 +49,7 @@ export function renderFront(resume: Resume): string {
   </article>`;
 }
 
-/** The printed back of the sheet: an about paragraph and a printer's note. */
-export function renderBack(resume: Resume): string {
-  if (!resume.back) return '';
-  return `<article class="sheet sheet-back" id="sheet-back" aria-label="Reverse of the sheet">
-    <section class="about">
-      <h2 class="section-title"><i class="rule" data-rule></i><span data-ink="2">About</span><i class="rule" data-rule></i></h2>
-      <p>${text(resume.back.about)}</p>
-    </section>
-    <section class="colophon">
-      <p class="ornament" data-ink="2" aria-hidden="true">❧</p>
-      <h2 class="colophon-title">Printer’s note</h2>
-      <p>${text(resume.back.colophon)}</p>
-    </section>
-  </article>`;
+/** The back of the sheet. Nothing is printed on it; what happens there is drawn in pencil. */
+export function renderBack(): string {
+  return '<article class="sheet sheet-back" id="sheet-back" aria-hidden="true"></article>';
 }

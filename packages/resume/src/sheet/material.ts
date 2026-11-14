@@ -18,6 +18,8 @@ export interface PaperOptions {
   ink: THREE.Texture;
   /** The other side's printing, which shows here as a faint raised bruise. */
   under: THREE.Texture;
+  /** Pencil marks made on this side after printing. */
+  pencil: THREE.Texture;
   fibre: THREE.Texture;
   /** True for the reverse of the sheet. */
   mirror: boolean;
@@ -32,6 +34,7 @@ const PARS = /* glsl */ `
 uniform sampler2D uInk;
 uniform sampler2D uUnder;
 uniform sampler2D uFibre;
+uniform sampler2D uPencil;
 uniform vec2 uInkTexel;
 uniform vec2 uUnderTexel;
 uniform vec2 uSheet;
@@ -98,10 +101,13 @@ vec3 inkCol = (uInk1 * ink.r + uInk2 * ink.g) / max(ink.r + ink.g, 1e-4);
 inkCol *= 1.0 + 2.2 * thin;
 diffuseColor.rgb = mix(paperCol, inkCol, density);
 float paperInk = density;
+// Pencil sits on the tooth of the paper: broken by the fibres, and a little shiny.
+float graphite = clamp(texture2D(uPencil, suv).r * (0.72 + 0.6 * fine.r), 0.0, 1.0);
+diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.13, 0.13, 0.15), graphite * 0.92);
 `;
 
 const ROUGHNESS = /* glsl */ `
-float roughnessFactor = mix(0.97, 0.9, paperInk) + 0.05 * (fib.r - 0.5);
+float roughnessFactor = mix(mix(0.97, 0.9, paperInk) + 0.05 * (fib.r - 0.5), 0.52, graphite * 0.8);
 `;
 
 const NORMAL = /* glsl */ `
@@ -143,6 +149,7 @@ export function createPaperMaterial(options: PaperOptions): THREE.MeshStandardMa
     uInk: { value: options.ink },
     uUnder: { value: options.under },
     uFibre: { value: options.fibre },
+    uPencil: { value: options.pencil },
     uInkTexel: { value: new THREE.Vector2(1 / inkImage.width, 1 / inkImage.height) },
     uUnderTexel: { value: new THREE.Vector2(1 / underImage.width, 1 / underImage.height) },
     uSheet: { value: options.size },

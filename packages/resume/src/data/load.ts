@@ -40,11 +40,5 @@ export function parseResume(source: string): Resume {
     },
     experience: raw.experience.map(parseRole),
   };
-  if (raw.back) {
-    resume.back = {
-      about: requireString(raw.back.about, 'back.about'),
-      colophon: requireString(raw.back.colophon, 'back.colophon'),
-    };
-  }
   return resume;
 }

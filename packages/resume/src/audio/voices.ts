@@ -113,6 +113,25 @@ export class Voices {
     this.burst(0.06, 'lowpass', 620, 0.36);
   }
 
+  /** Pencil on paper: a thin dry hiss that follows the hand. */
+  scratch(speed: number): void {
+    if (!this.ctx || !this.slideGain || !this.slideFilter) return;
+    const now = this.ctx.currentTime;
+    this.slideGain.gain.setTargetAtTime(Math.min(0.09, speed * 0.45), now, 0.02);
+    this.slideFilter.frequency.setTargetAtTime(4200 + Math.min(2400, speed * 9000), now, 0.03);
+  }
+
+  /** A star collected. */
+  chime(): void {
+    this.tone(1568, 1562, 0.34, 0.07);
+    setTimeout(() => this.tone(2093, 2086, 0.42, 0.06), 70);
+  }
+
+  /** The marble striking a line. */
+  knock(strength: number): void {
+    this.burst(0.02, 'bandpass', 1500, 0.06 + 0.16 * strength, 1.4);
+  }
+
   /** Something light set down. */
   tap(): void {
     this.burst(0.03, 'bandpass', 900, 0.25, 1.2);

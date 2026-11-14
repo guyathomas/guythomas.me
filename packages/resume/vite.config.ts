@@ -31,7 +31,7 @@ function resumeHtml(): Plugin {
           .replace('/*boot-scale*/', () => boot)
           .replace('/*boot-scale-plain*/', () => plainBoot)
           .replace('<!--sheet-front-->', () => renderFront(resume))
-          .replace('<!--sheet-back-->', () => renderBack(resume));
+          .replace('<!--sheet-back-->', () => renderBack());
       },
     },
   };

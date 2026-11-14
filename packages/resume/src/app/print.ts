@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { METRES_PER_SHEET_PX } from '../scene/view';
 import { SheetBody } from '../sheet/body';
 import { createFibreTexture } from '../sheet/fibre';
+import { GraphiteLayer } from '../sheet/graphite';
 import { createInkTexture, createPaperMaterial } from '../sheet/material';
 import { rasterizeSheet, type LinkRegion } from '../typeset/raster';
 
@@ -12,6 +13,8 @@ export interface Printed {
   sheetWidthPx: number;
   /** The ink maps, kept so that marks can be added after printing. */
   inks: { front: THREE.DataTexture; back: THREE.DataTexture };
+  /** Pencil on each face. */
+  pencil: { front: GraphiteLayer; back: GraphiteLayer };
 }
 
 const PAPER = '#f3eee3';
@@ -30,6 +33,10 @@ export function printSheet(renderer: THREE.WebGLRenderer, front: HTMLElement, ba
   const size = new THREE.Vector2(frontRaster.sheetWidth * METRES_PER_SHEET_PX, frontRaster.sheetHeight * METRES_PER_SHEET_PX);
   const frontInk = createInkTexture(frontRaster, anisotropy);
   const backInk = createInkTexture(backRaster, anisotropy);
+  const pencil = {
+    front: new GraphiteLayer(size.x, size.y, Math.min(narrow ? 1024 : 2048, limit), anisotropy),
+    back: new GraphiteLayer(size.x, size.y, Math.min(narrow ? 1024 : 2048, limit), anisotropy),
+  };
   const shared = {
     fibre: createFibreTexture(),
     size,
@@ -41,9 +48,9 @@ export function printSheet(renderer: THREE.WebGLRenderer, front: HTMLElement, ba
     size.x,
     size.y,
     THICKNESS,
-    createPaperMaterial({ ink: frontInk, under: backInk, mirror: false, ...shared }),
-    createPaperMaterial({ ink: backInk, under: frontInk, mirror: true, ...shared }),
+    createPaperMaterial({ ink: frontInk, under: backInk, pencil: pencil.front.texture, mirror: false, ...shared }),
+    createPaperMaterial({ ink: backInk, under: frontInk, pencil: pencil.back.texture, mirror: true, ...shared }),
     new THREE.MeshStandardMaterial({ color: '#e6dcc7', roughness: 1, flatShading: true, side: THREE.DoubleSide }),
   );
-  return { sheet, frontLinks: frontRaster.links, sheetWidthPx: frontRaster.sheetWidth, inks: { front: frontInk, back: backInk } };
+  return { sheet, frontLinks: frontRaster.links, sheetWidthPx: frontRaster.sheetWidth, inks: { front: frontInk, back: backInk }, pencil };
 }
