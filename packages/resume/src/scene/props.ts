@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 export interface Prop {
-  name: 'stamp' | 'loupe' | 'pencil';
+  name: 'stamp' | 'loupe' | 'pencil' | 'eraser';
   group: THREE.Group;
   /** Reach of the object on the desk, for picking. */
   radius: number;

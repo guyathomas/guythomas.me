@@ -22,8 +22,9 @@ export interface PlayDeps {
   finished(): void;
 }
 
-/** Reach of the rubber, metres. */
+/** Reach of the pencil's rubber end, and of the block eraser, metres. */
 const RUBBER = 0.0032;
+const BLOCK = 0.009;
 
 /** Pencil and paper: drawing on either face, and the marble run on the back. */
 export function createPlay(deps: PlayDeps) {
@@ -60,6 +61,14 @@ export function createPlay(deps: PlayDeps) {
   /** A press on the page: on the waiting marble, it lets it go. */
   const poke = (at: PagePoint): boolean => !at.front && run.onMarble(at.x, at.y) && launch();
 
+  /** Rubs out the lines within `reach` of a page point. */
+  const rub = (at: PagePoint, speed: number, reach: number): void => {
+    voices.scratch(speed * 0.6);
+    if (!(at.front ? marks.front : marks.back).rub(at.x, at.y, reach)) return;
+    if (at.front) deps.wake();
+    else sync();
+  };
+
   const tool = new PencilTool(deps.pencilItem, deps.objects, sheet, handling, {
     // The front takes any amount of scribbling; the game's page has only so much lead.
     allow: (front, length) => front || ((run.phase === 'ready' || run.phase === 'rolling') && run.lead > length),
@@ -75,18 +84,18 @@ export function createPlay(deps: PlayDeps) {
       (front ? marks.front : marks.back).add({ points, tones });
       if (!front) sync();
     },
-    rub: (at, speed) => {
-      voices.scratch(speed * 0.6);
-      if (!(at.front ? marks.front : marks.back).rub(at.x, at.y, RUBBER)) return;
-      if (at.front) deps.wake();
-      else sync();
-    },
+    rub: (at, speed) => rub(at, speed, RUBBER),
     rest: () => voices.scratch(0),
     poke,
   });
 
   return {
     tool,
+    /** The block eraser, dragged over the page. */
+    eraser: {
+      rub: (at: PagePoint, speed: number) => rub(at, speed, BLOCK),
+      rest: () => voices.scratch(0),
+    },
     poke,
     launch,
     /** Advances the game. The marble only runs while its page is face up and lying still. */

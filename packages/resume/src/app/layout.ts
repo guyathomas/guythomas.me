@@ -22,8 +22,10 @@ export function arrangeDesk(objects: DeskObjects, sheet: SheetBody, halfWidth: n
   const stamp = objects.find('stamp');
   const loupe = objects.find('loupe');
   const pencil = objects.find('pencil');
+  const eraser = objects.find('eraser');
   const side = Math.min(margin * 0.52, 0.062);
   if (stamp) objects.setHome(stamp, right + Math.max(side * 0.8, 0.032), top + 0.03, 0.12);
   if (loupe) objects.setHome(loupe, left - side - 0.004, top + 0.118, -1.82);
+  if (eraser) objects.setHome(eraser, right + Math.max(side * 0.62, 0.027), top + 0.272, 0.35);
   if (pencil) objects.setHome(pencil, right + side * 0.78, top + 0.165, 1.77);
 }

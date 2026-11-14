@@ -25,6 +25,8 @@ export interface PointerDeps {
   used(): void;
   toggleLamp(): void;
   pencil: PencilTool;
+  /** The block eraser: told where on the page it is being dragged, and when it stops. */
+  eraser: { rub(at: PagePoint, speed: number): void; rest(): void };
   /** A click on the page. Returns true if something there took it. */
   poke(at: PagePoint): boolean;
 }
@@ -114,6 +116,7 @@ export class Pointer {
     switch (this.drag) {
       case 'object':
         objects.drag(point.x, point.z, dt);
+        this.rubUnder(dt);
         break;
       case 'curl':
         handling.moveCurl(point.x, point.z);
@@ -146,6 +149,7 @@ export class Pointer {
         this.deps.wake();
         return;
       }
+      if (objects.inHand?.prop.name === 'eraser') this.deps.eraser.rest();
       objects.release((performance.now() - this.lastMove) / 1000);
     }
     if (drag === 'curl') handling.endCurl();
@@ -153,6 +157,16 @@ export class Pointer {
     if (!cancelled && this.travelled < 5) this.click(clientX, clientY);
     this.hover(clientX, clientY);
     this.deps.wake();
+  }
+
+  /** The eraser rubs out what it is dragged across. */
+  private rubUnder(dt: number): void {
+    const { objects, sheet, handling, eraser } = this.deps;
+    const item = objects.inHand;
+    if (item?.prop.name !== 'eraser') return;
+    const at = handling.busy ? null : pageAt(sheet, item.x, item.z);
+    if (at) eraser.rub(at, Math.hypot(item.vx, item.vz) * (dt > 0 ? 1 : 0));
+    else eraser.rest();
   }
 
   /** A press and release without travel: follow a link, or work the lamp's switch. */
