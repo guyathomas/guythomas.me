@@ -80,7 +80,7 @@ For review and screenshots. Combine freely.
 
 ## Viewer location
 
-Auto lighting needs a rough position. It starts from the browser's time zone (a bundled table, no network) and refines it from `/api/geo`, which returns the location Vercel derives from the request, rounded to a tenth of a degree. Nothing is stored or logged, there is no permission prompt, and no third party is involved.
+Auto lighting needs a rough position. It starts from the browser's time zone (a bundled table, no network) and refines it from `/api/geo`, which returns the location Vercel derives from the request, rounded to a tenth of a degree. Nothing is stored or logged, there is no permission prompt, and no third party is involved. The function is `api/geo.ts` at the repository root, because the site deploys from there; its tests are in `packages/resume/api`.
 
 ## Where this departs from the handover
 

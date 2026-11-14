@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { GET } from './geo';
+import { GET } from '../../../api/geo';
 
 const ask = async (headers: Record<string, string>) => {
   const response = GET(new Request('https://example.test/api/geo', { headers }));
