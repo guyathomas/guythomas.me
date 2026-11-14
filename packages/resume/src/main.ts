@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { CornerDraught } from './app/ear';
 import { arrangeDesk } from './app/layout';
 import { Lighting } from './app/lighting';
 import { isFrozen, parseParams } from './app/params';
@@ -166,6 +167,8 @@ async function start(): Promise<void> {
     still,
   );
 
+  const ear = new CornerDraught(sheet, handling, still);
+
   // Pencil and paper: drawing, and the marble run on the back.
   const play = createPlay({
     sheet,
@@ -192,6 +195,7 @@ async function start(): Promise<void> {
     moving = rig.step(dt) || moving;
     moving = cameraRig.step(dt) || moving;
     moving = settleCorners(dt) || moving;
+    moving = ear.step(dt) || moving;
     moving = play.step(dt) || moving;
     return moving;
   };
@@ -228,7 +232,6 @@ async function start(): Promise<void> {
     frontLinks,
     lampHead: lampHead.group,
     wake,
-    used: () => controls.used(),
     toggleLamp: () => {
       lighting.toggleLamp();
       voices.click();
@@ -317,6 +320,11 @@ async function start(): Promise<void> {
     wake();
   });
   if (!frozen) {
+    // Once, soon after opening, a draught lifts the corner: a hint that the sheet turns over.
+    window.setTimeout(() => {
+      ear.stir();
+      wake();
+    }, 2600);
     window.setInterval(() => lighting.refresh(false), 60000);
     void lighting.refine();
   }

@@ -21,8 +21,6 @@ export interface PointerDeps {
   lampHead: THREE.Object3D;
   /** Something changed: keep the frame loop running. */
   wake(): void;
-  /** The viewer has done something; the hint can go. */
-  used(): void;
   toggleLamp(): void;
   /** The things that are picked up and used in the hand. */
   tools: { pencil: PencilTool; eraser: PencilTool };
@@ -113,7 +111,6 @@ export class Pointer {
     const dt = (now - this.lastMove) / 1000;
     this.lastMove = now;
     this.travelled = Math.max(this.travelled, Math.hypot(clientX - this.downAt[0], clientY - this.downAt[1]));
-    if (this.travelled > 4) this.deps.used();
     switch (this.drag) {
       case 'object':
         objects.drag(point.x, point.z, dt);
@@ -280,7 +277,6 @@ export class Pointer {
     // With the pencil in hand, the other mouse button rubs out for as long as it is held.
     const other = pencil.active && !pencil.rubOnly && event.button === 2 && !this.drag;
     if (event.button !== 0 && !other) return;
-    this.deps.used();
     // Reaching for something else on the desk puts the pencil down first.
     const reach = pencil.active && !this.drag && event.button === 0 ? this.deskPoint(event.clientX, event.clientY) : null;
     if (reach && this.deps.objects.pick(reach.x, reach.z)) this.putDownPencil();
@@ -433,7 +429,6 @@ export class Pointer {
       event.preventDefault();
       owner = event.pointerId;
       element.setPointerCapture(event.pointerId);
-      this.deps.used();
       this.downAt = [event.clientX, event.clientY];
       this.travelled = 0;
       this.lastMove = performance.now();

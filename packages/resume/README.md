@@ -33,7 +33,7 @@ Edit `src/data/resume.yaml` and rebuild. Both pages and the printed sheet are ge
 | Drag the bare desk | Move the lamp's light |
 | Drag the sheet | Slide and turn it |
 | Drag a corner | Curl it. Carry it a third of the way, or flick it, and the sheet turns over where it lies |
-| Double-click the sheet | Turns it over |
+| Double-click the sheet | Turns it over. A pencilled "PTO" at the foot of the front, and a draught that lifts the corner once after loading, are the only hints |
 | Drag the loupe, stamp, pencil | Move them. The loupe magnifies. Let go while moving and they slide on, bump each other, and the pencil rolls |
 | Click the pencil, or carry it onto the sheet | It stays in the hand. Press on the paper to draw; click off the sheet or press `Esc` to put it down |
 | Click the eraser, or carry it onto the sheet | It stays in the hand, held on its end. Press on the paper and rub to take out the pencil under it; click off the sheet or press `Esc` to put it down |
