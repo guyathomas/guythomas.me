@@ -16,9 +16,6 @@ const LINE = 0.00036;
 const STAR_RADIUS = 0.006;
 const SHELF = 0.009;
 const WIN_TIME = 1.7;
-/** How much line, as a multiple of par, still earns three points, and two. */
-const THREE = 1.08;
-const TWO = 1.5;
 
 /**
  * The game on the back of the sheet. A marble waits on a shelf; lines drawn
@@ -43,6 +40,8 @@ export class MarbleRun {
   private wonFor = 0;
   /** What each page passed so far scored. */
   private scores: number[] = [];
+  /** The points each page passed so far scored. */
+  private tally: number[] = [];
 
   constructor(
     private readonly width: number,
@@ -63,7 +62,10 @@ export class MarbleRun {
   private load(level: number): void {
     this.level = level;
     const { width, height, plan } = this;
-    if (level === 0) this.scores = [];
+    if (level === 0) {
+      this.scores = [];
+      this.tally = [];
+    }
     this.stars = plan.stars.map(([x, y]) => ({ x: x * width, y: y * height, got: false, since: 0 }));
     this.walls = [];
     for (const wall of plan.walls) {
@@ -102,13 +104,28 @@ export class MarbleRun {
 
   /** What the page would score if it were passed now: three for a tidy solution, down to one. */
   get rating(): number {
-    const par = this.plan.par * this.width;
-    return this.drawn <= par * THREE ? 3 : this.drawn <= par * TWO ? 2 : 1;
+    const pages = this.drawn / this.width;
+    return pages <= this.plan.three ? 3 : pages <= this.plan.two ? 2 : 1;
   }
 
-  /** Points won so far, out of three a page. */
+  /** Stars won so far, out of three a page. */
   get score(): number {
     return this.scores.reduce((sum, value) => sum + value, 0);
+  }
+
+  /**
+   * What the page would score in points if it were passed now: 100 for as
+   * little line as the page has ever been passed with, less in proportion as
+   * more is drawn.
+   */
+  get worth(): number {
+    const best = this.plan.best * this.width;
+    return Math.round(100 * Math.min(1, best / Math.max(this.drawn, 1e-9)));
+  }
+
+  /** Points won so far, out of 100 a page. */
+  get points(): number {
+    return this.tally.reduce((sum, value) => sum + value, 0);
   }
 
   /** Counts line as it is being drawn, before it is handed over with `setLines`. */
@@ -184,6 +201,7 @@ export class MarbleRun {
       this.phase = 'won';
       this.wonFor = 0;
       this.scores[this.level] = this.rating;
+      this.tally[this.level] = this.worth;
       this.emit('won', 1);
       return true;
     }
@@ -215,22 +233,28 @@ export class MarbleRun {
     }
     const fine = LINE * 0.7;
     if (this.phase === 'done') {
-      // Every page passed: one large star, and the score out of all there was to win.
-      line(star(width / 2, height * 0.4, width * 0.13, 4.2), 0.85, LINE * 1.4);
-      const total = `${this.score}/${LEVELS.length * 3}`;
+      // Every page passed: one large star, the stars won out of all there were, and the points.
+      line(star(width / 2, height * 0.36, width * 0.13, 4.2), 0.85, LINE * 1.4);
       const size = width * 0.05;
-      for (const numeral of numerals(total, width / 2 - total.length * 0.41 * size, height * 0.52, size, 3.3)) line(numeral, 0.85);
+      const centred = (text: string, y: number, scale: number, seed: number) => {
+        for (const numeral of numerals(text, width / 2 - text.length * 0.41 * scale, y, scale, seed)) line(numeral, 0.85);
+      };
+      centred(`${this.score}/${LEVELS.length * 3}`, height * 0.48, size, 3.3);
+      centred(String(this.points), height * 0.56, size * 1.5, 8.6);
       return out;
     }
     if (this.scores.length > 0) {
-      line(star(width / 2 - 0.006, top + 0.0019, 0.0021, 6.4), 0.7, fine);
-      for (const numeral of numerals(String(this.score), width / 2 - 0.002, top - 0.0002, 0.0042, 1.7)) line(numeral, 0.75, fine);
+      // The running score: stars, then points.
+      line(star(width * 0.36, top + 0.0019, 0.0021, 6.4), 0.7, fine);
+      for (const numeral of numerals(String(this.score), width * 0.36 + 0.004, top - 0.0002, 0.0042, 1.7)) line(numeral, 0.75, fine);
+      for (const numeral of numerals(String(this.points), width * 0.5, top - 0.0002, 0.0042, 5.2)) line(numeral, 0.75, fine);
     }
     // The bar grows with every line drawn. Short of the first notch the page scores three, then two, then one.
     const full = 0.032;
     const left = width * 0.93 - full;
-    const scale = full / (this.plan.par * width * 2);
-    const notches = [THREE, TWO].map((multiple) => left + this.plan.par * width * multiple * scale);
+    // The two-point limit sits three quarters of the way along.
+    const scale = (full * 0.75) / (this.plan.two * width);
+    const notches = [this.plan.three, this.plan.two].map((limit) => left + limit * width * scale);
     line([left, top + 0.0002, left, top + 0.0036], 0.5, fine);
     for (const notch of notches) line([notch, top + 0.0006, notch, top + 0.0032], 0.5, fine);
     [3, 2, 1].forEach((points, band) => {
@@ -262,6 +286,12 @@ export class MarbleRun {
     if (this.phase === 'won') {
       const spread = Math.min(1, this.wonFor / 0.7);
       if (spread < 1) for (const ray of burst(marble.x, marble.y, marble.radius * 2.2, spread, this.level + 11, 11)) line(ray, 0.85);
+      // What the page scored, written large in the middle before it is rubbed clean.
+      const stars = this.scores[this.level] ?? 0;
+      for (let i = 0; i < stars; i++) line(star(width / 2 + (i - (stars - 1) / 2) * 0.016, height * 0.44, 0.0062, 12 + i), 0.85);
+      const worth = String(this.tally[this.level] ?? 0);
+      const size = 0.011;
+      for (const numeral of numerals(worth, width / 2 - worth.length * 0.41 * size, height * 0.49, size, 2.9)) line(numeral, 0.85);
     }
     return out;
   }

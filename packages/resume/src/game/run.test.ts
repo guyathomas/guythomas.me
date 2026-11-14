@@ -75,11 +75,11 @@ describe('MarbleRun', () => {
     expect(run.rating).toBe(3);
     run.spend(0.05);
     expect(run.drawn).toBeCloseTo(0.05, 9);
-    run.setLines([[0, 0.2, 0.2, 0.2], [0, 0.25, 0.05, 0.25]], 0.0003);
+    run.setLines([[0, 0.2, 0.15, 0.2]], 0.0003);
     expect(run.rating).toBe(2);
-    run.setLines([[0, 0.2, 0.2, 0.2], [0, 0.25, 0.2, 0.25], [0, 0.26, 0.2, 0.26]], 0.0003);
+    run.setLines([[0, 0.2, 0.2, 0.2], [0, 0.25, 0.2, 0.25]], 0.0003);
     expect(run.rating).toBe(1);
-    run.setLines([[0, 0.2, 0.1, 0.2]], 0.0003);
+    run.setLines([[0, 0.2, 0.06, 0.2]], 0.0003);
     expect(run.rating).toBe(3);
   });
 
@@ -95,8 +95,11 @@ describe('MarbleRun', () => {
     play(run, 6);
     expect(run.level).toBe(1);
     expect(run.score).toBe(rating);
+    expect(run.points).toBeGreaterThan(0);
+    expect(run.points).toBeLessThanOrEqual(100);
     run.reset();
     expect(run.score).toBe(0);
+    expect(run.points).toBe(0);
   });
 
   it('opens the first page with a line that is the viewer\'s to keep or rub out', () => {
@@ -115,5 +118,18 @@ describe('MarbleRun', () => {
     bare.release();
     play(bare, 0.8);
     expect(bare.marble.x).toBeCloseTo(0.2 * W, 6);
+  });
+
+  it('gives a page 100 points for the least line it has been passed with, and fewer for more', () => {
+    const { run } = make();
+    expect(run.worth).toBe(100);
+    run.setLines([[0, 0.2, 0.01, 0.2]], 0.0003);
+    expect(run.worth).toBe(100);
+    run.setLines([[0, 0.2, 0.2, 0.2]], 0.0003);
+    const once = run.worth;
+    expect(once).toBeLessThan(100);
+    run.setLines([[0, 0.2, 0.2, 0.2], [0, 0.25, 0.2, 0.25]], 0.0003);
+    expect(run.worth).toBeLessThan(once);
+    expect(run.worth).toBeGreaterThan(0);
   });
 });
