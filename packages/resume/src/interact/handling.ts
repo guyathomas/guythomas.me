@@ -171,8 +171,17 @@ export class SheetHandling {
       }
     }
     this.beginCurl(corner);
-    const reach = this.sheet.width * 2.3;
-    this.scripted = { from: [...this.anchor], to: [this.anchor[0] - reach, this.anchor[1] - this.sheet.height * 0.22], time: 0, duration: 1.15 };
+    // Carry it up and to the left, far enough that the last corner clears the roll.
+    const length = Math.hypot(this.sheet.width * 2.3, this.sheet.height * 0.22);
+    const ux = (-this.sheet.width * 2.3) / length;
+    const uz = (-this.sheet.height * 0.22) / length;
+    let furthest = 0;
+    for (let i = 0; i < 4; i++) {
+      const [x, z] = this.sheet.cornerWorld(i);
+      furthest = Math.max(furthest, (x - this.anchor[0]) * ux + (z - this.anchor[1]) * uz);
+    }
+    const reach = 2 * furthest + Math.PI * this.radius + 0.01;
+    this.scripted = { from: [...this.anchor], to: [this.anchor[0] + ux * reach, this.anchor[1] + uz * reach], time: 0, duration: 1.15 };
     this.afterTurn = () => this.squareUp();
     if (this.instant) {
       this.sheet.curl = null;
