@@ -1,0 +1,21 @@
+# Changelog
+
+## 1.0.0
+
+Complete rewrite as "Living paper": the resume as a letterpress sheet on a desk.
+
+### Added
+
+- The sheet: type set by the browser, printed to a two-colour ink map, pressed into paper by a shader and lit by the scene.
+- Handling: slide the sheet, curl a corner, turn it over to a printed back (about text and printer's note).
+- A desk with a brass paperweight, a working loupe and a pencil, all movable.
+- Lighting modes: day, night, and auto, which follows the viewer's real sun.
+- `/api/geo`, returning a coarse location from Vercel's request headers for auto lighting.
+- Opt-in synthesised sound.
+- `/plain/`, a printable copy and the fallback without WebGL2.
+- Freeze-state URL parameters and a screenshot tool for review.
+- Unit tests for the data, typesetting, paper and lighting maths.
+
+### Removed
+
+- The Astro and Tailwind site, its dark mode toggle and print animation.
