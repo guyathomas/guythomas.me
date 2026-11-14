@@ -1,0 +1,6 @@
+{
+  "framework": null,
+  "installCommand": "bun install",
+  "buildCommand": "bunx turbo build --filter=@guythomas/resume",
+  "outputDirectory": "packages/resume/dist"
+}
