@@ -40,6 +40,8 @@ export function createPlay(deps: PlayDeps) {
       marks.back.clear();
       if (!tool.rubbing) tool.cut();
       if (event === 'finished') deps.finished();
+      else open();
+      deps.wake();
     }
   }, Math.min(deps.firstPage, LEVELS.length - 1));
   const redraw = () => {
@@ -51,7 +53,14 @@ export function createPlay(deps: PlayDeps) {
     run.setLines(marks.back.lines.map((mark) => mark.points), PENCIL_HALF);
     redraw();
   };
-  layers.back.sketch(run.sketch());
+  /** Pencils in the lines a page opens with. They are ordinary lines: they can be rubbed out. */
+  function open(): void {
+    for (const points of run.starter()) marks.back.put(points, 0.8);
+    run.setLines(marks.back.lines.map((mark) => mark.points), PENCIL_HALF);
+    layers.back.sketch(run.sketch());
+  }
+  // The first page is set out before anything is running, so nothing needs waking.
+  open();
 
   const launch = (): boolean => {
     if (handling.frontUp || handling.busy || run.phase !== 'ready') return false;
@@ -124,7 +133,7 @@ export function createPlay(deps: PlayDeps) {
       marks.front.clear();
       marks.back.clear();
       run.reset();
-      layers.back.sketch(run.sketch());
+      open();
     },
     /** Draws both pencil maps afresh on the next frame. */
     stale(): void {

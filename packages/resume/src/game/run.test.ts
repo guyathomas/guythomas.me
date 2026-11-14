@@ -77,17 +77,28 @@ describe('MarbleRun', () => {
     expect(run.lead).toBeCloseTo(full - 0.1, 9);
     run.setLines([[0, 0.2, 0.15, 0.2]], 0.0003);
     expect(run.lead).toBeCloseTo(full - 0.15, 9);
-    run.setLines([[0, 0.2, 0.15, 0.2], [0, 0.25, 0.2, 0.25]], 0.0003);
+    run.setLines([[0, 0.2, 0.15, 0.2], [0, 0.25, 0.2, 0.25], [0, 0.26, 0.2, 0.26]], 0.0003);
     expect(run.lead).toBe(0);
     run.setLines([], 0.0003);
     expect(run.lead).toBeCloseTo(full, 9);
   });
 
-  it('starts the first page with a line already drawn', () => {
+  it('opens the first page with a line that is the viewer\'s to keep or rub out', () => {
     const { run } = make();
+    const starter = run.starter();
+    expect(starter).toHaveLength(1);
+    const full = run.lead;
+    run.setLines(starter, 0.0003);
+    // Keeping it costs exactly the extra lead the page allows for it.
+    expect(run.lead).toBeLessThan(full);
     run.release();
     play(run, 0.8);
-    // The marble has been turned aside by the starter line instead of dropping straight down.
     expect(run.marble.x).toBeGreaterThan(0.2 * W + 0.004);
+
+    // Rubbed out, the marble drops straight down.
+    const bare = make().run;
+    bare.release();
+    play(bare, 0.8);
+    expect(bare.marble.x).toBeCloseTo(0.2 * W, 6);
   });
 });

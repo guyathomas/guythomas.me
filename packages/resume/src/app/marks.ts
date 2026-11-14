@@ -15,8 +15,19 @@ export class Marks {
 
   constructor(private readonly layer: GraphiteLayer, private readonly half: number) {}
 
+  /** Keeps a line that has already been drawn on the layer. */
   add(mark: Mark): void {
     this.lines.push(mark);
+  }
+
+  /** Draws a line and keeps it. */
+  put(points: number[], tone: number): void {
+    const tones: number[] = [];
+    for (let i = 2; i < points.length; i += 2) {
+      this.layer.draw(points[i - 2], points[i - 1], points[i], points[i + 1], this.half, tone);
+      tones.push(tone);
+    }
+    this.lines.push({ points, tones });
   }
 
   clear(): void {

@@ -46,7 +46,7 @@ Edit `src/data/resume.yaml` and rebuild. Both pages and the printed sheet are ge
 
 ## The back
 
-Nothing is printed on the back. It carries a marble run, drawn in pencil and left for the viewer to find: a marble on a shelf, three stars, and on the first page the start of a line to carry on. Lines drawn on the page are ramps. Let the marble go and it rolls down the page.
+Nothing is printed on the back. It carries a marble run, drawn in pencil and left for the viewer to find: a marble on a shelf, three stars, and on the first two pages the start of a line to carry on (an ordinary pencil line: it can be rubbed out, which gives its lead back). Lines drawn on the page are ramps. Let the marble go and it rolls down the page.
 
 - **To pass a page,** all three stars must be collected in one run. A marble that rolls off the page or comes to rest goes back to its shelf and the stars come back.
 - **Lead is limited.** The bar in the head margin shows how much line the pencil has left for the page; rubbing a line out gives its lead back.
