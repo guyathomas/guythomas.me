@@ -10,8 +10,8 @@ export interface PagePoint {
 }
 
 export interface PencilEvents {
-  /** Whether the pencil will draw `length` more metres of line on this face. */
-  allow(front: boolean, length: number): boolean;
+  /** Whether the pencil may draw on this face just now. */
+  allow(front: boolean): boolean;
   /** A stroke segment was drawn. `speed` is metres per second. */
   drawn(front: boolean, x0: number, y0: number, x1: number, y1: number, tone: number, speed: number): void;
   /** A stroke ended; `points` are its x, y pairs and `tones` the darkness of each segment. */
@@ -112,7 +112,7 @@ export class PencilTool {
       this.events.rub(at, 0);
       return true;
     }
-    if (this.events.poke(at) || !this.events.allow(at.front, 0)) return true;
+    if (this.events.poke(at) || !this.events.allow(at.front)) return true;
     this.stroke = { front: at.front, points: [at.x, at.y], tones: [] };
     this.events.drawn(at.front, at.x, at.y, at.x, at.y, 0.9, 0);
     return true;
@@ -135,8 +135,8 @@ export class PencilTool {
     const x0 = stroke.points[n - 2];
     const y0 = stroke.points[n - 1];
     const length = at ? Math.hypot(at.x - x0, at.y - y0) : 0;
-    // Off the edge, onto the other face, or out of lead: the line ends there.
-    if (!at || at.front !== stroke.front || !this.events.allow(stroke.front, length)) {
+    // Off the edge, onto the other face, or the page has been passed: the line ends there.
+    if (!at || at.front !== stroke.front || !this.events.allow(stroke.front)) {
       this.lift();
       return;
     }

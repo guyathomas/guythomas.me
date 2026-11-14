@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { curlPoint, type Curl } from './curl';
+import { curlFromDrag, curlPoint, type Curl } from './curl';
 import { frontUp, identityPose, toLocal, toWorld, type Pose } from './pose';
 
 export interface SheetHit {
@@ -9,6 +9,10 @@ export interface SheetHit {
   corner: number | null;
   front: boolean;
 }
+
+/** The corner lifted by a draught: how far it is drawn in at its highest, and how tightly it rolls, metres. */
+const EAR_REACH = 0.0256;
+const EAR_RADIUS = 0.011;
 
 const CORNERS: Array<[number, number]> = [
   [0, 0],
@@ -33,6 +37,11 @@ export class SheetBody {
   readonly cornerLift = [0.0012, 0, 0.0024, 0.0034];
   /** Darkness of the shadow where paper meets desk. */
   contactStrength = 0.62;
+  /**
+   * How far a draught has lifted the bottom right corner: 0 lies flat, 1 shows
+   * a sliver of the back. Only while the front is up and nothing else curls the sheet.
+   */
+  ear = 0;
   /** Height of the slow wave along one edge, metres. */
   wave = 0.0017;
 
@@ -165,6 +174,21 @@ export class SheetBody {
     return toWorld(this.pose, (u - 0.5) * this.width, (v - 0.5) * this.height);
   }
 
+  /** Where a hand would be holding the lifted corner, on the desk. Null when the corner lies flat. */
+  earPull(): [number, number] | null {
+    if (this.ear < 0.01 || !frontUp(this.pose)) return null;
+    const reach = (EAR_REACH * this.ear) / Math.SQRT2;
+    return toWorld(this.pose, this.width / 2 - reach, this.height / 2 - reach);
+  }
+
+  /** The curl of the lifted corner, if it is up. */
+  private earCurl(): Curl | null {
+    const pull = this.earPull();
+    if (!pull) return null;
+    const [x, z] = this.cornerWorld(2);
+    return curlFromDrag(x, z, pull[0], pull[1], EAR_RADIUS);
+  }
+
   /** What part of the flat sheet lies under a desk point. */
   hit(x: number, z: number, reach: number): SheetHit | null {
     const [lx, lz] = toLocal(this.pose, x, z);
@@ -201,7 +225,8 @@ export class SheetBody {
 
   /** Rebuilds every vertex from pose, curl and rest shape. Call after changing any of them. */
   update(): void {
-    const { nx, ny, count, local, mid, normals, pose, curl, scratch } = this;
+    const { nx, ny, count, local, mid, normals, pose, scratch } = this;
+    const curl = this.curl ?? this.earCurl();
     for (let k = 0; k < count; k++) {
       const [x, z] = toWorld(pose, local[k * 2], local[k * 2 + 1]);
       const u = local[k * 2] / this.width + 0.5;

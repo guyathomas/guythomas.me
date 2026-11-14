@@ -111,7 +111,8 @@ export class SheetHandling {
     this.phase = 'curl';
     this.anchor = this.sheet.cornerWorld(corner);
     this.hand = [...this.anchor];
-    this.pull = [...this.anchor];
+    // A corner the draught has lifted is taken from where it stands.
+    this.pull = (corner === 2 ? this.sheet.earPull() : null) ?? [...this.anchor];
     this.lastHand = [...this.anchor];
     this.handFlow = 0;
     this.events.slide(0);

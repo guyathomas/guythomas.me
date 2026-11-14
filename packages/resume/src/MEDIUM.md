@@ -44,4 +44,4 @@ Sparingly. This is fine work, not distressed.
 
 ## Nothing else
 
-Nothing is on screen that is not part of the photograph, apart from one fading hint line and a row of small controls.
+Nothing is on screen that is not part of the photograph, apart from a row of small controls. A pencilled "PTO" at the foot of the sheet, and a draught that lifts its corner once, are the only hints that it can be turned over.

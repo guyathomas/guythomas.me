@@ -1,4 +1,6 @@
+import * as THREE from 'three';
 import { describe, expect, it } from 'vitest';
+import { SheetBody } from './body';
 import { creaseOffset, curlFromDrag, curlPoint, type Curl } from './curl';
 import { frontUp, identityPose, movePose, poseFromAngle, reflectPose, toLocal, toWorld } from './pose';
 import { glideStep, slideStep } from './slide';
@@ -123,5 +125,31 @@ describe('slide', () => {
     let steps = 0;
     while (glideStep(glide, 1 / 60, 9) && steps < 600) steps++;
     expect(steps).toBeLessThan(120);
+  });
+});
+
+describe('the corner a draught lifts', () => {
+  const make = () => {
+    const material = new THREE.MeshBasicMaterial();
+    return new SheetBody(0.2, 0.3, 0.0009, material, material, material);
+  };
+
+  it('is held a little way in from the bottom right corner, and follows the sheet', () => {
+    const sheet = make();
+    expect(sheet.earPull()).toBeNull();
+    sheet.ear = 1;
+    const [x, z] = sheet.earPull()!;
+    expect(x).toBeLessThan(0.1);
+    expect(z).toBeLessThan(0.15);
+    expect(Math.hypot(0.1 - x, 0.15 - z)).toBeCloseTo(0.0256, 6);
+    sheet.pose = poseFromAngle(0.05, 0.02, 0);
+    expect(sheet.earPull()![0]).toBeCloseTo(x + 0.05, 9);
+  });
+
+  it('lies flat when the back is up', () => {
+    const sheet = make();
+    sheet.ear = 1;
+    sheet.pose = reflectPose(sheet.pose, 0, 0, 1, 0);
+    expect(sheet.earPull()).toBeNull();
   });
 });

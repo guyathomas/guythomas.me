@@ -21,7 +21,6 @@ export class Controls {
   private readonly modeButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('#ui [data-mode]'));
   private readonly view = document.getElementById('btn-view') as HTMLButtonElement;
   private readonly sound = document.getElementById('btn-sound') as HTMLButtonElement;
-  private readonly hint = document.getElementById('hint');
 
   constructor(handlers: ControlHandlers) {
     for (const button of this.modeButtons) {
@@ -69,9 +68,7 @@ export class Controls {
         default:
           return;
       }
-      this.used();
     });
-    window.setTimeout(() => this.used(), 14000);
   }
 
   setMode(mode: Mode): void {
@@ -87,10 +84,5 @@ export class Controls {
   setSound(on: boolean): void {
     this.sound.setAttribute('aria-pressed', String(on));
     this.sound.textContent = on ? 'Sound on' : 'Enable sound';
-  }
-
-  /** The viewer has started handling things: retire the hint. */
-  used(): void {
-    this.hint?.classList.add('done');
   }
 }

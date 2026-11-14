@@ -116,28 +116,6 @@ body {
   flex: 1;
 }
 
-#hint {
-  position: fixed;
-  left: 22px;
-  top: 16px;
-  margin: 0;
-  font-family: 'EBG Italic', Georgia, serif;
-  font-size: 16px;
-  color: rgb(246 236 214 / 0.72);
-  text-shadow: 0 1px 2px rgb(0 0 0 / 0.55);
-  opacity: 0;
-  transition: opacity 1.2s ease;
-  pointer-events: none;
-}
-.live #hint {
-  opacity: 1;
-  transition-delay: 0.9s;
-}
-.live #hint.done {
-  opacity: 0;
-  transition-delay: 0s;
-}
-
 .grip {
   position: fixed;
   width: 64px;
@@ -158,11 +136,6 @@ body {
     font-size: 12px;
     gap: 0 14px;
   }
-  #hint {
-    left: 12px;
-    top: 8px;
-    font-size: 14px;
-  }
   #stage {
     padding: 44px 0 110px;
   }
@@ -171,8 +144,7 @@ body {
 @media (prefers-reduced-motion: reduce) {
   #gl,
   #stage .sheet,
-  #ui,
-  #hint {
+  #ui {
     transition-duration: 0.01s;
   }
 }

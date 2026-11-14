@@ -7,6 +7,7 @@ import { ERASER, PENCIL_HALF, PencilTool, type PagePoint } from '../interact/pen
 import type { SheetBody } from '../sheet/body';
 import type { GraphiteLayer } from '../sheet/graphite';
 import { Marks } from './marks';
+import { ptoLines } from './pto';
 
 export interface PlayDeps {
   sheet: SheetBody;
@@ -62,6 +63,12 @@ export function createPlay(deps: PlayDeps) {
   // The first page is set out before anything is running, so nothing needs waking.
   open();
 
+  /** Pencils "PTO" at the foot of the front. Like any pencil it can be rubbed out; a reset writes it again. */
+  function note(): void {
+    for (const points of ptoLines(sheet.width, sheet.height)) marks.front.put(points, 0.78);
+  }
+  note();
+
   const launch = (): boolean => {
     if (handling.frontUp || handling.busy || run.phase !== 'ready') return false;
     run.release();
@@ -80,8 +87,8 @@ export function createPlay(deps: PlayDeps) {
   };
 
   const tool = new PencilTool(deps.pencilItem, deps.objects, sheet, handling, {
-    // The front takes any amount of scribbling; the game's page has only so much lead.
-    allow: (front, length) => front || ((run.phase === 'ready' || run.phase === 'rolling') && run.lead > length),
+    // The front takes scribbling at any time; the game's page only while a page is in play.
+    allow: (front) => front || run.phase === 'ready' || run.phase === 'rolling',
     drawn: (front, x0, y0, x1, y1, tone, speed) => {
       (front ? layers.front : layers.back).draw(x0, y0, x1, y1, PENCIL_HALF, tone);
       voices.scratch(speed);
@@ -134,6 +141,7 @@ export function createPlay(deps: PlayDeps) {
       marks.back.clear();
       run.reset();
       open();
+      note();
     },
     /** Draws both pencil maps afresh on the next frame. */
     stale(): void {

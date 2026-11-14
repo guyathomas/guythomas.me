@@ -33,7 +33,7 @@ Edit `src/data/resume.yaml` and rebuild. Both pages and the printed sheet are ge
 | Drag the bare desk | Move the lamp's light |
 | Drag the sheet | Slide and turn it |
 | Drag a corner | Curl it. Carry it a third of the way, or flick it, and the sheet turns over where it lies |
-| Double-click the sheet | Turns it over |
+| Double-click the sheet | Turns it over. A pencilled "PTO" at the foot of the front, and a draught that lifts the corner once after loading, are the only hints |
 | Drag the loupe, stamp, pencil | Move them. The loupe magnifies. Let go while moving and they slide on, bump each other, and the pencil rolls |
 | Click the pencil, or carry it onto the sheet | It stays in the hand. Press on the paper to draw; click off the sheet or press `Esc` to put it down |
 | Click the eraser, or carry it onto the sheet | It stays in the hand, held on its end. Press on the paper and rub to take out the pencil under it; click off the sheet or press `Esc` to put it down |
@@ -46,14 +46,16 @@ Edit `src/data/resume.yaml` and rebuild. Both pages and the printed sheet are ge
 
 ## The back
 
-Nothing is printed on the back. It carries a marble run, drawn in pencil and left for the viewer to find: a marble on a shelf, three stars, and on the first two pages the start of a line to carry on (an ordinary pencil line: it can be rubbed out, which gives its lead back). Lines drawn on the page are ramps. Let the marble go and it rolls down the page.
+Nothing is printed on the back. It carries a marble run, drawn in pencil and left for the viewer to find: a marble on a shelf, three stars, and on the first two pages the start of a line to carry on (an ordinary pencil line: it can be rubbed out). Lines drawn on the page are ramps. Let the marble go and it rolls down the page.
 
 - **To pass a page,** all three stars must be collected in one run. A marble that rolls off the page or comes to rest goes back to its shelf and the stars come back.
-- **Lead is limited.** The bar in the head margin shows how much line the pencil has left for the page; rubbing a line out gives its lead back.
+- **The less you draw, the better the score.** A page scores three, two or one stars, and up to 100 points. The bar in the head margin grows with every line and shows which stars it would earn now; rubbing a line out shortens it. Three stars needs a clever solution (about a quarter more line than the shortest known), two is what tidy ramps from star to star earn. Points are 100 for the shortest known length and fall in proportion as more is drawn. Stars and points are written on the page when it is passed, the running totals sit at its head, and the final totals (out of 24 and 800) under the star at the end.
 - **There are eight pages,** from one ramp to walls, posts and a cup that must be entered last. The tally in the head margin counts them. Passing the last stamps the sheet.
 - **Reset** rubs out every pencil mark and returns to the first page.
 
-`src/game/levels.test.ts` plays a scripted solution to every page, so each is known to be passable within its lead.
+`src/game/levels.test.ts` plays two solutions to every page: the tidy one (`routes.ts`), which must earn two stars, and the shortest on record (`best.ts`), which must earn three. If the physics changes and either fails, the limits need playing again.
+
+The limits were set by playing. `src/game/best.ts` records the shortest dependable solution found for each page (its lines, length, how it works, and how often it survives a shaky hand), so they need not be found again. `bun tools/par.ts [rounds] [page] --seeds tools/par-seeds.json` is the solver that polished them: it shortens, moves, splits and removes lines while the marble still takes all three stars with every line end nudged.
 
 - `src/game` holds the rules: `marble.ts` (the marble against drawn lines), `run.ts` (shelf, stars, pages), `levels.ts`, `sketch.ts` (the hand-drawn shapes).
 - `src/sheet/graphite.ts` keeps a pencil map for each face, which the paper shader reads. The viewer's lines stay; the game's own drawing is redone each frame.

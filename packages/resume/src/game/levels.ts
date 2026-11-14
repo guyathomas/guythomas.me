@@ -6,8 +6,17 @@ export interface Level {
   walls: Array<Array<[number, number]>>;
   /** Pencil lines the page opens with: a start for the viewer to carry on, or rub out. */
   starter?: Array<Array<[number, number]>>;
-  /** How much line the pencil will draw on this page, in page widths. */
-  lead: number;
+  /**
+   * The most line, in page widths, that still scores three and two. Set by
+   * playing each page (see `best.ts`): three is about a quarter more than the
+   * shortest dependable solution found, so it needs a clever one; two is what
+   * tidy ramps from star to star earn; anything that passes scores one. The
+   * first page is kinder: three there allows one well-placed launch ramp.
+   */
+  three: number;
+  two: number;
+  /** The least line the page has been dependably passed with, in page widths: what scores 100 points. */
+  best: number;
 }
 
 type Points = Array<[number, number]>;
@@ -34,7 +43,9 @@ export const LEVELS: Level[] = [
         [0.33, 0.32],
       ],
     ],
-    lead: 1.4,
+    three: 0.35,
+    two: 1.0,
+    best: 0.11,
   },
   {
     start: [0.8, 0.12],
@@ -50,7 +61,9 @@ export const LEVELS: Level[] = [
         [0.72, 0.215],
       ],
     ],
-    lead: 2.2,
+    three: 0.36,
+    two: 1.7,
+    best: 0.29,
   },
   {
     start: [0.5, 0.12],
@@ -66,7 +79,9 @@ export const LEVELS: Level[] = [
         [0.6, 0.25],
       ],
     ],
-    lead: 2.7,
+    three: 0.66,
+    two: 2.05,
+    best: 0.53,
   },
   {
     start: [0.16, 0.12],
@@ -85,7 +100,9 @@ export const LEVELS: Level[] = [
         [0.5, 0.92],
       ],
     ],
-    lead: 3.6,
+    three: 1.19,
+    two: 2.85,
+    best: 0.95,
   },
   {
     start: [0.5, 0.1],
@@ -104,7 +121,9 @@ export const LEVELS: Level[] = [
         [0.94, 0.42],
       ],
     ],
-    lead: 2.2,
+    three: 0.34,
+    two: 1.7,
+    best: 0.27,
   },
   {
     start: [0.12, 0.1],
@@ -114,7 +133,9 @@ export const LEVELS: Level[] = [
       [0.86, 0.76],
     ],
     walls: [],
-    lead: 3.6,
+    three: 1.36,
+    two: 2.95,
+    best: 1.09,
   },
   {
     start: [0.14, 0.1],
@@ -124,7 +145,9 @@ export const LEVELS: Level[] = [
       [0.5, 0.7],
     ],
     walls: [cup(0.5, 0.7, 0.055, 0.045)],
-    lead: 1.9,
+    three: 0.4,
+    two: 1.55,
+    best: 0.32,
   },
   {
     start: [0.86, 0.1],
@@ -144,6 +167,8 @@ export const LEVELS: Level[] = [
       ],
       cup(0.24, 0.84, 0.065, 0.04),
     ],
-    lead: 3.0,
+    three: 1.19,
+    two: 2.5,
+    best: 0.95,
   },
 ];
