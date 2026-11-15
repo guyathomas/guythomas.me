@@ -72,6 +72,43 @@ body {
   align-items: center;
 }
 
+/* The pencil and the eraser, offered where there is no desk to pick them up from. */
+#tray {
+  position: fixed;
+  left: 50%;
+  bottom: calc(14px + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  display: none;
+  gap: 10px;
+  padding: 6px;
+  border-radius: 30px;
+  background: rgb(28 19 12 / 0.72);
+  box-shadow: 0 6px 18px rgb(0 0 0 / 0.35);
+}
+#tray.shown {
+  display: flex;
+}
+#tray button {
+  width: 46px;
+  height: 46px;
+  border: 0;
+  border-radius: 50%;
+  padding: 0;
+  color: rgb(246 236 214 / 0.8);
+  background: none;
+  display: grid;
+  place-items: center;
+  touch-action: manipulation;
+}
+#tray button[aria-pressed='true'] {
+  color: #2a1d12;
+  background: #f1eadb;
+}
+#tray svg {
+  width: 26px;
+  height: 26px;
+}
+
 .grip {
   position: fixed;
   width: 64px;
@@ -120,6 +157,8 @@ body {
   }
   #gl,
   #back-copy,
+  #tray,
+  #tray.shown,
   .grip,
   .touch .grip {
     display: none;

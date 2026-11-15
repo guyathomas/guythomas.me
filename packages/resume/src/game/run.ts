@@ -152,8 +152,8 @@ export class MarbleRun {
   }
 
   /** True when a page point is on the waiting marble. */
-  onMarble(x: number, y: number): boolean {
-    return this.phase === 'ready' && Math.hypot(x - this.marble.x, y - this.marble.y) < this.marble.radius + 0.006;
+  onMarble(x: number, y: number, reach = this.marble.radius + 0.006): boolean {
+    return this.phase === 'ready' && Math.hypot(x - this.marble.x, y - this.marble.y) < reach;
   }
 
   /** Takes the shelf away. */

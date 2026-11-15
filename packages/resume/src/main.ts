@@ -24,6 +24,7 @@ import { frameReading, METRES_PER_SHEET_PX } from './scene/view';
 import { planScroll, viewAt, WHOLE, type ScrollPlan } from './scene/scroll';
 import { fontsReady } from './typeset/raster';
 import { Controls } from './ui/controls';
+import { ToolTray } from './ui/tray';
 
 declare global {
   interface Window {
@@ -169,7 +170,7 @@ async function start(): Promise<void> {
     layers: pencil,
     voices,
     wake,
-    game: roomy,
+    desk: roomy,
     firstPage: Math.floor((params.page ?? 1) - 1),
     turnOver: () => {
       handling.turnOver();
@@ -215,6 +216,7 @@ async function start(): Promise<void> {
 
   const lighting = new Lighting(rig, params, () => wake());
 
+  const tray = new ToolTray((name) => pointer.useTool(pointer.toolInUse === name ? null : name));
   let hush = 0;
   let hushing = false;
   const pointer = new Pointer({
@@ -280,6 +282,11 @@ async function start(): Promise<void> {
     const zoom = plan && cameraRig.goal === 0 ? viewAt(plan, window.scrollY) : WHOLE;
     const shown = { pxPerMetre: framing.pxPerMetre * zoom.scale, x: framing.x + zoom.x, z: framing.z + zoom.z };
     cameraRig.apply(shown, window.innerHeight, sheetCentre, sheet.height);
+
+    // Where there is no desk to pick a pencil up from, the two tools are offered while the back is up.
+    const playing = !roomy && !handling.frontUp && !handling.busy;
+    if (!playing && tray.shown && pointer.toolInUse) pointer.useTool(null);
+    tray.show(playing, pointer.toolInUse);
 
     play.render(renderer);
     loupe.sync();

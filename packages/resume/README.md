@@ -69,7 +69,7 @@ The limits were set by playing. `src/game/best.ts` records the shortest dependab
 - `src/sheet/graphite.ts` keeps a pencil map for each face, which the paper shader reads. The viewer's lines stay; the game's own drawing is redone each frame.
 - `src/interact/pencil.ts` is the pencil in the hand.
 
-Where the window has no desk beside the sheet (a phone, a tablet held upright) there are no objects, so no pencil and no game: the back carries a printed note saying so instead.
+**On a phone** (or any window with no desk beside the sheet) there are no objects to pick up, so while the back is up two buttons are offered at the foot of the screen: pencil and eraser. With one chosen, a finger on the paper draws or rubs, a tap on the marble lets it go, and two fingers scroll the page; choosing it again puts it away. The game is always played on a letter-sized board (`src/app/board.ts`), drawn smaller at the head of the phone's long sheet, so its pages, physics and scores are the same everywhere.
 
 ## Freeze states
 

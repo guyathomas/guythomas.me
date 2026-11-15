@@ -58,10 +58,7 @@ describe('renderFront', () => {
 });
 
 describe('renderBack', () => {
-  it('carries only the note for phones', () => {
-    const html = renderBack();
-    expect(html).toMatch(/^<article class="sheet sheet-back" id="sheet-back"/);
-    expect(html.match(/<p /g)).toHaveLength(1);
-    expect(html).toContain('class="back-note"');
+  it('is a blank sheet', () => {
+    expect(renderBack()).toMatch(/^<article class="sheet sheet-back" id="sheet-back"[^>]*><\/article>$/);
   });
 });
