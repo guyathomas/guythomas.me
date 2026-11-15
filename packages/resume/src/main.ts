@@ -148,7 +148,8 @@ async function start(): Promise<void> {
   const handling = new SheetHandling(
     sheet,
     {
-      moved: (from, to) => objects.carry(sheet, from, to),
+      grasped: () => objects.board(sheet),
+      moved: (from, to) => objects.carry(from, to),
       slide: (speed) => voices.slide(speed),
       flick: () => voices.flick(),
       slap: (strength) => voices.slap(strength),

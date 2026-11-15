@@ -28,6 +28,7 @@ const smooth = (t: number) => t * t * (3 - 2 * t);
 export class DeskObjects {
   readonly items: Item[] = [];
   private grabbed: Item | null = null;
+  private readonly riders = new Set<Item>();
   /** Where thrown things stop: the part of the desk that can be seen, so nothing is lost off the edge of the picture. */
   bounds: Bounds = DESK;
   private offset: [number, number] = [0, 0];
@@ -173,13 +174,29 @@ export class DeskObjects {
     this.move(item, x, z, angle);
   }
 
-  /** Things resting on the sheet ride along when it slides. */
-  carry(sheet: SheetBody, from: Pose, to: Pose): void {
-    const turned = Math.atan2(to.c, to.a) - Math.atan2(from.c, from.a);
+  /**
+   * Notes what is resting on the sheet as a hand takes hold of it. Only these
+   * ride along; anything the sheet then slides under stays where it is.
+   */
+  board(sheet: SheetBody): void {
+    this.riders.clear();
     for (const item of this.items) {
       if (item.held || item.flight || !item.prop.group.visible) continue;
+      const [lx, lz] = toLocal(sheet.pose, item.x, item.z);
+      if (Math.abs(lx) <= sheet.width / 2 && Math.abs(lz) <= sheet.height / 2) this.riders.add(item);
+    }
+  }
+
+  /** Things that were resting on the sheet when it was taken hold of ride along as it slides. */
+  carry(from: Pose, to: Pose): void {
+    const turned = Math.atan2(to.c, to.a) - Math.atan2(from.c, from.a);
+    for (const item of this.riders) {
+      // Picked up, or sent on its way, it has left the sheet.
+      if (item.held || item.flight || !item.prop.group.visible) {
+        this.riders.delete(item);
+        continue;
+      }
       const [lx, lz] = toLocal(from, item.x, item.z);
-      if (Math.abs(lx) > sheet.width / 2 || Math.abs(lz) > sheet.height / 2) continue;
       const [x, z] = toWorld(to, lx, lz);
       this.move(item, x, z, item.angle - turned);
     }
