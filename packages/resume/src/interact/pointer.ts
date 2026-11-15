@@ -7,7 +7,7 @@ import type { SheetHandling } from './handling';
 import type { DeskObjects, Item } from './objects';
 import { pageAt, type PagePoint, type PencilTool } from './pencil';
 
-type Drag = 'slide' | 'curl' | 'object' | 'light' | 'draw' | null;
+type Drag = 'slide' | 'curl' | 'object' | 'draw' | null;
 
 export interface PointerDeps {
   canvas: HTMLCanvasElement;
@@ -18,8 +18,6 @@ export interface PointerDeps {
   rig: LightRig;
   cameraRig: CameraRig;
   frontLinks: LinkRegion[];
-  /** True if a point on the screen is on the lamp's head. */
-  onLamp(clientX: number, clientY: number): boolean;
   /** The bell was struck. */
   ring(): void;
   /** Something changed: keep the frame loop running. */
@@ -32,7 +30,6 @@ export interface PointerDeps {
 }
 
 const CORNER_REACH = 0.021;
-const LIGHT_REACH = 0.34;
 
 /** Turns pointer and touch input into handling of the sheet, the objects and the lamp. */
 export class Pointer {
@@ -41,7 +38,6 @@ export class Pointer {
   private readonly ndc = new THREE.Vector2();
   private readonly plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
   private readonly point = new THREE.Vector3();
-  private lightOffset: [number, number] = [0, 0];
   private downAt: [number, number] = [0, 0];
   private travelled = 0;
   private lastMove = 0;
@@ -79,20 +75,13 @@ export class Pointer {
   private begin(clientX: number, clientY: number): void {
     const point = this.deskPoint(clientX, clientY);
     if (!point) return;
-    const { objects, sheet, handling, rig } = this.deps;
+    const { objects, sheet, handling } = this.deps;
     this.downAt = [clientX, clientY];
     this.travelled = 0;
     this.lastMove = performance.now();
 
-    // Things on the desk and links on the sheet come before the lamp that leans over them.
     const item = objects.pick(point.x, point.z);
-    const lamp = !item && !this.linkUnder(clientX, clientY) && this.deps.onLamp(clientX, clientY);
-    if (lamp) {
-      // The lamp's head: a click is its switch, a drag swings its light about.
-      this.lightOffset = [rig.lampAim.x - point.x, rig.lampAim.z - point.z];
-      rig.lampNudge.set(0, 0);
-      this.drag = 'light';
-    } else if (item) {
+    if (item) {
       objects.grab(item, point.x, point.z);
       this.drag = 'object';
     } else {
@@ -103,10 +92,6 @@ export class Pointer {
       } else if (hit) {
         handling.beginSlide(point.x, point.z);
         this.drag = handling.phase === 'slide' ? 'slide' : null;
-      } else {
-        this.lightOffset = [rig.lampAim.x - point.x, rig.lampAim.z - point.z];
-        rig.lampNudge.set(0, 0);
-        this.drag = 'light';
       }
     }
     if (this.drag) this.deps.canvas.style.cursor = 'grabbing';
@@ -116,7 +101,7 @@ export class Pointer {
   private move(clientX: number, clientY: number): void {
     const point = this.deskPoint(clientX, clientY);
     if (!point) return;
-    const { objects, handling, rig } = this.deps;
+    const { objects, handling } = this.deps;
     const now = performance.now();
     const dt = (now - this.lastMove) / 1000;
     this.lastMove = now;
@@ -130,14 +115,6 @@ export class Pointer {
         break;
       case 'slide':
         handling.moveSlide(point.x, point.z, dt);
-        break;
-      case 'light':
-        rig.lampAim.set(
-          THREE.MathUtils.clamp(point.x + this.lightOffset[0], -LIGHT_REACH, LIGHT_REACH),
-          0,
-          THREE.MathUtils.clamp(point.z + this.lightOffset[1], -LIGHT_REACH, LIGHT_REACH),
-        );
-        rig.place();
         break;
     }
     this.deps.wake();
@@ -158,7 +135,9 @@ export class Pointer {
         this.deps.wake();
         return;
       }
+      // A click that does not carry the thing off works it: the bell rings, the lamp switches.
       if (objects.inHand?.prop.name === 'bell' && this.travelled < 5) this.deps.ring();
+      if (objects.inHand?.prop.name === 'lamp' && this.travelled < 5) this.deps.toggleLamp();
       objects.release((performance.now() - this.lastMove) / 1000);
     }
     if (drag === 'curl') handling.endCurl();
@@ -182,11 +161,6 @@ export class Pointer {
     const at = point ? pageAt(sheet, point.x, point.z) : null;
     if (at && this.deps.poke(at)) return;
     const link = this.linkUnder(clientX, clientY);
-    // Whatever is on the page under the press takes it; only then the lamp's switch.
-    if (!link && this.deps.onLamp(clientX, clientY)) {
-      this.deps.toggleLamp();
-      return;
-    }
     if (!link || sheet.curl) return;
     if (link.href.startsWith('mailto:')) window.location.href = link.href;
     else window.open(link.href, '_blank', 'noopener');
@@ -212,8 +186,7 @@ export class Pointer {
     rig.place();
 
     let cursor = 'default';
-    if (this.deps.onLamp(clientX, clientY)) cursor = 'pointer';
-    else if (objects.pick(point.x, point.z)) cursor = 'grab';
+    if (objects.pick(point.x, point.z)) cursor = 'grab';
     else {
       const hit = sheet.curl ? null : sheet.hit(point.x, point.z, CORNER_REACH);
       if (hit?.corner !== null && hit) cursor = 'grab';
@@ -309,7 +282,7 @@ export class Pointer {
       return;
     }
     if (event.pointerType === 'touch') {
-      // Touch on the open desk is left to scrolling; a tap moves the light.
+      // Touch on the open desk is left to scrolling.
       this.downAt = [event.clientX, event.clientY];
       this.travelled = 0;
       return;
@@ -375,7 +348,7 @@ export class Pointer {
 
   private tap(clientX: number, clientY: number): void {
     const link = this.linkUnder(clientX, clientY);
-    if (link || this.deps.onLamp(clientX, clientY)) {
+    if (link) {
       this.click(clientX, clientY);
       return;
     }
@@ -383,11 +356,6 @@ export class Pointer {
     if (!point) return;
     const at = pageAt(this.deps.sheet, point.x, point.z);
     if (at && this.deps.poke(at)) return;
-    const { rig } = this.deps;
-    rig.lampNudge.set(0, 0);
-    rig.lampAim.set(THREE.MathUtils.clamp(point.x, -LIGHT_REACH, LIGHT_REACH), 0, THREE.MathUtils.clamp(point.z, -LIGHT_REACH, LIGHT_REACH));
-    rig.place();
-    this.deps.wake();
   }
 
   // Touch grips: small invisible handles over the things a finger can pick up,

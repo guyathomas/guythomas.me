@@ -31,11 +31,11 @@ Nothing is written on the picture. Everything is done by handling what is on the
 
 | Input | Result |
 |---|---|
-| Click the lamp's head | Switches the lamp on or off. It also comes on by itself at dusk and goes off at dawn |
-| Drag the lamp's head, or the bare desk | Swings the lamp's light about |
+| Click the lamp | Switches it on or off. It also comes on by itself at dusk and goes off at dawn |
+| Drag the lamp, by its foot or its head | Moves it. It stands free, turns to face the sheet, and throws its light in front of it |
 | Ring the bell | Turns the desk's sounds on, and off again |
 | Tap the pencilled "PTO" | Turns the sheet over |
-| Move the pointer | The lamp leans toward it; the impression catches the light |
+| Move the pointer | The lamp's light leans toward it; the impression catches the light |
 | Drag the sheet | Slide and turn it |
 | Drag a corner | Curl it. Carry it a third of the way, or flick it, and the sheet turns over where it lies, always side over side so the other face is the right way up. On a long phone slip a pull of under half its width is enough |
 | Double-click the sheet | Turns it over. A pencilled "PTO" at the foot of the front, and a draught that lifts the corner once after loading, are the only hints |
@@ -78,7 +78,6 @@ For review and screenshots. Combine freely.
 | `mode` | `auto`, `day`, `night`. For review only: the piece itself always follows the viewer's sun |
 | `sun` | Local solar hour for auto mode, for example `6.5` |
 | `lat`, `lon` | Viewer position for auto mode |
-| `light` | Lamp position, `x,y` each from -1 to 1 |
 | `t` | Freeze the clock at this many seconds |
 | `page` | Page of the marble run to open on, `1` to `8` |
 | `fps` | Render continuously and record the frame rate in `window.__stats` |

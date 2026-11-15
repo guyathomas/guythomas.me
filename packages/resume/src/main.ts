@@ -15,7 +15,7 @@ import { CameraRig } from './scene/camera';
 import { createBell } from './scene/bell';
 import { createDesk } from './scene/desk';
 import { createEraser } from './scene/eraser';
-import { createLampHead, SHADE_RADIUS } from './scene/lamp';
+import { createLampHead, createLampStand, HEAD_HEIGHT, HEAD_REACH, THROW } from './scene/lamp';
 import { createLoupe } from './scene/loupe';
 import { createKit, createPencil } from './scene/props';
 import { LightRig } from './scene/rig';
@@ -109,14 +109,13 @@ async function start(): Promise<void> {
   const pencilItem = objects.add(createPencil(kit), [-0.077, 0.085]);
   const eraserItem = objects.add(createEraser(kit), [-0.012, 0.012]);
   objects.add(createBell(kit));
+  // The lamp can be taken by its foot or by its head.
+  const lampItem = objects.add(createLampStand(kit), [0, HEAD_REACH]);
   for (const item of objects.items) scene.add(item.prop.group, item.prop.blob);
   scene.add(loupe.group.userData.glass as THREE.Object3D);
 
   // Light.
   const rig = new LightRig(scene, renderer);
-  rig.lampAim.set(-0.02, 0, -sheet.height * 0.2);
-  if (params.light) rig.lampAim.set(params.light[0] * 0.3, 0, params.light[1] * 0.3);
-  rig.place();
   rig.loadEnvironment(() => stage.invalidate());
   const lampHead = createLampHead();
   scene.add(lampHead.group);
@@ -141,9 +140,6 @@ async function start(): Promise<void> {
       pointer.dropPencil();
       play.reset();
       objects.home();
-      rig.lampAim.set(-0.02, 0, -sheet.height * 0.2);
-      rig.lampNudge.set(0, 0);
-      rig.place();
       cameraRig.goal = 0;
       controls.setDesk(false);
       wake();
@@ -225,17 +221,6 @@ async function start(): Promise<void> {
 
   const lighting = new Lighting(rig, params, () => wake());
 
-  // The lamp's head is its switch. It is found on the screen, so that it can be pressed in either view.
-  const lampAt = new THREE.Vector3();
-  const lampRim = new THREE.Vector3();
-  const onLamp = (clientX: number, clientY: number): boolean => {
-    const toScreen = (v: THREE.Vector3) => v.project(camera).set(((v.x + 1) / 2) * window.innerWidth, ((1 - v.y) / 2) * window.innerHeight, 0);
-    toScreen(lampAt.copy(lampHead.group.position));
-    toScreen(lampRim.copy(lampHead.group.position).add(new THREE.Vector3(SHADE_RADIUS * lampHead.group.scale.x, 0, 0)));
-    const reach = Math.max(26, lampAt.distanceTo(lampRim));
-    return Math.hypot(clientX - lampAt.x, clientY - lampAt.y) < reach;
-  };
-
   let hush = 0;
   let hushing = false;
   const pointer = new Pointer({
@@ -247,7 +232,6 @@ async function start(): Promise<void> {
     rig,
     cameraRig,
     frontLinks,
-    onLamp,
     // The bell turns the desk's sounds on, and off again.
     ring: () => {
       window.clearTimeout(hush);
@@ -286,15 +270,8 @@ async function start(): Promise<void> {
       // Objects are laid out once, the first time there is room; after that a resize only shows or hides them.
       const halfWidth = window.innerWidth / 2 / framing.pxPerMetre;
       if (arrangeDesk(objects, sheet, halfWidth, !homed)) homed = true;
-      // The lamp leans in at the top left of the picture as it is when not scrolled, smaller where the picture is small.
       const left = framing.x - halfWidth;
       const top = framing.z - (window.innerHeight / 2 + window.scrollY) / framing.pxPerMetre;
-      const shade = Math.min(SHADE_RADIUS, Math.max(0.016, halfWidth * 0.3));
-      lampHead.group.scale.setScalar(shade / SHADE_RADIUS);
-      // With desk to spare the whole head is in the picture; without, it only looks in over the corner.
-      const inset = roomy ? 1.75 : 0.6;
-      rig.lampHome.set(left + shade * inset, 0.07 + shade * 2, top + shade * inset);
-      rig.place();
       // Thrown things stop at the edge of what can be seen, so nothing is lost.
       objects.bounds = { x0: left + 0.015, x1: left + halfWidth * 2 - 0.015, z0: top + 0.015, z1: sheet.height / 2 + 0.03 };
       if (!placed) applyView();
@@ -303,6 +280,20 @@ async function start(): Promise<void> {
     sheetCentre.set(handling.home.cx, 0, handling.home.cz);
     cameraRig.apply(framing, window.innerHeight, sheetCentre, sheet.height);
 
+    // The lamp stands where it was put and turns to face the sheet; its light falls in front of it.
+    const lx = lampItem.x;
+    const lz = lampItem.z;
+    const away = Math.hypot(sheet.pose.cx - lx, sheet.pose.cz - lz);
+    if (away > 0.03 && !lampItem.flight) {
+      const facing = Math.atan2(-(sheet.pose.cz - lz), sheet.pose.cx - lx);
+      if (Math.abs(facing - lampItem.angle) > 1e-4) objects.move(lampItem, lx, lz, facing);
+    }
+    const fx = Math.cos(lampItem.angle);
+    const fz = -Math.sin(lampItem.angle);
+    rig.lampHome.set(lx + fx * HEAD_REACH, HEAD_HEIGHT + lampItem.lift, lz + fz * HEAD_REACH);
+    if (rig.rake === 0) rig.lampAim.set(lx + fx * THROW, 0, lz + fz * THROW);
+    rig.place();
+    lampHead.group.visible = lampItem.prop.group.visible;
     lampHead.group.position.copy(rig.head);
     aim.copy(rig.lamp.target.position).sub(rig.head).normalize();
     lampHead.group.quaternion.setFromUnitVectors(down, aim);

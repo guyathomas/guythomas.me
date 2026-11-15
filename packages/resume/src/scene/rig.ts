@@ -64,7 +64,7 @@ export class LightRig {
   readonly sun = new THREE.SpotLight('#ffffff', 0, 0, 0.21, 0.35, 0);
   readonly windowGlow = new THREE.DirectionalLight('#ffffff', 0);
   readonly sky = new THREE.HemisphereLight('#ffffff', '#3a2a1c', 0);
-  readonly lamp = new THREE.SpotLight(LAMP_COLOUR, 0, 2.6, 0.4, 1, 2);
+  readonly lamp = new THREE.SpotLight(LAMP_COLOUR, 0, 2.6, 0.56, 1, 2);
   /** The desk point the lamp is aimed at. */
   readonly lampAim = new THREE.Vector3(0, 0, 0);
   /** A small offset added to the aim, used for the pointer's nudge. */
