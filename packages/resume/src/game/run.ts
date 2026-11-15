@@ -12,7 +12,7 @@ interface Star {
   since: number;
 }
 
-const LINE = 0.00036;
+const LINE = 0.00046;
 const STAR_RADIUS = 0.006;
 const SHELF = 0.009;
 const WIN_TIME = 1.7;

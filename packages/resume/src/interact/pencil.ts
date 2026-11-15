@@ -25,7 +25,7 @@ export interface PencilEvents {
 }
 
 /** Half the width of a pencil line, metres. */
-export const PENCIL_HALF = 0.0004;
+export const PENCIL_HALF = 0.00048;
 const SPACING = 0.00035;
 /** What kind of thing is in the hand. */
 export interface ToolKind {

@@ -69,7 +69,7 @@ export class LightRig {
   /** Where the raking light is centred, for the freeze state. */
   readonly lampAim = new THREE.Vector3(0, 0, 0);
   /** Where that light is. */
-  readonly lampHome = new THREE.Vector3(-0.24, 0.3, -0.24);
+  readonly lampHome = new THREE.Vector3(-0.5, 0.72, -0.5);
   exposure = 1;
   /** 0 is the lamp's normal height; 1 drops it almost to the desk, off to one side, to rake the light. */
   rake = 0;
@@ -191,7 +191,8 @@ export class LightRig {
     this.scene.environmentIntensity = 0.42 * sky + 0.05 * night + 0.02;
 
     // Warm, from one side, and falling away across the desk.
-    this.lamp.intensity = 1.5 * lamp;
+    // Far enough off that no part of the sheet is so brightly lit that pencil and ink burn out on it.
+    this.lamp.intensity = 6.2 * lamp;
     this.lamp.visible = lamp > 0.002;
 
     // A camera would open up at night, but not all the way: night should read as night.
