@@ -54,7 +54,8 @@ body {
 #back-copy .sheet {
   zoom: var(--s, 1);
 }
-.desk-view {
+.desk-view,
+.back-up {
   overflow: hidden;
 }
 
@@ -99,6 +100,14 @@ body {
   display: grid;
   place-items: center;
   touch-action: manipulation;
+}
+#tray button:disabled {
+  opacity: 0.35;
+}
+#tray .go {
+  margin-left: 6px;
+  color: #2a1d12;
+  background: #d9a441;
 }
 #tray button[aria-pressed='true'] {
   color: #2a1d12;

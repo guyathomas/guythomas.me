@@ -1,5 +1,7 @@
 type Tool = 'pencil' | 'eraser';
 
+const GO = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.2v13.6a.8.8 0 0 0 1.2.7l11-6.8a.8.8 0 0 0 0-1.4l-11-6.8A.8.8 0 0 0 8 5.2z"/></svg>';
+
 const ICONS: Record<Tool, string> = {
   pencil:
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.2-4.6L16.6 4a2 2 0 0 1 2.8 0l.6.6a2 2 0 0 1 0 2.8L8.6 18.8 4 20z"/><path d="M14.5 6.1l3.4 3.4"/></svg>',
@@ -10,7 +12,8 @@ const ICONS: Record<Tool, string> = {
 /**
  * The pencil and the eraser as two buttons, for where there is no desk to
  * pick them up from. Picking one makes a finger on the paper draw or rub;
- * picking it again puts it away, and the finger scrolls as before.
+ * picking it again puts it away, and the finger scrolls as before. A third
+ * button lets the marble go.
  */
 export class ToolTray {
   shown = false;
@@ -18,7 +21,10 @@ export class ToolTray {
   private readonly buttons = new Map<Tool, HTMLButtonElement>();
   private current: Tool | null = null;
 
-  constructor(pick: (tool: Tool) => void) {
+  private readonly go = document.createElement('button');
+  private ready = true;
+
+  constructor(pick: (tool: Tool) => void, launch: () => void) {
     this.element.id = 'tray';
     this.element.setAttribute('role', 'toolbar');
     this.element.setAttribute('aria-label', 'Drawing');
@@ -32,11 +38,21 @@ export class ToolTray {
       this.buttons.set(tool, button);
       this.element.appendChild(button);
     }
+    this.go.type = 'button';
+    this.go.className = 'go';
+    this.go.setAttribute('aria-label', 'Let the marble go');
+    this.go.innerHTML = GO;
+    this.go.addEventListener('click', launch);
+    this.element.appendChild(this.go);
     document.body.appendChild(this.element);
   }
 
-  /** Shows or hides the tray and marks the tool in use. Cheap to call every frame. */
-  show(shown: boolean, inUse: Tool | null): void {
+  /** Shows or hides the tray, marks the tool in use, and says whether the marble is waiting. Cheap to call every frame. */
+  show(shown: boolean, inUse: Tool | null, ready: boolean): void {
+    if (ready !== this.ready) {
+      this.ready = ready;
+      this.go.disabled = !ready;
+    }
     if (shown !== this.shown) {
       this.shown = shown;
       this.element.classList.toggle('shown', shown);

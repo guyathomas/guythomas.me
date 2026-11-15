@@ -24,6 +24,8 @@ export interface PointerDeps {
   wake(): void;
   /** The things that are picked up and used in the hand. */
   tools: { pencil: PencilTool; eraser: PencilTool };
+  /** True while the foot of the sheet is out of sight, so its bottom corners are not there to take hold of. */
+  footHidden(): boolean;
   /** A click on the page. Returns true if something there took it. */
   poke(at: PagePoint): boolean;
 }
@@ -408,7 +410,7 @@ export class Pointer {
     for (let corner = 0; corner < 4; corner++) {
       this.addGrip(
         () => {
-          if (sheet.curl || handling.busy) return null;
+          if (sheet.curl || handling.busy || (corner >= 2 && this.deps.footHidden())) return null;
           const [x, z] = sheet.cornerWorld(corner);
           return new THREE.Vector3(x, 0, z);
         },

@@ -75,19 +75,28 @@ export function createPlay(deps: PlayDeps) {
   // The first page is set out before anything is running, so nothing needs waking.
   open();
 
+  // Without a desk the back is shown only as far as the board and a little more, so its "PTO" is written there.
+  const backFoot = deps.desk ? sheet.height : Math.min(sheet.height, board.foot + 0.019);
   /** Pencils "PTO" at the foot of a face. Like any pencil it can be rubbed out; a reset writes it again. */
   function note(front: boolean): void {
     // Without a desk there is no corner within easy reach of a thumb, so the back says the same.
     if (!front && deps.desk) return;
-    for (const points of ptoLines(sheet.width, sheet.height)) (front ? marks.front : marks.back).put(points, 0.78);
+    for (const points of ptoLines(sheet.width, front ? sheet.height : backFoot)) (front ? marks.front : marks.back).put(points, 0.78);
   }
-  const noted = ptoLines(sheet.width, sheet.height).flat();
-  const xs = noted.filter((_, i) => i % 2 === 0);
-  const ys = noted.filter((_, i) => i % 2 === 1);
-  const pad = 0.005;
-  const box = { x0: Math.min(...xs) - pad, x1: Math.max(...xs) + pad, y0: Math.min(...ys) - pad, y1: Math.max(...ys) + pad };
+  const boxOf = (height: number) => {
+    const noted = ptoLines(sheet.width, height).flat();
+    const xs = noted.filter((_, i) => i % 2 === 0);
+    const ys = noted.filter((_, i) => i % 2 === 1);
+    const pad = 0.005;
+    return { x0: Math.min(...xs) - pad, x1: Math.max(...xs) + pad, y0: Math.min(...ys) - pad, y1: Math.max(...ys) + pad };
+  };
+  const boxes = { front: boxOf(sheet.height), back: boxOf(backFoot) };
   /** True for a page point on the pencilled "PTO". */
-  const onNote = (at: PagePoint): boolean => (at.front || !deps.desk) && at.x > box.x0 && at.x < box.x1 && at.y > box.y0 && at.y < box.y1;
+  const onNote = (at: PagePoint): boolean => {
+    if (!at.front && deps.desk) return false;
+    const box = at.front ? boxes.front : boxes.back;
+    return at.x > box.x0 && at.x < box.x1 && at.y > box.y0 && at.y < box.y1;
+  };
   note(true);
   note(false);
 
@@ -157,6 +166,12 @@ export function createPlay(deps: PlayDeps) {
     tools: { pencil: tool, eraser },
     poke,
     launch,
+    /** How much of the back, from its head, is worth showing where the sheet is longer than the board. */
+    backFoot,
+    /** True while the marble is waiting to be let go. */
+    get waiting(): boolean {
+      return run.phase === 'ready';
+    },
     /** Advances the game. The marble only runs while its page is face up and lying still. */
     step(dt: number): boolean {
       if (handling.frontUp || handling.busy || !run.step(dt)) return false;

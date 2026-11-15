@@ -168,6 +168,20 @@ export class SheetBody {
     this.update();
   }
 
+  /**
+   * Has the sheet drawn only on one side of a plane, so that part of it can be
+   * put out of sight. The plane is kept and moved by whoever gave it.
+   */
+  clipTo(plane: THREE.Plane): void {
+    this.group.traverse((child) => {
+      const material = (child as THREE.Mesh).material as THREE.Material | undefined;
+      if (!material) return;
+      material.clippingPlanes = [plane];
+      material.clipShadows = true;
+      material.needsUpdate = true;
+    });
+  }
+
   /** Flat desk position of a corner (0 TL, 1 TR, 2 BR, 3 BL). */
   cornerWorld(index: number): [number, number] {
     const [u, v] = CORNERS[index];
