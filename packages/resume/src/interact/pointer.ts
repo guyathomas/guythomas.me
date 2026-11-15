@@ -7,7 +7,7 @@ import type { SheetHandling } from './handling';
 import type { DeskObjects, Item } from './objects';
 import { pageAt, type PagePoint, type PencilTool } from './pencil';
 
-type Drag = 'slide' | 'curl' | 'object' | 'draw' | null;
+type Drag = 'slide' | 'curl' | 'object' | 'draw' | 'scroll' | null;
 
 export interface PointerDeps {
   canvas: HTMLCanvasElement;
@@ -24,6 +24,8 @@ export interface PointerDeps {
   wake(): void;
   /** The things that are picked up and used in the hand. */
   tools: { pencil: PencilTool; eraser: PencilTool };
+  /** True while the foot of the sheet is out of sight, so its bottom corners are not there to take hold of. */
+  footHidden(): boolean;
   /** A click on the page. Returns true if something there took it. */
   poke(at: PagePoint): boolean;
 }
@@ -44,6 +46,8 @@ export class Pointer {
   private pressed: number | null = null;
   /** True while the rubber is down only because the other mouse button is held. */
   private borrowed = false;
+  /** While two fingers scroll the page past a tool: the finger being followed, and where it last was. */
+  private scrolling: { id: number; y: number } | null = null;
   private readonly grips: Array<{ element: HTMLElement; place: () => THREE.Vector3 | null; begin: (x: number, z: number) => void }> = [];
 
   constructor(private readonly deps: PointerDeps) {
@@ -238,6 +242,31 @@ export class Pointer {
     this.setTool(false);
   }
 
+  /**
+   * Takes up the pencil or the eraser without reaching for it, or puts both
+   * away: for where there is no desk to pick them up from, as on a phone.
+   */
+  useTool(name: 'pencil' | 'eraser' | null): void {
+    const { tools, sheet } = this.deps;
+    for (const key of ['pencil', 'eraser'] as const) {
+      if (key !== name && tools[key].active) tools[key].putDown();
+    }
+    if (this.drag === 'draw' || this.drag === 'scroll') {
+      this.cancelPress();
+      this.drag = null;
+      this.scrolling = null;
+    }
+    if (name && !tools[name].active) tools[name].take(sheet.pose.cx, sheet.pose.cz);
+    this.setTool(name !== null);
+    this.deps.wake();
+  }
+
+  /** Which of the two is in the hand. */
+  get toolInUse(): 'pencil' | 'eraser' | null {
+    const { pencil, eraser } = this.deps.tools;
+    return eraser.active ? 'eraser' : pencil.active ? 'pencil' : null;
+  }
+
   /** Turns the pencil in the hand end for end. Returns true if there was one to turn. */
   turnPencil(): boolean {
     const pencil = this.tool;
@@ -256,6 +285,13 @@ export class Pointer {
     const reach = pencil.active && !this.drag && event.button === 0 ? this.deskPoint(event.clientX, event.clientY) : null;
     if (reach && this.deps.objects.pick(reach.x, reach.z)) this.putDownPencil();
     if (pencil.active) {
+      // A second finger while one is drawing: the two of them scroll the page, as a finger alone no longer can.
+      if (event.pointerType === 'touch' && this.drag === 'draw' && event.pointerId !== this.pressed) {
+        pencil.lift();
+        this.drag = 'scroll';
+        this.scrolling = { id: event.pointerId, y: event.clientY };
+        return;
+      }
       const point = this.deskPoint(event.clientX, event.clientY);
       if (!point || this.drag) return;
       if (other) {
@@ -287,6 +323,13 @@ export class Pointer {
 
   private onMove = (event: PointerEvent): void => {
     const pencil = this.tool;
+    if (this.drag === 'scroll') {
+      if (this.scrolling && event.pointerId === this.scrolling.id) {
+        window.scrollBy(0, this.scrolling.y - event.clientY);
+        this.scrolling.y = event.clientY;
+      }
+      return;
+    }
     if (pencil.active) {
       // Only the finger that is drawing moves the line.
       if (this.drag === 'draw' && event.pointerId !== this.pressed) return;
@@ -308,6 +351,13 @@ export class Pointer {
   };
 
   private endStroke(event: PointerEvent): boolean {
+    if (this.drag === 'scroll') {
+      // Either finger lifting ends it; the other does nothing more until it is lifted too.
+      this.scrolling = null;
+      this.cancelPress();
+      this.drag = null;
+      return true;
+    }
     if (this.drag !== 'draw') return false;
     if (this.pressed !== event.pointerId) return true;
     this.pressed = null;
@@ -360,7 +410,7 @@ export class Pointer {
     for (let corner = 0; corner < 4; corner++) {
       this.addGrip(
         () => {
-          if (sheet.curl || handling.busy) return null;
+          if (sheet.curl || handling.busy || (corner >= 2 && this.deps.footHidden())) return null;
           const [x, z] = sheet.cornerWorld(corner);
           return new THREE.Vector3(x, 0, z);
         },

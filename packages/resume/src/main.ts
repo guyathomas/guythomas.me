@@ -24,6 +24,7 @@ import { frameReading, METRES_PER_SHEET_PX } from './scene/view';
 import { planScroll, viewAt, WHOLE, type ScrollPlan } from './scene/scroll';
 import { fontsReady } from './typeset/raster';
 import { Controls } from './ui/controls';
+import { ToolTray } from './ui/tray';
 
 declare global {
   interface Window {
@@ -169,7 +170,7 @@ async function start(): Promise<void> {
     layers: pencil,
     voices,
     wake,
-    game: roomy,
+    desk: roomy,
     firstPage: Math.floor((params.page ?? 1) - 1),
     turnOver: () => {
       handling.turnOver();
@@ -191,6 +192,7 @@ async function start(): Promise<void> {
     moving = cameraRig.step(dt) || moving;
     moving = settleCorners(dt) || moving;
     moving = ear.step(dt) || moving;
+    moving = trimBack(dt) || moving;
     moving = play.step(dt) || moving;
     return moving;
   };
@@ -215,6 +217,30 @@ async function start(): Promise<void> {
 
   const lighting = new Lighting(rig, params, () => wake());
 
+  const tray = new ToolTray(
+    (name) => pointer.useTool(pointer.toolInUse === name ? null : name),
+    () => play.launch(),
+  );
+
+  // On a phone the sheet is far longer than the game's board. While the back is up and lying still, only the
+  // board's length of it is shown: the rest is drawn back out of sight, and returns before the sheet is turned.
+  const playing = () => !roomy && !handling.frontUp && !handling.busy;
+  const cut = new THREE.Plane(new THREE.Vector3(0, 0, -1), 10);
+  const whole = sheet.height + 0.05;
+  let shown = whole;
+  if (!roomy) {
+    renderer.localClippingEnabled = true;
+    sheet.clipTo(cut);
+  }
+  function trimBack(dt: number): boolean {
+    if (roomy) return false;
+    const goal = playing() ? play.backFoot : whole;
+    const before = shown;
+    // It goes away gently, but is all there the moment the sheet is taken up.
+    shown = goal > shown || still ? goal : Math.max(goal, shown - Math.max(0.004, (shown - goal) * (1 - Math.exp(-dt * 7))));
+    cut.constant = handling.home.cz - sheet.height / 2 + shown;
+    return shown !== before;
+  }
   let hush = 0;
   let hushing = false;
   const pointer = new Pointer({
@@ -244,6 +270,7 @@ async function start(): Promise<void> {
       }
     },
     wake,
+    footHidden: () => !roomy && shown < sheet.height - 0.01,
     tools: play.tools,
     poke: play.poke,
   });
@@ -280,6 +307,16 @@ async function start(): Promise<void> {
     const zoom = plan && cameraRig.goal === 0 ? viewAt(plan, window.scrollY) : WHOLE;
     const shown = { pxPerMetre: framing.pxPerMetre * zoom.scale, x: framing.x + zoom.x, z: framing.z + zoom.z };
     cameraRig.apply(shown, window.innerHeight, sheetCentre, sheet.height);
+
+    // Where there is no desk to pick a pencil up from, the two tools are offered while the back is up.
+    const play1 = playing();
+    if (!play1 && tray.shown && pointer.toolInUse) pointer.useTool(null);
+    if (play1 !== tray.shown) {
+      // The board is at the head of the page, and there is nothing below it to scroll to.
+      if (play1) window.scrollTo(0, 0);
+      document.documentElement.classList.toggle('back-up', play1);
+    }
+    tray.show(play1, pointer.toolInUse, play.waiting);
 
     play.render(renderer);
     loupe.sync();

@@ -164,25 +164,6 @@
   font-style: normal;
 }
 
-/* The back is blank but for a note, printed only where the window has no room
-   beside the sheet for the pencil, and so no game. */
-.sheet-back .back-note {
-  display: none;
-}
-.no-desk .sheet-back .back-note {
-  display: block;
-  margin: 150px 12% 0;
-  text-align: center;
-  font-family: 'EBG Italic', serif;
-  font-size: 15px;
-  line-height: 23px;
-}
-.no-desk .sheet-back .back-note .ornament {
-  display: block;
-  margin-bottom: 14px;
-  font-family: 'EBG Text', serif;
-}
-
 /* Narrow slip, used on phones so the type stays at reading size */
 .narrow .sheet {
   width: 372px;
