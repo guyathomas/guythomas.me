@@ -27,7 +27,7 @@ Edit `src/data/resume.yaml` and rebuild. Both pages and the printed sheet are ge
 
 ## The view and the light
 
-- **One picture.** On anything larger than a phone the whole sheet is fitted to the window's height with the desk around it, and nothing scrolls. The wheel brings the camera closer, up to reading size. A phone, or a window under 560 px high, gets the sheet at reading size and scrolls.
+- **One picture, then a page.** On anything larger than a phone the page opens on the whole sheet fitted to the window's height, with the desk around it. Scrolling first brings the camera in to reading size at the top of the sheet (about a third of a window of scroll), then moves it down the sheet like any page; scrolling back reverses it. It is the browser's own scroll, so momentum, the scrollbar and the keys work. Where the fitted sheet is already at reading size there is nothing to scroll. A phone, or a window under 560 px high, gets the sheet at reading size and scrolls (`src/scene/scroll.ts`).
 - **Light is not a control.** It is the viewer's real sun: where it stands in their sky, from their clock and place. By day it comes through the window; as it sets, the room's own warm light comes up from off the top left of the picture. There is no lamp to see or switch.
 
 ## Controls
@@ -36,8 +36,7 @@ Nothing is written on the picture. Everything is done by handling what is on the
 
 | Input | Result |
 |---|---|
-| Scroll, or pinch on a trackpad | Comes closer to what is under the pointer, up to reading size, and draws back to the whole desk |
-| Drag the bare desk, when close | Slides the picture |
+| Scroll | Comes in to reading size, then moves down the sheet |
 | Ring the bell | Turns the desk's sounds on, and off again |
 | Tap the pencilled "PTO" | Turns the sheet over |
 | Drag the sheet | Slide and turn it |

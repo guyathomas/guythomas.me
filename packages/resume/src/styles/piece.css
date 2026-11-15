@@ -58,15 +58,16 @@ body {
   overflow: hidden;
 }
 
-/* The fitted view: the whole desk is one picture, and nothing scrolls. */
-.fit,
+/* The fitted view: the whole desk is one picture that stays put. The page is
+   only as much longer than the window as there is to scroll through: first the
+   camera comes in, then it moves down the sheet. */
 .fit body {
-  height: 100%;
-  overflow: hidden;
+  min-height: calc(100vh + var(--scroll, 0px));
 }
 .fit #stage {
+  position: fixed;
+  inset: 0;
   box-sizing: border-box;
-  height: 100%;
   padding: 0;
   align-items: center;
 }
@@ -112,11 +113,9 @@ body {
   }
   html,
   body,
-  .fit,
   .fit body {
     background: #fff;
     min-height: 0;
-    height: auto;
     overflow: visible;
   }
   #gl,
@@ -127,7 +126,7 @@ body {
   }
   #stage,
   .fit #stage {
-    height: auto;
+    position: static;
     padding: 0;
     display: block;
   }

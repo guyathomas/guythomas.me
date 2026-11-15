@@ -17,7 +17,7 @@ Complete rewrite as "Living paper": the resume as a letterpress sheet on a desk.
 - Phones and narrow windows: the controls sit on their own strip, clear of the text, with larger touch targets; the back carries a note in place of the game; a corner needs a shorter pull to turn the slip over.
 - Nothing written on the picture: no buttons. A bell turns sound on and off, and a tap on "PTO" turns the sheet.
 - Lighting always follows the viewer's sun, with the room's own light coming up after dark. Nothing to switch.
-- On anything larger than a phone the whole desk is one picture that does not scroll; the wheel comes closer, up to reading size.
+- On anything larger than a phone the page opens on the whole desk; scrolling brings the camera in to reading size and then moves down the sheet.
 - Printing from the browser prints the sheet of type rather than the scene.
 - Thrown objects stop at the edge of the picture, so nothing is lost.
 - Lighting modes: day, night, and auto, which follows the viewer's real sun.

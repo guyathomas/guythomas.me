@@ -21,7 +21,7 @@ import { LightRig } from './scene/rig';
 import { Stage } from './scene/stage';
 import { createStamp } from './scene/stamp';
 import { frameReading, METRES_PER_SHEET_PX } from './scene/view';
-import { panBy, WHOLE, zoomAt, type Zoom } from './scene/zoom';
+import { planScroll, viewAt, WHOLE, type ScrollPlan } from './scene/scroll';
 import { fontsReady } from './typeset/raster';
 import { Controls } from './ui/controls';
 
@@ -119,7 +119,6 @@ async function start(): Promise<void> {
   const controls = new Controls({
     desk: () => {
       cameraRig.goal = cameraRig.goal === 1 ? 0 : 1;
-      zoom = WHOLE;
       controls.setDesk(cameraRig.goal === 1);
       wake();
     },
@@ -138,7 +137,7 @@ async function start(): Promise<void> {
       play.reset();
       objects.home();
       cameraRig.goal = 0;
-      zoom = WHOLE;
+      window.scrollTo(0, 0);
       controls.setDesk(false);
       wake();
     },
@@ -244,35 +243,13 @@ async function start(): Promise<void> {
       }
     },
     wake,
-    pan: (dx, dy) => {
-      if (zoom.scale <= 1.001 || cameraRig.goal === 1) return false;
-      const perMetre = basePx * zoom.scale;
-      zoom = panBy(zoom, dx / perMetre, dy / perMetre, window.innerWidth / 2 / basePx, window.innerHeight / 2 / basePx);
-      return true;
-    },
     tools: play.tools,
     poke: play.poke,
   });
 
-  // The fitted view: the wheel (or a pinch on a trackpad) comes closer to what is under the pointer, up to
-  // reading size, and draws back again to the whole desk.
-  let zoom: Zoom = WHOLE;
-  let basePx = 1;
-  window.addEventListener(
-    'wheel',
-    (event) => {
-      if (!document.documentElement.classList.contains('fit') || cameraRig.goal === 1) return;
-      event.preventDefault();
-      const most = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--read')) || 1;
-      const step = event.deltaMode === 1 ? event.deltaY * 16 : event.deltaY;
-      const factor = Math.exp(-step * (event.ctrlKey ? 0.012 : 0.0022));
-      const dx = (event.clientX - window.innerWidth / 2) / basePx;
-      const dz = (event.clientY - window.innerHeight / 2) / basePx;
-      zoom = zoomAt(zoom, factor, dx, dz, most, window.innerWidth / 2 / basePx, window.innerHeight / 2 / basePx);
-      wake();
-    },
-    { passive: false },
-  );
+  // The fitted view: scrolling first brings the camera in to reading size, then moves it down the sheet.
+  const fitted = document.documentElement.classList.contains('fit');
+  let plan: ScrollPlan | null = null;
 
   let arranged = false;
   let placed = false;
@@ -285,15 +262,21 @@ async function start(): Promise<void> {
       const halfWidth = window.innerWidth / 2 / framing.pxPerMetre;
       if (arrangeDesk(objects, sheet, halfWidth, !homed)) homed = true;
       const left = framing.x - halfWidth;
-      const top = framing.z - (window.innerHeight / 2 + window.scrollY) / framing.pxPerMetre;
+      // The fitted picture stays put while the page scrolls under it; a phone's sheet moves with the page.
+      const top = framing.z - (window.innerHeight / 2 + (fitted ? 0 : window.scrollY)) / framing.pxPerMetre;
+      if (fitted) {
+        const most = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--read')) || 1;
+        plan = planScroll(window.innerHeight, framing.pxPerMetre, sheet.height, most, 44);
+        document.documentElement.style.setProperty('--scroll', `${Math.round(plan.stretch + plan.travel)}px`);
+      }
       // Thrown things stop at the edge of what can be seen, so nothing is lost.
       objects.bounds = { x0: left + 0.015, x1: left + halfWidth * 2 - 0.015, z0: top + 0.015, z1: sheet.height / 2 + 0.03 };
       if (!placed) applyView();
       placed = true;
     }
     sheetCentre.set(handling.home.cx, 0, handling.home.cz);
-    basePx = framing.pxPerMetre;
     // Come closer, and the camera frames a part of the desk instead of the whole.
+    const zoom = plan && cameraRig.goal === 0 ? viewAt(plan, window.scrollY) : WHOLE;
     const shown = { pxPerMetre: framing.pxPerMetre * zoom.scale, x: framing.x + zoom.x, z: framing.z + zoom.z };
     cameraRig.apply(shown, window.innerHeight, sheetCentre, sheet.height);
 
@@ -343,7 +326,6 @@ async function start(): Promise<void> {
     }
     // A hand full of pencil should not outlast the room for it.
     pointer.putDownPencil();
-    zoom = WHOLE;
     arranged = false;
     stage.resize();
   });

@@ -7,7 +7,7 @@ import type { SheetHandling } from './handling';
 import type { DeskObjects, Item } from './objects';
 import { pageAt, type PagePoint, type PencilTool } from './pencil';
 
-type Drag = 'slide' | 'curl' | 'object' | 'draw' | 'pan' | null;
+type Drag = 'slide' | 'curl' | 'object' | 'draw' | null;
 
 export interface PointerDeps {
   canvas: HTMLCanvasElement;
@@ -22,8 +22,6 @@ export interface PointerDeps {
   ring(): void;
   /** Something changed: keep the frame loop running. */
   wake(): void;
-  /** In the fitted view: slides the picture by this many screen px. Returns false if it is not held close. */
-  pan(dx: number, dy: number): boolean;
   /** The things that are picked up and used in the hand. */
   tools: { pencil: PencilTool; eraser: PencilTool };
   /** A click on the page. Returns true if something there took it. */
@@ -40,7 +38,6 @@ export class Pointer {
   private readonly plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
   private readonly point = new THREE.Vector3();
   private downAt: [number, number] = [0, 0];
-  private panFrom: [number, number] = [0, 0];
   private travelled = 0;
   private lastMove = 0;
   /** The mouse or pen pointer whose press began on the canvas, if any. */
@@ -94,10 +91,6 @@ export class Pointer {
       } else if (hit) {
         handling.beginSlide(point.x, point.z);
         this.drag = handling.phase === 'slide' ? 'slide' : null;
-      } else if (this.deps.pan(0, 0)) {
-        // Held close, the bare desk is something to take hold of and slide the picture by.
-        this.panFrom = [clientX, clientY];
-        this.drag = 'pan';
       }
     }
     if (this.drag) this.deps.canvas.style.cursor = 'grabbing';
@@ -115,10 +108,6 @@ export class Pointer {
     switch (this.drag) {
       case 'object':
         objects.drag(point.x, point.z, dt);
-        break;
-      case 'pan':
-        this.deps.pan(this.panFrom[0] - clientX, this.panFrom[1] - clientY);
-        this.panFrom = [clientX, clientY];
         break;
       case 'curl':
         handling.moveCurl(point.x, point.z);
@@ -152,7 +141,7 @@ export class Pointer {
     if (drag === 'curl') handling.endCurl();
     if (drag === 'slide') handling.endSlide();
     // A click on an object is not a click on what lies under it.
-    if (drag !== 'object' && drag !== 'pan' && !cancelled && this.travelled < 5) this.click(clientX, clientY);
+    if (drag !== 'object' && !cancelled && this.travelled < 5) this.click(clientX, clientY);
     this.hover(clientX, clientY);
     this.deps.wake();
   }
