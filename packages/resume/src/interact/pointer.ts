@@ -7,7 +7,7 @@ import type { SheetHandling } from './handling';
 import type { DeskObjects, Item } from './objects';
 import { pageAt, type PagePoint, type PencilTool } from './pencil';
 
-type Drag = 'slide' | 'curl' | 'object' | 'draw' | null;
+type Drag = 'slide' | 'curl' | 'object' | 'draw' | 'pan' | null;
 
 export interface PointerDeps {
   canvas: HTMLCanvasElement;
@@ -22,7 +22,8 @@ export interface PointerDeps {
   ring(): void;
   /** Something changed: keep the frame loop running. */
   wake(): void;
-  toggleLamp(): void;
+  /** In the fitted view: slides the picture by this many screen px. Returns false if it is not held close. */
+  pan(dx: number, dy: number): boolean;
   /** The things that are picked up and used in the hand. */
   tools: { pencil: PencilTool; eraser: PencilTool };
   /** A click on the page. Returns true if something there took it. */
@@ -31,7 +32,7 @@ export interface PointerDeps {
 
 const CORNER_REACH = 0.021;
 
-/** Turns pointer and touch input into handling of the sheet, the objects and the lamp. */
+/** Turns pointer and touch input into handling of the sheet and the things on the desk. */
 export class Pointer {
   private drag: Drag = null;
   private readonly ray = new THREE.Raycaster();
@@ -39,6 +40,7 @@ export class Pointer {
   private readonly plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
   private readonly point = new THREE.Vector3();
   private downAt: [number, number] = [0, 0];
+  private panFrom: [number, number] = [0, 0];
   private travelled = 0;
   private lastMove = 0;
   /** The mouse or pen pointer whose press began on the canvas, if any. */
@@ -92,6 +94,10 @@ export class Pointer {
       } else if (hit) {
         handling.beginSlide(point.x, point.z);
         this.drag = handling.phase === 'slide' ? 'slide' : null;
+      } else if (this.deps.pan(0, 0)) {
+        // Held close, the bare desk is something to take hold of and slide the picture by.
+        this.panFrom = [clientX, clientY];
+        this.drag = 'pan';
       }
     }
     if (this.drag) this.deps.canvas.style.cursor = 'grabbing';
@@ -109,6 +115,10 @@ export class Pointer {
     switch (this.drag) {
       case 'object':
         objects.drag(point.x, point.z, dt);
+        break;
+      case 'pan':
+        this.deps.pan(this.panFrom[0] - clientX, this.panFrom[1] - clientY);
+        this.panFrom = [clientX, clientY];
         break;
       case 'curl':
         handling.moveCurl(point.x, point.z);
@@ -135,15 +145,14 @@ export class Pointer {
         this.deps.wake();
         return;
       }
-      // A click that does not carry the thing off works it: the bell rings, the lamp switches.
+      // A click that does not carry the bell off rings it.
       if (objects.inHand?.prop.name === 'bell' && this.travelled < 5) this.deps.ring();
-      if (objects.inHand?.prop.name === 'lamp' && this.travelled < 5) this.deps.toggleLamp();
       objects.release((performance.now() - this.lastMove) / 1000);
     }
     if (drag === 'curl') handling.endCurl();
     if (drag === 'slide') handling.endSlide();
     // A click on an object is not a click on what lies under it.
-    if (drag !== 'object' && !cancelled && this.travelled < 5) this.click(clientX, clientY);
+    if (drag !== 'object' && drag !== 'pan' && !cancelled && this.travelled < 5) this.click(clientX, clientY);
     this.hover(clientX, clientY);
     this.deps.wake();
   }
@@ -154,7 +163,7 @@ export class Pointer {
     return eraser.active ? eraser : pencil;
   }
 
-  /** A press and release without travel: follow a link, or work the lamp's switch. */
+  /** A press and release without travel: something on the page takes it, or a link is followed. */
   private click(clientX: number, clientY: number): void {
     const { sheet } = this.deps;
     const point = this.deskPoint(clientX, clientY);

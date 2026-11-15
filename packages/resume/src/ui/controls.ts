@@ -8,7 +8,6 @@ export interface ControlHandlers {
   erase(): void;
   /** Space: returns true if it was used. */
   launch(): boolean;
-  lamp(): void;
 }
 
 /**
@@ -32,9 +31,6 @@ export class Controls {
           break;
         case 'd':
           handlers.desk();
-          break;
-        case 'l':
-          handlers.lamp();
           break;
         case 'escape':
           if (!handlers.cancel() && this.deskView) handlers.desk();

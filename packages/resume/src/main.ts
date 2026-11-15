@@ -15,19 +15,19 @@ import { CameraRig } from './scene/camera';
 import { createBell } from './scene/bell';
 import { createDesk } from './scene/desk';
 import { createEraser } from './scene/eraser';
-import { BULB_HEIGHT, createLamp } from './scene/lamp';
 import { createLoupe } from './scene/loupe';
 import { createKit, createPencil } from './scene/props';
 import { LightRig } from './scene/rig';
 import { Stage } from './scene/stage';
 import { createStamp } from './scene/stamp';
 import { frameReading, METRES_PER_SHEET_PX } from './scene/view';
+import { panBy, WHOLE, zoomAt, type Zoom } from './scene/zoom';
 import { fontsReady } from './typeset/raster';
 import { Controls } from './ui/controls';
 
 declare global {
   interface Window {
-    __sizeSheet(): boolean;
+    __sizeSheet(reading?: boolean): boolean;
     __stats?: Stage['stats'];
   }
 }
@@ -109,8 +109,6 @@ async function start(): Promise<void> {
   const pencilItem = objects.add(createPencil(kit), [-0.077, 0.085]);
   const eraserItem = objects.add(createEraser(kit), [-0.012, 0.012]);
   objects.add(createBell(kit));
-  const lamp = createLamp(kit);
-  const lampItem = objects.add(lamp.prop);
   for (const item of objects.items) scene.add(item.prop.group, item.prop.blob);
   scene.add(loupe.group.userData.glass as THREE.Object3D);
 
@@ -121,6 +119,7 @@ async function start(): Promise<void> {
   const controls = new Controls({
     desk: () => {
       cameraRig.goal = cameraRig.goal === 1 ? 0 : 1;
+      zoom = WHOLE;
       controls.setDesk(cameraRig.goal === 1);
       wake();
     },
@@ -139,12 +138,9 @@ async function start(): Promise<void> {
       play.reset();
       objects.home();
       cameraRig.goal = 0;
+      zoom = WHOLE;
       controls.setDesk(false);
       wake();
-    },
-    lamp: () => {
-      lighting.toggleLamp();
-      voices.click();
     },
   });
 
@@ -248,13 +244,35 @@ async function start(): Promise<void> {
       }
     },
     wake,
-    toggleLamp: () => {
-      lighting.toggleLamp();
-      voices.click();
+    pan: (dx, dy) => {
+      if (zoom.scale <= 1.001 || cameraRig.goal === 1) return false;
+      const perMetre = basePx * zoom.scale;
+      zoom = panBy(zoom, dx / perMetre, dy / perMetre, window.innerWidth / 2 / basePx, window.innerHeight / 2 / basePx);
+      return true;
     },
     tools: play.tools,
     poke: play.poke,
   });
+
+  // The fitted view: the wheel (or a pinch on a trackpad) comes closer to what is under the pointer, up to
+  // reading size, and draws back again to the whole desk.
+  let zoom: Zoom = WHOLE;
+  let basePx = 1;
+  window.addEventListener(
+    'wheel',
+    (event) => {
+      if (!document.documentElement.classList.contains('fit') || cameraRig.goal === 1) return;
+      event.preventDefault();
+      const most = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--read')) || 1;
+      const step = event.deltaMode === 1 ? event.deltaY * 16 : event.deltaY;
+      const factor = Math.exp(-step * (event.ctrlKey ? 0.012 : 0.0022));
+      const dx = (event.clientX - window.innerWidth / 2) / basePx;
+      const dz = (event.clientY - window.innerHeight / 2) / basePx;
+      zoom = zoomAt(zoom, factor, dx, dz, most, window.innerWidth / 2 / basePx, window.innerHeight / 2 / basePx);
+      wake();
+    },
+    { passive: false },
+  );
 
   let arranged = false;
   let placed = false;
@@ -274,14 +292,10 @@ async function start(): Promise<void> {
       placed = true;
     }
     sheetCentre.set(handling.home.cx, 0, handling.home.cz);
-    cameraRig.apply(framing, window.innerHeight, sheetCentre, sheet.height);
-
-    // The light is wherever the lamp has been put.
-    // Where there is no desk to stand it on, it is taken to be just off the top left of the sheet.
-    if (lampItem.prop.group.visible) rig.lampHome.set(lampItem.x, BULB_HEIGHT + lampItem.lift, lampItem.z);
-    else rig.lampHome.set(sheet.pose.cx - sheet.width * 0.75, 0.16, sheet.pose.cz - sheet.height * 0.5 - 0.03);
-    rig.place();
-    lamp.glow.emissiveIntensity = Math.min(1.6, rig.lamp.intensity * 6);
+    basePx = framing.pxPerMetre;
+    // Come closer, and the camera frames a part of the desk instead of the whole.
+    const shown = { pxPerMetre: framing.pxPerMetre * zoom.scale, x: framing.x + zoom.x, z: framing.z + zoom.z };
+    cameraRig.apply(shown, window.innerHeight, sheetCentre, sheet.height);
 
     play.render(renderer);
     loupe.sync();
@@ -329,6 +343,7 @@ async function start(): Promise<void> {
     }
     // A hand full of pencil should not outlast the room for it.
     pointer.putDownPencil();
+    zoom = WHOLE;
     arranged = false;
     stage.resize();
   });
@@ -367,6 +382,8 @@ function supported(): boolean {
 
 /** Without the scene, the sheet of type the page first paints is the page. */
 function fallBack(): void {
+  // Sized for reading, and free to scroll.
+  window.__sizeSheet(true);
   document.documentElement.classList.remove('live');
   document.documentElement.classList.add('flat');
 }

@@ -58,19 +58,18 @@ const RAKE_OFFSET = new THREE.Vector3(-0.36, 0.055, -0.04);
 
 /**
  * The lights: the sun through the window, the sky filling the room, the soft
- * glow of the window itself, and one desk lamp.
+ * glow of the window itself, and after dark the room's own light from out of the picture.
  */
 export class LightRig {
   readonly sun = new THREE.SpotLight('#ffffff', 0, 0, 0.21, 0.35, 0);
   readonly windowGlow = new THREE.DirectionalLight('#ffffff', 0);
   readonly sky = new THREE.HemisphereLight('#ffffff', '#3a2a1c', 0);
-  /** The lamp's bulb: it lights everything about it. */
-  readonly lamp = new THREE.PointLight(LAMP_COLOUR, 0, 1.6, 1.25);
+  /** The room's light after dark: a warm lamp somewhere off the top left of the picture. */
+  readonly lamp = new THREE.PointLight(LAMP_COLOUR, 0, 3, 2);
   /** Where the raking light is centred, for the freeze state. */
   readonly lampAim = new THREE.Vector3(0, 0, 0);
-  /** Where the bulb is. */
-  readonly lampHome = new THREE.Vector3(-0.2, 0.085, -0.16);
-  lampOn = false;
+  /** Where that light is. */
+  readonly lampHome = new THREE.Vector3(-0.24, 0.3, -0.24);
   exposure = 1;
   /** 0 is the lamp's normal height; 1 drops it almost to the desk, off to one side, to rake the light. */
   rake = 0;
@@ -106,7 +105,7 @@ export class LightRig {
     this.lamp.castShadow = true;
     this.lamp.shadow.mapSize.set(1024, 1024);
     this.lamp.shadow.camera.near = 0.02;
-    this.lamp.shadow.camera.far = 1.4;
+    this.lamp.shadow.camera.far = 3;
     this.lamp.shadow.bias = -0.0006;
     this.lamp.shadow.normalBias = 0.0012;
     this.lamp.shadow.radius = 2.4;
@@ -143,10 +142,9 @@ export class LightRig {
     }
   }
 
-  /** The lamp is a reading light by day and the key light at night. */
+  /** The room's light comes up as the daylight goes. */
   private lampLevel(): number {
-    if (!this.lampOn) return 0;
-    return 0.45 + 0.55 * (this.target?.night ?? 0);
+    return this.target?.night ?? 0;
   }
 
   /** Eases toward the target state like a dimmer. Returns true while still moving. */
@@ -192,8 +190,8 @@ export class LightRig {
     this.sky.intensity = 1.25 * sky + 0.014;
     this.scene.environmentIntensity = 0.42 * sky + 0.05 * night + 0.02;
 
-    // A gentler falloff than a bare bulb's, as a shade gives: bright by the lamp without burning out what is under it.
-    this.lamp.intensity = 0.27 * lamp;
+    // Warm, from one side, and falling away across the desk.
+    this.lamp.intensity = 1.5 * lamp;
     this.lamp.visible = lamp > 0.002;
 
     // A camera would open up at night, but not all the way: night should read as night.

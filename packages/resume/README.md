@@ -25,14 +25,19 @@ Edit `src/data/resume.yaml` and rebuild. Both pages and the printed sheet are ge
 
 `src/MEDIUM.md` is the art direction every state is held to.
 
+## The view and the light
+
+- **One picture.** On anything larger than a phone the whole sheet is fitted to the window's height with the desk around it, and nothing scrolls. The wheel brings the camera closer, up to reading size. A phone, or a window under 560 px high, gets the sheet at reading size and scrolls.
+- **Light is not a control.** It is the viewer's real sun: where it stands in their sky, from their clock and place. By day it comes through the window; as it sets, the room's own warm light comes up from off the top left of the picture. There is no lamp to see or switch.
+
 ## Controls
 
 Nothing is written on the picture. Everything is done by handling what is on the desk; the keys are shortcuts for those who look for them.
 
 | Input | Result |
 |---|---|
-| Click the lamp | Switches it on or off. It also comes on by itself at dusk and goes off at dawn |
-| Drag the lamp | Moves it. It is an upright table lamp that stands free and lights everything about it, so the light is wherever the lamp is put |
+| Scroll, or pinch on a trackpad | Comes closer to what is under the pointer, up to reading size, and draws back to the whole desk |
+| Drag the bare desk, when close | Slides the picture |
 | Ring the bell | Turns the desk's sounds on, and off again |
 | Tap the pencilled "PTO" | Turns the sheet over |
 | Drag the sheet | Slide and turn it |
@@ -44,7 +49,7 @@ Nothing is written on the picture. Everything is done by handling what is on the
 | `E`, or hold the right mouse button | With the pencil in hand: turns it to the rubber end, a finer eraser |
 | Set the stamp down on the sheet | Leaves an "OK to print" mark and opens the print dialog |
 | Click the email or website | Opens it |
-| `F` / `R` / `D` / `L` | Turn over / reset everything / desk view / lamp switch |
+| `F` / `R` / `D` | Turn over / reset everything / desk view |
 | `Space`, or click the marble | On the back: lets the marble go |
 | The browser's Print | Prints the sheet of type on a letter page |
 

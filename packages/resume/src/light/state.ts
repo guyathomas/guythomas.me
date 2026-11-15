@@ -12,8 +12,6 @@ export interface LightState {
   skyColor: Vec3;
   /** 0 at night, 1 in full daylight. */
   skyStrength: number;
-  /** True when a person at this desk would have switched the lamp on. */
-  lampWanted: boolean;
   /** 0 by day, 1 at full night. */
   night: number;
 }
@@ -67,7 +65,6 @@ export function lightingFor(sun: SunPosition, latitude: number): LightState {
     sunStrength: up * inWindow * reach,
     skyColor,
     skyStrength,
-    lampWanted: sun.elevation < 5,
     night: 1 - smooth(-7, 5, sun.elevation),
   };
 }
