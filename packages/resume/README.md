@@ -95,7 +95,7 @@ Auto lighting needs a rough position. It starts from the browser's time zone (a 
 
 - **No Blender bake.** The handover recommended baking the desk's light. Everything on the desk can be moved and the sun moves in auto mode, so a bake would be wrong as soon as anything was touched. The scene is lit live with shadow maps, contact shadows and an HDRI instead.
 - **No type sorts on the desk.** They read as dark sticks at this scale. Fewer, better objects.
-- **Sliding does not nudge objects.** The sheet passes under things rather than pushing them; things resting on it ride along.
+- **Sliding does not nudge objects.** The sheet passes under things rather than pushing them. Only what was resting on it when it was taken hold of rides along.
 - **Touch is simpler.** Corners, the loupe, the stamp and the eraser can be dragged; a tap on the pencil takes it into the hand, after which a finger draws; a tap elsewhere moves the light or lets the marble go; swipes scroll. The sheet cannot be slid by touch, and phones show no desk objects.
 
 Assets and licences are listed in `ATTRIBUTIONS.md`.

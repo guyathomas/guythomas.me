@@ -8,6 +8,8 @@ type Phase = 'rest' | 'slide' | 'glide' | 'curl' | 'return' | 'turning' | 'dropp
 export interface HandlingEvents {
   /** The sheet moved rigidly from one pose to another (so things resting on it can follow). */
   moved(from: Pose, to: Pose): void;
+  /** A hand has taken hold of the sheet to slide it. */
+  grasped?(): void;
   slide(speed: number): void;
   flick(): void;
   slap(strength: number): void;
@@ -74,6 +76,7 @@ export class SheetHandling {
   beginSlide(x: number, z: number): void {
     if (this.phase !== 'rest' && this.phase !== 'glide') return;
     this.phase = 'slide';
+    this.events.grasped?.();
     this.grabLocal = toLocal(this.sheet.pose, x, z);
     this.glide = { vx: 0, vz: 0, spin: 0 };
   }
