@@ -102,12 +102,15 @@ inkCol *= 1.0 + 2.2 * thin;
 diffuseColor.rgb = mix(paperCol, inkCol, density);
 float paperInk = density;
 // Pencil sits on the tooth of the paper: broken by the fibres, and a little shiny.
-float graphite = clamp(texture2D(uPencil, suv).r * (0.72 + 0.6 * fine.r), 0.0, 1.0);
-diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.13, 0.13, 0.15), graphite * 0.92);
+// A line thinner than a pixel is blended in linear light, which thins it to nothing on brightly lit paper;
+// weighting its coverage keeps it as dark as it is drawn (as for small type above).
+float graphite = clamp(pow(texture2D(uPencil, suv).r, 0.5) * (0.9 + 0.35 * fine.r), 0.0, 1.0);
+diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.07, 0.07, 0.085), graphite * 0.97);
+float pencilMark = graphite;
 `;
 
 const ROUGHNESS = /* glsl */ `
-float roughnessFactor = mix(mix(0.97, 0.9, paperInk) + 0.05 * (fib.r - 0.5), 0.52, graphite * 0.8);
+float roughnessFactor = mix(mix(0.97, 0.9, paperInk) + 0.05 * (fib.r - 0.5), 1.0, graphite);
 `;
 
 const NORMAL = /* glsl */ `
@@ -174,8 +177,10 @@ export function createPaperMaterial(options: PaperOptions): THREE.MeshStandardMa
       .replace('#include <normalmap_pars_fragment>', `#include <normalmap_pars_fragment>\n${PARS}`)
       .replace('#include <map_fragment>', ALBEDO)
       .replace('#include <roughnessmap_fragment>', ROUGHNESS)
-      .replace('#include <normal_fragment_maps>', NORMAL);
+      .replace('#include <normal_fragment_maps>', NORMAL)
+      // Pencil takes no shine at all: lit paper must not glare through a line.
+      .replace('#include <opaque_fragment>', 'outgoingLight = mix(outgoingLight, totalDiffuse + totalEmissiveRadiance, pencilMark);\n#include <opaque_fragment>');
   };
-  material.customProgramCacheKey = () => 'paper';
+  material.customProgramCacheKey = () => 'paper-2';
   return material;
 }

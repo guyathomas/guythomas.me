@@ -2,19 +2,17 @@ import { describe, expect, it } from 'vitest';
 import { DAY_SUN, NIGHT_SUN, lightingFor } from './state';
 
 describe('lightingFor', () => {
-  it('gives a strong beam and no lamp at mid-morning', () => {
+  it('gives a strong beam and no room light at mid-morning', () => {
     const state = lightingFor(DAY_SUN, 40);
     expect(state.sunStrength).toBeGreaterThan(0.8);
     expect(state.skyStrength).toBeGreaterThan(0.95);
-    expect(state.lampWanted).toBe(false);
     expect(state.night).toBe(0);
   });
 
-  it('is dark at night with the lamp on', () => {
+  it('is dark at night, when the room light takes over', () => {
     const state = lightingFor(NIGHT_SUN, 40);
     expect(state.sunStrength).toBe(0);
     expect(state.skyStrength).toBe(0);
-    expect(state.lampWanted).toBe(true);
     expect(state.night).toBe(1);
   });
 
@@ -51,8 +49,10 @@ describe('lightingFor', () => {
     expect(lightingFor({ elevation: 20, azimuth: 0 }, 40).sunStrength).toBe(0);
   });
 
-  it('asks for the lamp through dusk', () => {
-    expect(lightingFor({ elevation: 3, azimuth: 260 }, 40).lampWanted).toBe(true);
-    expect(lightingFor({ elevation: 12, azimuth: 250 }, 40).lampWanted).toBe(false);
+  it('brings the room light up through dusk', () => {
+    const dusk = lightingFor({ elevation: -3, azimuth: 260 }, 40).night;
+    expect(dusk).toBeGreaterThan(0);
+    expect(dusk).toBeLessThan(1);
+    expect(lightingFor({ elevation: 12, azimuth: 250 }, 40).night).toBe(0);
   });
 });

@@ -1,27 +1,30 @@
-let frame: HTMLIFrameElement | null = null;
-let ready = false;
+/**
+ * Printing. The page prints its own sheet of type, not the picture of the
+ * desk: the stylesheet hides the scene for print, and the phone's narrow slip
+ * is set back to a letter sheet while the printer has it.
+ */
+let active = false;
 
-/** Prints the plain copy of the sheet without leaving the desk. */
-export function printPlain(): void {
-  if (frame) {
-    // Still loading: the print already asked for will follow. The frame is never focused, so the desk keeps its keys.
-    if (ready) frame.contentWindow?.print();
-    return;
-  }
-  const created = document.createElement('iframe');
-  frame = created;
-  created.src = '/plain/';
-  created.title = 'Printable copy';
-  created.tabIndex = -1;
-  created.setAttribute('aria-hidden', 'true');
-  created.style.cssText = 'position:fixed;left:-10000px;top:0;width:816px;height:1056px;border:0';
-  created.addEventListener('load', () => {
-    const view = created.contentWindow;
-    if (!view) return;
-    void view.document.fonts.ready.then(() => {
-      ready = true;
-      view.print();
-    });
+/** True while the printer has the page. */
+export function printing(): boolean {
+  return active;
+}
+
+export function installPrinting(): void {
+  const root = document.documentElement;
+  let wasNarrow = false;
+  window.addEventListener('beforeprint', () => {
+    active = true;
+    wasNarrow = root.classList.contains('narrow');
+    root.classList.remove('narrow');
   });
-  document.body.appendChild(created);
+  window.addEventListener('afterprint', () => {
+    active = false;
+    root.classList.toggle('narrow', wasNarrow);
+  });
+}
+
+/** Sends the sheet to the printer. */
+export function printSheetCopy(): void {
+  window.print();
 }

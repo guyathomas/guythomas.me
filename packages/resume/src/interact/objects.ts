@@ -1,7 +1,7 @@
 import type { SheetBody } from '../sheet/body';
 import { toLocal, toWorld, type Pose } from '../sheet/pose';
 import { placeProp, type Prop } from '../scene/props';
-import { coast, collide, throwSpin, type Body } from './motion';
+import { coast, collide, DESK, throwSpin, type Body, type Bounds } from './motion';
 
 export interface Item extends Body {
   prop: Prop;
@@ -28,6 +28,8 @@ const smooth = (t: number) => t * t * (3 - 2 * t);
 export class DeskObjects {
   readonly items: Item[] = [];
   private grabbed: Item | null = null;
+  /** Where thrown things stop: the part of the desk that can be seen, so nothing is lost off the edge of the picture. */
+  bounds: Bounds = DESK;
   private offset: [number, number] = [0, 0];
 
   /** `byHand` is false when the object put itself down. */
@@ -253,7 +255,7 @@ export class DeskObjects {
     let moving = false;
     for (const item of free) {
       if (item.vx === 0 && item.vz === 0 && item.spin === 0) continue;
-      coast(item, dt);
+      coast(item, dt, this.bounds);
       this.place(item);
       moving = true;
     }

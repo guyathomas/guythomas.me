@@ -28,7 +28,7 @@ function renderRole(role: Role, index: number): string {
       </div>`;
 }
 
-/** The printed front of the sheet. Also the semantic copy and the plain page. */
+/** The printed front of the sheet. Also the semantic copy, what is printed, and what shows without the scene. */
 export function renderFront(resume: Resume): string {
   const { header } = resume;
   const site = header.website

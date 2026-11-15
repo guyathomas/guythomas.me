@@ -53,24 +53,23 @@ function windowCookie(): THREE.CanvasTexture {
 }
 
 const LAMP_COLOUR = new THREE.Color('#fff0dd');
-/** Where the lamp head sits relative to the spot it lights. */
-const LAMP_OFFSET = new THREE.Vector3(-0.25, 0.16, -0.2);
+/** Where the lamp's light is dropped to, from the middle of the sheet, to rake across it. */
 const RAKE_OFFSET = new THREE.Vector3(-0.36, 0.055, -0.04);
 
 /**
  * The lights: the sun through the window, the sky filling the room, the soft
- * glow of the window itself, and one desk lamp.
+ * glow of the window itself, and after dark the room's own light from out of the picture.
  */
 export class LightRig {
   readonly sun = new THREE.SpotLight('#ffffff', 0, 0, 0.21, 0.35, 0);
   readonly windowGlow = new THREE.DirectionalLight('#ffffff', 0);
   readonly sky = new THREE.HemisphereLight('#ffffff', '#3a2a1c', 0);
-  readonly lamp = new THREE.SpotLight(LAMP_COLOUR, 0, 2.6, 0.85, 1, 2);
-  /** The desk point the lamp is aimed at. */
+  /** The room's light after dark: a warm lamp somewhere off the top left of the picture. */
+  readonly lamp = new THREE.PointLight(LAMP_COLOUR, 0, 3, 2);
+  /** Where the raking light is centred, for the freeze state. */
   readonly lampAim = new THREE.Vector3(0, 0, 0);
-  /** A small offset added to the aim, used for the pointer's nudge. */
-  readonly lampNudge = new THREE.Vector2();
-  lampOn = false;
+  /** Where that light is. */
+  readonly lampHome = new THREE.Vector3(-0.5, 0.72, -0.5);
   exposure = 1;
   /** 0 is the lamp's normal height; 1 drops it almost to the desk, off to one side, to rake the light. */
   rake = 0;
@@ -104,14 +103,14 @@ export class LightRig {
     this.windowGlow.shadow.radius = 7;
 
     this.lamp.castShadow = true;
-    this.lamp.shadow.mapSize.set(2048, 2048);
-    this.lamp.shadow.camera.near = 0.06;
-    this.lamp.shadow.camera.far = 1.6;
-    this.lamp.shadow.bias = -0.00012;
-    this.lamp.shadow.normalBias = 0.0003;
-    this.lamp.shadow.radius = 3.2;
+    this.lamp.shadow.mapSize.set(1024, 1024);
+    this.lamp.shadow.camera.near = 0.02;
+    this.lamp.shadow.camera.far = 3;
+    this.lamp.shadow.bias = -0.0006;
+    this.lamp.shadow.normalBias = 0.0012;
+    this.lamp.shadow.radius = 2.4;
 
-    scene.add(this.sun, this.sun.target, this.windowGlow, this.windowGlow.target, this.sky, this.lamp, this.lamp.target);
+    scene.add(this.sun, this.sun.target, this.windowGlow, this.windowGlow.target, this.sky, this.lamp);
     this.place();
   }
 
@@ -143,10 +142,9 @@ export class LightRig {
     }
   }
 
-  /** The lamp is a dim reading light by day and the key light at night. */
+  /** The room's light comes up as the daylight goes. */
   private lampLevel(): number {
-    if (!this.lampOn) return 0;
-    return 0.3 + 0.7 * (this.target?.night ?? 0);
+    return this.target?.night ?? 0;
   }
 
   /** Eases toward the target state like a dimmer. Returns true while still moving. */
@@ -169,13 +167,9 @@ export class LightRig {
     return Math.abs(after - before) > 0.0004 || turn > 0.0008;
   }
 
-  /** Positions the lamp and its target. Call after moving the aim. */
+  /** Puts the light where the bulb is. Call after moving the lamp. */
   place(): void {
-    const aimX = this.lampAim.x + this.lampNudge.x;
-    const aimZ = this.lampAim.z + this.lampNudge.y;
-    this.lamp.target.position.set(aimX, 0, aimZ);
-    const offset = LAMP_OFFSET.clone().lerp(RAKE_OFFSET, this.rake);
-    this.lamp.position.set(this.lampAim.x + offset.x + this.lampNudge.x * 0.5, offset.y, this.lampAim.z + offset.z + this.lampNudge.y * 0.5);
+    this.lamp.position.copy(this.lampHome).lerp(RAKE_OFFSET.clone().add(this.lampAim), this.rake);
   }
 
   private apply(): void {
@@ -196,7 +190,9 @@ export class LightRig {
     this.sky.intensity = 1.25 * sky + 0.014;
     this.scene.environmentIntensity = 0.42 * sky + 0.05 * night + 0.02;
 
-    this.lamp.intensity = 1.9 * lamp;
+    // Warm, from one side, and falling away across the desk.
+    // Far enough off that no part of the sheet is so brightly lit that pencil and ink burn out on it.
+    this.lamp.intensity = 6.2 * lamp;
     this.lamp.visible = lamp > 0.002;
 
     // A camera would open up at night, but not all the way: night should read as night.

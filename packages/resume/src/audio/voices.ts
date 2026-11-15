@@ -142,6 +142,18 @@ export class Voices {
     this.burst(0.02, 'bandpass', 1500, 0.06 + 0.16 * strength, 1.4);
   }
 
+  /** The desk bell, struck. */
+  bell(level: number): void {
+    for (const [frequency, gain, duration] of [
+      [2090, 0.16, 1.5],
+      [3135, 0.07, 1.0],
+      [4702, 0.035, 0.6],
+    ]) {
+      this.tone(frequency, frequency * 0.999, duration * level, gain * level);
+    }
+    this.burst(0.012, 'bandpass', 3800, 0.2 * level, 2);
+  }
+
   /** Something light set down. */
   tap(): void {
     this.burst(0.03, 'bandpass', 900, 0.25, 1.2);

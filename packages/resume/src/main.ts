@@ -5,28 +5,29 @@ import { Lighting } from './app/lighting';
 import { isFrozen, parseParams } from './app/params';
 import { createPlay } from './app/play';
 import { printSheet } from './app/print';
-import { printPlain } from './app/printing';
+import { installPrinting, printing, printSheetCopy } from './app/printing';
 import { Stamping } from './app/stamping';
 import { Voices } from './audio/voices';
 import { SheetHandling } from './interact/handling';
 import { DeskObjects } from './interact/objects';
 import { Pointer } from './interact/pointer';
 import { CameraRig } from './scene/camera';
+import { createBell } from './scene/bell';
 import { createDesk } from './scene/desk';
 import { createEraser } from './scene/eraser';
-import { createLampHead } from './scene/lamp';
 import { createLoupe } from './scene/loupe';
 import { createKit, createPencil } from './scene/props';
 import { LightRig } from './scene/rig';
 import { Stage } from './scene/stage';
 import { createStamp } from './scene/stamp';
 import { frameReading, METRES_PER_SHEET_PX } from './scene/view';
+import { planScroll, viewAt, WHOLE, type ScrollPlan } from './scene/scroll';
 import { fontsReady } from './typeset/raster';
 import { Controls } from './ui/controls';
 
 declare global {
   interface Window {
-    __sizeSheet(): boolean;
+    __sizeSheet(reading?: boolean): boolean;
     __stats?: Stage['stats'];
   }
 }
@@ -85,7 +86,7 @@ async function start(): Promise<void> {
           objects.sendHome(item);
           wake();
         }, 320),
-        window.setTimeout(printPlain, 1150),
+        window.setTimeout(printSheetCopy, 1150),
       ];
     } else {
       voices.tap();
@@ -107,23 +108,15 @@ async function start(): Promise<void> {
   objects.add(loupe, [0, 0.13]);
   const pencilItem = objects.add(createPencil(kit), [-0.077, 0.085]);
   const eraserItem = objects.add(createEraser(kit), [-0.012, 0.012]);
+  objects.add(createBell(kit));
   for (const item of objects.items) scene.add(item.prop.group, item.prop.blob);
   scene.add(loupe.group.userData.glass as THREE.Object3D);
 
   // Light.
   const rig = new LightRig(scene, renderer);
-  rig.lampAim.set(-0.02, 0, -sheet.height * 0.2);
-  if (params.light) rig.lampAim.set(params.light[0] * 0.3, 0, params.light[1] * 0.3);
-  rig.place();
   rig.loadEnvironment(() => stage.invalidate());
-  const lampHead = createLampHead();
-  scene.add(lampHead.group);
 
   const controls = new Controls({
-    mode: (mode) => {
-      lighting.setMode(mode);
-      controls.setMode(mode);
-    },
     desk: () => {
       cameraRig.goal = cameraRig.goal === 1 ? 0 : 1;
       controls.setDesk(cameraRig.goal === 1);
@@ -133,7 +126,6 @@ async function start(): Promise<void> {
       handling.turnOver();
       wake();
     },
-    print: printPlain,
     cancel: () => pointer.putDownPencil(),
     launch: () => play.launch(),
     erase: () => void pointer.turnPencil(),
@@ -144,22 +136,10 @@ async function start(): Promise<void> {
       pointer.dropPencil();
       play.reset();
       objects.home();
-      rig.lampAim.set(-0.02, 0, -sheet.height * 0.2);
-      rig.lampNudge.set(0, 0);
-      rig.place();
-      rig.lampOn = true;
       cameraRig.goal = 0;
+      window.scrollTo(0, 0);
       controls.setDesk(false);
       wake();
-    },
-    sound: () => {
-      if (voices.enabled) voices.disable();
-      else voices.enable();
-      controls.setSound(voices.enabled);
-    },
-    lamp: () => {
-      lighting.toggleLamp();
-      voices.click();
     },
   });
 
@@ -190,6 +170,10 @@ async function start(): Promise<void> {
     wake,
     game: roomy,
     firstPage: Math.floor((params.page ?? 1) - 1),
+    turnOver: () => {
+      handling.turnOver();
+      wake();
+    },
     // The last page passed: the proof is stamped, without sending it to the printer.
     finished: () => {
       const { cx, cz } = sheet.pose;
@@ -228,9 +212,10 @@ async function start(): Promise<void> {
     return changed;
   }
 
-  const lighting = new Lighting(rig, params, frozen, () => wake());
-  controls.setMode(lighting.mode);
+  const lighting = new Lighting(rig, params, () => wake());
 
+  let hush = 0;
+  let hushing = false;
   const pointer = new Pointer({
     canvas,
     camera,
@@ -240,18 +225,32 @@ async function start(): Promise<void> {
     rig,
     cameraRig,
     frontLinks,
-    lampHead: lampHead.group,
-    wake,
-    toggleLamp: () => {
-      lighting.toggleLamp();
-      voices.click();
+    // The bell turns the desk's sounds on, and off again.
+    ring: () => {
+      window.clearTimeout(hush);
+      if (voices.enabled && !hushing) {
+        // A last, shorter note, then quiet.
+        voices.bell(0.5);
+        hushing = true;
+        hush = window.setTimeout(() => {
+          hushing = false;
+          voices.disable();
+        }, 500);
+      } else {
+        hushing = false;
+        voices.enable();
+        voices.bell(1);
+      }
     },
+    wake,
     tools: play.tools,
     poke: play.poke,
   });
 
-  const down = new THREE.Vector3(0, -1, 0);
-  const aim = new THREE.Vector3();
+  // The fitted view: scrolling first brings the camera in to reading size, then moves it down the sheet.
+  const fitted = document.documentElement.classList.contains('fit');
+  let plan: ScrollPlan | null = null;
+
   let arranged = false;
   let placed = false;
   let homed = false;
@@ -260,18 +259,26 @@ async function start(): Promise<void> {
     if (!arranged) {
       arranged = true;
       // Objects are laid out once, the first time there is room; after that a resize only shows or hides them.
-      if (arrangeDesk(objects, sheet, window.innerWidth / 2 / framing.pxPerMetre, !homed)) homed = true;
+      const halfWidth = window.innerWidth / 2 / framing.pxPerMetre;
+      if (arrangeDesk(objects, sheet, halfWidth, !homed)) homed = true;
+      const left = framing.x - halfWidth;
+      // The fitted picture stays put while the page scrolls under it; a phone's sheet moves with the page.
+      const top = framing.z - (window.innerHeight / 2 + (fitted ? 0 : window.scrollY)) / framing.pxPerMetre;
+      if (fitted) {
+        const most = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--read')) || 1;
+        plan = planScroll(window.innerHeight, framing.pxPerMetre, sheet.height, most, 44);
+        document.documentElement.style.setProperty('--scroll', `${Math.round(plan.stretch + plan.travel)}px`);
+      }
+      // Thrown things stop at the edge of what can be seen, so nothing is lost.
+      objects.bounds = { x0: left + 0.015, x1: left + halfWidth * 2 - 0.015, z0: top + 0.015, z1: sheet.height / 2 + 0.03 };
       if (!placed) applyView();
       placed = true;
     }
     sheetCentre.set(handling.home.cx, 0, handling.home.cz);
-    cameraRig.apply(framing, window.innerHeight, sheetCentre, sheet.height);
-
-    lampHead.group.visible = cameraRig.blend > 0.02;
-    lampHead.group.position.copy(rig.lamp.position);
-    aim.copy(rig.lamp.target.position).sub(rig.lamp.position).normalize();
-    lampHead.group.quaternion.setFromUnitVectors(down, aim);
-    lampHead.bulb.emissiveIntensity = rig.lamp.intensity * 2.4;
+    // Come closer, and the camera frames a part of the desk instead of the whole.
+    const zoom = plan && cameraRig.goal === 0 ? viewAt(plan, window.scrollY) : WHOLE;
+    const shown = { pxPerMetre: framing.pxPerMetre * zoom.scale, x: framing.x + zoom.x, z: framing.z + zoom.z };
+    cameraRig.apply(shown, window.innerHeight, sheetCentre, sheet.height);
 
     play.render(renderer);
     loupe.sync();
@@ -311,6 +318,8 @@ async function start(): Promise<void> {
   window.addEventListener('scroll', () => stage.invalidate(), { passive: true });
   window.addEventListener('resize', () => {
     // The sheet is printed for the room it has; a different room wants a fresh one.
+    // The printer lays the page out its own way; that is not a new window.
+    if (printing()) return;
     if (window.__sizeSheet() !== narrow || deskRoom() !== roomy) {
       location.reload();
       return;
@@ -320,7 +329,7 @@ async function start(): Promise<void> {
     arranged = false;
     stage.resize();
   });
-  // If the graphics context goes, the plain sheet underneath takes over until it is back.
+  // If the graphics context goes, the sheet of type underneath takes over until it is back.
   canvas.addEventListener('webglcontextlost', (event) => {
     event.preventDefault();
     document.documentElement.classList.remove('live');
@@ -353,11 +362,20 @@ function supported(): boolean {
   }
 }
 
+/** Without the scene, the sheet of type the page first paints is the page. */
+function fallBack(): void {
+  // Sized for reading, and free to scroll.
+  window.__sizeSheet(true);
+  document.documentElement.classList.remove('live');
+  document.documentElement.classList.add('flat');
+}
+
+installPrinting();
 if (supported()) {
   start().catch((error) => {
     console.error(error);
-    location.replace('/plain/');
+    fallBack();
   });
 } else {
-  location.replace('/plain/');
+  fallBack();
 }

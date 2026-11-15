@@ -58,62 +58,18 @@ body {
   overflow: hidden;
 }
 
-/* Quiet controls */
-#ui {
+/* The fitted view: the whole desk is one picture that stays put. The page is
+   only as much longer than the window as there is to scroll through: first the
+   camera comes in, then it moves down the sheet. */
+.fit body {
+  min-height: calc(100vh + var(--scroll, 0px));
+}
+.fit #stage {
   position: fixed;
-  left: 22px;
-  bottom: 18px;
-  right: 22px;
-  display: flex;
-  flex-wrap: wrap;
+  inset: 0;
+  box-sizing: border-box;
+  padding: 0;
   align-items: center;
-  gap: 6px 22px;
-  font-family: 'EBG SC', Georgia, serif;
-  font-size: 13.5px;
-  letter-spacing: 0.14em;
-  color: rgb(246 236 214 / 0.62);
-  text-shadow: 0 1px 2px rgb(0 0 0 / 0.55);
-  opacity: 0;
-  transition: opacity 0.8s ease 0.4s;
-  pointer-events: none;
-}
-.live #ui {
-  opacity: 1;
-}
-#ui > * {
-  pointer-events: auto;
-}
-#ui button,
-#ui a {
-  font: inherit;
-  letter-spacing: inherit;
-  color: inherit;
-  text-shadow: inherit;
-  background: none;
-  border: 0;
-  padding: 6px 0;
-  cursor: pointer;
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
-#ui button:hover,
-#ui a:hover,
-#ui button:focus-visible,
-#ui a:focus-visible {
-  color: rgb(255 248 230 / 0.98);
-  outline: none;
-}
-#ui button[aria-checked='true'],
-#ui button[aria-pressed='true'] {
-  color: rgb(255 248 230 / 0.98);
-  box-shadow: 0 1px 0 rgb(255 248 230 / 0.6);
-}
-#ui .modes {
-  display: flex;
-  gap: 12px;
-}
-#ui .spacer {
-  flex: 1;
 }
 
 .grip {
@@ -128,49 +84,59 @@ body {
   display: block;
 }
 
-/* Where the sheet is as wide as the window it runs under the controls, so they sit on a strip of shadow of their own. */
-@media (max-width: 1099px) {
-  #ui {
-    left: 0;
-    right: 0;
-    bottom: 0;
-    padding: 26px 14px calc(8px + env(safe-area-inset-bottom));
-    gap: 0 18px;
-    justify-content: center;
-    color: rgb(246 236 214 / 0.86);
-    background: linear-gradient(to top, rgb(28 19 12 / 0.94) 0%, rgb(28 19 12 / 0.86) 58%, rgb(28 19 12 / 0) 100%);
-  }
-  #ui button,
-  #ui a {
-    padding: 9px 0;
-  }
-  #ui .spacer {
-    display: none;
-  }
-  #stage {
-    padding-bottom: 130px;
-  }
-}
-
-/* A phone: no desk to stand back from, and no objects to make a sound. */
 @media (max-width: 699px) {
-  #ui {
-    font-size: 12px;
-    gap: 0 16px;
-  }
-  #btn-view,
-  #btn-sound {
-    display: none;
-  }
   #stage {
-    padding-top: 44px;
+    padding: 44px 0 70px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   #gl,
-  #stage .sheet,
-  #ui {
+  #stage .sheet {
     transition-duration: 0.01s;
+  }
+}
+
+/* Without the scene (no WebGL, or the script did not load) the sheet of type is the page. */
+.flat #gl {
+  display: none;
+}
+.flat #stage {
+  pointer-events: auto;
+}
+
+/* The printer gets the sheet of type, not the picture of the desk. */
+@media print {
+  @page {
+    size: letter;
+    margin: 0;
+  }
+  html,
+  body,
+  .fit body {
+    background: #fff;
+    min-height: 0;
+    overflow: visible;
+  }
+  #gl,
+  #back-copy,
+  .grip,
+  .touch .grip {
+    display: none;
+  }
+  #stage,
+  .fit #stage {
+    position: static;
+    padding: 0;
+    display: block;
+  }
+  #stage .sheet,
+  .live #stage .sheet {
+    opacity: 1;
+    zoom: 1;
+    box-shadow: none;
+    background: #fff;
+    /* A hair under the page, so that rounding never spills a blank second one. */
+    min-height: 1050px;
   }
 }

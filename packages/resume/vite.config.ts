@@ -9,7 +9,7 @@ const root = import.meta.dirname;
 const yamlPath = resolve(root, 'src/data/resume.yaml');
 const bootPath = resolve(root, 'src/boot-scale.js');
 
-/** Prints the resume from the yaml into both pages at build and on every dev request. */
+/** Prints the resume from the yaml into the page at build and on every dev request. */
 function resumeHtml(): Plugin {
   return {
     name: 'resume-html',
@@ -24,12 +24,10 @@ function resumeHtml(): Plugin {
       handler(html) {
         const resume = parseResume(readFileSync(yamlPath, 'utf8'));
         const boot = readFileSync(bootPath, 'utf8');
-        const plainBoot = boot.replace('Math.min(Math.max(w * 0.62, 760), 1000, w - 32)', 'Math.min(816, w - 32)');
         return html
           .replaceAll('%NAME%', () => escapeHtml(resume.header.name))
           .replaceAll('%TITLE%', () => escapeHtml(resume.header.title))
           .replace('/*boot-scale*/', () => boot)
-          .replace('/*boot-scale-plain*/', () => plainBoot)
           .replace('<!--sheet-front-->', () => renderFront(resume))
           .replace('<!--sheet-back-->', () => renderBack());
       },
@@ -42,12 +40,6 @@ export default defineConfig({
   build: {
     target: 'es2022',
     chunkSizeWarningLimit: 700,
-    rollupOptions: {
-      input: {
-        main: resolve(root, 'index.html'),
-        plain: resolve(root, 'plain/index.html'),
-      },
-    },
   },
   optimizeDeps: { exclude: ['three'] },
   server: { port: 5199, strictPort: true },
