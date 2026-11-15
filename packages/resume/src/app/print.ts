@@ -26,8 +26,11 @@ const THICKNESS = 0.0009;
 export function printSheet(renderer: THREE.WebGLRenderer, front: HTMLElement, back: HTMLElement, narrow: boolean): Printed {
   const limit = renderer.capabilities.maxTextureSize;
   const anisotropy = renderer.capabilities.getMaxAnisotropy();
-  // Phones get a narrower slip, so fewer texels still resolve the type.
-  const frontRaster = rasterizeSheet(front, Math.min(narrow ? 1536 : 4096, limit), Math.min(8192, limit));
+  // As many texels as the screen can show with the sheet at reading size under the loupe, and no more: a
+  // full-size map is 60 MB of memory that a small or low-density window never resolves.
+  const shownPx = front.getBoundingClientRect().width * (parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--read')) || 1);
+  const wanted = Math.ceil((shownPx * Math.min(window.devicePixelRatio || 1, 3) * 1.6) / 256) * 256;
+  const frontRaster = rasterizeSheet(front, Math.min(Math.max(narrow ? 1536 : 2048, Math.min(4096, wanted)), limit), Math.min(8192, limit));
   // Both faces are the same piece of paper: the back is as tall as the front turned out.
   back.style.minHeight = `${frontRaster.sheetHeight}px`;
   const backRaster = rasterizeSheet(back, Math.min(narrow ? 1024 : 2048, limit), Math.min(4096, limit));

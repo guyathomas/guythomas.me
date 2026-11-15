@@ -27,6 +27,12 @@ Complete rewrite as "Living paper": the resume as a letterpress sheet on a desk.
 - Freeze-state URL parameters and a screenshot tool for review.
 - Unit tests for the data, typesetting, paper and lighting maths.
 
+### Performance
+
+- Shadow maps and the loupe's view are redrawn only when something has moved, not on every frame.
+- Phones fetch about 0.1 MB of scene assets in place of 5.5 MB, and draw without multisampling.
+- Large textures load after the piece is up; shaders compile in the background.
+
 ### Removed
 
 - The Astro and Tailwind site, its dark mode toggle and print animation.

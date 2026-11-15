@@ -71,6 +71,15 @@ The limits were set by playing. `src/game/best.ts` records the shortest dependab
 
 **On a phone** (or any window with no desk beside the sheet) there are no objects to pick up, so while the back is up two buttons are offered at the foot of the screen: pencil and eraser. With one chosen, a finger on the paper draws or rubs; choosing it again puts it away. A third button lets the marble go (a tap on the marble does too). The phone's sheet is far longer than the board, so while the back is up only the board's length of it is shown, with "PTO" under it, and the page does not scroll; the rest returns as the sheet is turned back. The game is always played on a letter-sized board (`src/app/board.ts`), drawn smaller at the head of the phone's long sheet, so its pages, physics and scores are the same everywhere.
 
+## Performance
+
+- **Nothing is drawn while nothing moves.** The loop runs only while something is in motion.
+- **Shadows and the loupe's view are redrawn only when something on the desk or its light has moved** (`changed()` in `src/main.ts`). Scrolling and moving the pointer move only the camera, so they cost one pass of the scene, not one per shadow map.
+- **A phone fetches only the small wood texture and a small picture of the room** (about 0.1 MB in place of 5.5 MB), and draws at the screen's full density without multisampling.
+- **The large desk textures wait until the piece is up,** are decoded off the main thread, and shaders are compiled in the background where the browser allows.
+- **The ink map is sized to what the window can show,** not always 4096 px wide.
+- If frames run slow, the internal resolution steps down by itself.
+
 ## Freeze states
 
 For review and screenshots. Combine freely.

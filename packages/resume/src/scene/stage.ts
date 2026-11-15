@@ -68,8 +68,11 @@ export class Stage {
   private last = 0;
   private scale = 1;
   private slowFrames = 0;
+  /** Set when something that casts a shadow, or a light, has moved. Shadow maps are only redrawn then. */
+  shadowsStale = true;
 
-  constructor(readonly canvas: HTMLCanvasElement) {
+  /** `small` is a phone-sized picture: it is drawn at the screen's full density, without multisampling. */
+  constructor(readonly canvas: HTMLCanvasElement, private readonly small = false) {
     this.renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance', stencil: false });
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -78,7 +81,7 @@ export class Stage {
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.camera.up.set(0, 0, -1);
 
-    const target = new THREE.WebGLRenderTarget(4, 4, { samples: 4, type: THREE.HalfFloatType });
+    const target = new THREE.WebGLRenderTarget(4, 4, { samples: small ? 0 : 4, type: THREE.HalfFloatType });
     this.composer = new EffectComposer(this.renderer, target);
     this.composer.addPass(new RenderPass(this.scene, this.camera));
     this.composer.addPass(new OutputPass());
@@ -88,8 +91,11 @@ export class Stage {
   }
 
   get pixelRatio(): number {
-    // A phone's picture is small, so it can afford every pixel the screen has.
-    return Math.min(window.devicePixelRatio || 1, window.innerWidth < 700 ? 3 : 2) * this.scale;
+    // A phone's picture is small enough to draw at every pixel the screen has, which does more for small type
+    // than multisampling does and costs fewer samples. Phones short of memory stay at two.
+    const memory = (navigator as { deviceMemory?: number }).deviceMemory ?? 8;
+    const most = this.small && memory > 4 ? 3 : 2;
+    return Math.min(window.devicePixelRatio || 1, most) * this.scale;
   }
 
   resize(): void {
@@ -133,8 +139,10 @@ export class Stage {
     }
     if (this.dirty || this.continuous) {
       this.dirty = false;
-      this.renderer.shadowMap.needsUpdate = true;
       this.beforeRender?.();
+      // Most frames only move the camera; the shadows on the desk are the same as last time.
+      if (this.shadowsStale) this.renderer.shadowMap.needsUpdate = true;
+      this.shadowsStale = false;
       this.finish.uniforms.uSeed.value = this.frozenTime === null ? (now * 0.06) % 997 : 3;
       this.composer.render();
       this.measure(dt);
@@ -155,7 +163,7 @@ export class Stage {
       stats.seconds = 0;
     }
     this.slowFrames = dt > 1 / 42 ? this.slowFrames + 1 : Math.max(0, this.slowFrames - 2);
-    if (this.slowFrames > 45 && this.scale > 0.6) {
+    if (this.slowFrames > 18 && this.scale > 0.6) {
       this.scale = Math.max(0.6, this.scale - 0.15);
       this.slowFrames = 0;
       this.resize();

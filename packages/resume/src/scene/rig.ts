@@ -65,7 +65,8 @@ export class LightRig {
   readonly windowGlow = new THREE.DirectionalLight('#ffffff', 0);
   readonly sky = new THREE.HemisphereLight('#ffffff', '#3a2a1c', 0);
   /** The room's light after dark: a warm lamp somewhere off the top left of the picture. */
-  readonly lamp = new THREE.PointLight(LAMP_COLOUR, 0, 3, 2);
+  // A spot, not a bare point: one shadow map aimed at the desk is far finer than a point light's six spread round the room.
+  readonly lamp = new THREE.SpotLight(LAMP_COLOUR, 0, 3, 0.62, 0.6, 2);
   /** Where the raking light is centred, for the freeze state. */
   readonly lampAim = new THREE.Vector3(0, 0, 0);
   /** Where that light is. */
@@ -103,20 +104,21 @@ export class LightRig {
     this.windowGlow.shadow.radius = 7;
 
     this.lamp.castShadow = true;
-    this.lamp.shadow.mapSize.set(1024, 1024);
-    this.lamp.shadow.camera.near = 0.02;
-    this.lamp.shadow.camera.far = 3;
-    this.lamp.shadow.bias = -0.0006;
-    this.lamp.shadow.normalBias = 0.0012;
-    this.lamp.shadow.radius = 2.4;
+    this.lamp.shadow.mapSize.set(4096, 4096);
+    this.lamp.shadow.camera.near = 0.4;
+    this.lamp.shadow.camera.far = 2.2;
+    this.lamp.shadow.bias = -0.00015;
+    this.lamp.shadow.normalBias = 0.0005;
+    this.lamp.shadow.radius = 3;
 
-    scene.add(this.sun, this.sun.target, this.windowGlow, this.windowGlow.target, this.sky, this.lamp);
+    scene.add(this.sun, this.sun.target, this.windowGlow, this.windowGlow.target, this.sky, this.lamp, this.lamp.target);
     this.place();
   }
 
   /** Loads the room's reflections. Brass and glass look dead without them. */
-  loadEnvironment(onChange: () => void): void {
-    new HDRLoader().load('/assets/workshop-1k.hdr', (hdr) => {
+  /** `small` fetches a much smaller picture of the room, for where there is no brass or glass to show it off. */
+  loadEnvironment(onChange: () => void, small = false): void {
+    new HDRLoader().load(small ? '/assets/workshop-256.hdr' : '/assets/workshop-1k.hdr', (hdr) => {
       const pmrem = new THREE.PMREMGenerator(this.renderer);
       this.scene.environment = pmrem.fromEquirectangular(hdr).texture;
       // Turn the room so its windows are behind the top of the picture.
@@ -170,6 +172,7 @@ export class LightRig {
   /** Puts the light where the bulb is. Call after moving the lamp. */
   place(): void {
     this.lamp.position.copy(this.lampHome).lerp(RAKE_OFFSET.clone().add(this.lampAim), this.rake);
+    this.lamp.target.position.copy(this.lampAim).multiplyScalar(this.rake);
   }
 
   private apply(): void {

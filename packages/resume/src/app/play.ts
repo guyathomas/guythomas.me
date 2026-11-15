@@ -194,9 +194,10 @@ export function createPlay(deps: PlayDeps) {
       layers.front.stale();
       layers.back.stale();
     },
-    render(renderer: Parameters<GraphiteLayer['render']>[0]): void {
-      layers.front.render(renderer);
-      layers.back.render(renderer);
+    /** Returns true if any pencil was redrawn. */
+    render(renderer: Parameters<GraphiteLayer['render']>[0]): boolean {
+      const front = layers.front.render(renderer);
+      return layers.back.render(renderer) || front;
     },
   };
 }
