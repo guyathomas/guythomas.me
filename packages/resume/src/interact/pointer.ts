@@ -174,17 +174,12 @@ export class Pointer {
     return linkAt(this.deps.frontLinks, hit.u, hit.v);
   }
 
-  /** No button down: the lamp leans toward the pointer, and the cursor says what can be picked up. */
+  /** No button down: the picture shifts a breath with the pointer, and the cursor says what can be picked up. */
   private hover(clientX: number, clientY: number): void {
     const point = this.deskPoint(clientX, clientY);
     if (!point) return;
-    const { rig, objects, sheet, canvas, cameraRig } = this.deps;
+    const { objects, sheet, canvas, cameraRig } = this.deps;
     cameraRig.sway.set((clientX / window.innerWidth) * 2 - 1, (clientY / window.innerHeight) * 2 - 1);
-    const lean = new THREE.Vector2(point.x - rig.lampAim.x, point.z - rig.lampAim.z).multiplyScalar(0.2);
-    if (lean.length() > 0.045) lean.setLength(0.045);
-    rig.lampNudge.copy(lean);
-    rig.place();
-
     let cursor = 'default';
     if (objects.pick(point.x, point.z)) cursor = 'grab';
     else {

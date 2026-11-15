@@ -15,7 +15,7 @@ import { CameraRig } from './scene/camera';
 import { createBell } from './scene/bell';
 import { createDesk } from './scene/desk';
 import { createEraser } from './scene/eraser';
-import { createLampHead, createLampStand, HEAD_HEIGHT, HEAD_REACH, THROW } from './scene/lamp';
+import { BULB_HEIGHT, createLamp } from './scene/lamp';
 import { createLoupe } from './scene/loupe';
 import { createKit, createPencil } from './scene/props';
 import { LightRig } from './scene/rig';
@@ -109,16 +109,14 @@ async function start(): Promise<void> {
   const pencilItem = objects.add(createPencil(kit), [-0.077, 0.085]);
   const eraserItem = objects.add(createEraser(kit), [-0.012, 0.012]);
   objects.add(createBell(kit));
-  // The lamp can be taken by its foot or by its head.
-  const lampItem = objects.add(createLampStand(kit), [0, HEAD_REACH]);
+  const lamp = createLamp(kit);
+  const lampItem = objects.add(lamp.prop);
   for (const item of objects.items) scene.add(item.prop.group, item.prop.blob);
   scene.add(loupe.group.userData.glass as THREE.Object3D);
 
   // Light.
   const rig = new LightRig(scene, renderer);
   rig.loadEnvironment(() => stage.invalidate());
-  const lampHead = createLampHead();
-  scene.add(lampHead.group);
 
   const controls = new Controls({
     desk: () => {
@@ -258,8 +256,6 @@ async function start(): Promise<void> {
     poke: play.poke,
   });
 
-  const down = new THREE.Vector3(0, -1, 0);
-  const aim = new THREE.Vector3();
   let arranged = false;
   let placed = false;
   let homed = false;
@@ -280,25 +276,12 @@ async function start(): Promise<void> {
     sheetCentre.set(handling.home.cx, 0, handling.home.cz);
     cameraRig.apply(framing, window.innerHeight, sheetCentre, sheet.height);
 
-    // The lamp stands where it was put and turns to face the sheet; its light falls in front of it.
-    const lx = lampItem.x;
-    const lz = lampItem.z;
-    const away = Math.hypot(sheet.pose.cx - lx, sheet.pose.cz - lz);
-    if (away > 0.03 && !lampItem.flight) {
-      const facing = Math.atan2(-(sheet.pose.cz - lz), sheet.pose.cx - lx);
-      if (Math.abs(facing - lampItem.angle) > 1e-4) objects.move(lampItem, lx, lz, facing);
-    }
-    const fx = Math.cos(lampItem.angle);
-    const fz = -Math.sin(lampItem.angle);
-    rig.lampHome.set(lx + fx * HEAD_REACH, HEAD_HEIGHT + lampItem.lift, lz + fz * HEAD_REACH);
-    if (rig.rake === 0) rig.lampAim.set(lx + fx * THROW, 0, lz + fz * THROW);
+    // The light is wherever the lamp has been put.
+    // Where there is no desk to stand it on, it is taken to be just off the top left of the sheet.
+    if (lampItem.prop.group.visible) rig.lampHome.set(lampItem.x, BULB_HEIGHT + lampItem.lift, lampItem.z);
+    else rig.lampHome.set(sheet.pose.cx - sheet.width * 0.75, 0.16, sheet.pose.cz - sheet.height * 0.5 - 0.03);
     rig.place();
-    lampHead.group.visible = lampItem.prop.group.visible;
-    lampHead.group.position.copy(rig.head);
-    aim.copy(rig.lamp.target.position).sub(rig.head).normalize();
-    lampHead.group.quaternion.setFromUnitVectors(down, aim);
-    lampHead.bulb.emissiveIntensity = rig.lamp.intensity * 2.4;
-    lampHead.bulb.color.set(rig.lamp.intensity > 0.02 ? '#fff4dc' : '#6f6a5f');
+    lamp.glow.emissiveIntensity = Math.min(1.6, rig.lamp.intensity * 6);
 
     play.render(renderer);
     loupe.sync();

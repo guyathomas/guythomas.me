@@ -15,7 +15,7 @@ Complete rewrite as "Living paper": the resume as a letterpress sheet on a desk.
 - An eraser on the desk: pick it up and rub with its end to take out the pencil under it. The pencil's rubber end does the same (`E`, or the right mouse button).
 - No hint text: a pencilled "PTO" at the foot of the sheet and a draught that lifts its corner once say that it turns over.
 - Phones and narrow windows: the controls sit on their own strip, clear of the text, with larger touch targets; the back carries a note in place of the game; a corner needs a shorter pull to turn the slip over.
-- Nothing written on the picture: no buttons. A free-standing desk lamp that can be moved about and clicked to switch (and which lights itself at dusk), a bell that turns sound on and off, and a tap on "PTO" to turn the sheet. Lighting always follows the viewer's sun.
+- Nothing written on the picture: no buttons. An upright table lamp that lights all round it, can be moved about, and is clicked to switch (and which lights itself at dusk), a bell that turns sound on and off, and a tap on "PTO" to turn the sheet. Lighting always follows the viewer's sun.
 - Printing from the browser prints the sheet of type rather than the scene.
 - Thrown objects stop at the edge of the picture, so nothing is lost.
 - Lighting modes: day, night, and auto, which follows the viewer's real sun.

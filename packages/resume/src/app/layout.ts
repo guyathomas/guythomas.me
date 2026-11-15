@@ -35,7 +35,7 @@ export function arrangeDesk(objects: DeskObjects, sheet: SheetBody, halfWidth: n
   const bell = objects.find('bell');
   const lamp = objects.find('lamp');
   const side = Math.min(margin * 0.52, 0.062);
-  if (lamp) objects.setHome(lamp, left - Math.max(side + 0.03, margin * 0.5), top + 0.004, -0.5);
+  if (lamp) objects.setHome(lamp, left - side - 0.004, top + 0.022, 0);
   if (bell) objects.setHome(bell, left - side - 0.004, top + 0.096, 0);
   if (stamp) objects.setHome(stamp, right + Math.max(side * 0.8, 0.032), top + 0.03, 0.12);
   if (loupe) objects.setHome(loupe, left - side - 0.004, top + 0.16, -1.82);

@@ -32,10 +32,9 @@ Nothing is written on the picture. Everything is done by handling what is on the
 | Input | Result |
 |---|---|
 | Click the lamp | Switches it on or off. It also comes on by itself at dusk and goes off at dawn |
-| Drag the lamp, by its foot or its head | Moves it. It stands free, turns to face the sheet, and throws its light in front of it |
+| Drag the lamp | Moves it. It is an upright table lamp that stands free and lights everything about it, so the light is wherever the lamp is put |
 | Ring the bell | Turns the desk's sounds on, and off again |
 | Tap the pencilled "PTO" | Turns the sheet over |
-| Move the pointer | The lamp's light leans toward it; the impression catches the light |
 | Drag the sheet | Slide and turn it |
 | Drag a corner | Curl it. Carry it a third of the way, or flick it, and the sheet turns over where it lies, always side over side so the other face is the right way up. On a long phone slip a pull of under half its width is enough |
 | Double-click the sheet | Turns it over. A pencilled "PTO" at the foot of the front, and a draught that lifts the corner once after loading, are the only hints |

@@ -53,7 +53,7 @@ function windowCookie(): THREE.CanvasTexture {
 }
 
 const LAMP_COLOUR = new THREE.Color('#fff0dd');
-/** Where the lamp head sits relative to the spot it lights when it is dropped low to rake the light. */
+/** Where the lamp's light is dropped to, from the middle of the sheet, to rake across it. */
 const RAKE_OFFSET = new THREE.Vector3(-0.36, 0.055, -0.04);
 
 /**
@@ -64,15 +64,12 @@ export class LightRig {
   readonly sun = new THREE.SpotLight('#ffffff', 0, 0, 0.21, 0.35, 0);
   readonly windowGlow = new THREE.DirectionalLight('#ffffff', 0);
   readonly sky = new THREE.HemisphereLight('#ffffff', '#3a2a1c', 0);
-  readonly lamp = new THREE.SpotLight(LAMP_COLOUR, 0, 2.6, 0.56, 1, 2);
-  /** The desk point the lamp is aimed at. */
+  /** The lamp's bulb: it lights everything about it. */
+  readonly lamp = new THREE.PointLight(LAMP_COLOUR, 0, 1.6, 1.25);
+  /** Where the raking light is centred, for the freeze state. */
   readonly lampAim = new THREE.Vector3(0, 0, 0);
-  /** A small offset added to the aim, used for the pointer's nudge. */
-  readonly lampNudge = new THREE.Vector2();
-  /** Where the lamp's head stands over the desk. */
-  readonly lampHome = new THREE.Vector3(-0.2, 0.14, -0.16);
-  /** Where the head is now. */
-  readonly head = new THREE.Vector3();
+  /** Where the bulb is. */
+  readonly lampHome = new THREE.Vector3(-0.2, 0.085, -0.16);
   lampOn = false;
   exposure = 1;
   /** 0 is the lamp's normal height; 1 drops it almost to the desk, off to one side, to rake the light. */
@@ -107,14 +104,14 @@ export class LightRig {
     this.windowGlow.shadow.radius = 7;
 
     this.lamp.castShadow = true;
-    this.lamp.shadow.mapSize.set(2048, 2048);
-    this.lamp.shadow.camera.near = 0.06;
-    this.lamp.shadow.camera.far = 1.6;
-    this.lamp.shadow.bias = -0.00012;
-    this.lamp.shadow.normalBias = 0.0003;
-    this.lamp.shadow.radius = 3.2;
+    this.lamp.shadow.mapSize.set(1024, 1024);
+    this.lamp.shadow.camera.near = 0.02;
+    this.lamp.shadow.camera.far = 1.4;
+    this.lamp.shadow.bias = -0.0006;
+    this.lamp.shadow.normalBias = 0.0012;
+    this.lamp.shadow.radius = 2.4;
 
-    scene.add(this.sun, this.sun.target, this.windowGlow, this.windowGlow.target, this.sky, this.lamp, this.lamp.target);
+    scene.add(this.sun, this.sun.target, this.windowGlow, this.windowGlow.target, this.sky, this.lamp);
     this.place();
   }
 
@@ -172,17 +169,9 @@ export class LightRig {
     return Math.abs(after - before) > 0.0004 || turn > 0.0008;
   }
 
-  /** Positions the lamp and its target. Call after moving the aim. */
+  /** Puts the light where the bulb is. Call after moving the lamp. */
   place(): void {
-    const aimX = this.lampAim.x + this.lampNudge.x;
-    const aimZ = this.lampAim.z + this.lampNudge.y;
-    this.lamp.target.position.set(aimX, 0, aimZ);
-    const raked = RAKE_OFFSET.clone().add(this.lampAim);
-    this.head.copy(this.lampHome).lerp(raked, this.rake);
-    // The light itself is thrown from further back up the head's axis: a bulb as near the paper as the
-    // shade looks would put its glare on the ink, where from back here it falls off the sheet.
-    const back = this.head.clone().sub(this.lamp.target.position).normalize();
-    this.lamp.position.copy(this.head).addScaledVector(back, 0.24 * (1 - this.rake));
+    this.lamp.position.copy(this.lampHome).lerp(RAKE_OFFSET.clone().add(this.lampAim), this.rake);
   }
 
   private apply(): void {
@@ -203,9 +192,8 @@ export class LightRig {
     this.sky.intensity = 1.25 * sky + 0.014;
     this.scene.environmentIntensity = 0.42 * sky + 0.05 * night + 0.02;
 
-    // The same pool of light however near the head stands: a closer lamp is turned down to match.
-    const reach = this.lamp.position.distanceTo(this.lamp.target.position) / 0.36;
-    this.lamp.intensity = 1.9 * lamp * Math.min(1.8, reach * reach);
+    // A gentler falloff than a bare bulb's, as a shade gives: bright by the lamp without burning out what is under it.
+    this.lamp.intensity = 0.27 * lamp;
     this.lamp.visible = lamp > 0.002;
 
     // A camera would open up at night, but not all the way: night should read as night.
