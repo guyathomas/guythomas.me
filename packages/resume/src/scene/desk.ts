@@ -16,8 +16,15 @@ function prepare(texture: THREE.Texture, colour: boolean, anisotropy: number): T
  * The desk: a worn, oiled tabletop. A tiny preview of the wood is shown at
  * once; the full-resolution maps replace it as they arrive.
  */
-export function createDesk(anisotropy: number, onChange: () => void): { mesh: THREE.Mesh; ready: Promise<void> } {
-  const loader = new THREE.TextureLoader();
+/**
+ * `full` is false where hardly any desk shows, as on a phone: the small wood
+ * texture is then all that is fetched. `settled` resolves once the piece is up
+ * and running; the large textures wait for it, so they never hold up the start.
+ */
+export function createDesk(anisotropy: number, onChange: () => void, full: boolean, settled: Promise<void>): { mesh: THREE.Mesh; ready: Promise<void> } {
+  // Bitmaps are decoded off the main thread, so handing a large one to the GPU does not stall the page.
+  const loader = new THREE.ImageBitmapLoader();
+  loader.setOptions({ imageOrientation: 'flipY' });
   const material = new THREE.MeshStandardMaterial({ color: '#ffffff', roughness: 0.82, metalness: 0 });
   const mesh = new THREE.Mesh(new THREE.PlaneGeometry(SIZE, SIZE), material);
   mesh.rotation.x = -Math.PI / 2;
@@ -25,7 +32,7 @@ export function createDesk(anisotropy: number, onChange: () => void): { mesh: TH
   mesh.rotation.z = 0.06;
   mesh.receiveShadow = true;
 
-  const load = (url: string, colour: boolean) => loader.loadAsync(url).then((texture) => prepare(texture, colour, anisotropy));
+  const load = (url: string, colour: boolean) => loader.loadAsync(url).then((bitmap) => prepare(new THREE.CanvasTexture(bitmap), colour, anisotropy));
 
   const ready = load('/assets/wood-diff-512.webp', true).then((preview) => {
     material.map = preview;
@@ -33,7 +40,9 @@ export function createDesk(anisotropy: number, onChange: () => void): { mesh: TH
     onChange();
   });
 
-  ready
+  if (!full) return { mesh, ready };
+
+  Promise.all([ready, settled])
     .then(() => Promise.all([load('/assets/wood-diff-4k.webp', true), load('/assets/wood-nor-2k.webp', false), load('/assets/wood-rough-2k.webp', false)]))
     .then(([colour, normal, rough]) => {
       material.map?.dispose();

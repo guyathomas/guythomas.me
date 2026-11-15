@@ -116,8 +116,9 @@ export class LightRig {
   }
 
   /** Loads the room's reflections. Brass and glass look dead without them. */
-  loadEnvironment(onChange: () => void): void {
-    new HDRLoader().load('/assets/workshop-1k.hdr', (hdr) => {
+  /** `small` fetches a much smaller picture of the room, for where there is no brass or glass to show it off. */
+  loadEnvironment(onChange: () => void, small = false): void {
+    new HDRLoader().load(small ? '/assets/workshop-256.hdr' : '/assets/workshop-1k.hdr', (hdr) => {
       const pmrem = new THREE.PMREMGenerator(this.renderer);
       this.scene.environment = pmrem.fromEquirectangular(hdr).texture;
       // Turn the room so its windows are behind the top of the picture.

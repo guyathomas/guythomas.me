@@ -173,14 +173,15 @@ export class GraphiteLayer {
     this.dirty = true;
   }
 
-  /** Brings the map up to date. Call before the sheet is rendered. */
-  render(renderer: THREE.WebGLRenderer): void {
-    if (!this.dirty) return;
+  /** Brings the map up to date. Call before the sheet is rendered. Returns true if it was redrawn. */
+  render(renderer: THREE.WebGLRenderer): boolean {
+    if (!this.dirty) return false;
     this.dirty = false;
     const previous = renderer.getRenderTarget();
     renderer.setRenderTarget(this.target);
     renderer.clear();
     renderer.render(this.scene, this.camera);
     renderer.setRenderTarget(previous);
+    return true;
   }
 }

@@ -35,6 +35,9 @@ declare global {
 
 const FREE_CORNER_LIFT = [0.0012, 0.0038, 0.0024, 0.0034];
 
+/** Hands the page back to the browser for a moment, so that starting up is several short jobs and not one long one. */
+const breathe = () => new Promise<void>((resolve) => window.setTimeout(resolve));
+
 async function start(): Promise<void> {
   const canvas = document.getElementById('gl') as HTMLCanvasElement;
   const frontEl = document.getElementById('sheet-front') as HTMLElement;
@@ -54,7 +57,7 @@ async function start(): Promise<void> {
   document.documentElement.classList.toggle('no-desk', !roomy);
 
   await fontsReady();
-  const stage = new Stage(canvas);
+  const stage = new Stage(canvas, narrow);
   stage.frozenTime = params.time;
   stage.continuous = params.fps;
   window.__stats = stage.stats;
@@ -64,10 +67,21 @@ async function start(): Promise<void> {
   // The sheet.
   const { sheet, frontLinks, sheetWidthPx, inks, pencil } = printSheet(renderer, frontEl, backEl, narrow);
   const stamping = new Stamping(sheet, inks);
+  // Setting the type and making the paper are the heavy steps: let the page breathe between them and the rest.
+  await breathe();
   scene.add(sheet.group);
 
   // The desk and the things on it.
-  const desk = createDesk(renderer.capabilities.getMaxAnisotropy(), () => stage.invalidate());
+  // Something outside the usual run of things has changed the picture (a texture arrived, the sheet was stamped):
+  // draw everything afresh for a few frames.
+  let fresh = 4;
+  const refresh = () => {
+    fresh = 4;
+    stage.invalidate();
+  };
+  let settle: () => void = () => undefined;
+  const settled = new Promise<void>((resolve) => (settle = resolve));
+  const desk = createDesk(renderer.capabilities.getMaxAnisotropy(), refresh, !narrow, settled);
   scene.add(desk.mesh);
   const voices = new Voices();
   const kit = createKit();
@@ -81,6 +95,7 @@ async function start(): Promise<void> {
     // The stamp set down on the sheet passes it for press: a mark, then the printer.
     if (item.prop.name === 'stamp' && byHand && !handling.busy && stamping.press(item.x, item.z, item.angle)) {
       voices.stamp();
+      refresh();
       cancelStampRun();
       stampRun = [
         window.setTimeout(() => {
@@ -113,9 +128,11 @@ async function start(): Promise<void> {
   for (const item of objects.items) scene.add(item.prop.group, item.prop.blob);
   scene.add(loupe.group.userData.glass as THREE.Object3D);
 
+  await breathe();
+
   // Light.
   const rig = new LightRig(scene, renderer);
-  rig.loadEnvironment(() => stage.invalidate());
+  rig.loadEnvironment(refresh, narrow);
 
   const controls = new Controls({
     desk: () => {
@@ -134,6 +151,7 @@ async function start(): Promise<void> {
       handling.reset();
       cancelStampRun();
       stamping.clear();
+      refresh();
       pointer.dropPencil();
       play.reset();
       objects.home();
@@ -180,6 +198,7 @@ async function start(): Promise<void> {
     finished: () => {
       const { cx, cz } = sheet.pose;
       if (stamping.press(cx, cz + sheet.height * 0.2, 0.1)) voices.stamp();
+      refresh();
     },
   });
 
@@ -279,6 +298,23 @@ async function start(): Promise<void> {
   const fitted = document.documentElement.classList.contains('fit');
   let plan: ScrollPlan | null = null;
 
+  // Everything that decides what the shadows and the loupe show, as numbers to compare from frame to frame.
+  let before: number[] = [];
+  const changed = (): boolean => {
+    const { pose, curl } = sheet;
+    const now = [pose.cx, pose.cz, pose.a, pose.b, pose.c, pose.d, sheet.drop, sheet.ear, ...sheet.cornerLift, cut.constant];
+    if (curl) now.push(curl.mx, curl.mz, curl.nx, curl.nz);
+    for (const item of objects.items) {
+      now.push(item.x, item.z, item.angle, item.lift, item.rolled, item.prop.group.visible ? 1 : 0);
+      if (item.hand) now.push(item.hand.x, item.hand.z, item.hand.touching ? 1 : 0, item.hand.flipped ? 1 : 0);
+    }
+    for (const light of [rig.sun, rig.windowGlow, rig.lamp]) now.push(light.position.x, light.position.y, light.position.z, light.intensity, light.visible ? 1 : 0);
+    now.push(rig.sky.intensity, rig.exposure);
+    const same = now.length === before.length && now.every((value, i) => value === before[i]);
+    before = now;
+    return !same;
+  };
+
   let arranged = false;
   let placed = false;
   let homed = false;
@@ -318,9 +354,14 @@ async function start(): Promise<void> {
     }
     tray.show(play1, pointer.toolInUse, play.waiting);
 
-    play.render(renderer);
+    // Has anything on the desk, or its light, moved since the last frame? If not, the shadows and the view
+    // through the loupe are as they were, and only the camera has moved.
+    const drawn = play.render(renderer);
+    const moved = changed();
+    if (moved || fresh > 0) stage.shadowsStale = true;
     loupe.sync();
-    if (loupe.group.visible) loupe.renderView(renderer, scene);
+    if (loupe.group.visible && (moved || drawn || fresh > 0)) loupe.renderView(renderer, scene);
+    if (fresh > 0) fresh--;
     pointer.syncGrips();
   };
 
@@ -365,6 +406,7 @@ async function start(): Promise<void> {
     // A hand full of pencil should not outlast the room for it.
     pointer.putDownPencil();
     arranged = false;
+    fresh = 4;
     stage.resize();
   });
   // If the graphics context goes, the sheet of type underneath takes over until it is back.
@@ -375,6 +417,7 @@ async function start(): Promise<void> {
   canvas.addEventListener('webglcontextrestored', () => {
     document.documentElement.classList.add('live');
     play.stale();
+    refresh();
     wake();
   });
   if (!frozen) {
@@ -387,9 +430,16 @@ async function start(): Promise<void> {
     void lighting.refine();
   }
 
+  // Shaders are built in the background where the browser can, instead of stalling the first frame.
+  await Promise.all([renderer.compileAsync(scene, camera).catch(() => undefined), desk.ready.catch(() => undefined)]);
   wake();
-  await desk.ready.catch(() => undefined);
-  requestAnimationFrame(() => requestAnimationFrame(() => document.documentElement.classList.add('live')));
+  requestAnimationFrame(() =>
+    requestAnimationFrame(() => {
+      document.documentElement.classList.add('live');
+      // The large textures come only now, once the piece is up.
+      window.setTimeout(settle, 400);
+    }),
+  );
 }
 
 function supported(): boolean {
