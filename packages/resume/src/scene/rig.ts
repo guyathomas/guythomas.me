@@ -53,8 +53,7 @@ function windowCookie(): THREE.CanvasTexture {
 }
 
 const LAMP_COLOUR = new THREE.Color('#fff0dd');
-/** Where the lamp head sits relative to the spot it lights. */
-const LAMP_OFFSET = new THREE.Vector3(-0.25, 0.16, -0.2);
+/** Where the lamp head sits relative to the spot it lights when it is dropped low to rake the light. */
 const RAKE_OFFSET = new THREE.Vector3(-0.36, 0.055, -0.04);
 
 /**
@@ -65,11 +64,15 @@ export class LightRig {
   readonly sun = new THREE.SpotLight('#ffffff', 0, 0, 0.21, 0.35, 0);
   readonly windowGlow = new THREE.DirectionalLight('#ffffff', 0);
   readonly sky = new THREE.HemisphereLight('#ffffff', '#3a2a1c', 0);
-  readonly lamp = new THREE.SpotLight(LAMP_COLOUR, 0, 2.6, 0.85, 1, 2);
+  readonly lamp = new THREE.SpotLight(LAMP_COLOUR, 0, 2.6, 0.4, 1, 2);
   /** The desk point the lamp is aimed at. */
   readonly lampAim = new THREE.Vector3(0, 0, 0);
   /** A small offset added to the aim, used for the pointer's nudge. */
   readonly lampNudge = new THREE.Vector2();
+  /** Where the lamp's head stands over the desk. */
+  readonly lampHome = new THREE.Vector3(-0.2, 0.14, -0.16);
+  /** Where the head is now. */
+  readonly head = new THREE.Vector3();
   lampOn = false;
   exposure = 1;
   /** 0 is the lamp's normal height; 1 drops it almost to the desk, off to one side, to rake the light. */
@@ -143,10 +146,10 @@ export class LightRig {
     }
   }
 
-  /** The lamp is a dim reading light by day and the key light at night. */
+  /** The lamp is a reading light by day and the key light at night. */
   private lampLevel(): number {
     if (!this.lampOn) return 0;
-    return 0.3 + 0.7 * (this.target?.night ?? 0);
+    return 0.45 + 0.55 * (this.target?.night ?? 0);
   }
 
   /** Eases toward the target state like a dimmer. Returns true while still moving. */
@@ -174,8 +177,12 @@ export class LightRig {
     const aimX = this.lampAim.x + this.lampNudge.x;
     const aimZ = this.lampAim.z + this.lampNudge.y;
     this.lamp.target.position.set(aimX, 0, aimZ);
-    const offset = LAMP_OFFSET.clone().lerp(RAKE_OFFSET, this.rake);
-    this.lamp.position.set(this.lampAim.x + offset.x + this.lampNudge.x * 0.5, offset.y, this.lampAim.z + offset.z + this.lampNudge.y * 0.5);
+    const raked = RAKE_OFFSET.clone().add(this.lampAim);
+    this.head.copy(this.lampHome).lerp(raked, this.rake);
+    // The light itself is thrown from further back up the head's axis: a bulb as near the paper as the
+    // shade looks would put its glare on the ink, where from back here it falls off the sheet.
+    const back = this.head.clone().sub(this.lamp.target.position).normalize();
+    this.lamp.position.copy(this.head).addScaledVector(back, 0.24 * (1 - this.rake));
   }
 
   private apply(): void {
@@ -196,7 +203,9 @@ export class LightRig {
     this.sky.intensity = 1.25 * sky + 0.014;
     this.scene.environmentIntensity = 0.42 * sky + 0.05 * night + 0.02;
 
-    this.lamp.intensity = 1.9 * lamp;
+    // The same pool of light however near the head stands: a closer lamp is turned down to match.
+    const reach = this.lamp.position.distanceTo(this.lamp.target.position) / 0.36;
+    this.lamp.intensity = 1.9 * lamp * Math.min(1.8, reach * reach);
     this.lamp.visible = lamp > 0.002;
 
     // A camera would open up at night, but not all the way: night should read as night.

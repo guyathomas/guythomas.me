@@ -24,21 +24,7 @@
     <div id="back-copy">
       <!--sheet-back-->
     </div>
-    <nav id="ui" aria-label="Scene controls">
-      <div class="modes" role="radiogroup" aria-label="Lighting">
-        <button type="button" role="radio" data-mode="auto" aria-checked="true">Auto</button>
-        <button type="button" role="radio" data-mode="day" aria-checked="false">Day</button>
-        <button type="button" role="radio" data-mode="night" aria-checked="false">Night</button>
-      </div>
-      <button type="button" id="btn-view" aria-pressed="false">Desk</button>
-      <button type="button" id="btn-flip">Turn over</button>
-      <button type="button" id="btn-reset">Reset</button>
-      <span class="spacer"></span>
-      <button type="button" id="btn-sound" aria-pressed="false">Enable sound</button>
-      <button type="button" id="btn-print">Print</button>
-      <a href="/plain/">Plain copy</a>
-    </nav>
-    <script type="module" src="/src/main.ts" onerror="location.replace('/plain/')"></script>
-    <noscript><meta http-equiv="refresh" content="0; url=/plain/" /></noscript>
+    <script type="module" src="/src/main.ts" onerror="document.documentElement.classList.add('flat')"></script>
+    <noscript><style>#gl { display: none; } #stage { pointer-events: auto; }</style></noscript>
   </body>
 </html>

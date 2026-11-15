@@ -1,5 +1,5 @@
-/* The printed sheet. Shared by the piece (as the layout the rasteriser reads)
-   and by the plain copy. All sizes are in sheet px: 816 x 1056 is US Letter. */
+/* The printed sheet: the layout the rasteriser reads, what shows before and
+   without the scene, and what the printer gets. All sizes are in sheet px: 816 x 1056 is US Letter. */
 
 @font-face {
   font-family: 'EBG Text';

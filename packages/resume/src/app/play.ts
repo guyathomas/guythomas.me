@@ -22,6 +22,8 @@ export interface PlayDeps {
   game: boolean;
   /** Page of the run to open on, counting from 0. */
   firstPage: number;
+  /** Turns the sheet over, as a tap on the pencilled "PTO" asks. */
+  turnOver(): void;
   /** Every page of the run has been passed. */
   finished(): void;
 }
@@ -68,8 +70,19 @@ export function createPlay(deps: PlayDeps) {
 
   /** Pencils "PTO" at the foot of the front. Like any pencil it can be rubbed out; a reset writes it again. */
   function note(): void {
-    for (const points of ptoLines(sheet.width, sheet.height)) marks.front.put(points, 0.78);
+    for (const points of ptoLines(sheet.width, sheet.height)) {
+      marks.front.put(points, 0.78);
+      // Without the game the back is bare, and a finger needs the same way home.
+      if (!deps.game) marks.back.put(points.slice(), 0.78);
+    }
   }
+  const noted = ptoLines(sheet.width, sheet.height).flat();
+  const xs = noted.filter((_, i) => i % 2 === 0);
+  const ys = noted.filter((_, i) => i % 2 === 1);
+  const pad = 0.005;
+  const box = { x0: Math.min(...xs) - pad, x1: Math.max(...xs) + pad, y0: Math.min(...ys) - pad, y1: Math.max(...ys) + pad };
+  /** True for a page point on the pencilled "PTO". */
+  const onNote = (at: PagePoint): boolean => (at.front || !deps.game) && at.x > box.x0 && at.x < box.x1 && at.y > box.y0 && at.y < box.y1;
   note();
 
   const launch = (): boolean => {
@@ -79,7 +92,13 @@ export function createPlay(deps: PlayDeps) {
     return true;
   };
   /** A press on the page: on the waiting marble, it lets it go. */
-  const poke = (at: PagePoint): boolean => !at.front && run.onMarble(at.x, at.y) && launch();
+  const poke = (at: PagePoint): boolean => {
+    if (onNote(at) && !handling.busy) {
+      deps.turnOver();
+      return true;
+    }
+    return !at.front && run.onMarble(at.x, at.y) && launch();
+  };
 
   /** Rubs out the lines within `reach` of a page point. */
   const rub = (at: PagePoint, speed: number, reach: number): void => {

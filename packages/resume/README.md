@@ -2,7 +2,7 @@
 
 The resume as a letterpress-printed sheet lying on a desk. It can be read at once, and it can be handled: slide it, rake the light across the impression, curl a corner, turn it over, look through the loupe.
 
-`/` is the piece. `/plain/` is a plain, printable copy generated from the same data, and the fallback when WebGL2 is unavailable.
+There is one page. It first paints the resume as an ordinary sheet of type, then fades the scene in over it. If the scene cannot start (no WebGL2, or the script fails) that sheet stays, readable and with working links. Printing prints that sheet, not the picture of the desk.
 
 ## Run it
 
@@ -27,10 +27,15 @@ Edit `src/data/resume.yaml` and rebuild. Both pages and the printed sheet are ge
 
 ## Controls
 
+Nothing is written on the picture. Everything is done by handling what is on the desk; the keys are shortcuts for those who look for them.
+
 | Input | Result |
 |---|---|
+| Click the lamp's head | Switches the lamp on or off. It also comes on by itself at dusk and goes off at dawn |
+| Drag the lamp's head, or the bare desk | Swings the lamp's light about |
+| Ring the bell | Turns the desk's sounds on, and off again |
+| Tap the pencilled "PTO" | Turns the sheet over |
 | Move the pointer | The lamp leans toward it; the impression catches the light |
-| Drag the bare desk | Move the lamp's light |
 | Drag the sheet | Slide and turn it |
 | Drag a corner | Curl it. Carry it a third of the way, or flick it, and the sheet turns over where it lies, always side over side so the other face is the right way up. On a long phone slip a pull of under half its width is enough |
 | Double-click the sheet | Turns it over. A pencilled "PTO" at the foot of the front, and a draught that lifts the corner once after loading, are the only hints |
@@ -38,11 +43,11 @@ Edit `src/data/resume.yaml` and rebuild. Both pages and the printed sheet are ge
 | Click the pencil, or carry it onto the sheet | It stays in the hand. Press on the paper to draw; click off the sheet or press `Esc` to put it down |
 | Click the eraser, or carry it onto the sheet | It stays in the hand, held on its end. Press on the paper and rub to take out the pencil under it; click off the sheet or press `Esc` to put it down |
 | `E`, or hold the right mouse button | With the pencil in hand: turns it to the rubber end, a finer eraser |
-| Set the stamp down on the sheet | Leaves an "OK to print" mark and opens the print dialog for the plain copy |
+| Set the stamp down on the sheet | Leaves an "OK to print" mark and opens the print dialog |
 | Click the email or website | Opens it |
-| `F` / `R` / `D` / `L` | Turn over / reset / desk view / lamp switch |
+| `F` / `R` / `D` / `L` | Turn over / reset everything / desk view / lamp switch |
 | `Space`, or click the marble | On the back: lets the marble go |
-| `Cmd/Ctrl+P`, or Print | Prints the plain copy, not the picture of the desk |
+| The browser's Print | Prints the sheet of type on a letter page |
 
 ## The back
 
@@ -70,7 +75,7 @@ For review and screenshots. Combine freely.
 | Parameter | Values |
 |---|---|
 | `view` | `rest`, `raking`, `corner-lifted`, `mid-flip`, `back`, `loupe`, `desk` |
-| `mode` | `auto`, `day`, `night` |
+| `mode` | `auto`, `day`, `night`. For review only: the piece itself always follows the viewer's sun |
 | `sun` | Local solar hour for auto mode, for example `6.5` |
 | `lat`, `lon` | Viewer position for auto mode |
 | `light` | Lamp position, `x,y` each from -1 to 1 |

@@ -23,13 +23,19 @@ const ROLL = 0.7;
 /** Radians per second squared. */
 const TURN = 18;
 const BOUNCE = 0.3;
-const DESK_X = 0.45;
-const DESK_Z = 0.5;
+/** The part of the desk a loose thing may slide over: by default the whole top. */
+export interface Bounds {
+  x0: number;
+  x1: number;
+  z0: number;
+  z1: number;
+}
+export const DESK: Bounds = { x0: -0.45, x1: 0.45, z0: -0.5, z1: 0.5 };
 
 const toward = (value: number, amount: number) => (value > 0 ? Math.max(0, value - amount) : Math.min(0, value + amount));
 
 /** Advances a released body under friction. Returns true while it is still moving. */
-export function coast(body: Body, dt: number): boolean {
+export function coast(body: Body, dt: number, bounds: Bounds = DESK): boolean {
   const cos = Math.cos(body.angle);
   const sin = Math.sin(body.angle);
   // Along the body's length is (cos, -sin); across it is (sin, cos).
@@ -52,12 +58,13 @@ export function coast(body: Body, dt: number): boolean {
   body.x += body.vx * dt;
   body.z += body.vz * dt;
   body.angle += body.spin * dt;
-  if (Math.abs(body.x) > DESK_X) {
-    body.x = Math.sign(body.x) * DESK_X;
+  // At the edge it stops dead, as against a raised lip.
+  if (body.x < bounds.x0 || body.x > bounds.x1) {
+    body.x = Math.min(bounds.x1, Math.max(bounds.x0, body.x));
     body.vx = 0;
   }
-  if (Math.abs(body.z) > DESK_Z) {
-    body.z = Math.sign(body.z) * DESK_Z;
+  if (body.z < bounds.z0 || body.z > bounds.z1) {
+    body.z = Math.min(bounds.z1, Math.max(bounds.z0, body.z));
     body.vz = 0;
   }
   return body.vx !== 0 || body.vz !== 0 || body.spin !== 0;

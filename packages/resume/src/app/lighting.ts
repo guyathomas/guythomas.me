@@ -5,30 +5,22 @@ import type { Place } from '../light/zones';
 import type { LightRig } from '../scene/rig';
 import type { Mode, Params } from './params';
 
-const STORE = 'lighting-mode';
-
-/** Chooses the sky for the scene: a fixed day, a fixed night, or the viewer's real sun. */
+/**
+ * Lights the scene by the viewer's real sun. The lamp comes on at dusk and
+ * goes off at dawn by itself; a hand on its switch holds until the next one.
+ * A fixed day or night can be asked for in the URL, for review.
+ */
 export class Lighting {
-  mode: Mode;
+  private mode: Mode;
   private place: Place;
   private lampWanted: boolean | null = null;
 
-  constructor(private readonly rig: LightRig, private readonly params: Params, private readonly frozen: boolean, private readonly changed: () => void) {
-    this.mode = params.mode ?? (frozen ? 'auto' : this.remembered()) ?? 'auto';
+  constructor(private readonly rig: LightRig, private readonly params: Params, private readonly changed: () => void) {
+    this.mode = params.mode ?? 'auto';
     this.place = guessPlace();
     if (params.latitude !== null) this.place = { ...this.place, latitude: params.latitude };
     if (params.longitude !== null) this.place = { ...this.place, longitude: params.longitude };
-    rig.lampOn = true;
     this.refresh(true);
-  }
-
-  private remembered(): Mode | null {
-    try {
-      const stored = localStorage.getItem(STORE);
-      return stored === 'auto' || stored === 'day' || stored === 'night' ? stored : null;
-    } catch {
-      return null;
-    }
   }
 
   /** Refines the viewer's position without holding anything up. */
@@ -43,15 +35,9 @@ export class Lighting {
     this.refresh(false);
   }
 
+  /** Pins the sky, for a freeze state. */
   setMode(mode: Mode): void {
     this.mode = mode;
-    if (!this.frozen) {
-      try {
-        localStorage.setItem(STORE, mode);
-      } catch {
-        // Private windows may refuse storage; the choice simply is not remembered.
-      }
-    }
     this.refresh(false);
   }
 
@@ -60,12 +46,11 @@ export class Lighting {
     this.changed();
   }
 
-  /** Recomputes the sky. Call when the mode, the place or the time changes. */
+  /** Recomputes the sky. Call when the place or the time changes. */
   refresh(immediate: boolean): void {
     const sun = sunFor(this.mode, new Date(), this.place, this.params.sun);
     const state = lightingFor(sun, this.place.latitude);
-    // A hand on the switch holds until the next dusk or dawn.
-    if (this.lampWanted !== null && this.lampWanted !== state.lampWanted) this.rig.lampOn = true;
+    if (this.lampWanted !== state.lampWanted) this.rig.lampOn = state.lampWanted;
     this.lampWanted = state.lampWanted;
     this.rig.setState(state, immediate);
     this.changed();

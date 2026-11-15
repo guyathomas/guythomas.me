@@ -88,7 +88,8 @@ export class Stage {
   }
 
   get pixelRatio(): number {
-    return Math.min(window.devicePixelRatio || 1, 2) * this.scale;
+    // A phone's picture is small, so it can afford every pixel the screen has.
+    return Math.min(window.devicePixelRatio || 1, window.innerWidth < 700 ? 3 : 2) * this.scale;
   }
 
   resize(): void {

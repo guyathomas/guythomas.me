@@ -18,7 +18,10 @@ export interface PointerDeps {
   rig: LightRig;
   cameraRig: CameraRig;
   frontLinks: LinkRegion[];
-  lampHead: THREE.Object3D;
+  /** True if a point on the screen is on the lamp's head. */
+  onLamp(clientX: number, clientY: number): boolean;
+  /** The bell was struck. */
+  ring(): void;
   /** Something changed: keep the frame loop running. */
   wake(): void;
   toggleLamp(): void;
@@ -81,8 +84,15 @@ export class Pointer {
     this.travelled = 0;
     this.lastMove = performance.now();
 
+    // Things on the desk and links on the sheet come before the lamp that leans over them.
     const item = objects.pick(point.x, point.z);
-    if (item) {
+    const lamp = !item && !this.linkUnder(clientX, clientY) && this.deps.onLamp(clientX, clientY);
+    if (lamp) {
+      // The lamp's head: a click is its switch, a drag swings its light about.
+      this.lightOffset = [rig.lampAim.x - point.x, rig.lampAim.z - point.z];
+      rig.lampNudge.set(0, 0);
+      this.drag = 'light';
+    } else if (item) {
       objects.grab(item, point.x, point.z);
       this.drag = 'object';
     } else {
@@ -148,6 +158,7 @@ export class Pointer {
         this.deps.wake();
         return;
       }
+      if (objects.inHand?.prop.name === 'bell' && this.travelled < 5) this.deps.ring();
       objects.release((performance.now() - this.lastMove) / 1000);
     }
     if (drag === 'curl') handling.endCurl();
@@ -166,19 +177,16 @@ export class Pointer {
 
   /** A press and release without travel: follow a link, or work the lamp's switch. */
   private click(clientX: number, clientY: number): void {
-    const { sheet, lampHead, cameraRig } = this.deps;
+    const { sheet } = this.deps;
     const point = this.deskPoint(clientX, clientY);
     const at = point ? pageAt(sheet, point.x, point.z) : null;
     if (at && this.deps.poke(at)) return;
-    if (cameraRig.blend > 0.5) {
-      this.ndc.set((clientX / window.innerWidth) * 2 - 1, -(clientY / window.innerHeight) * 2 + 1);
-      this.ray.setFromCamera(this.ndc, this.deps.camera);
-      if (this.ray.intersectObject(lampHead, true).length > 0) {
-        this.deps.toggleLamp();
-        return;
-      }
-    }
     const link = this.linkUnder(clientX, clientY);
+    // Whatever is on the page under the press takes it; only then the lamp's switch.
+    if (!link && this.deps.onLamp(clientX, clientY)) {
+      this.deps.toggleLamp();
+      return;
+    }
     if (!link || sheet.curl) return;
     if (link.href.startsWith('mailto:')) window.location.href = link.href;
     else window.open(link.href, '_blank', 'noopener');
@@ -204,7 +212,8 @@ export class Pointer {
     rig.place();
 
     let cursor = 'default';
-    if (objects.pick(point.x, point.z)) cursor = 'grab';
+    if (this.deps.onLamp(clientX, clientY)) cursor = 'pointer';
+    else if (objects.pick(point.x, point.z)) cursor = 'grab';
     else {
       const hit = sheet.curl ? null : sheet.hit(point.x, point.z, CORNER_REACH);
       if (hit?.corner !== null && hit) cursor = 'grab';
@@ -366,7 +375,7 @@ export class Pointer {
 
   private tap(clientX: number, clientY: number): void {
     const link = this.linkUnder(clientX, clientY);
-    if (link) {
+    if (link || this.deps.onLamp(clientX, clientY)) {
       this.click(clientX, clientY);
       return;
     }
