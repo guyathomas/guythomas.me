@@ -20,7 +20,8 @@ const ARROW = [
  * turn over. Returns pencil lines as runs of x, y pairs in page metres.
  */
 export function ptoLines(width: number, height: number): number[][] {
-  const size = Math.min(0.0054, width * 0.03);
+  // On a narrow sheet the letters keep the size they have on a wide one, rather than shrinking past reading.
+  const size = Math.min(0.0054, width * 0.055);
   const glyphs = [P, T, O, ARROW];
   const advance = [0, 0.95, 1.9, 3.0];
   const right = width - Math.max(0.012, width * 0.09);

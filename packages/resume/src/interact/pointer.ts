@@ -418,6 +418,8 @@ export class Pointer {
           handling.beginCurl(corner);
           this.drag = handling.phase === 'curl' ? 'curl' : null;
         },
+        // A tap on a corner, where a thumb most naturally goes, turns the sheet over.
+        () => handling.turnOver(),
       );
     }
     for (const item of objects.items) {
@@ -434,16 +436,22 @@ export class Pointer {
     this.drag = 'object';
   }
 
-  private addGrip(place: () => THREE.Vector3 | null, begin: (x: number, z: number) => void): void {
+  /**
+   * `tap`, if given, is what a press that does not move does. The grip then waits for the finger to travel
+   * before it takes hold, so that a tap is not taken for the start of a drag.
+   */
+  private addGrip(place: () => THREE.Vector3 | null, begin: (x: number, z: number) => void, tap?: () => void): void {
     const element = document.createElement('div');
     element.className = 'grip';
     element.setAttribute('aria-hidden', 'true');
     document.body.appendChild(element);
     /** The finger that took hold; others are ignored until it lets go. */
     let owner: number | null = null;
+    /** Where the press came down on the desk, while a tap may yet become a drag. */
+    let waiting: { x: number; z: number } | null = null;
     element.addEventListener('pointerdown', (event) => {
       // One hand at a time: a second finger does not take over, and a hand holding the pencil is busy.
-      if (this.drag || this.tool.active) return;
+      if (this.drag || this.tool.active || owner !== null) return;
       const point = this.deskPoint(event.clientX, event.clientY);
       if (!point) return;
       event.preventDefault();
@@ -452,15 +460,32 @@ export class Pointer {
       this.downAt = [event.clientX, event.clientY];
       this.travelled = 0;
       this.lastMove = performance.now();
+      if (tap) {
+        waiting = { x: point.x, z: point.z };
+        return;
+      }
       begin(point.x, point.z);
       this.deps.wake();
     });
     element.addEventListener('pointermove', (event) => {
-      if (this.drag && event.pointerId === owner) this.move(event.clientX, event.clientY);
+      if (event.pointerId !== owner) return;
+      if (waiting) {
+        if (Math.hypot(event.clientX - this.downAt[0], event.clientY - this.downAt[1]) < 8) return;
+        begin(waiting.x, waiting.z);
+        waiting = null;
+        this.deps.wake();
+      }
+      if (this.drag) this.move(event.clientX, event.clientY);
     });
     const finish = (event: PointerEvent) => {
       if (event.pointerId !== owner) return;
       owner = null;
+      if (waiting) {
+        waiting = null;
+        if (event.type === 'pointerup') tap?.();
+        this.deps.wake();
+        return;
+      }
       if (!this.drag) return;
       this.end(event.clientX, event.clientY, true);
     };

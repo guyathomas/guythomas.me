@@ -2,45 +2,48 @@ import * as THREE from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
-import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
+import { OutputShader } from 'three/examples/jsm/shaders/OutputShader.js';
 
-/** Lens falloff and film grain, applied to the finished picture. */
-const FINISH = {
-  uniforms: {
-    tDiffuse: { value: null as THREE.Texture | null },
+/**
+ * Tone mapping and the move to screen colour, then lens falloff and film grain, in one pass over the picture.
+ * Two passes did the same; on a phone every full-screen pass is a large share of the frame.
+ */
+class FinishPass extends OutputPass {
+  readonly finish = {
     uGrain: { value: 0.028 },
     uVignette: { value: 0.34 },
     uSeed: { value: 0 },
     uAspect: { value: 1 },
-  },
-  vertexShader: /* glsl */ `
-    varying vec2 vUv;
-    void main() {
-      vUv = uv;
-      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-    }`,
-  fragmentShader: /* glsl */ `
-    uniform sampler2D tDiffuse;
-    uniform float uGrain;
-    uniform float uVignette;
-    uniform float uSeed;
-    uniform float uAspect;
-    varying vec2 vUv;
-    float hash(vec2 p) {
-      vec3 q = fract(vec3(p.xyx) * 0.1031);
-      q += dot(q, q.yzx + 33.33);
-      return fract((q.x + q.y) * q.z);
-    }
-    void main() {
-      vec4 colour = texture2D(tDiffuse, vUv);
-      vec2 centred = (vUv - 0.5) * vec2(uAspect, 1.0);
-      float falloff = smoothstep(0.35, 1.05, length(centred));
-      colour.rgb *= 1.0 - uVignette * falloff;
-      float grain = hash(gl_FragCoord.xy + uSeed) - 0.5;
-      colour.rgb += grain * uGrain * (1.0 - 0.6 * dot(colour.rgb, vec3(0.3333)));
-      gl_FragColor = colour;
-    }`,
-};
+  };
+
+  constructor() {
+    super();
+    Object.assign(this.uniforms, this.finish);
+    const shader = OutputShader.fragmentShader;
+    const close = shader.lastIndexOf('}');
+    this.material.fragmentShader =
+      shader.slice(0, close).replace(
+        'varying vec2 vUv;',
+        /* glsl */ `varying vec2 vUv;
+        uniform float uGrain;
+        uniform float uVignette;
+        uniform float uSeed;
+        uniform float uAspect;
+        float hash(vec2 p) {
+          vec3 q = fract(vec3(p.xyx) * 0.1031);
+          q += dot(q, q.yzx + 33.33);
+          return fract((q.x + q.y) * q.z);
+        }`,
+      ) +
+      /* glsl */ `
+        vec2 centred = (vUv - 0.5) * vec2(uAspect, 1.0);
+        float falloff = smoothstep(0.35, 1.05, length(centred));
+        gl_FragColor.rgb *= 1.0 - uVignette * falloff;
+        float grain = hash(gl_FragCoord.xy + uSeed) - 0.5;
+        gl_FragColor.rgb += grain * uGrain * (1.0 - 0.6 * dot(gl_FragColor.rgb, vec3(0.3333)));
+      }`;
+  }
+}
 
 export type Ticker = (dt: number, now: number) => boolean;
 
@@ -62,7 +65,7 @@ export class Stage {
   readonly stats = { frames: 0, seconds: 0, fps: 0, worst: 0 };
 
   private readonly tickers = new Set<Ticker>();
-  private readonly finish: ShaderPass;
+  private readonly finish = new FinishPass();
   private dirty = true;
   private running = false;
   private last = 0;
@@ -71,8 +74,8 @@ export class Stage {
   /** Set when something that casts a shadow, or a light, has moved. Shadow maps are only redrawn then. */
   shadowsStale = true;
 
-  /** `small` is a phone-sized picture: it is drawn at the screen's full density, without multisampling. */
-  constructor(readonly canvas: HTMLCanvasElement, private readonly small = false) {
+  /** `small` is a phone-sized picture: it is drawn without multisampling. */
+  constructor(readonly canvas: HTMLCanvasElement, small = false) {
     this.renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance', stencil: false });
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -84,18 +87,14 @@ export class Stage {
     const target = new THREE.WebGLRenderTarget(4, 4, { samples: small ? 0 : 4, type: THREE.HalfFloatType });
     this.composer = new EffectComposer(this.renderer, target);
     this.composer.addPass(new RenderPass(this.scene, this.camera));
-    this.composer.addPass(new OutputPass());
-    this.finish = new ShaderPass(FINISH);
     this.composer.addPass(this.finish);
     this.resize();
   }
 
   get pixelRatio(): number {
-    // A phone's picture is small enough to draw at every pixel the screen has, which does more for small type
-    // than multisampling does and costs fewer samples. Phones short of memory stay at two.
-    const memory = (navigator as { deviceMemory?: number }).deviceMemory ?? 8;
-    const most = this.small && memory > 4 ? 3 : 2;
-    return Math.min(window.devicePixelRatio || 1, most) * this.scale;
+    // Never more than two pixels to the point. A phone's screen often has three, but drawing every one of them
+    // more than doubles the work of each frame for type that is already sharp at two, and the phone lags.
+    return Math.min(window.devicePixelRatio || 1, 2) * this.scale;
   }
 
   resize(): void {
@@ -107,7 +106,7 @@ export class Stage {
     this.composer.setSize(width, height);
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
-    this.finish.uniforms.uAspect.value = width / height;
+    this.finish.finish.uAspect.value = width / height;
     this.invalidate();
   }
 
@@ -143,7 +142,7 @@ export class Stage {
       // Most frames only move the camera; the shadows on the desk are the same as last time.
       if (this.shadowsStale) this.renderer.shadowMap.needsUpdate = true;
       this.shadowsStale = false;
-      this.finish.uniforms.uSeed.value = this.frozenTime === null ? (now * 0.06) % 997 : 3;
+      this.finish.finish.uSeed.value = this.frozenTime === null ? (now * 0.06) % 997 : 3;
       this.composer.render();
       this.measure(dt);
     }

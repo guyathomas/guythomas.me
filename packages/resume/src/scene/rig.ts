@@ -3,7 +3,11 @@ import { HDRLoader } from 'three/examples/jsm/loaders/HDRLoader.js';
 import type { LightState } from '../light/state';
 
 /** The pattern the window throws: panes of light crossed by glazing bars, with a plant at one side. */
-function windowCookie(): THREE.CanvasTexture {
+/**
+ * `bare` leaves out the glazing bars, for a phone: its picture is a strip of desk seen so close that a bar's
+ * shadow is a broad grey smear across the sheet rather than the line of a window.
+ */
+function windowCookie(bare: boolean): THREE.CanvasTexture {
   const size = 1024;
   const canvas = document.createElement('canvas');
   canvas.width = canvas.height = size;
@@ -25,9 +29,11 @@ function windowCookie(): THREE.CanvasTexture {
   bar(0, 0, 60, size, 26);
   bar(size - 60, 0, 60, size, 26);
   // Glazing bars.
-  bar(size * 0.36, 0, 20, size, 12);
-  bar(size * 0.68, 0, 20, size, 12);
-  bar(0, size * 0.47, size, 24, 12);
+  if (!bare) {
+    bar(size * 0.36, 0, 20, size, 12);
+    bar(size * 0.68, 0, 20, size, 12);
+    bar(0, size * 0.47, size, 24, 12);
+  }
 
   // A pot plant on the sill: soft leaf shadows in one corner.
   let seed = 11;
@@ -81,8 +87,12 @@ export class LightRig {
   private readonly sunColour = new THREE.Color();
   private readonly skyColour = new THREE.Color();
 
-  constructor(private readonly scene: THREE.Scene, private readonly renderer: THREE.WebGLRenderer) {
-    this.sun.map = windowCookie();
+  /**
+   * `small` is a phone's picture: a narrow strip of desk seen close to. Each shadow map is drawn over only that
+   * strip, so that its texels are not magnified into blocks and hard black edges, and the lamp's map is smaller.
+   */
+  constructor(private readonly scene: THREE.Scene, private readonly renderer: THREE.WebGLRenderer, small = false) {
+    this.sun.map = windowCookie(small);
     this.sun.castShadow = true;
     this.sun.shadow.mapSize.set(2048, 2048);
     this.sun.shadow.camera.near = 1.4;
@@ -90,13 +100,21 @@ export class LightRig {
     this.sun.shadow.bias = -0.00012;
     this.sun.shadow.normalBias = 0.0006;
     this.sun.shadow.radius = 1.4;
+    if (small) {
+      // Seen this close, the edge of the pool of sun cuts across the narrow sheet as a broad grey diagonal.
+      // Widen the window so the strip in the picture lies inside the pool.
+      this.sun.angle = 0.4;
+      // The spot's map spans its whole cone; narrow it to the part of the desk that is in the picture.
+      this.sun.shadow.focus = 0.25;
+    }
 
     this.windowGlow.position.set(-0.25, 1.1, -1.25);
     this.windowGlow.castShadow = true;
     this.windowGlow.shadow.mapSize.set(1024, 1024);
     const glowCamera = this.windowGlow.shadow.camera;
-    glowCamera.left = glowCamera.bottom = -0.75;
-    glowCamera.right = glowCamera.top = 0.75;
+    const reach = small ? 0.5 : 0.75;
+    glowCamera.left = glowCamera.bottom = -reach;
+    glowCamera.right = glowCamera.top = reach;
     glowCamera.near = 0.6;
     glowCamera.far = 3;
     this.windowGlow.shadow.bias = -0.0004;
@@ -104,7 +122,9 @@ export class LightRig {
     this.windowGlow.shadow.radius = 7;
 
     this.lamp.castShadow = true;
-    this.lamp.shadow.mapSize.set(4096, 4096);
+    // A 4096 map is 64 MB that a phone can ill spare; focused on the strip, 2048 is finer than 4096 was.
+    this.lamp.shadow.mapSize.setScalar(small ? 2048 : 4096);
+    if (small) this.lamp.shadow.focus = 0.4;
     this.lamp.shadow.camera.near = 0.4;
     this.lamp.shadow.camera.far = 2.2;
     this.lamp.shadow.bias = -0.00015;
