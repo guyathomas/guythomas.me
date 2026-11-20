@@ -2,8 +2,8 @@ import * as THREE from 'three';
 import { HDRLoader } from 'three/examples/jsm/loaders/HDRLoader.js';
 import type { LightState } from '../light/state';
 
-/** The pattern the window throws: panes of light crossed by glazing bars, with a plant at one side. */
 /**
+ * The pattern the window throws: panes of light crossed by glazing bars, with a plant at one side.
  * `bare` leaves out the glazing bars, for a phone: its picture is a strip of desk seen so close that a bar's
  * shadow is a broad grey smear across the sheet rather than the line of a window.
  */

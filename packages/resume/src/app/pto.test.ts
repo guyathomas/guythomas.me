@@ -17,4 +17,13 @@ describe('ptoLines', () => {
       }
     }
   });
+
+  it('keeps its size on a narrow sheet, rather than shrinking past reading', () => {
+    const tall = (width: number) => {
+      const ys = ptoLines(width, 0.3).flatMap((points) => points.filter((_, i) => i % 2 === 1));
+      return Math.max(...ys) - Math.min(...ys);
+    };
+    expect(tall(0.098)).toBeGreaterThan(0.004);
+    expect(tall(0.098)).toBeCloseTo(tall(0.2159), 3);
+  });
 });

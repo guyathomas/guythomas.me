@@ -4,6 +4,34 @@ import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { OutputShader } from 'three/examples/jsm/shaders/OutputShader.js';
 
+/** Adds lens falloff and grain to the end of three's output shader. Throws if that shader is no longer the shape it expects. */
+export function finishShader(shader: string): string {
+  const close = shader.lastIndexOf('}');
+  if (!shader.includes('varying vec2 vUv;') || close < 0) throw new Error('OutputShader has changed shape: FinishPass needs updating');
+  return (
+    shader.slice(0, close).replace(
+      'varying vec2 vUv;',
+      /* glsl */ `varying vec2 vUv;
+      uniform float uGrain;
+      uniform float uVignette;
+      uniform float uSeed;
+      uniform float uAspect;
+      float hash(vec2 p) {
+        vec3 q = fract(vec3(p.xyx) * 0.1031);
+        q += dot(q, q.yzx + 33.33);
+        return fract((q.x + q.y) * q.z);
+      }`,
+    ) +
+    /* glsl */ `
+      vec2 centred = (vUv - 0.5) * vec2(uAspect, 1.0);
+      float falloff = smoothstep(0.35, 1.05, length(centred));
+      gl_FragColor.rgb *= 1.0 - uVignette * falloff;
+      float grain = hash(gl_FragCoord.xy + uSeed) - 0.5;
+      gl_FragColor.rgb += grain * uGrain * (1.0 - 0.6 * dot(gl_FragColor.rgb, vec3(0.3333)));
+    }`
+  );
+}
+
 /**
  * Tone mapping and the move to screen colour, then lens falloff and film grain, in one pass over the picture.
  * Two passes did the same; on a phone every full-screen pass is a large share of the frame.
@@ -18,30 +46,9 @@ class FinishPass extends OutputPass {
 
   constructor() {
     super();
+    // OutputPass hands its own uniforms object to its material, so what is added here reaches the shader.
     Object.assign(this.uniforms, this.finish);
-    const shader = OutputShader.fragmentShader;
-    const close = shader.lastIndexOf('}');
-    this.material.fragmentShader =
-      shader.slice(0, close).replace(
-        'varying vec2 vUv;',
-        /* glsl */ `varying vec2 vUv;
-        uniform float uGrain;
-        uniform float uVignette;
-        uniform float uSeed;
-        uniform float uAspect;
-        float hash(vec2 p) {
-          vec3 q = fract(vec3(p.xyx) * 0.1031);
-          q += dot(q, q.yzx + 33.33);
-          return fract((q.x + q.y) * q.z);
-        }`,
-      ) +
-      /* glsl */ `
-        vec2 centred = (vUv - 0.5) * vec2(uAspect, 1.0);
-        float falloff = smoothstep(0.35, 1.05, length(centred));
-        gl_FragColor.rgb *= 1.0 - uVignette * falloff;
-        float grain = hash(gl_FragCoord.xy + uSeed) - 0.5;
-        gl_FragColor.rgb += grain * uGrain * (1.0 - 0.6 * dot(gl_FragColor.rgb, vec3(0.3333)));
-      }`;
+    this.material.fragmentShader = finishShader(OutputShader.fragmentShader);
   }
 }
 
