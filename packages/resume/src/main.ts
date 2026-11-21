@@ -131,7 +131,7 @@ async function start(): Promise<void> {
   await breathe();
 
   // Light.
-  const rig = new LightRig(scene, renderer);
+  const rig = new LightRig(scene, renderer, narrow);
   rig.loadEnvironment(refresh, narrow);
 
   const controls = new Controls({
@@ -394,7 +394,22 @@ async function start(): Promise<void> {
     if (frozen) lighting.refresh(true);
   }
 
-  window.addEventListener('scroll', () => stage.invalidate(), { passive: true });
+  // On a phone the draught comes while the foot of the sheet is far below the window. The first time the foot
+  // scrolls into sight, it comes again, where the "PTO" can be seen with it.
+  let footSeen = frozen || fitted;
+  window.addEventListener(
+    'scroll',
+    () => {
+      stage.invalidate();
+      if (footSeen || frontEl.getBoundingClientRect().bottom > window.innerHeight) return;
+      footSeen = true;
+      window.setTimeout(() => {
+        ear.stir();
+        wake();
+      }, 350);
+    },
+    { passive: true },
+  );
   window.addEventListener('resize', () => {
     // The sheet is printed for the room it has; a different room wants a fresh one.
     // The printer lays the page out its own way; that is not a new window.

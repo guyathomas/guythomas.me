@@ -87,15 +87,18 @@ export function createPlay(deps: PlayDeps) {
     const noted = ptoLines(sheet.width, height).flat();
     const xs = noted.filter((_, i) => i % 2 === 0);
     const ys = noted.filter((_, i) => i % 2 === 1);
-    const pad = 0.005;
-    return { x0: Math.min(...xs) - pad, x1: Math.max(...xs) + pad, y0: Math.min(...ys) - pad, y1: Math.max(...ys) + pad };
+    // Without a desk a finger is the only way to turn the sheet: the note answers anywhere from it to the corner.
+    const pad = deps.desk ? 0.005 : 0.008;
+    const x1 = deps.desk ? Math.max(...xs) + pad : sheet.width;
+    const y1 = deps.desk ? Math.max(...ys) + pad : height;
+    return { x0: Math.min(...xs) - pad, x1, y0: Math.min(...ys) - pad, y1 };
   };
   const boxes = { front: boxOf(sheet.height), back: boxOf(backFoot) };
   /** True for a page point on the pencilled "PTO". */
   const onNote = (at: PagePoint): boolean => {
     if (!at.front && deps.desk) return false;
     const box = at.front ? boxes.front : boxes.back;
-    return at.x > box.x0 && at.x < box.x1 && at.y > box.y0 && at.y < box.y1;
+    return at.x > box.x0 && at.x <= box.x1 && at.y > box.y0 && at.y <= box.y1;
   };
   note(true);
   note(false);
